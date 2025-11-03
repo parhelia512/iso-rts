@@ -126,19 +126,19 @@ bool MapIO::Save(const std::string & filename, const std::vector<GameMapCell> & 
     const int mapSize = rows * cols;
 
     const int statBlobs = DefineStatResourceForCells(cells, BLOBS_SOURCE);
-    fs << MAP_TAG_STAT_BLOBS << " " << statBlobs;
+    fs << MAP_TAG_STAT_BLOBS << " " << statBlobs << "\n";
 
     const int statDiamonds = DefineStatResourceForCells(cells, DIAMONDS_SOURCE);
-    fs << MAP_TAG_STAT_DIAMONDS << " " << statDiamonds;
+    fs << MAP_TAG_STAT_DIAMONDS << " " << statDiamonds << "\n";
 
     const int statEnergy = DefineStatResourceForObjects(objects, mapSize, GameObject::TYPE_RES_GEN_ENERGY);
-    fs << MAP_TAG_STAT_ENERGY << " " << statEnergy;
+    fs << MAP_TAG_STAT_ENERGY << " " << statEnergy << "\n";
 
     const int statMaterial = DefineStatResourceForObjects(objects, mapSize, GameObject::TYPE_RES_GEN_MATERIAL);
-    fs << MAP_TAG_STAT_MATERIAL << " " << statMaterial;
+    fs << MAP_TAG_STAT_MATERIAL << " " << statMaterial << "\n";
 
     const int statValue = DefineStatValue(statBlobs, statDiamonds, statEnergy, statMaterial);
-    fs << MAP_TAG_STAT_VALUE << " " << statValue;
+    fs << MAP_TAG_STAT_VALUE << " " << statValue << "\n";
 
     // save header end tag
     fs << MAP_TAG_END_HEADER << "\n";
