@@ -39,8 +39,7 @@ bool MapsRegistry::CreatePlanet(unsigned int planetId)
      return true;
 }
 
-bool MapsRegistry::AddMap(unsigned int planetId, const std::string & file, int energy,
-                          int material, int diamonds, int blobs, int value,
+bool MapsRegistry::AddMap(unsigned int planetId, const std::string & file,
                           PlayerFaction occupier, TerritoryStatus status)
 {
     // planet not found
@@ -54,6 +53,11 @@ bool MapsRegistry::AddMap(unsigned int planetId, const std::string & file, int e
     const MissionCategory mission = mio.GetMissionCategory();
     const unsigned int rows = mio.GetMapRows();
     const unsigned int cols = mio.GetMapCols();
+    const int blobs = mio.GetStatBlobs();
+    const int diamonds = mio.GetStatDiamonds();
+    const int energy = mio.GetStatEnergy();
+    const int material = mio.GetStatMaterial();
+    const int value = mio.GetStatMapValue();
 
     // store data
     mData[planetId].emplace_back(file, energy, material, diamonds, blobs,

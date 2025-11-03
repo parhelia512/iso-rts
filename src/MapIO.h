@@ -49,6 +49,12 @@ public:
     MissionCategory GetMissionCategory();
     const std::vector<MissionGoal> & GetMissionGoals() const;
 
+    int GetStatBlobs() const;
+    int GetStatDiamonds() const;
+    int GetStatEnergy() const;
+    int GetStatMaterial() const;
+    int GetStatMapValue() const;
+
     void Clear();
 
     bool Load(const std::string & filename);
@@ -70,6 +76,11 @@ private:
     static const std::string MAP_TAG_END_HEADER;
     static const std::string MAP_TAG_END_MAP;
     static const std::string MAP_TAG_MAP_SIZE;
+    static const std::string MAP_TAG_STAT_BLOBS;
+    static const std::string MAP_TAG_STAT_DIAMONDS;
+    static const std::string MAP_TAG_STAT_ENERGY;
+    static const std::string MAP_TAG_STAT_MATERIAL;
+    static const std::string MAP_TAG_STAT_VALUE;
     static const std::string MAP_TAG_VERSION;
 
 private:
@@ -82,6 +93,12 @@ private:
 
     unsigned int mRows = 0 ;
     unsigned int mCols = 0 ;
+
+    int mStatBlobs = 0;
+    int mStatDiamonds = 0;
+    int mStatEnergy = 0;
+    int mStatMaterial = 0;
+    int mStatValue = 0;
 };
 
 inline unsigned int MapIO::GetMapRows() const { return mRows; }
@@ -95,5 +112,11 @@ inline const std::vector<MapObjectEntry> & MapIO::GetObjectEntries() const { ret
 
 inline MissionCategory MapIO::GetMissionCategory() { return mCategory; }
 inline const std::vector<MissionGoal> & MapIO::GetMissionGoals() const { return mGoals; }
+
+inline int MapIO::GetStatBlobs() const { return mStatBlobs; }
+inline int MapIO::GetStatDiamonds() const { return mStatDiamonds; }
+inline int MapIO::GetStatEnergy() const { return mStatEnergy; }
+inline int MapIO::GetStatMaterial() const { return mStatMaterial; }
+inline int MapIO::GetStatMapValue() const { return mStatValue; }
 
 } // namespace game

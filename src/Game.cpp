@@ -143,19 +143,19 @@ void Game::InitGameData()
     // -- MAPS --
     // PLANET 1
     mMapsReg->CreatePlanet(PLANET_1);
-    //               planetId, file, energy, material, diamonds, blobs, value, occupier, status
-    mMapsReg->AddMap(PLANET_1, "data/maps/80x80-01.map", 5, 4, 2, 2, 3, NO_FACTION, TER_ST_UNEXPLORED);
-    mMapsReg->AddMap(PLANET_1, "data/maps/40x40-01.map", 2, 2, 1, 1, 2, NO_FACTION, TER_ST_UNEXPLORED);
-    mMapsReg->AddMap(PLANET_1, "data/maps/60x60-01.map", 4, 4, 2, 2, 3, NO_FACTION, TER_ST_UNREACHABLE);
-    mMapsReg->AddMap(PLANET_1, "data/maps/20x20-empty.map", 1, 2, 1, 1, 1, NO_FACTION, TER_ST_UNREACHABLE);
-    mMapsReg->AddMap(PLANET_1, "data/maps/80x80-01.map", 5, 4, 2, 2, 3, NO_FACTION, TER_ST_UNREACHABLE);
-    mMapsReg->AddMap(PLANET_1, "data/maps/40x40-01.map", 2, 2, 1, 1, 2, NO_FACTION, TER_ST_UNREACHABLE);
-    mMapsReg->AddMap(PLANET_1, "data/maps/60x60-01.map", 4, 4, 2, 2, 3, NO_FACTION, TER_ST_UNREACHABLE);
-    mMapsReg->AddMap(PLANET_1, "data/maps/20x20-empty.map", 1, 2, 1, 1, 1, NO_FACTION, TER_ST_UNREACHABLE);
-    mMapsReg->AddMap(PLANET_1, "data/maps/20x20-empty.map", 1, 2, 1, 1, 1, NO_FACTION, TER_ST_UNREACHABLE);
-    mMapsReg->AddMap(PLANET_1, "data/maps/40x40-01.map", 2, 2, 1, 1, 2, NO_FACTION, TER_ST_UNREACHABLE);
-    mMapsReg->AddMap(PLANET_1, "data/maps/60x60-01.map", 4, 4, 2, 2, 3, NO_FACTION, TER_ST_UNEXPLORED);
-    mMapsReg->AddMap(PLANET_1, "data/maps/80x80-01.map", 5, 4, 2, 2, 3, NO_FACTION, TER_ST_UNEXPLORED);
+    //               planetId, file, occupier, status
+    mMapsReg->AddMap(PLANET_1, "data/maps/80x80-01.map", NO_FACTION, TER_ST_UNEXPLORED);
+    mMapsReg->AddMap(PLANET_1, "data/maps/40x40-01.map", NO_FACTION, TER_ST_UNEXPLORED);
+    mMapsReg->AddMap(PLANET_1, "data/maps/60x60-01.map", NO_FACTION, TER_ST_UNREACHABLE);
+    mMapsReg->AddMap(PLANET_1, "data/maps/20x20-empty.map", NO_FACTION, TER_ST_UNREACHABLE);
+    mMapsReg->AddMap(PLANET_1, "data/maps/80x80-01.map", NO_FACTION, TER_ST_UNREACHABLE);
+    mMapsReg->AddMap(PLANET_1, "data/maps/40x40-01.map", NO_FACTION, TER_ST_UNREACHABLE);
+    mMapsReg->AddMap(PLANET_1, "data/maps/60x60-01.map", NO_FACTION, TER_ST_UNREACHABLE);
+    mMapsReg->AddMap(PLANET_1, "data/maps/20x20-empty.map", NO_FACTION, TER_ST_UNREACHABLE);
+    mMapsReg->AddMap(PLANET_1, "data/maps/20x20-empty.map", NO_FACTION, TER_ST_UNREACHABLE);
+    mMapsReg->AddMap(PLANET_1, "data/maps/40x40-01.map", NO_FACTION, TER_ST_UNREACHABLE);
+    mMapsReg->AddMap(PLANET_1, "data/maps/60x60-01.map", NO_FACTION, TER_ST_UNEXPLORED);
+    mMapsReg->AddMap(PLANET_1, "data/maps/80x80-01.map", NO_FACTION, TER_ST_UNEXPLORED);
 }
 
 void Game::ClearGameData()

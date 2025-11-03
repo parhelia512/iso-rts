@@ -17,8 +17,16 @@ const std::string MapIO::MAP_TAG_GOAL("G");
 const std::string MapIO::MAP_TAG_END_HEADER("--1--");
 const std::string MapIO::MAP_TAG_END_MAP("--2--");
 const std::string MapIO::MAP_TAG_MAP_SIZE("RC");
+const std::string MapIO::MAP_TAG_STAT_BLOBS("SB");
+const std::string MapIO::MAP_TAG_STAT_DIAMONDS("SD");
+const std::string MapIO::MAP_TAG_STAT_ENERGY("SE");
+const std::string MapIO::MAP_TAG_STAT_MATERIAL("SM");
+const std::string MapIO::MAP_TAG_STAT_VALUE("SV");
 const std::string MapIO::MAP_TAG_VERSION("V");
+
 const unsigned int LEN_SIMPLE_TAG = 1;
+const unsigned int LEN_DOUBLE_TAG = 2;
+const unsigned int LEN_END_TAG = 5;
 
 MapIO::MapIO()
     : mCategory(MC_UNKNOWN)
@@ -37,6 +45,12 @@ void MapIO::Clear()
     mCols = 0 ;
 
     mCategory = MC_UNKNOWN;
+
+    mStatBlobs = 0;
+    mStatDiamonds = 0;
+    mStatEnergy = 0;
+    mStatMaterial = 0;
+    mStatValue = 0;
 }
 
 bool MapIO::Load(const std::string & filename)
@@ -103,6 +117,13 @@ bool MapIO::Save(const std::string & filename, const std::vector<GameMapCell> & 
     fs << "# ====== MAP =====\n";
     fs << MAP_TAG_MAP_SIZE << " " << rows << " " << cols << "\n";
 
+    // stats
+    fs << MAP_TAG_STAT_BLOBS << " " << mStatBlobs;
+    fs << MAP_TAG_STAT_DIAMONDS << " " << mStatDiamonds;
+    fs << MAP_TAG_STAT_ENERGY << " " << mStatEnergy;
+    fs << MAP_TAG_STAT_MATERIAL << " " << mStatMaterial;
+    fs << MAP_TAG_STAT_VALUE << " " << mStatValue;
+
     // save header end tag
     fs << MAP_TAG_END_HEADER << "\n";
 
@@ -145,9 +166,6 @@ void MapIO::ReadHeader(std::fstream & fs)
 {
     std::string line;
     std::istringstream ss;
-
-    const unsigned int lenTagEndHeader = MAP_TAG_END_HEADER.length();
-    const unsigned int lenTagMapSize = MAP_TAG_MAP_SIZE.length();
 
     while(std::getline(fs, line))
     {
@@ -199,20 +217,43 @@ void MapIO::ReadHeader(std::fstream & fs)
             if(primary && MC_UNKNOWN == mCategory)
                 mCategory = mGoals[mGoals.size() - 1].GetCategory();
         }
-        else if(line.compare(0, lenTagMapSize, MAP_TAG_MAP_SIZE) == 0)
+        else if(line.compare(0, LEN_DOUBLE_TAG, MAP_TAG_MAP_SIZE) == 0)
         {
-            ss.ignore(lenTagMapSize);
+            ss.ignore(LEN_DOUBLE_TAG);
             ss >> mRows >> mCols;
         }
-        else if(line.compare(0, lenTagEndHeader, MAP_TAG_END_HEADER) == 0)
+        else if(line.compare(0, LEN_DOUBLE_TAG, MAP_TAG_STAT_BLOBS) == 0)
+        {
+            ss.ignore(LEN_DOUBLE_TAG);
+            ss >> mStatBlobs;
+        }
+        else if(line.compare(0, LEN_DOUBLE_TAG, MAP_TAG_STAT_DIAMONDS) == 0)
+        {
+            ss.ignore(LEN_DOUBLE_TAG);
+            ss >> mStatDiamonds;
+        }
+        else if(line.compare(0, LEN_DOUBLE_TAG, MAP_TAG_STAT_ENERGY) == 0)
+        {
+            ss.ignore(LEN_DOUBLE_TAG);
+            ss >> mStatEnergy;
+        }
+        else if(line.compare(0, LEN_DOUBLE_TAG, MAP_TAG_STAT_MATERIAL) == 0)
+        {
+            ss.ignore(LEN_DOUBLE_TAG);
+            ss >> mStatMaterial;
+        }
+        else if(line.compare(0, LEN_DOUBLE_TAG, MAP_TAG_STAT_VALUE) == 0)
+        {
+            ss.ignore(LEN_DOUBLE_TAG);
+            ss >> mStatValue;
+        }
+        else if(line.compare(0, LEN_END_TAG, MAP_TAG_END_HEADER) == 0)
             break;
     }
 }
 
 void MapIO::ReadMap(std::fstream & fs)
 {
-    const unsigned int lenTagEndMap = MAP_TAG_END_MAP.length();
-
     std::string line;
     std::istringstream ss;
 
@@ -226,7 +267,7 @@ void MapIO::ReadMap(std::fstream & fs)
             continue;
 
         // exit when read end tag
-        if(line.compare(0, lenTagEndMap, MAP_TAG_END_MAP) == 0)
+        if(line.compare(0, LEN_END_TAG, MAP_TAG_END_MAP) == 0)
             break;
 
         // good row
