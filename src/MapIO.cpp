@@ -192,7 +192,12 @@ int MapIO::DefineStatResourceForCells(const std::vector<GameMapCell> & cells, Ce
 
     const float perc = resCells / (mapSize * maxResPerc);
 
-    return static_cast<int>(std::roundf(MAX_STAT_VALUE * perc));
+    const float stat = std::roundf(MAX_STAT_VALUE * perc);
+
+    if(stat < MAX_STAT_VALUE)
+        return stat;
+    else
+        return MAX_STAT_VALUE;
 }
 
 int MapIO::DefineStatResourceForObjects(const std::vector<GameObject *> & objects,
@@ -210,7 +215,12 @@ int MapIO::DefineStatResourceForObjects(const std::vector<GameObject *> & object
 
     const float perc = resGens / maxGetSlots;
 
-    return static_cast<int>(std::roundf(MAX_STAT_VALUE * perc));
+    const float stat = std::roundf(MAX_STAT_VALUE * perc);
+
+    if(stat < MAX_STAT_VALUE)
+        return stat;
+    else
+        return MAX_STAT_VALUE;
 }
 
 int MapIO::DefineStatValue(int statBlobs, int statDiamonds, int statEnergy, int statMaterial) const
