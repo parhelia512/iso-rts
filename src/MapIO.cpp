@@ -4,6 +4,9 @@
 #include "GameMapCell.h"
 #include "GameObjects/GameObject.h"
 
+#include <cmath>
+
+#include <algorithm>
 #include <iostream>
 #include <sstream>
 
@@ -27,6 +30,8 @@ const std::string MapIO::MAP_TAG_VERSION("V");
 const unsigned int LEN_SIMPLE_TAG = 1;
 const unsigned int LEN_DOUBLE_TAG = 2;
 const unsigned int LEN_END_TAG = 5;
+
+const float MAX_STAT_VALUE = 10.f;
 
 MapIO::MapIO()
     : mCategory(MC_UNKNOWN)
@@ -88,8 +93,8 @@ bool MapIO::LoadHeader(const std::string & filename)
 }
 
 bool MapIO::Save(const std::string & filename, const std::vector<GameMapCell> & cells,
-                     std::vector<GameObject *> objects, const std::vector<MissionGoal> & goals,
-                     MissionCategory category, int rows, int cols)
+                 const std::vector<GameObject *> & objects, const std::vector<MissionGoal> & goals,
+                 MissionCategory category, int rows, int cols)
 {
     // no data to save -> EXIT
     if(0 == rows || 0 == cols)
@@ -118,11 +123,22 @@ bool MapIO::Save(const std::string & filename, const std::vector<GameMapCell> & 
     fs << MAP_TAG_MAP_SIZE << " " << rows << " " << cols << "\n";
 
     // stats
-    fs << MAP_TAG_STAT_BLOBS << " " << mStatBlobs;
-    fs << MAP_TAG_STAT_DIAMONDS << " " << mStatDiamonds;
-    fs << MAP_TAG_STAT_ENERGY << " " << mStatEnergy;
-    fs << MAP_TAG_STAT_MATERIAL << " " << mStatMaterial;
-    fs << MAP_TAG_STAT_VALUE << " " << mStatValue;
+    const int mapSize = rows * cols;
+
+    const int statBlobs = DefineStatResourceForCells(cells, BLOBS_SOURCE);
+    fs << MAP_TAG_STAT_BLOBS << " " << statBlobs;
+
+    const int statDiamonds = DefineStatResourceForCells(cells, DIAMONDS_SOURCE);
+    fs << MAP_TAG_STAT_DIAMONDS << " " << statDiamonds;
+
+    const int statEnergy = DefineStatResourceForObjects(objects, mapSize, GameObject::TYPE_RES_GEN_ENERGY);
+    fs << MAP_TAG_STAT_ENERGY << " " << statEnergy;
+
+    const int statMaterial = DefineStatResourceForObjects(objects, mapSize, GameObject::TYPE_RES_GEN_MATERIAL);
+    fs << MAP_TAG_STAT_MATERIAL << " " << statMaterial;
+
+    const int statValue = DefineStatValue(statBlobs, statDiamonds, statEnergy, statMaterial);
+    fs << MAP_TAG_STAT_VALUE << " " << statValue;
 
     // save header end tag
     fs << MAP_TAG_END_HEADER << "\n";
@@ -160,6 +176,49 @@ bool MapIO::Save(const std::string & filename, const std::vector<GameMapCell> & 
     fs.close();
 
     return true;
+}
+
+int MapIO::DefineStatResourceForCells(const std::vector<GameMapCell> & cells, CellTypes res) const
+{
+    const float maxResPerc = 0.05f;
+
+    const int resCells = std::count_if(cells.begin(), cells.end(),
+                                       [res](const GameMapCell & cell)
+                                       {
+                                           return cell.basicType == res;
+                                       });
+
+    const int mapSize = cells.size();
+
+    const float perc = resCells / (mapSize * maxResPerc);
+
+    return static_cast<int>(std::roundf(MAX_STAT_VALUE * perc));
+}
+
+int MapIO::DefineStatResourceForObjects(const std::vector<GameObject *> & objects,
+                                        int mapSize, GameObjectTypeId type) const
+{
+    const float genArea = 16.f;
+    const float maxPerc = 10.f;
+    const float maxGetSlots = mapSize / (genArea * maxPerc);
+
+    const int resGens = std::count_if(objects.begin(), objects.end(),
+                                      [type](const GameObject * obj)
+                                      {
+                                          return obj->GetObjectType() == type;
+                                      });
+
+    const float perc = resGens / maxGetSlots;
+
+    return static_cast<int>(std::roundf(MAX_STAT_VALUE * perc));
+}
+
+int MapIO::DefineStatValue(int statBlobs, int statDiamonds, int statEnergy, int statMaterial) const
+{
+    const float w1 = 0.3f;
+    const float w2 = 0.2f;
+
+    return (statEnergy + statMaterial) * w1 + (statBlobs + statDiamonds) * w2;
 }
 
 void MapIO::ReadHeader(std::fstream & fs)

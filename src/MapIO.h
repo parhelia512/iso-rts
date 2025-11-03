@@ -15,6 +15,7 @@ class GameMapCell;
 class GameObject;
 class IsoMap;
 
+enum CellTypes : int;
 enum MissionCategory : unsigned int;
 
 // structure used to define GameObjects to create
@@ -61,10 +62,15 @@ public:
     bool LoadHeader(const std::string & filename);
 
     bool Save(const std::string & filename, const std::vector<GameMapCell> & cells,
-              std::vector<GameObject *> objects, const std::vector<MissionGoal> & goals,
+              const std::vector<GameObject *> & objects, const std::vector<MissionGoal> & goals,
               MissionCategory category, int rows, int cols);
 
 private:
+    int DefineStatResourceForCells(const std::vector<GameMapCell> & cells, CellTypes res) const;
+    int DefineStatResourceForObjects(const std::vector<GameObject *> & objects,
+                                     int mapSize, GameObjectTypeId type) const;
+    int DefineStatValue(int statBlobs, int statDiamonds, int statEnergy, int statMaterial) const;
+
     void ReadHeader(std::fstream & fs);
     void ReadMap(std::fstream & fs);
     void ReadObjectsData(std::fstream & fs);
