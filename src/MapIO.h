@@ -63,7 +63,7 @@ public:
 
     bool Save(const std::string & filename, const std::vector<GameMapCell> & cells,
               const std::vector<GameObject *> & objects, const std::vector<MissionGoal> & goals,
-              MissionCategory category, int rows, int cols);
+              int rows, int cols);
 
 private:
     int DefineStatResourceForCells(const std::vector<GameMapCell> & cells, CellTypes res) const;
