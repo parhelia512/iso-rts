@@ -563,12 +563,17 @@ enum SpriteIdPlanetMap : unsigned int
     IND_PM_CELL_F3_SEL,
 
     // STARS BAR
-    IND_PM_STARS_DIS,
+    IND_PM_STARS_0,
     IND_PM_STARS_1,
     IND_PM_STARS_2,
     IND_PM_STARS_3,
     IND_PM_STARS_4,
     IND_PM_STARS_5,
+    IND_PM_STARS_6,
+    IND_PM_STARS_7,
+    IND_PM_STARS_8,
+    IND_PM_STARS_9,
+    IND_PM_STARS_10,
 
     // PIPS BAR
     IND_PM_PIPS_BAR_DIS,

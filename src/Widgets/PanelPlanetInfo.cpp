@@ -77,7 +77,7 @@ PanelPlanetInfo::PanelPlanetInfo()
     mHeaderValue->SetColor(WidgetsConstants::colorPlanetMapHeader);
     RegisterRenderable(mHeaderValue);
 
-    tex = tm->GetSprite(SpriteFilePlanetMap, IND_PM_STARS_DIS);
+    tex = tm->GetSprite(SpriteFilePlanetMap, IND_PM_STARS_0);
     mBarValue = new graphic::Image(tex);
     RegisterRenderable(mBarValue);
 
@@ -343,7 +343,7 @@ void PanelPlanetInfo::UpdateTerritoryValue()
     using namespace sgl;
 
     auto tm = graphic::TextureManager::Instance();
-    graphic::Texture * tex = tm->GetSprite(SpriteFilePlanetMap, IND_PM_STARS_DIS + mValue);
+    graphic::Texture * tex = tm->GetSprite(SpriteFilePlanetMap, IND_PM_STARS_0 + mValue);
     mBarValue->SetTexture(tex);
 }
 
