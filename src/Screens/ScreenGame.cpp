@@ -900,8 +900,6 @@ void ScreenGame::LoadMapFile()
     // get mission data
     mMissionGoals = mio.GetMissionGoals();
     SetMissionRewards();
-
-
 }
 
 void ScreenGame::OnKeyDown(sgl::core::KeyboardEvent & event)
@@ -1019,7 +1017,6 @@ void ScreenGame::OnMouseMotion(sgl::core::MouseMotionEvent & event)
 
 void ScreenGame::OnWindowExposed(sgl::graphic::WindowEvent &)
 {
-    SetPause(false);
 }
 
 void ScreenGame::OnWindowHidden(sgl::graphic::WindowEvent &)
