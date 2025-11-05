@@ -3,13 +3,17 @@
 namespace game
 {
 
+class Game;
 class TutorialManager;
+class TutorialStep;
 
 class Tutorial
 {
 public:
-    Tutorial();
+    Tutorial(Game * game);
     virtual ~Tutorial();
+
+    void AddStep(TutorialStep * step);
 
     bool IsDone() const;
 
@@ -22,6 +26,7 @@ public:
 
 private:
     TutorialManager * mTutMan = nullptr;
+    Game * mGame = nullptr;
 
     bool mDone = false;
 };
