@@ -5,6 +5,12 @@
 namespace game
 {
 
+TutorialManager::~TutorialManager()
+{
+    for(const TutorialStep * s : mSteps)
+        delete s;
+}
+
 void TutorialManager::Start()
 {
     // already started

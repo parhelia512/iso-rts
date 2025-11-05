@@ -264,6 +264,8 @@ add_executable(
     src/Tutorial/StepPlanetMapSelectTerritory.cpp
     src/Tutorial/StepPlanetMapSendAI.h
     src/Tutorial/StepPlanetMapSendAI.cpp
+    src/Tutorial/Tutorial.h
+    src/Tutorial/Tutorial.cpp
     src/Tutorial/TutorialConstants.h
     src/Tutorial/TutorialManager.h
     src/Tutorial/TutorialManager.cpp

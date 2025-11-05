@@ -10,6 +10,8 @@ class TutorialStep;
 class TutorialManager
 {
 public:
+    ~TutorialManager();
+
     void AddStep(TutorialStep * step);
 
     void Start();
