@@ -19,7 +19,7 @@ class PanelPlanetActions;
 class PanelPlanetInfo;
 class PanelPlanetResources;
 class PlanetMap;
-class TutorialManager;
+class Tutorial;
 
 class ScreenPlanetMap : public Screen
 {
@@ -31,8 +31,6 @@ public:
     void Render() override;
 
 private:
-    void CreateTutorial();
-
     void SetPlanetName(const char * name);
     void SetDate(const char * date);
 
@@ -43,6 +41,8 @@ private:
     void UpdatePlanetButtons();
 
 private:
+    friend class TutorialPlanetMap;
+
     sgl::graphic::Image * mBg = nullptr;
 
     PanelResources * mPanelPlayerRes = nullptr;
@@ -58,8 +58,7 @@ private:
 
     PlanetMap * mPlanet = nullptr;
 
-    // TUTORIAL
-    TutorialManager * mTutMan = nullptr;
+    Tutorial * mTut = nullptr;
 };
 
 } // namespace game

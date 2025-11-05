@@ -5,18 +5,7 @@
 #include "MapsRegistry.h"
 #include "Player.h"
 #include "States/StatesIds.h"
-#include "Tutorial/StepDelay.h"
-#include "Tutorial/StepPlanetMapConquerTerritory.h"
-#include "Tutorial/StepPlanetMapConquerTerritoryStart.h"
-#include "Tutorial/StepPlanetMapIntro.h"
-#include "Tutorial/StepPlanetMapExploreTerritory.h"
-#include "Tutorial/StepPlanetMapExploreTerritoryInfo.h"
-#include "Tutorial/StepPlanetMapExploreTerritoryStart.h"
-#include "Tutorial/StepPlanetMapExploreTerritorySuccess.h"
-#include "Tutorial/StepPlanetMapNoInfo.h"
-#include "Tutorial/StepPlanetMapSelectTerritory.h"
-#include "Tutorial/StepPlanetMapSendAI.h"
-#include "Tutorial/TutorialManager.h"
+#include "Tutorial/TutorialPlanetMap.h"
 #include "Widgets/ButtonPlanetMap.h"
 #include "Widgets/GameUIData.h"
 #include "Widgets/PanelResources.h"
@@ -430,11 +419,17 @@ ScreenPlanetMap::ScreenPlanetMap(Game * game)
 
     // TUTORIAL
     if(game->IsTutorialEnabled() && game->GetTutorialState(TUTORIAL_PLANET_MAP) == TS_TODO)
-        CreateTutorial();
+    {
+        mTut = new TutorialPlanetMap(this);
+        mTut->Start();
+    }
 }
 
 ScreenPlanetMap::~ScreenPlanetMap()
 {
+    delete mTut;
+    mTut = nullptr;
+
     sgl::sgui::Stage::Instance()->ClearWidgets();
 
     delete mBg;
@@ -447,16 +442,14 @@ ScreenPlanetMap::~ScreenPlanetMap()
 void ScreenPlanetMap::Update(float delta)
 {
     // TUTORIAL
-    if(mTutMan != nullptr)
+    if(mTut)
     {
-        mTutMan->Update(delta);
+        mTut->Update(delta);
 
-        if(mTutMan->AreAllStepsDone())
+        if(mTut->IsDone())
         {
-            GetGame()->SetTutorialState(TUTORIAL_PLANET_MAP, TS_DONE);
-
-            delete mTutMan;
-            mTutMan = nullptr;
+            delete mTut;
+            mTut = nullptr;
         }
     }
 }
@@ -464,34 +457,6 @@ void ScreenPlanetMap::Update(float delta)
 void ScreenPlanetMap::Render()
 {
     mBg->Render();
-}
-
-void ScreenPlanetMap::CreateTutorial()
-{
-    Game * game = GetGame();
-    Player * local = game->GetLocalPlayer();
-
-    mTutMan = new TutorialManager;
-    mTutMan->AddStep(new StepDelay(1.f));
-    mTutMan->AddStep(new StepPlanetMapIntro);
-    mTutMan->AddStep(new StepPlanetMapSelectTerritory(mPlanet));
-    mTutMan->AddStep(new StepDelay(0.5f));
-    mTutMan->AddStep(new StepPlanetMapNoInfo(mPanelInfo, mPanelResources));
-    mTutMan->AddStep(new StepPlanetMapExploreTerritory(mPanelActions));
-    mTutMan->AddStep(new StepDelay(0.5f));
-    mTutMan->AddStep(new StepPlanetMapExploreTerritoryInfo);
-    mTutMan->AddStep(new StepPlanetMapExploreTerritoryStart(mPanelExplore));
-    mTutMan->AddStep(new StepDelay(0.5f));
-    mTutMan->AddStep(new StepPlanetMapExploreTerritorySuccess(mPanelExplore, mPanelInfo, mPanelResources));
-    mTutMan->AddStep(new StepDelay(0.5f));
-    mTutMan->AddStep(new StepPlanetMapSendAI(mPanelActions));
-    mTutMan->AddStep(new StepPlanetMapConquerTerritory(mPanelActions));
-    mTutMan->AddStep(new StepDelay(0.5f));
-    mTutMan->AddStep(new StepPlanetMapConquerTerritoryStart(mPanelConquer));
-
-    game->SetTutorialState(TUTORIAL_PLANET_MAP, TS_IN_PROGRESS);
-
-    mTutMan->Start();
 }
 
 void ScreenPlanetMap::SetPlanetName(const char * name)
