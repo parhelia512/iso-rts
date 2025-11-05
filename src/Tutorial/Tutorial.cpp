@@ -7,9 +7,10 @@
 namespace game
 {
 
-Tutorial::Tutorial(Game *game)
+Tutorial::Tutorial(TutorialId tutId, Game *game)
     : mTutMan(new TutorialManager)
     , mGame(game)
+    , mId(tutId)
 {
 }
 
@@ -26,7 +27,7 @@ void Tutorial::AddStep(TutorialStep * step)
 
 void Tutorial::Start()
 {
-    mGame->SetTutorialState(TUTORIAL_PLANET_MAP, TS_IN_PROGRESS);
+    mGame->SetTutorialState(mId, TS_IN_PROGRESS);
 
     OnStart();
 
@@ -44,7 +45,7 @@ void Tutorial::Update(float delta)
     {
         mDone = true;
 
-        mGame->SetTutorialState(TUTORIAL_PLANET_MAP, TS_DONE);
+        mGame->SetTutorialState(mId, TS_DONE);
 
         OnEnd();
     }

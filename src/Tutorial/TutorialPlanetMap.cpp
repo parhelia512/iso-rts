@@ -1,6 +1,6 @@
 #include "Tutorial/TutorialPlanetMap.h"
 
-#include "Game.h"
+#include "GameConstants.h"
 #include "Screens/ScreenPlanetMap.h"
 #include "Tutorial/StepDelay.h"
 #include "Tutorial/StepPlanetMapConquerTerritory.h"
@@ -18,11 +18,9 @@ namespace game
 {
 
 TutorialPlanetMap::TutorialPlanetMap(ScreenPlanetMap * screen)
-    : Tutorial(screen->GetGame())
+    : Tutorial(TUTORIAL_PLANET_MAP, screen->GetGame())
     , mScreen(screen)
 {
-    Player * local = screen->GetGame()->GetLocalPlayer();
-
     AddStep(new StepDelay(1.f));
     AddStep(new StepPlanetMapIntro);
     AddStep(new StepPlanetMapSelectTerritory(mScreen->mPlanet));
