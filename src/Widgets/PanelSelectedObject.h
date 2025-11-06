@@ -18,7 +18,6 @@ namespace game
 
 class GameObject;
 class ObjectsDataRegistry;
-class ObjectVisualStat;
 
 class PanelSelectedObject : public sgl::sgui::Widget
 {
@@ -48,9 +47,9 @@ private:
     sgl::sgui::TextArea * mTitle = nullptr;
     sgl::sgui::Image * mBarLvl = nullptr;
 
-    ObjectVisualStat * mStatEnergy = nullptr;
-    ObjectVisualStat * mStatHealth = nullptr;
-    ObjectVisualStat * mStatExperience = nullptr;
+    sgl::sgui::Widget * mStatEnergy = nullptr;
+    sgl::sgui::Widget * mStatHealth = nullptr;
+    sgl::sgui::Widget * mStatExperience = nullptr;
     unsigned int mFuncValuesChangedId = 0;
 
     // buttons function

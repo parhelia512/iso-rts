@@ -14,8 +14,11 @@
 #include <sgl/media/AudioPlayer.h>
 #include <sgl/sgui/ImageButton.h>
 
-namespace game
+// anonymous namespace for local "private" classes
+namespace
 {
+
+using namespace game;
 
 class ButtonCloseMiniMap : public sgl::sgui::ImageButton
 {
@@ -134,6 +137,11 @@ public:
     {
     }
 };
+
+} // namespace
+
+namespace game
+{
 
 // ========== MINI MAP ELEMENT ==========
 

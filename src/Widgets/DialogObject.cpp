@@ -23,8 +23,11 @@
 #include <cmath>
 #include <sstream>
 
-namespace game
+// anonymous namespace for local "private" classes
+namespace
 {
+
+using namespace game;
 
 // ====== BUTTON CLOSE =====
 class ButtonCloseDO : public sgl::sgui::ImageButton
@@ -215,6 +218,11 @@ private:
     sgl::sgui::Image * mBar = nullptr;
 };
 
+} // namespace
+
+namespace game
+{
+
 // ===== DIALOG =====
 DialogObject::DialogObject(const ObjectsDataRegistry * odr)
     : mObjDataReg(odr)
@@ -339,10 +347,12 @@ void DialogObject::SetObject(GameObject * obj)
     mImg->SetPosition(imgX, imgY);
 
     // VISUAL STATS
-    mStatRank->SetValue(obj->GetExperienceLevel(), obj->GetMaxExperienceLevel());
-    mStatExperience->SetValue(obj->GetExperience(), obj->GetExperienceToNextLevel());
-    mStatEnergy->SetValue(obj->GetEnergy(), obj->GetMaxEnergy());
-    mStatHealth->SetValue(obj->GetHealth(), obj->GetMaxHealth());
+    static_cast<ObjectExtendedVisualRank *>(mStatRank)->SetValue(obj->GetExperienceLevel(),
+                                                                 obj->GetMaxExperienceLevel());
+    static_cast<ObjectExtendedVisualStat *>(mStatExperience)->SetValue(obj->GetExperience(),
+                                                                       obj->GetExperienceToNextLevel());
+    static_cast<ObjectExtendedVisualStat *>(mStatEnergy)->SetValue(obj->GetEnergy(), obj->GetMaxEnergy());
+    static_cast<ObjectExtendedVisualStat *>(mStatHealth)->SetValue(obj->GetHealth(), obj->GetMaxHealth());
 
     // ATTRIBUTES
     const auto & atts = data.GetAttributes();

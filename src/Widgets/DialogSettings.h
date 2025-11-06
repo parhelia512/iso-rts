@@ -7,16 +7,18 @@
 namespace sgl
 {
     namespace graphic { class Image; }
-    namespace sgui { class AbstractButtonsGroup; }
+    namespace sgui
+    {
+        class AbstractButtonsGroup;
+        class ComboBox;
+        class ImageButton;
+    }
 }
 
 namespace game
 {
 
-class ButtonCloseSettings;
 class Game;
-class PanelContentSettings;
-class SettingsComboBox;
 
 class DialogSettings : public sgl::sgui::Widget
 {
@@ -54,13 +56,13 @@ private:
 
     sgl::sgui::AbstractButtonsGroup * mGroupButtons = nullptr;
 
-    PanelContentSettings * mPanels[NUM_PANELS];
+    sgl::sgui::Widget * mPanels[NUM_PANELS];
 
     sgl::graphic::Image * mBg = nullptr;
 
-    ButtonCloseSettings * mButtonBack = nullptr;
+    sgl::sgui::ImageButton * mButtonBack = nullptr;
 
-    SettingsComboBox * mComboRes = nullptr;
+    sgl::sgui::ComboBox * mComboRes = nullptr;
 };
 
 } // namespace game

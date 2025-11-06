@@ -21,8 +21,11 @@
 
 #include <cmath>
 
-namespace game
+// anonymous namespace for local "private" classes
+namespace
 {
+
+using namespace game;
 
 // ========== BUTTON CLOSE ==========
 class ButtonClosePanel : public sgl::sgui::ImageButton
@@ -249,8 +252,12 @@ private:
     sgl::sgui::Image * mIcon = nullptr;
 };
 
-// ========== PANEL ==========
+} // namespace
 
+namespace game
+{
+
+// ========== PANEL ==========
 PanelSelectedObject::PanelSelectedObject(const ObjectsDataRegistry * odr, sgl::sgui::Widget * parent)
     : sgl::sgui::Widget(parent)
     , mObjDataReg(odr)
@@ -500,9 +507,9 @@ void PanelSelectedObject::UpdateStats()
     const int maxExp = mObj->GetExperienceToNextLevel();
 
     // STAT BARS
-    mStatEnergy->SetValue(mObj->GetEnergy(), mObj->GetMaxEnergy());
-    mStatHealth->SetValue(mObj->GetHealth(), mObj->GetMaxHealth());
-    mStatExperience->SetValue(exp, maxExp);
+    static_cast<ObjectVisualStat *>(mStatEnergy)->SetValue(mObj->GetEnergy(), mObj->GetMaxEnergy());
+    static_cast<ObjectVisualStat *>(mStatHealth)->SetValue(mObj->GetHealth(), mObj->GetMaxHealth());
+    static_cast<ObjectVisualStat *>(mStatExperience)->SetValue(exp, maxExp);
 
     // INFO / UPGRADE BUTTON
     const bool showInfo = exp < maxExp;

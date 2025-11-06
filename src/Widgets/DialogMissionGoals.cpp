@@ -23,8 +23,11 @@
 #include <iomanip>
 #include <sstream>
 
-namespace game
+// anonymous namespace for local "private" classes
+namespace
 {
+
+using namespace game;
 
 // ====== BUTTON CLOSE =====
 class ButtonCloseDMG : public sgl::sgui::ImageButton
@@ -180,6 +183,11 @@ private:
         player->PlaySound("UI/button_click-02.ogg");
     }
 };
+
+} // namespace
+
+namespace game
+{
 
 // ===== DIALOG =====
 DialogMissionGoals::DialogMissionGoals(ScreenGame * screen)

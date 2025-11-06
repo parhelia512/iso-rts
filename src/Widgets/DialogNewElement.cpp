@@ -28,8 +28,11 @@
 
 #include <cassert>
 
-namespace game
+// anonymous namespace for local "private" classes
+namespace
 {
+
+using namespace game;
 
 constexpr int NUM_SLOTS = 6;
 
@@ -495,6 +498,11 @@ const int ButtonSlot::KEYS[NUM_SLOTS] = {
 
 
 const char * ButtonSlot::SHORTCUTS[NUM_SLOTS] = { "1", "2", "3", "4", "5", "6" };
+
+} // namespace
+
+namespace game
+{
 
 // ===== DIALOG NEW ELEMENT =====
 DialogNewElement::DialogNewElement(ElemType type, Player * player,

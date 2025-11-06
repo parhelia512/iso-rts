@@ -23,8 +23,11 @@
 #include <sstream>
 #include <string>
 
-namespace game
+// anonymous namespace for local "private" classes
+namespace
 {
+
+using namespace game;
 
 constexpr int incBuy = 5;
 constexpr int incSell = 5;
@@ -189,6 +192,11 @@ public:
 private:
     sgl::sgui::Label * mShortcut = nullptr;
 };
+
+} // namespace
+
+namespace game
+{
 
 // ===== DIALOG =====
 DialogTrading::DialogTrading(Game * g, Player * p)

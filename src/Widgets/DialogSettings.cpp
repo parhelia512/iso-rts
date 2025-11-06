@@ -27,8 +27,12 @@
 #include <iostream>
 #include <sstream>
 
+// anonymous namespace for local "private" classes
 namespace
 {
+
+using namespace game;
+
     constexpr unsigned int colorTxt = 0x73a6bfff;
     constexpr unsigned int colorTxtSlider = 0xadc2ccff;
     constexpr unsigned int sizeTxt = 22;
@@ -39,10 +43,7 @@ namespace
 
     constexpr int contX0 = 30;
     constexpr int contY0 = 40;
-}
 
-namespace game
-{
 // ====== BUTTON CLOSE =====
 class ButtonCloseSettings : public sgl::sgui::ImageButton
 {
@@ -399,6 +400,11 @@ private:
     sgl::graphic::Image * mImgMid = nullptr;
     sgl::graphic::Image * mImgBot = nullptr;
 };
+
+} // namespace
+
+namespace game
+{
 
 // ====== SCREEN SETTINGS ======
 DialogSettings::DialogSettings(Game * game)
