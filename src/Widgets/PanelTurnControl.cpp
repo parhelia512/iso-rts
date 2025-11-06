@@ -20,8 +20,11 @@
 
 #include <cmath>
 
-namespace game
+// anonymous namespace for local "private" classes
+namespace
 {
+
+using namespace game;
 
 // ========== BUTTON END TURN ==========
 class ButtonEndTurn : public sgl::sgui::ImageButton
@@ -29,11 +32,11 @@ class ButtonEndTurn : public sgl::sgui::ImageButton
 public:
     ButtonEndTurn(sgl::sgui::Widget * parent)
         : sgl::sgui::ImageButton({
-                                     ID_TURN_CONTROL_BUTTON_NORMAL,
-                                     ID_TURN_CONTROL_BUTTON_DISABLED,
-                                     ID_TURN_CONTROL_BUTTON_OVER,
-                                     ID_TURN_CONTROL_BUTTON_PUSHED,
-                                     ID_TURN_CONTROL_BUTTON_NORMAL
+                                    ID_TURN_CONTROL_BUTTON_NORMAL,
+                                    ID_TURN_CONTROL_BUTTON_DISABLED,
+                                    ID_TURN_CONTROL_BUTTON_OVER,
+                                    ID_TURN_CONTROL_BUTTON_PUSHED,
+                                    ID_TURN_CONTROL_BUTTON_NORMAL
                                  }, SpriteFilePanelTurnControl, parent)
     {
         // tooltip
@@ -62,6 +65,11 @@ public:
         player->PlaySound("UI/button_over-01.ogg");
     }
 };
+
+} // namespace
+
+namespace game
+{
 
 // ========== PANEL ==========
 PanelTurnControl::PanelTurnControl(Player * player, sgl::sgui::Widget * parent)

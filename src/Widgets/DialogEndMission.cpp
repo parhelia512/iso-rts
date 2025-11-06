@@ -14,12 +14,14 @@
 #include <sgl/media/AudioPlayer.h>
 #include <sgl/sgui/ImageButton.h>
 #include <sgl/sgui/Label.h>
-#include <sgl/utilities/System.h>
 
 #include <sstream>
 
-namespace game
+// anonymous namespace for local "private" classes
+namespace
 {
+
+using namespace game;
 
 // ===== BUTTON =====
 class ButtonDialogEndMission : public GameButton
@@ -27,8 +29,8 @@ class ButtonDialogEndMission : public GameButton
 public:
     ButtonDialogEndMission(sgl::sgui::Widget * parent)
         : GameButton(SpriteFileDialogEndMission,
-        { IND_DIA_EM_BTN_NORMAL, IND_DIA_EM_BTN_DISABLED,
-          IND_DIA_EM_BTN_OVER, IND_DIA_EM_BTN_PUSHED, IND_DIA_EM_BTN_PUSHED },
+        { IND_DIA_EM_BTN_NORMAL, IND_DIA_EM_BTN_DISABLED, IND_DIA_EM_BTN_OVER,
+          IND_DIA_EM_BTN_PUSHED, IND_DIA_EM_BTN_PUSHED },
         { 0xc1e0f0ff, 0x5a6266ff, 0xd6e9f5ff, 0xadd6ebff, 0xadd6ebff },
         parent)
     {
@@ -61,6 +63,11 @@ public:
         player->PlaySound("UI/button_click-01.ogg");
     }
 };
+
+} // namespace
+
+namespace game
+{
 
 // ===== DIALOG =====
 DialogEndMission::DialogEndMission(int time, int territoryConquered, int enemiesKilled,

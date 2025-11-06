@@ -20,8 +20,11 @@
 
 #include <sstream>
 
-namespace game
+// anonymous namespace for local "private" classes
+namespace
 {
+
+using namespace game;
 
 // ===== BUTTON =====
 class ButtonExploreTemple : public GameButton
@@ -29,10 +32,10 @@ class ButtonExploreTemple : public GameButton
 public:
     ButtonExploreTemple(sgl::sgui::Widget * parent)
         : GameButton(SpriteFileDialogExploreTemple,
-        { ID_DLG_EXTM_BTN_NORMAL, ID_DLG_EXTM_BTN_DISABLED,
-          ID_DLG_EXTM_BTN_OVER, ID_DLG_EXTM_BTN_PUSHED, ID_DLG_EXTM_BTN_PUSHED },
-        { 0xc3dfeeff, 0x5a6266ff, 0xebf4f9ff, 0xc3dfeeff, 0xc3dfeeff },
-        parent)
+                     { ID_DLG_EXTM_BTN_NORMAL, ID_DLG_EXTM_BTN_DISABLED,
+                      ID_DLG_EXTM_BTN_OVER, ID_DLG_EXTM_BTN_PUSHED, ID_DLG_EXTM_BTN_PUSHED },
+                     { 0xc3dfeeff, 0x5a6266ff, 0xebf4f9ff, 0xc3dfeeff, 0xc3dfeeff },
+                     parent)
     {
         using namespace sgl;
 
@@ -60,6 +63,11 @@ public:
         player->PlaySound("UI/button_click-01.ogg");
     }
 };
+
+} // namespace
+
+namespace game
+{
 
 // ===== DIALOG EXPLORE TEMPLE =====
 const int marginSide = 40;

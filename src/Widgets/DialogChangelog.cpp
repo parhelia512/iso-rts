@@ -8,69 +8,16 @@
 #include <sgl/graphic/FontManager.h>
 #include <sgl/graphic/Image.h>
 #include <sgl/graphic/Text.h>
-#include <sgl/graphic/Texture.h>
 #include <sgl/graphic/TextureManager.h>
 #include <sgl/sgui/ScrollArea.h>
 #include <sgl/sgui/Scrollbar.h>
 #include <sgl/sgui/TextArea.h>
 
-namespace game
+// anonymous namespace for local "private" classes
+namespace
 {
 
-// ===== BUTTON CHANGELOG =====
-ButtonChangelog::ButtonChangelog()
-{
-    using namespace sgl;
-
-    // BACKGROUND
-    auto tm = graphic::TextureManager::Instance();
-    auto tex = tm->GetSprite(SpriteFileMainMenu, IND_MM_BTN_UPDATES);
-    mBg = new graphic::Image(tex);
-    RegisterRenderable(mBg);
-
-    SetSize(mBg->GetWidth(), mBg->GetHeight());
-
-    // TEXT
-    auto fm = graphic::FontManager::Instance();
-    auto font = fm->GetFont("Lato-Regular.ttf", 20, graphic::Font::NORMAL);
-    mLabel = new sgui::TextArea(GetWidth(), GetHeight(), font, false, this);
-    mLabel->setTextAlignment(sgui::TextArea::ALIGN_H_CENTER, sgui::TextArea::ALIGN_V_CENTER);
-    mLabel->SetText("U\nP\nD\nA\nT\nE\nS");
-
-    UpdateLabel(sgui::AbstractButton::VisualState::NORMAL);
-}
-
-void ButtonChangelog::HandlePositionChanged()
-{
-    PositionElements();
-}
-
-void ButtonChangelog::OnStateChanged(sgl::sgui::AbstractButton::VisualState state)
-{
-    UpdateLabel(state);
-}
-
-void ButtonChangelog::PositionElements()
-{
-    const int x0 = GetScreenX();
-    const int y0 = GetScreenY();
-
-    mBg->SetPosition(x0, y0);
-}
-
-void ButtonChangelog::UpdateLabel(sgl::sgui::AbstractButton::VisualState state)
-{
-    const unsigned int colorsLabel[NUM_VISUAL_STATES] =
-    {
-        0xb9ced9ff,
-        0x35464dff,
-        0xcfe6f2ff,
-        0xaec2ccff,
-        0xaec2ccff
-    };
-
-    mLabel->SetColor(colorsLabel[state]);
-}
+using namespace game;
 
 // ===== BUTTON CLOSE CHANGELOG =====
 class ButtonCloseChangelog : public sgl::sgui::AbstractButton
@@ -111,7 +58,6 @@ private:
 };
 
 // ===== CHANGELOG SCROLLBAR =====
-
 class ChangelogScrollbar : public sgl::sgui::Scrollbar
 {
 public:
@@ -185,11 +131,11 @@ public:
         , mScrollbar(new ChangelogScrollbar(this))
     {
         mScrollbar->SetOnValueChanged([this](int val)
-        {
-            sgl::sgui::Widget * cont = GetContent();
-            cont->SetY(CONT_Y0 - val);
-            cont->SetVisibleArea(0, val, CONT_W, CONT_H);
-        });
+                                      {
+                                          sgl::sgui::Widget * cont = GetContent();
+                                          cont->SetY(CONT_Y0 - val);
+                                          cont->SetVisibleArea(0, val, CONT_W, CONT_H);
+                                      });
     }
 
     void HandlePositionChanged() override
@@ -240,6 +186,66 @@ private:
 
     ChangelogScrollbar * mScrollbar = nullptr;
 };
+
+} // namespace
+
+namespace game
+{
+
+// ===== BUTTON CHANGELOG =====
+ButtonChangelog::ButtonChangelog()
+{
+    using namespace sgl;
+
+    // BACKGROUND
+    auto tm = graphic::TextureManager::Instance();
+    auto tex = tm->GetSprite(SpriteFileMainMenu, IND_MM_BTN_UPDATES);
+    mBg = new graphic::Image(tex);
+    RegisterRenderable(mBg);
+
+    SetSize(mBg->GetWidth(), mBg->GetHeight());
+
+    // TEXT
+    auto fm = graphic::FontManager::Instance();
+    auto font = fm->GetFont("Lato-Regular.ttf", 20, graphic::Font::NORMAL);
+    mLabel = new sgui::TextArea(GetWidth(), GetHeight(), font, false, this);
+    mLabel->setTextAlignment(sgui::TextArea::ALIGN_H_CENTER, sgui::TextArea::ALIGN_V_CENTER);
+    mLabel->SetText("U\nP\nD\nA\nT\nE\nS");
+
+    UpdateLabel(sgui::AbstractButton::VisualState::NORMAL);
+}
+
+void ButtonChangelog::HandlePositionChanged()
+{
+    PositionElements();
+}
+
+void ButtonChangelog::OnStateChanged(sgl::sgui::AbstractButton::VisualState state)
+{
+    UpdateLabel(state);
+}
+
+void ButtonChangelog::PositionElements()
+{
+    const int x0 = GetScreenX();
+    const int y0 = GetScreenY();
+
+    mBg->SetPosition(x0, y0);
+}
+
+void ButtonChangelog::UpdateLabel(sgl::sgui::AbstractButton::VisualState state)
+{
+    const unsigned int colorsLabel[NUM_VISUAL_STATES] =
+    {
+        0xb9ced9ff,
+        0x35464dff,
+        0xcfe6f2ff,
+        0xaec2ccff,
+        0xaec2ccff
+    };
+
+    mLabel->SetColor(colorsLabel[state]);
+}
 
 // ===== DIALOG CHANGELOG =====
 DialogChangelog::DialogChangelog()

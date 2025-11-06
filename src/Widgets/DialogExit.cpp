@@ -18,8 +18,11 @@
 #include <sgl/sgui/ImageButton.h>
 #include <sgl/utilities/System.h>
 
-namespace game
+// anonymous namespace for local "private" classes
+namespace
 {
+
+using namespace game;
 
 // ===== BUTTON 1 =====
 class ButtonDialogExit : public GameButton
@@ -27,10 +30,10 @@ class ButtonDialogExit : public GameButton
 public:
     ButtonDialogExit(sgl::sgui::Widget * parent)
         : GameButton(SpriteFileDialogExit,
-        { IND_DIA_EX_BTN_NORMAL, IND_DIA_EX_BTN_DISABLED,
-          IND_DIA_EX_BTN_OVER, IND_DIA_EX_BTN_PUSHED, IND_DIA_EX_BTN_PUSHED },
-        { 0xcadce5ff, 0x5a6266ff, 0xd7eaf4ff, 0xd7eaf4ff, 0xd7eaf4ff },
-        parent)
+                     { IND_DIA_EX_BTN_NORMAL, IND_DIA_EX_BTN_DISABLED,
+                       IND_DIA_EX_BTN_OVER, IND_DIA_EX_BTN_PUSHED, IND_DIA_EX_BTN_PUSHED },
+                     { 0xcadce5ff, 0x5a6266ff, 0xd7eaf4ff, 0xd7eaf4ff, 0xd7eaf4ff },
+                     parent)
     {
         using namespace sgl;
 
@@ -65,8 +68,8 @@ class ButtonCloseDialogExit : public sgl::sgui::ImageButton
 public:
     ButtonCloseDialogExit(sgl::sgui::Widget * parent)
         : sgl::sgui::ImageButton({ IND_DIA_EX_BTN_X_NORMAL, IND_DIA_EX_BTN_X_DISABLED,
-                                 IND_DIA_EX_BTN_X_OVER, IND_DIA_EX_BTN_X_PUSHED,
-                                 IND_DIA_EX_BTN_X_PUSHED }, SpriteFileDialogExit, parent)
+                                   IND_DIA_EX_BTN_X_OVER, IND_DIA_EX_BTN_X_PUSHED,
+                                   IND_DIA_EX_BTN_X_PUSHED }, SpriteFileDialogExit, parent)
     {
         SetShortcutKey(sgl::core::KeyboardEvent::KEY_ESCAPE);
     }
@@ -145,31 +148,31 @@ private:
         using namespace sgl;
 
         const unsigned int texBgIds[NUM_VISUAL_STATES] =
-        {
-            IND_DIA_EX_BTN2_NORMAL,
-            IND_DIA_EX_BTN2_DISABLED,
-            IND_DIA_EX_BTN2_OVER,
-            IND_DIA_EX_BTN2_PUSHED,
-            IND_DIA_EX_BTN2_PUSHED
-        };
+            {
+                IND_DIA_EX_BTN2_NORMAL,
+                IND_DIA_EX_BTN2_DISABLED,
+                IND_DIA_EX_BTN2_OVER,
+                IND_DIA_EX_BTN2_PUSHED,
+                IND_DIA_EX_BTN2_PUSHED
+            };
 
         const unsigned int texIconIds[NUM_VISUAL_STATES] =
-        {
-            IND_DIA_ICON_STEAM_NORMAL,
-            IND_DIA_ICON_STEAM_DISABLED,
-            IND_DIA_ICON_STEAM_OVER,
-            IND_DIA_ICON_STEAM_PUSHED,
-            IND_DIA_ICON_STEAM_PUSHED
-        };
+            {
+                IND_DIA_ICON_STEAM_NORMAL,
+                IND_DIA_ICON_STEAM_DISABLED,
+                IND_DIA_ICON_STEAM_OVER,
+                IND_DIA_ICON_STEAM_PUSHED,
+                IND_DIA_ICON_STEAM_PUSHED
+            };
 
         const unsigned int colorsTxt[NUM_VISUAL_STATES] =
-        {
-            0xc3dae5ff,
-            0x5a6266ff,
-            0xc2e2f2ff,
-            0xb9ced9ff,
-            0xb9ced9ff,
-        };
+            {
+                0xc3dae5ff,
+                0x5a6266ff,
+                0xc2e2f2ff,
+                0xb9ced9ff,
+                0xb9ced9ff,
+            };
 
         // body
         auto tm = graphic::TextureManager::Instance();
@@ -216,6 +219,11 @@ private:
     sgl::graphic::Image * mIcon = nullptr;
     sgl::graphic::Text * mText = nullptr;
 };
+
+} // namespace
+
+namespace game
+{
 
 // ===== DIALOG =====
 DialogExit::DialogExit(Game * game, Screen * screen)

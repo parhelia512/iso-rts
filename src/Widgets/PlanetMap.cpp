@@ -12,8 +12,11 @@
 #include <sgl/sgui/AbstractButton.h>
 #include <sgl/sgui/AbstractButtonsGroup.h>
 
-namespace game
+// anonymous namespace for local "private" classes
+namespace
 {
+
+using namespace game;
 
 // ===== BUTTON MISSION =====
 class ButtonMission : public sgl::sgui::AbstractButton
@@ -152,6 +155,11 @@ private:
      PlayerFaction mFaction = NO_FACTION;
      TerritoryStatus mTerritoryStatus = TER_ST_UNKNOWN;
 };
+
+} // namespace
+
+namespace game
+{
 
 // ===== PLANET MAP =====
 PlanetMap::PlanetMap()

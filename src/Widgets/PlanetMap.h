@@ -15,8 +15,6 @@ namespace sgl
 namespace game
 {
 
-class ButtonMission;
-
 enum PlayerFaction : unsigned int;
 enum TerritoryStatus : unsigned int;
 
