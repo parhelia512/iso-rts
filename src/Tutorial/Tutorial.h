@@ -26,6 +26,8 @@ public:
     virtual void OnStart();
     virtual void OnEnd();
 
+    const TutorialManager * GetManager() const;
+
     void Update(float delta);
 
 private:
@@ -40,5 +42,7 @@ private:
 inline unsigned int Tutorial::GetId() const { return mId; }
 
 inline bool Tutorial::IsDone() const { return mDone; }
+
+inline const TutorialManager * Tutorial::GetManager() const { return mTutMan; }
 
 } // namespace game

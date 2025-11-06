@@ -40,7 +40,7 @@ class MoveIndicator;
 class Player;
 class PlayerAI;
 class StructureIndicator;
-class TutorialManager;
+class Tutorial;
 class Unit;
 class WallIndicator;
 
@@ -112,7 +112,6 @@ private:
 
     void CreateUI();
 
-    void CreateTutorial();
     void UpdateTutorial(float delta);
 
     void LoadMapFile();
@@ -187,6 +186,7 @@ private:
 
 private:
     friend class GameHUD;
+    friend class TutorialGameIntro;
 
     std::vector<Player *> mAiPlayers;
 
@@ -227,7 +227,7 @@ private:
     sgl::core::Pointd2D mMousePos;
 
     // TUTORIAL
-    TutorialManager * mTutMan = nullptr;
+    Tutorial * mTut = nullptr;
 
     // TURN MANAGEMENT
     Player * mLocalPlayer = nullptr;

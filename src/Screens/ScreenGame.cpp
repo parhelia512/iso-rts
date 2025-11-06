@@ -32,30 +32,7 @@
 #include "Particles/UpdaterLootboxPrize.h"
 #include "Particles/UpdaterSingleLaser.h"
 #include "States/StatesIds.h"
-#include "Tutorial/StepDelay.h"
-#include "Tutorial/StepGameBase.h"
-#include "Tutorial/StepGameBaseBuildUnit.h"
-#include "Tutorial/StepGameBaseBuildUnitIcon.h"
-#include "Tutorial/StepGameBaseFeatures.h"
-#include "Tutorial/StepGameConquerCells.h"
-#include "Tutorial/StepGameConquerStruct.h"
-#include "Tutorial/StepGameDisableCamera.h"
-#include "Tutorial/StepGameEnableCamera.h"
-#include "Tutorial/StepGameEndTurn.h"
-#include "Tutorial/StepGameEnergyRegeneration.h"
-#include "Tutorial/StepGameIntro.h"
-#include "Tutorial/StepGameMapNavigation.h"
-#include "Tutorial/StepGameMissionGoalsIcon.h"
-#include "Tutorial/StepGameMissionGoalsDialog.h"
-#include "Tutorial/StepGameMoveCamera.h"
-#include "Tutorial/StepGameMoveUnit.h"
-#include "Tutorial/StepGameStructConnected.h"
-#include "Tutorial/StepGameStructDisconnected.h"
-#include "Tutorial/StepGameTurnEnergy.h"
-#include "Tutorial/StepGameUnit.h"
-#include "Tutorial/StepGameUnitConquerCellsIcon.h"
-#include "Tutorial/StepGameUnitSelect.h"
-#include "Tutorial/StepGameWaitTurn.h"
+#include "Tutorial/TutorialGameIntro.h"
 #include "Tutorial/TutorialManager.h"
 #include "Widgets/ButtonQuickUnitSelection.h"
 #include "Widgets/DialogNewElement.h"
@@ -203,7 +180,10 @@ ScreenGame::ScreenGame(Game * game)
 
     // TUTORIAL
     if(game->IsTutorialEnabled() && game->GetTutorialState(TUTORIAL_MISSION_INTRO) == TS_TODO)
-        CreateTutorial();
+    {
+        mTut = new TutorialGameIntro(this);
+        mTut->Start();
+    }
 }
 
 ScreenGame::~ScreenGame()
@@ -221,6 +201,8 @@ ScreenGame::~ScreenGame()
     }
 
     game->RemoveOnSettingsChangedFunction(mIdOnSettingsChanged);
+
+    delete mTut;
 
     delete mPathfinder;
     delete mPartMan;
@@ -266,7 +248,7 @@ void ScreenGame::Update(float delta)
     if(mPaused)
     {
         // only continue the tutorial if paused
-        if(mTutMan != nullptr)
+        if(mTut != nullptr)
             UpdateTutorial(delta);
 
         return ;
@@ -309,7 +291,7 @@ void ScreenGame::Update(float delta)
          UpdateAI(delta);
 
     // TUTORIAL
-    if(mTutMan != nullptr)
+    if(mTut != nullptr)
         UpdateTutorial(delta);
 
     // check game end
@@ -778,75 +760,14 @@ void ScreenGame::CreateUI()
     sgl::sgui::Stage::Instance()->SetFocus();
 }
 
-void ScreenGame::CreateTutorial()
-{
-    Game * game = GetGame();
-    Player * local = game->GetLocalPlayer();
-
-    auto panelActions = mHUD->GetPanelObjectActions();
-    auto panelObj = mHUD->GetPanelSelectedObject();
-    auto panelTurn = mHUD->GetPanelTurnControl();
-
-    mTutMan = new TutorialManager;
-    mTutMan->AddStep(new StepGameDisableCamera(mCamController));
-
-    mTutMan->AddStep(new StepDelay(1.f));
-    mTutMan->AddStep(new StepGameIntro);
-    mTutMan->AddStep(new StepDelay(0.3f));
-    mTutMan->AddStep(new StepGameBase(local->GetBase()));
-    mTutMan->AddStep(new StepDelay(0.5f));
-    mTutMan->AddStep(new StepGameBaseFeatures(panelObj, panelActions));
-    mTutMan->AddStep(new StepGameMissionGoalsIcon(panelActions));
-    mTutMan->AddStep(new StepDelay(0.5f));
-    mTutMan->AddStep(new StepGameMissionGoalsDialog(mHUD));
-    mTutMan->AddStep(new StepDelay(0.5f));
-    mTutMan->AddStep(new StepGameBaseBuildUnitIcon(panelActions));
-    mTutMan->AddStep(new StepDelay(0.5f));
-    mTutMan->AddStep(new StepGameBaseBuildUnit(mHUD));
-    // TODO replace constant with time from Base when implemented
-    mTutMan->AddStep(new StepDelay(TIME_NEW_UNIT));
-    mTutMan->AddStep(new StepGameUnit(local));
-    mTutMan->AddStep(new StepDelay(0.5f));
-    mTutMan->AddStep(new StepGameMoveUnit(local, mIsoMap));
-    mTutMan->AddStep(new StepDelay(3.f));
-    const int genR = 56;
-    const int genC = 13;
-    const GameMapCell gmc = mGameMap->GetCell(genR, genC);
-    mTutMan->AddStep(new StepGameMoveCamera(200, -100));
-    mTutMan->AddStep(new StepGameConquerStruct(gmc.objTop, mIsoMap));
-    mTutMan->AddStep(new StepDelay(0.5f));
-    mTutMan->AddStep(new StepGameTurnEnergy(mHUD));
-    mTutMan->AddStep(new StepDelay(0.5f));
-    mTutMan->AddStep(new StepGameEndTurn(panelTurn));
-    mTutMan->AddStep(new StepGameWaitTurn(this));
-    mTutMan->AddStep(new StepDelay(0.5f));
-    mTutMan->AddStep(new StepGameEnergyRegeneration);
-    mTutMan->AddStep(new StepGameStructDisconnected);
-    mTutMan->AddStep(new StepGameUnitSelect(local));
-    mTutMan->AddStep(new StepGameUnitConquerCellsIcon(panelActions));
-    mTutMan->AddStep(new StepGameConquerCells(local, mIsoMap));
-    mTutMan->AddStep(new StepDelay(0.5f));
-    mTutMan->AddStep(new StepGameStructConnected);
-
-    mTutMan->AddStep(new StepGameEnableCamera(mCamController));
-
-    mTutMan->AddStep(new StepGameMapNavigation);
-
-    game->SetTutorialState(TUTORIAL_MISSION_INTRO, TS_IN_PROGRESS);
-
-    mTutMan->Start();
-}
-
 void ScreenGame::UpdateTutorial(float delta)
 {
-    mTutMan->Update(delta);
+    mTut->Update(delta);
 
-    if(mTutMan->AreAllStepsDone())
+    if(mTut->IsDone())
     {
-        GetGame()->SetTutorialState(TUTORIAL_MISSION_INTRO, TS_DONE);
-
-        delete mTutMan;
-        mTutMan = nullptr;
+        delete mTut;
+        mTut = nullptr;
     }
 }
 
@@ -1661,7 +1582,8 @@ bool ScreenGame::CheckIfGoalCompleted(MissionGoal & g)
         {
             if(game->GetTutorialState(TUTORIAL_MISSION_INTRO) != TS_DONE)
             {
-                g.SetProgress(mTutMan->GetNumStepsDone() * 100 / mTutMan->GetNumStepsAtStart());
+                auto tutMan = mTut->GetManager();
+                g.SetProgress(tutMan->GetNumStepsDone() * 100 / tutMan->GetNumStepsAtStart());
                 return false;
             }
         }

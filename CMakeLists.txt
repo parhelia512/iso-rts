@@ -266,6 +266,8 @@ add_executable(
     src/Tutorial/StepPlanetMapSendAI.cpp
     src/Tutorial/Tutorial.h
     src/Tutorial/Tutorial.cpp
+    src/Tutorial/TutorialGameIntro.h
+    src/Tutorial/TutorialGameIntro.cpp
     src/Tutorial/TutorialPlanetMap.h
     src/Tutorial/TutorialPlanetMap.cpp
     src/Tutorial/TutorialConstants.h
