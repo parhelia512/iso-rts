@@ -242,7 +242,8 @@ unsigned int ScreenGame::GetPlayTimeInSec() const
 
 void ScreenGame::Update(float delta)
 {
-    Game * game = GetGame();
+    // always move CAMERA
+    mCamController->Update(delta);
 
     // do nothing when paused
     if(mPaused)
@@ -257,14 +258,12 @@ void ScreenGame::Update(float delta)
     // keep track of time played (while not paused)
     mTimePlayed += delta;
 
-    // -- CAMERA --
-    mCamController->Update(delta);
-
     // -- PARTICLES --
     mPartMan->Update(delta);
 
     // -- AUTO END TURN --
     const float minEn = 1.f;
+    const Game * game = GetGame();
 
     if(IsCurrentTurnLocal() && game->IsAutoEndTurnEnabled() &&
        mLocalPlayer->GetTurnEnergy() < minEn)
