@@ -137,6 +137,8 @@ ScreenTest::~ScreenTest()
         delete r;
 
     sgl::sgui::Stage::Instance()->ClearWidgets();
+
+    GetGame()->SetCurrentCursor(CURSOR_DEFAULT);
 }
 
 void ScreenTest::OnKeyUp(sgl::core::KeyboardEvent & event)
