@@ -165,6 +165,22 @@ void Game::ClearGameData()
     ClearPlayers();
 }
 
+// -- mouse cursors --
+void Game::RegisterCursor(GameCursorId curId, sgl::graphic::Cursor * cursor)
+{
+    mCursors.emplace(curId, cursor);
+}
+
+void Game::SetCurrentCursor(GameCursorId curId)
+{
+    const auto it = mCursors.find(curId);
+
+    if(it == mCursors.end())
+        return ;
+
+    sgl::sgui::Stage::Instance()->SetCursor(it->second);
+}
+
 const std::string & Game::GetCurrentMapFile() const
 {
     return mMapsReg->GetMapFile(mCurrPlanet, mCurrTerritory);

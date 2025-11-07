@@ -290,6 +290,9 @@ enum SpriteIdGameUI : unsigned int
     ID_GAMEUI_GOAL_F1,
     ID_GAMEUI_GOAL_F2,
     ID_GAMEUI_GOAL_F3,
+
+    // MOUSE CURSORS
+    ID_GAME_CURSOR_1
 };
 
 // FACTION SELECTION DIALOG

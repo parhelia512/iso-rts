@@ -29,6 +29,7 @@ private:
 
     void SetupLoadPackages();
     void SetupFonts();
+    void SetupMouseCursors();
     void SetupMusic();
     void SetupSFX();
     void SetupTextures();

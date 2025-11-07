@@ -1,15 +1,18 @@
 #include "Screens/ScreenInit.h"
 
 #include "Game.h"
+#include "GameConstants.h"
 #include "GameData.h"
 #include "GameTestData.h"
 #include "States/StatesIds.h"
 #include "Widgets/GameUIData.h"
 
 #include <sgl/core/DataPackage.h>
+#include <sgl/graphic/Cursor.h>
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
 #include <sgl/graphic/Image.h>
+#include <sgl/graphic/ModuleGraphic.h>
 #include <sgl/graphic/Renderer.h>
 #include <sgl/graphic/TextureManager.h>
 #include <sgl/media/AudioManager.h>
@@ -60,6 +63,9 @@ ScreenInit::ScreenInit(Game * game)
     SetupSFX();
     SetupTextures();
 
+    // NOTE always after SetupTextures
+    SetupMouseCursors();
+
     // FINAL JOB - move to next screen
     // NOTE keep last
     mJobs.emplace_back([this]
@@ -79,6 +85,9 @@ ScreenInit::ScreenInit(Game * game)
 
     // SET DEFAULT FONT FOR SGUI
     sgl::sgui::Stage::Instance()->SetDefaultFont(font);
+
+    // hide system mouse
+    sgl::graphic::ModuleGraphic::HideSystemCursor();
 }
 
 ScreenInit::~ScreenInit()
@@ -89,6 +98,8 @@ ScreenInit::~ScreenInit()
         delete p;
 
     sgl::sgui::Stage::Instance()->ClearWidgets();
+
+    GetGame()->SetCurrentCursor(CURSOR_DEFAULT);
 }
 
 void ScreenInit::Update(float update)
@@ -201,6 +212,21 @@ void ScreenInit::SetupFonts()
     mJobs.emplace_back([this, fm]
     {
         fm->RegisterFont(packageFontsGame, "Lato-Bold.ttf");
+    });
+}
+
+void ScreenInit::SetupMouseCursors()
+{
+    mJobs.emplace_back([this]
+    {
+        using namespace sgl;
+
+        auto tm = graphic::TextureManager::Instance();
+        auto tex = tm->GetSprite(SpriteFileGameUI, ID_GAME_CURSOR_1);
+
+        auto cursor = new graphic::Cursor(tex, 1, 1);
+
+        GetGame()->RegisterCursor(CURSOR_DEFAULT, cursor);
     });
 }
 
@@ -496,6 +522,9 @@ void ScreenInit::SetupTextures()
             { 0, 0, 72, 72 },
             { 73, 0, 72, 72 },
             { 146, 0, 72, 72 },
+
+            // MOUSE CURSORS
+            { 219, 0, 29, 38 },
         };
 
         tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_UI_GAME], SpriteFileGameUI, rects);

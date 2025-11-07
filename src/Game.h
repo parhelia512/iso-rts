@@ -5,12 +5,14 @@
 #include <functional>
 #include <map>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace sgl
 {
     namespace graphic
     {
+        class Cursor;
         class Font;
         class Renderer;
         class Window;
@@ -30,6 +32,7 @@ class MapsRegistry;
 class ObjectsDataRegistry;
 class Player;
 
+enum GameCursorId : unsigned int;
 enum Planets : unsigned int;
 enum PlayerFaction : unsigned int;
 enum ResourceType : unsigned int;
@@ -59,6 +62,10 @@ public:
 
     void InitGameData();
     void ClearGameData();
+
+    // -- mouse cursors --
+    void RegisterCursor(GameCursorId curId, sgl::graphic::Cursor * cursor);
+    void SetCurrentCursor(GameCursorId curId);
 
     const std::string & GetCurrentMapFile() const;
     unsigned int GetCurrentTerritory() const;
@@ -123,6 +130,8 @@ private:
     std::vector<Player *> mPlayers;
 
     std::map<unsigned int, std::function<void()>> mOnSettingsChanged;
+
+    std::unordered_map<GameCursorId, sgl::graphic::Cursor *> mCursors;
 
     std::vector<TutorialState> mTutorialsState;
 

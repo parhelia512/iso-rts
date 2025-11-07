@@ -18,6 +18,15 @@ constexpr unsigned int PLAYER_COLOR[] =
     0xdb57dbff
 };
 
+enum GameCursorId : unsigned int
+{
+    CURSOR_DEFAULT,
+
+    NUM_GAME_CURSORS,
+
+    CURSOR_NULL
+};
+
 enum MapLayers : unsigned int
 {
     CELL_OVERLAYS1,
