@@ -296,15 +296,15 @@ void Game::Update(float delta)
 {
     mRenderer->Clear(mClearR, mClearG, mClearB, mClearA);
 
-    mStateMan->UpdateActive();
-
-    auto * state = static_cast<BaseGameState *>(mStateMan->GetActiveState());
-
-    state->Update(delta);
+    // UPDATE
+    mStateMan->Update(delta);
     mStage->Update(delta);
     mAudioMan->Update(delta);
 
+    // RENDER
+    auto * state = static_cast<BaseGameState *>(mStateMan->GetActiveState());
     state->Render();
+
     mStage->Render();
 
     mRenderer->Finalize();

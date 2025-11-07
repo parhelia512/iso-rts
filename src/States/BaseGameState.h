@@ -14,7 +14,7 @@ public:
     BaseGameState(unsigned int stateId, Game * game);
     ~BaseGameState();
 
-    void Update(float delta);
+    void Update(float delta) override;
 
     void Render();
 
