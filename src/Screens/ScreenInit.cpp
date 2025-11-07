@@ -1787,7 +1787,9 @@ void ScreenInit::SetupTextures()
             { 678, 101, 40, 40 },
             { 719, 101, 40, 40 },
             { 760, 101, 40, 40 },
-            { 801, 101, 40, 40 }
+            { 801, 101, 40, 40 },
+            // TEST CURSORS
+            { 842, 101, 19, 26 },
         };
 
         tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_TEST], SpriteFileTestUI, rects);

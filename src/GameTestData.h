@@ -30,7 +30,9 @@ enum SpriteIdTestUI : unsigned int
     IND_TMULTISEL_BG2,
     IND_TMULTISEL_BG3,
     IND_TMULTISEL_BG4,
-    IND_TMULTISEL_BG5
+    IND_TMULTISEL_BG5,
+    // CURSORS
+    IND_TC_CURSOR1,
 };
 
 constexpr int NUM_TEST_SPRITE_RECTS = 4;

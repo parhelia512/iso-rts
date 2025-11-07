@@ -7,7 +7,11 @@
 namespace sgl
 {
     namespace core { class Timer; }
-    namespace graphic { class TexturedRenderable; }
+    namespace graphic
+    {
+        class Cursor;
+        class TexturedRenderable;
+    }
 }
 
 namespace game
@@ -39,6 +43,8 @@ private:
 private:
     std::vector<sgl::graphic::TexturedRenderable *> mRenderables;
 
+    sgl::graphic::Cursor * mCursor = nullptr;
+
     sgl::core::Timer * mTimer1 = nullptr;
     sgl::core::Timer * mTimer2 = nullptr;
 
@@ -46,6 +52,7 @@ private:
     GameProgressBar * mPb1 = nullptr;
     GameProgressBar * mPb2 = nullptr;
     float mTimerPb = 0.f;
+
 };
 
 } // namespace game
