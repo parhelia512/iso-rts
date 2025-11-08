@@ -245,15 +245,13 @@ void ScreenGame::Update(float delta)
     // always move CAMERA
     mCamController->Update(delta);
 
-    // do nothing when paused
-    if(mPaused)
-    {
-        // only continue the tutorial if paused
-        if(mTut != nullptr)
-            UpdateTutorial(delta);
+    // always continue the TUTORIAL
+    if(mTut != nullptr)
+        UpdateTutorial(delta);
 
+    // do nothing else when paused
+    if(mPaused)
         return ;
-    }
 
     // keep track of time played (while not paused)
     mTimePlayed += delta;
@@ -288,10 +286,6 @@ void ScreenGame::Update(float delta)
     // -- AI --
     if(!mAiPlayers.empty())
          UpdateAI(delta);
-
-    // TUTORIAL
-    if(mTut != nullptr)
-        UpdateTutorial(delta);
 
     // check game end
     UpdateGameEnd();
