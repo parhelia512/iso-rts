@@ -34,6 +34,13 @@ void Tutorial::Start()
     mTutMan->Start();
 }
 
+void Tutorial::SetPause(bool paused)
+{
+    mPaused = paused;
+
+    mTutMan->SetPause(paused);
+}
+
 void Tutorial::OnStart() { }
 void Tutorial::OnEnd() { }
 

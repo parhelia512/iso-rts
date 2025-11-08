@@ -47,7 +47,6 @@ inline unsigned int Tutorial::GetId() const { return mId; }
 
 inline bool Tutorial::IsDone() const { return mDone; }
 
-inline void Tutorial::SetPause(bool paused) { mPaused = paused; }
 inline bool Tutorial::IsPaused() const { return mPaused; }
 
 inline const TutorialManager * Tutorial::GetManager() const { return mTutMan; }

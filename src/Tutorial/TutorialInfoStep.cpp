@@ -24,6 +24,13 @@ TutorialInfoStep::~TutorialInfoStep()
     delete mInfo;
 }
 
+void TutorialInfoStep::SetPause(bool paused)
+{
+    TutorialStep::SetPause(paused);
+
+    mInfo->SetEnabled(!paused);
+}
+
 void TutorialInfoStep::OnStart()
 {
     // CLICK FILTER

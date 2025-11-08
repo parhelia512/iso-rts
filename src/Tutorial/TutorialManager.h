@@ -16,6 +16,9 @@ public:
 
     void Start();
 
+    void SetPause(bool paused);
+    bool IsPaused() const;
+
     void Update(float delta);
 
     unsigned int GetNumStepsAtStart() const;
@@ -34,9 +37,13 @@ private:
 
     unsigned int mStepsAtStart = 0;
     unsigned int mStepsDone = 0;
+
+    bool mPaused = false;
 };
 
 inline void TutorialManager::AddStep(TutorialStep * step) { mSteps.push_back(step); }
+
+inline bool TutorialManager::IsPaused() const { return mPaused; }
 
 inline unsigned int TutorialManager::GetNumStepsAtStart() const { return mStepsAtStart; }
 inline unsigned int TutorialManager::GetNumStepsTodo() const { return mSteps.size(); }

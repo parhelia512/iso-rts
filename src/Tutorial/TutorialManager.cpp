@@ -22,9 +22,17 @@ void TutorialManager::Start()
     StartNextStep();
 }
 
+void TutorialManager::SetPause(bool paused)
+{
+    mPaused = paused;
+
+    if(mCurrStep != nullptr)
+        mCurrStep->SetPause(paused);
+}
+
 void TutorialManager::Update(float delta)
 {
-    if(nullptr == mCurrStep)
+    if(nullptr == mCurrStep || mPaused)
         return ;
 
     mCurrStep->Update(delta);

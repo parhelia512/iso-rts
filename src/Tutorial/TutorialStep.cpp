@@ -3,6 +3,11 @@
 namespace game
 {
 
+void TutorialStep::SetPause(bool paused)
+{
+    mPaused = paused;
+}
+
 void TutorialStep::OnStart() { }
 
 void TutorialStep::OnEnd() { }

@@ -14,6 +14,8 @@ public:
     TutorialInfoStep(int infoW, int infoH);
     ~TutorialInfoStep();
 
+    void SetPause(bool paused) override;
+
     void OnStart() override;
 
 protected:

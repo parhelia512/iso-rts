@@ -409,6 +409,9 @@ void ScreenGame::SetPause(bool paused)
 {
     mPaused = paused;
 
+    if(mTut != nullptr)
+        mTut->SetPause(paused);
+
     mHUD->SetEnabled(!paused);
 
     // handle turn control panel text
