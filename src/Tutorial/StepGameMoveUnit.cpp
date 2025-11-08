@@ -12,70 +12,54 @@ namespace game
 {
 
 StepGameMoveUnit::StepGameMoveUnit(const Player * p, const IsoMap * isoMap)
+    : TutorialInfoStep(500, 275)
+    , mFocusArea(new FocusArea)
 {
-    // CLICK FILTER
-    mClickFilter = new PanelClickFilter;
-    mClickFilter->SetEnabled(false);
-
     // FOCUS
-    mFocusArea = new FocusArea;
     mFocusArea->SetVisible(false);
 
     // INFO
-    mInfo = new PanelInfoTutorial(500, 275);
-    mInfo->SetEnabled(false);
-    mInfo->SetVisible(false);
-    mInfo->SetPosition(1350, 125);
+    auto info = GetPanelInfo();
 
-    mInfo->AddInfoEntry("Now that your unit is selected you can do several things with it.", colorTutorialText, 6.f, true, false);
-    mInfo->AddInfoEntry("The default action is MOVE, so let's start with that.", colorTutorialText, 6.f, true, false);
-    mInfo->AddInfoEntry("Click inside this cell with the RIGHT MOUSE BUTTON to move next to that spiky structure.",
-                        colorTutorialTextAction, 0.f, false, false, [this, p, isoMap]
-                        {
-                            const int destR = 57;
-                            const int destC = 13;
+    info->SetPosition(1350, 125);
 
-                            const sgl::core::Pointd2D pos = isoMap->GetCellPosition(destR, destC);
+    info->AddInfoEntry("Now that your unit is selected you can do several things with it.",
+                       colorTutorialText, 6.f, true, false);
+    info->AddInfoEntry("The default action is MOVE, so let's start with that.",
+                       colorTutorialText, 6.f, true, false);
+    info->AddInfoEntry("Click inside this cell with the RIGHT MOUSE BUTTON to move next to that spiky structure.",
+                       colorTutorialTextAction, 0.f, false, false, [this, p, isoMap]
+                       {
+                           const int destR = 57;
+                           const int destC = 13;
 
-                            // FOCUS
-                            const int marginW = 5;
-                            const int marginH = 10;
-                            const int objX = pos.x - marginW;
-                            const int objY = pos.y - marginH;
-                            const int objW = isoMap->GetTileWidth() + (2 * marginW);
-                            const int objH = isoMap->GetTileHeight() + (2 * marginH);
+                           const sgl::core::Pointd2D pos = isoMap->GetCellPosition(destR, destC);
 
-                            mFocusArea->SetWorldArea(objX, objY, objW, objH);
-                            mFocusArea->SetCornersColor(colorTutorialFocusAction);
-                            mFocusArea->SetBlinking(true);
-                            mFocusArea->SetVisible(true);
+                           // FOCUS
+                           const int marginW = 5;
+                           const int marginH = 10;
+                           const int objX = pos.x - marginW;
+                           const int objY = pos.y - marginH;
+                           const int objW = isoMap->GetTileWidth() + (2 * marginW);
+                           const int objH = isoMap->GetTileHeight() + (2 * marginH);
 
-                            // CLICK FILTER
-                            mClickFilter->SetWorldClickableArea(objX, objY, objW, objH);
-                            mClickFilter->SetClickableCell(isoMap, destR, destC);
+                           mFocusArea->SetWorldArea(objX, objY, objW, objH);
+                           mFocusArea->SetCornersColor(colorTutorialFocusAction);
+                           mFocusArea->SetBlinking(true);
+                           mFocusArea->SetVisible(true);
 
-                            mUnit = p->GetUnit(0);
-                        });
+                           // CLICK FILTER
+                           auto cf = GetClickFilter();
+                           cf->SetWorldClickableArea(objX, objY, objW, objH);
+                           cf->SetClickableCell(isoMap, destR, destC);
+
+                           mUnit = p->GetUnit(0);
+                       });
 }
 
 StepGameMoveUnit::~StepGameMoveUnit()
 {
-    delete mClickFilter;
     delete mFocusArea;
-    delete mInfo;
-}
-
-void StepGameMoveUnit::OnStart()
-{
-    // CLICK FILTER
-    mClickFilter->SetEnabled(true);
-
-    // INFO
-    mInfo->SetEnabled(true);
-    mInfo->SetVisible(true);
-    mInfo->SetFocus();
-
-    mInfo->StartInfo();
 }
 
 void StepGameMoveUnit::Update(float)

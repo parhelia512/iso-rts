@@ -1,24 +1,14 @@
 #pragma once
 
-#include "Tutorial/TutorialStep.h"
+#include "Tutorial/TutorialInfoStep.h"
 
 namespace game
 {
 
-class PanelClickFilter;
-class PanelInfoTutorial;
-
-class StepGameStructConnected : public TutorialStep
+class StepGameStructConnected : public TutorialInfoStep
 {
 public:
     StepGameStructConnected();
-    ~StepGameStructConnected();
-
-    void OnStart() override;
-
-private:
-    PanelClickFilter * mClickFilter = nullptr;
-    PanelInfoTutorial * mInfo = nullptr;
 };
 
 } // namespace game

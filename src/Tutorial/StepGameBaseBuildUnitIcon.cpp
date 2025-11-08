@@ -12,47 +12,43 @@ namespace game
 {
 
 StepGameBaseBuildUnitIcon::StepGameBaseBuildUnitIcon(PanelObjectActions * panel)
-    : mPanelActions(panel)
+    : TutorialInfoStep(590, 200)
+    , mFocusArea(new FocusArea)
+    , mPanelActions(panel)
 {
-    // CLICK FILTER
-    mClickFilter = new PanelClickFilter;
-    mClickFilter->SetEnabled(false);
-
     // FOCUS
-    mFocusArea = new FocusArea;
     mFocusArea->SetCornersColor(colorTutorialFocusAction);
     mFocusArea->SetBlinking(true);
     mFocusArea->SetVisible(false);
 
     // INFO
-    mInfo = new PanelInfoTutorial(590, 200);
-    mInfo->SetEnabled(false);
-    mInfo->SetVisible(false);
-    mInfo->SetPosition(300, 550);
+    auto info = GetPanelInfo();
 
-    mInfo->AddInfoEntry("You can also create worker units with your base.",
-                        colorTutorialText, 4.f, true, false);
-    mInfo->AddInfoEntry("Let's create a new one now.",
-                        colorTutorialText, 3.f, true, false);
-    mInfo->AddInfoEntry("Click this button to open the new units dialog.",
-                        colorTutorialTextAction, 0.f, false, false, [this, panel]
-                        {
-                            // FOCUS
-                            auto btn = panel->GetButton(PanelObjectActions::BTN_BUILD_UNIT_BASE);
+    info->SetPosition(300, 550);
 
-                            const int padding = 10;
-                            const int fX = panel->GetX() + btn->GetX() - padding;
-                            const int fY = panel->GetY() + btn->GetY() - padding;
-                            const int fW = btn->GetWidth() + (padding * 2);
-                            const int fH = btn->GetHeight() + (padding * 2);
+    info->AddInfoEntry("You can also create worker units with your base.",
+                       colorTutorialText, 4.f, true, false);
+    info->AddInfoEntry("Let's create a new one now.",
+                       colorTutorialText, 3.f, true, false);
+    info->AddInfoEntry("Click this button to open the new units dialog.",
+                       colorTutorialTextAction, 0.f, false, false, [this, panel]
+                       {
+                           // FOCUS
+                           auto btn = panel->GetButton(PanelObjectActions::BTN_BUILD_UNIT_BASE);
 
-                            mFocusArea->SetScreenArea(fX, fY, fW, fH);
-                            mFocusArea->SetVisible(true);
+                           const int padding = 10;
+                           const int fX = panel->GetX() + btn->GetX() - padding;
+                           const int fY = panel->GetY() + btn->GetY() - padding;
+                           const int fW = btn->GetWidth() + (padding * 2);
+                           const int fH = btn->GetHeight() + (padding * 2);
 
-                            // CLICK FILTER
-                            mClickFilter->SetScreenClickableArea(fX, fY, fW, fH);
+                           mFocusArea->SetScreenArea(fX, fY, fW, fH);
+                           mFocusArea->SetVisible(true);
 
-                        });
+                           // CLICK FILTER
+                           GetClickFilter()->SetScreenClickableArea(fX, fY, fW, fH);
+
+                       });
 
     mClickId = panel->AddButtonFunction(PanelObjectActions::BTN_BUILD_UNIT_BASE, [this]
     {
@@ -64,22 +60,7 @@ StepGameBaseBuildUnitIcon::~StepGameBaseBuildUnitIcon()
 {
     mPanelActions->RemoveButtonFunction(PanelObjectActions::BTN_BUILD_UNIT_BASE, mClickId);
 
-    delete mClickFilter;
     delete mFocusArea;
-    delete mInfo;
-}
-
-void StepGameBaseBuildUnitIcon::OnStart()
-{
-    // CLICK FILTER
-    mClickFilter->SetEnabled(true);
-
-    // INFO
-    mInfo->SetEnabled(true);
-    mInfo->SetVisible(true);
-    mInfo->SetFocus();
-
-    mInfo->StartInfo();
 }
 
 } // namespace game

@@ -11,12 +11,10 @@ namespace game
 {
 
 StepGameBase::StepGameBase(const Base * b)
-    : mBase(b)
+    : TutorialInfoStep(500, 250)
+    , mFocusArea(new FocusArea)
+    , mBase(b)
 {
-    // CLICK FILTER
-    mClickFilter = new PanelClickFilter;
-    mClickFilter->SetEnabled(false);
-
     // FOCUS
     auto isoObj = mBase->GetIsoObject();
     const int objX = isoObj->GetX();
@@ -24,29 +22,26 @@ StepGameBase::StepGameBase(const Base * b)
     const int objW = isoObj->GetWidth();
     const int objH = isoObj->GetHeight();
 
-    mFocusArea = new FocusArea;
     mFocusArea->SetWorldArea(objX, objY, objW, objH);
     mFocusArea->SetCornersColor(colorTutorialFocusElement);
-
     mFocusArea->SetVisible(false);
 
     // INFO
-    mInfo = new PanelInfoTutorial(500, 250);
-    mInfo->SetEnabled(false);
-    mInfo->SetVisible(false);
-    mInfo->SetPosition(1150, 400);
+    auto info = GetPanelInfo();
 
-    mInfo->AddInfoEntry("This is your base.", colorTutorialText, 3.f, true, false);
-    mInfo->AddInfoEntry("You must protect it at all costs because if "
-                        "destroyed you are defeated.", colorTutorialText, 6.f, true, false);
-    mInfo->AddInfoEntry("Select it with the LEFT MOUSE BUTTON", colorTutorialTextAction, 0.f, false, false);
+    info->SetPosition(1150, 400);
 
-    mInfo->SetFunctionOnFinished([this, objX, objY, objW, objH]
+    info->AddInfoEntry("This is your base.", colorTutorialText, 3.f, true, false);
+    info->AddInfoEntry("You must protect it at all costs because if "
+                       "destroyed you are defeated.", colorTutorialText, 6.f, true, false);
+    info->AddInfoEntry("Select it with the LEFT MOUSE BUTTON", colorTutorialTextAction, 0.f, false, false);
+
+    info->SetFunctionOnFinished([this, objX, objY, objW, objH]
     {
         mFocusArea->SetCornersColor(colorTutorialFocusAction);
         mFocusArea->SetBlinking(true);
 
-        mClickFilter->SetWorldClickableArea(objX, objY, objW, objH);
+        GetClickFilter()->SetWorldClickableArea(objX, objY, objW, objH);
 
         mCheckBaseSelected = true;
     });
@@ -54,25 +49,15 @@ StepGameBase::StepGameBase(const Base * b)
 
 StepGameBase::~StepGameBase()
 {
-    delete mClickFilter;
     delete mFocusArea;
-    delete mInfo;
 }
 
 void StepGameBase::OnStart()
 {
-    // CLICK FILTER
-    mClickFilter->SetEnabled(true);
+    TutorialInfoStep::OnStart();
 
     // FOCUS
     mFocusArea->SetVisible(true);
-
-    // INFO
-    mInfo->SetEnabled(true);
-    mInfo->SetVisible(true);
-    mInfo->SetFocus();
-
-    mInfo->StartInfo();
 }
 
 void StepGameBase::Update(float)

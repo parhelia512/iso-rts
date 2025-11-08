@@ -1,27 +1,21 @@
 #pragma once
 
-#include "Tutorial/TutorialStep.h"
+#include "Tutorial/TutorialInfoStep.h"
 
 namespace game
 {
 
 class FocusArea;
-class PanelClickFilter;
-class PanelInfoTutorial;
 class PanelObjectActions;
 
-class StepGameBaseBuildUnitIcon : public TutorialStep
+class StepGameBaseBuildUnitIcon : public TutorialInfoStep
 {
 public:
     StepGameBaseBuildUnitIcon(PanelObjectActions * panel);
     ~StepGameBaseBuildUnitIcon();
 
-    void OnStart() override;
-
 private:
     FocusArea * mFocusArea = nullptr;
-    PanelClickFilter * mClickFilter = nullptr;
-    PanelInfoTutorial * mInfo = nullptr;
     PanelObjectActions * mPanelActions = nullptr;
 
     unsigned int mClickId = 0;

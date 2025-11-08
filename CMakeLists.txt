@@ -266,15 +266,15 @@ add_executable(
     src/Tutorial/StepPlanetMapSendAI.cpp
     src/Tutorial/Tutorial.h
     src/Tutorial/Tutorial.cpp
+    src/Tutorial/TutorialConstants.h
     src/Tutorial/TutorialGameIntro.h
     src/Tutorial/TutorialGameIntro.cpp
     src/Tutorial/TutorialInfoStep.h
     src/Tutorial/TutorialInfoStep.cpp
-    src/Tutorial/TutorialPlanetMap.h
-    src/Tutorial/TutorialPlanetMap.cpp
-    src/Tutorial/TutorialConstants.h
     src/Tutorial/TutorialManager.h
     src/Tutorial/TutorialManager.cpp
+    src/Tutorial/TutorialPlanetMap.h
+    src/Tutorial/TutorialPlanetMap.cpp
     src/Tutorial/TutorialStep.h
     src/Tutorial/TutorialStep.cpp
     src/Widgets/BlinkingIconEnergy.h

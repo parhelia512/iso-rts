@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Tutorial/TutorialStep.h"
+#include "Tutorial/TutorialInfoStep.h"
 
 namespace game
 {
@@ -11,20 +11,16 @@ class IsoMap;
 class PanelClickFilter;
 class PanelInfoTutorial;
 
-class StepGameConquerStruct : public TutorialStep
+class StepGameConquerStruct : public TutorialInfoStep
 {
 public:
     StepGameConquerStruct(const GameObject * energyGen, const IsoMap * isoMap);
     ~StepGameConquerStruct();
 
-    void OnStart() override;
-
     void Update(float delta) override;
 
 private:
     FocusArea * mFocusArea = nullptr;
-    PanelClickFilter * mClickFilter = nullptr;
-    PanelInfoTutorial * mInfo = nullptr;
 
     const GameObject * mEnergyGen = nullptr;
 };
