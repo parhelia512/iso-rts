@@ -12,11 +12,9 @@ namespace game
 {
 
 StepPlanetMapExploreTerritory::StepPlanetMapExploreTerritory(PanelPlanetActions * panelActions)
+    : TutorialInfoStep(infoPlanetMapW, infoPlanetMapH)
+    , mFocusArea(new FocusArea)
 {
-    // CLICK FILTER
-    mClickFilter = new PanelClickFilter;
-    mClickFilter->SetEnabled(false);
-
     // FOCUS
     auto btnExplore = panelActions->GetButton(PanelPlanetActions::EXPLORE);
 
@@ -26,23 +24,21 @@ StepPlanetMapExploreTerritory::StepPlanetMapExploreTerritory(PanelPlanetActions 
     const int fW = btnExplore->GetWidth() + (padding * 2);
     const int fH = btnExplore->GetHeight() + (padding * 2);
 
-    mFocusArea = new FocusArea;
     mFocusArea->SetScreenArea(fX, fY, fW, fH);
     mFocusArea->SetCornersColor(colorTutorialFocusAction);
     mFocusArea->SetBlinking(true);
     mFocusArea->SetVisible(false);
 
     // INFO
-    mInfo = new PanelInfoTutorial(infoPlanetMapW, infoPlanetMapH);
-    mInfo->SetEnabled(false);
-    mInfo->SetVisible(false);
-    mInfo->SetPosition(infoPlanetMapX, infoPlanetMapY);
+    auto info = GetPanelInfo();
 
-    mInfo->AddInfoEntry("Click the button EXPLORE to try to explore it.",
-                        colorTutorialTextAction, 0.f, false, false, [this, fX, fY, fW, fH]
-                        {
-                            mClickFilter->SetScreenClickableArea(fX, fY, fW, fH);
-                        });
+    info->SetPosition(infoPlanetMapX, infoPlanetMapY);
+
+    info->AddInfoEntry("Click the button EXPLORE to try to explore it.",
+                       colorTutorialTextAction, 0.f, false, false, [this, fX, fY, fW, fH]
+                       {
+                           GetClickFilter()->SetScreenClickableArea(fX, fY, fW, fH);
+                       });
 
     // EXPLORE BUTTON
     btnExplore->AddOnClickFunction([this]
@@ -53,25 +49,15 @@ StepPlanetMapExploreTerritory::StepPlanetMapExploreTerritory(PanelPlanetActions 
 
 StepPlanetMapExploreTerritory::~StepPlanetMapExploreTerritory()
 {
-    delete mClickFilter;
     delete mFocusArea;
-    delete mInfo;
 }
 
 void StepPlanetMapExploreTerritory::OnStart()
 {
-    // CLICK FILTER
-    mClickFilter->SetEnabled(true);
+    TutorialInfoStep::OnStart();
 
     // FOCUS
     mFocusArea->SetVisible(true);
-
-    // INFO
-    mInfo->SetEnabled(true);
-    mInfo->SetVisible(true);
-    mInfo->SetFocus();
-
-    mInfo->StartInfo();
 }
 
 } // namespace game

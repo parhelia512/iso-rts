@@ -12,11 +12,9 @@ namespace game
 {
 
 StepPlanetMapConquerTerritory::StepPlanetMapConquerTerritory(PanelPlanetActions * panelActions)
+    : TutorialInfoStep(infoPlanetMapW, infoPlanetMapH)
+    , mFocusArea(new FocusArea)
 {
-    // CLICK FILTER
-    mClickFilter = new PanelClickFilter;
-    mClickFilter->SetEnabled(false);
-
     // FOCUS
     auto btn = panelActions->GetButton(PanelPlanetActions::CONQUER);
 
@@ -26,30 +24,29 @@ StepPlanetMapConquerTerritory::StepPlanetMapConquerTerritory(PanelPlanetActions 
     const int fW = btn->GetWidth() + (padding * 2);
     const int fH = btn->GetHeight() + (padding * 2);
 
-    mFocusArea = new FocusArea;
     mFocusArea->SetScreenArea(fX, fY, fW, fH);
     mFocusArea->SetCornersColor(colorTutorialFocusAction);
     mFocusArea->SetBlinking(true);
     mFocusArea->SetVisible(false);
 
     // INFO
-    mInfo = new PanelInfoTutorial(infoPlanetMapW, infoPlanetMapH);
-    mInfo->SetEnabled(false);
-    mInfo->SetVisible(false);
-    mInfo->SetPosition(infoPlanetMapX, infoPlanetMapY);
+    auto info = GetPanelInfo();
 
-    mInfo->AddInfoEntry("I would suggest you to conquer the territory yourself.",
-                        colorTutorialText, 5.f, true, true);
-    mInfo->AddInfoEntry("To do that click the button CONQUER.",
-                        colorTutorialTextAction, 0.f, false, false, [this, fX, fY, fW, fH]
-                        {
-                            // CLICK FILTER
-                            mClickFilter->SetScreenClickableArea(fX, fY, fW, fH);
-                            mClickFilter->SetEnabled(true);
+    info->SetPosition(infoPlanetMapX, infoPlanetMapY);
 
-                            // FOCUS
-                            mFocusArea->SetVisible(true);
-                        });
+    info->AddInfoEntry("I would suggest you to conquer the territory yourself.",
+                       colorTutorialText, 5.f, true, true);
+    info->AddInfoEntry("To do that click the button CONQUER.",
+                       colorTutorialTextAction, 0.f, false, false, [this, fX, fY, fW, fH]
+                       {
+                           // CLICK FILTER
+                           auto cf = GetClickFilter();
+                           cf->SetScreenClickableArea(fX, fY, fW, fH);
+                           cf->SetEnabled(true);
+
+                           // FOCUS
+                           mFocusArea->SetVisible(true);
+                       });
 
     // CONQUER BUTTON
     btn->AddOnClickFunction([this]
@@ -60,22 +57,7 @@ StepPlanetMapConquerTerritory::StepPlanetMapConquerTerritory(PanelPlanetActions 
 
 StepPlanetMapConquerTerritory::~StepPlanetMapConquerTerritory()
 {
-    delete mClickFilter;
     delete mFocusArea;
-    delete mInfo;
-}
-
-void StepPlanetMapConquerTerritory::OnStart()
-{
-    // CLICK FILTER
-    mClickFilter->SetEnabled(true);
-
-    // INFO
-    mInfo->SetEnabled(true);
-    mInfo->SetVisible(true);
-    mInfo->SetFocus();
-
-    mInfo->StartInfo();
 }
 
 } // namespace game

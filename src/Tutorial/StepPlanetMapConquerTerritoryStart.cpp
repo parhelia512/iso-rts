@@ -12,11 +12,9 @@ namespace game
 {
 
 StepPlanetMapConquerTerritoryStart::StepPlanetMapConquerTerritoryStart(PanelPlanetActionConquer * panel)
+    : TutorialInfoStep(infoPlanetMapW, infoPlanetMapH)
+    , mFocusArea(new FocusArea)
 {
-    // CLICK FILTER
-    mClickFilter = new PanelClickFilter;
-    mClickFilter->SetEnabled(false);
-
     // FOCUS
     auto btn = panel->GetButtonOk();
 
@@ -26,26 +24,25 @@ StepPlanetMapConquerTerritoryStart::StepPlanetMapConquerTerritoryStart(PanelPlan
     const int fW = btn->GetWidth() + (padding * 2);
     const int fH = btn->GetHeight() + (padding * 2);
 
-    mFocusArea = new FocusArea;
     mFocusArea->SetScreenArea(fX, fY, fW, fH);
     mFocusArea->SetCornersColor(colorTutorialFocusAction);
     mFocusArea->SetBlinking(true);
     mFocusArea->SetVisible(false);
 
     // INFO
-    mInfo = new PanelInfoTutorial(infoPlanetMapW, infoPlanetMapH);
-    mInfo->SetEnabled(false);
-    mInfo->SetVisible(false);
-    mInfo->SetPosition(infoPlanetMapX, infoPlanetMapY);
+    auto info = GetPanelInfo();
 
-    mInfo->AddInfoEntry("Now click the button PROCEED to start your first mission.",
-                        colorTutorialTextAction, 0.f, false, false);
+    info->SetPosition(infoPlanetMapX, infoPlanetMapY);
 
-    mInfo->SetFunctionOnFinished([this, fX, fY, fW, fH]
+    info->AddInfoEntry("Now click the button PROCEED to start your first mission.",
+                       colorTutorialTextAction, 0.f, false, false);
+
+    info->SetFunctionOnFinished([this, fX, fY, fW, fH]
     {
         // CLICK FILTER
-        mClickFilter->SetScreenClickableArea(fX, fY, fW, fH);
-        mClickFilter->SetEnabled(true);
+        auto cf = GetClickFilter();
+        cf->SetScreenClickableArea(fX, fY, fW, fH);
+        cf->SetEnabled(true);
 
         // FOCUS
         mFocusArea->SetVisible(true);
@@ -60,19 +57,7 @@ StepPlanetMapConquerTerritoryStart::StepPlanetMapConquerTerritoryStart(PanelPlan
 
 StepPlanetMapConquerTerritoryStart::~StepPlanetMapConquerTerritoryStart()
 {
-    delete mClickFilter;
     delete mFocusArea;
-    delete mInfo;
-}
-
-void StepPlanetMapConquerTerritoryStart::OnStart()
-{
-    // INFO
-    mInfo->SetEnabled(true);
-    mInfo->SetVisible(true);
-    mInfo->SetFocus();
-
-    mInfo->StartInfo();
 }
 
 } // namespace game

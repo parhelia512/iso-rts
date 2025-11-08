@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Tutorial/TutorialStep.h"
+#include "Tutorial/TutorialInfoStep.h"
 
 namespace sgl
 {
@@ -11,11 +11,9 @@ namespace game
 {
 
 class FocusArea;
-class PanelClickFilter;
-class PanelInfoTutorial;
 class PlanetMap;
 
-class StepPlanetMapSelectTerritory : public TutorialStep
+class StepPlanetMapSelectTerritory : public TutorialInfoStep
 {
 public:
     StepPlanetMapSelectTerritory(PlanetMap * planet);
@@ -27,10 +25,8 @@ public:
 
 private:
     FocusArea * mFocusArea = nullptr;
-    PanelClickFilter * mClickFilter = nullptr;
-    PanelInfoTutorial * mInfo = nullptr;
-
     sgl::sgui::AbstractButton * mTerritory = nullptr;
+
     bool mCheckTerritorySelected = false;
 };
 

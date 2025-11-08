@@ -1,27 +1,21 @@
 #pragma once
 
-#include "Tutorial/TutorialStep.h"
+#include "Tutorial/TutorialInfoStep.h"
 
 namespace game
 {
 
 class FocusArea;
-class PanelClickFilter;
-class PanelInfoTutorial;
 class PanelPlanetActions;
 
-class StepPlanetMapSendAI : public TutorialStep
+class StepPlanetMapSendAI : public TutorialInfoStep
 {
 public:
     StepPlanetMapSendAI(PanelPlanetActions * panel);
     ~StepPlanetMapSendAI();
 
-    void OnStart() override;
-
 private:
     FocusArea * mFocusArea = nullptr;
-    PanelClickFilter * mClickFilter = nullptr;
-    PanelInfoTutorial * mInfo = nullptr;
 };
 
 } // namespace game

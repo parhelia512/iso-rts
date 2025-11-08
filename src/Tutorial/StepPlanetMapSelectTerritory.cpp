@@ -12,11 +12,9 @@ namespace game
 {
 
 StepPlanetMapSelectTerritory::StepPlanetMapSelectTerritory(PlanetMap * planet)
+    : TutorialInfoStep(infoPlanetMapW, infoPlanetMapH)
+    , mFocusArea(new FocusArea)
 {
-    // CLICK FILTER
-    mClickFilter = new PanelClickFilter;
-    mClickFilter->SetEnabled(false);
-
     // FOCUS
     mTerritory = planet->GetButton(0);
 
@@ -26,28 +24,26 @@ StepPlanetMapSelectTerritory::StepPlanetMapSelectTerritory(PlanetMap * planet)
     const int fW = mTerritory->GetWidth() + (padding * 2);
     const int fH = mTerritory->GetHeight() + (padding * 2);
 
-    mFocusArea = new FocusArea;
     mFocusArea->SetScreenArea(fX, fY, fW, fH);
     mFocusArea->SetCornersColor(colorTutorialFocusElement);
     mFocusArea->SetVisible(false);
 
     // INFO
-    mInfo = new PanelInfoTutorial(infoPlanetMapW, infoPlanetMapH);
-    mInfo->SetEnabled(false);
-    mInfo->SetVisible(false);
-    mInfo->SetPosition(infoPlanetMapX, infoPlanetMapY);
+    auto info = GetPanelInfo();
 
-    mInfo->AddInfoEntry("Let's start to explore a territory of this planet.",
-                        colorTutorialText, 5.f, true, true);
-    mInfo->AddInfoEntry("Select this one in the top with the LEFT MOUSE BUTTON", colorTutorialTextAction,
-                        0.f, false, false);
+    info->SetPosition(infoPlanetMapX, infoPlanetMapY);
 
-    mInfo->SetFunctionOnFinished([this, fX, fY, fW, fH]
+    info->AddInfoEntry("Let's start to explore a territory of this planet.",
+                       colorTutorialText, 5.f, true, true);
+    info->AddInfoEntry("Select this one in the top with the LEFT MOUSE BUTTON", colorTutorialTextAction,
+                       0.f, false, false);
+
+    info->SetFunctionOnFinished([this, fX, fY, fW, fH]
     {
         mFocusArea->SetCornersColor(colorTutorialFocusAction);
         mFocusArea->SetBlinking(true);
 
-        mClickFilter->SetScreenClickableArea(fX, fY, fW, fH);
+        GetClickFilter()->SetScreenClickableArea(fX, fY, fW, fH);
 
         mCheckTerritorySelected = true;
     });
@@ -55,25 +51,15 @@ StepPlanetMapSelectTerritory::StepPlanetMapSelectTerritory(PlanetMap * planet)
 
 StepPlanetMapSelectTerritory::~StepPlanetMapSelectTerritory()
 {
-    delete mClickFilter;
     delete mFocusArea;
-    delete mInfo;
 }
 
 void StepPlanetMapSelectTerritory::OnStart()
 {
-    // CLICK FILTER
-    mClickFilter->SetEnabled(true);
+    TutorialInfoStep::OnStart();
 
     // FOCUS
     mFocusArea->SetVisible(true);
-
-    // INFO
-    mInfo->SetEnabled(true);
-    mInfo->SetVisible(true);
-    mInfo->SetFocus();
-
-    mInfo->StartInfo();
 }
 
 void StepPlanetMapSelectTerritory::Update(float)
