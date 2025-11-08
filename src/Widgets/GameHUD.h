@@ -106,6 +106,8 @@ private:
     void TemporaryClosePanels();
     void ReopenPanels();
 
+    void ResumeGame();
+
     GameMapProgressBar * CreateProgressBar(float time, PlayerFaction faction);
 
     void CenterWidget(sgl::sgui::Widget * w);

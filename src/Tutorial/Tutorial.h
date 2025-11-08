@@ -23,6 +23,9 @@ public:
 
     void Start();
 
+    void SetPause(bool paused);
+    bool IsPaused() const;
+
     virtual void OnStart();
     virtual void OnEnd();
 
@@ -37,11 +40,15 @@ private:
     TutorialId mId;
 
     bool mDone = false;
+    bool mPaused = false;
 };
 
 inline unsigned int Tutorial::GetId() const { return mId; }
 
 inline bool Tutorial::IsDone() const { return mDone; }
+
+inline void Tutorial::SetPause(bool paused) { mPaused = paused; }
+inline bool Tutorial::IsPaused() const { return mPaused; }
 
 inline const TutorialManager * Tutorial::GetManager() const { return mTutMan; }
 

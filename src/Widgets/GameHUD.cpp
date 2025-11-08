@@ -13,6 +13,7 @@
 #include "GameObjects/Temple.h"
 #include "GameObjects/Unit.h"
 #include "Screens/ScreenGame.h"
+#include "Tutorial/Tutorial.h"
 #include "Widgets/ButtonMinimap.h"
 #include "Widgets/ButtonPanelSelectedObject.h"
 #include "Widgets/ButtonQuickUnitSelection.h"
@@ -319,6 +320,9 @@ void GameHUD::ShowDialogExit()
 
     mScreen->SetPause(true);
 
+    if(mScreen->mTut != nullptr)
+        mScreen->mTut->SetPause(true);
+
     mDialogExit = new DialogExit(mScreen->GetGame(), mScreen);
     mDialogExit->SetFocus();
 
@@ -334,8 +338,7 @@ void GameHUD::ShowDialogExit()
     {
         ReopenPanels();
 
-        // un-pause game
-        mScreen->SetPause(false);
+        ResumeGame();
     });
 
     mDialogExit->SetFunctionOnClose([this]
@@ -346,8 +349,7 @@ void GameHUD::ShowDialogExit()
         mDialogExit->DeleteLater();
         mDialogExit = nullptr;
 
-        // un-pause game
-        mScreen->SetPause(false);
+        ResumeGame();
     });
 
     TemporaryClosePanels();
@@ -774,6 +776,16 @@ void GameHUD::ReopenPanels()
 
     if(mPanelObjActions->HasObjectSet())
         mPanelObjActions->SetVisible(true);
+}
+
+void GameHUD::ResumeGame()
+{
+    // un-pause game
+    mScreen->SetPause(false);
+
+    // un-pause tutorial
+    if(mScreen->mTut != nullptr)
+        mScreen->mTut->SetPause(false);
 }
 
 GameMapProgressBar * GameHUD::CreateProgressBar(float time, PlayerFaction faction)

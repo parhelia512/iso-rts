@@ -39,6 +39,9 @@ void Tutorial::OnEnd() { }
 
 void Tutorial::Update(float delta)
 {
+    if(mPaused)
+        return ;
+
     mTutMan->Update(delta);
 
     if(mTutMan->AreAllStepsDone())
