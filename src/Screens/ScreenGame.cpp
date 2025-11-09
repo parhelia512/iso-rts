@@ -33,8 +33,6 @@
 #include "Particles/UpdaterSingleLaser.h"
 #include "States/StatesIds.h"
 #include "Tutorial/TutorialGameIntro.h"
-#include "Tutorial/TutorialManager.h"
-#include "Widgets/ButtonQuickUnitSelection.h"
 #include "Widgets/DialogNewElement.h"
 #include "Widgets/GameHUD.h"
 #include "Widgets/GameMapProgressBar.h"
@@ -1578,8 +1576,7 @@ bool ScreenGame::CheckIfGoalCompleted(MissionGoal & g)
         {
             if(game->GetTutorialState(TUTORIAL_MISSION_INTRO) != TS_DONE)
             {
-                auto tutMan = mTut->GetManager();
-                g.SetProgress(tutMan->GetNumStepsDone() * 100 / tutMan->GetNumStepsAtStart());
+                g.SetProgress(mTut->GetNumStepsDone() * 100 / mTut->GetNumStepsAtStart());
                 return false;
             }
         }

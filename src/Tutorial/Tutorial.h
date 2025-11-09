@@ -1,10 +1,11 @@
 #pragma once
 
+#include <deque>
+
 namespace game
 {
 
 class Game;
-class TutorialManager;
 class TutorialStep;
 
 enum TutorialId : unsigned int;
@@ -29,15 +30,28 @@ public:
     virtual void OnStart();
     virtual void OnEnd();
 
-    const TutorialManager * GetManager() const;
+    unsigned int GetNumStepsAtStart() const;
+    unsigned int GetNumStepsTodo() const;
+    unsigned int GetNumStepsDone() const;
+    bool AreAllStepsDone() const;
 
     void Update(float delta);
 
 private:
-    TutorialManager * mTutMan = nullptr;
+    void FinalizeStep();
+    void StartNextStep();
+
+private:
+    std::deque<TutorialStep *> mSteps;
+
+    TutorialStep * mCurrStep = nullptr;
+
     Game * mGame = nullptr;
 
     TutorialId mId;
+
+    unsigned int mStepsAtStart = 0;
+    unsigned int mStepsDone = 0;
 
     bool mDone = false;
     bool mPaused = false;
@@ -47,8 +61,13 @@ inline unsigned int Tutorial::GetId() const { return mId; }
 
 inline bool Tutorial::IsDone() const { return mDone; }
 
+inline void Tutorial::AddStep(TutorialStep * step) { mSteps.push_back(step); }
+
 inline bool Tutorial::IsPaused() const { return mPaused; }
 
-inline const TutorialManager * Tutorial::GetManager() const { return mTutMan; }
+inline unsigned int Tutorial::GetNumStepsAtStart() const { return mStepsAtStart; }
+inline unsigned int Tutorial::GetNumStepsTodo() const { return mSteps.size(); }
+inline unsigned int Tutorial::GetNumStepsDone() const { return mStepsDone; }
+inline bool Tutorial::AreAllStepsDone() const { return mStepsDone == mStepsAtStart; }
 
 } // namespace game

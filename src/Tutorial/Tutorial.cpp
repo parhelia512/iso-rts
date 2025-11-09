@@ -2,43 +2,44 @@
 
 #include "Game.h"
 #include "GameConstants.h"
-#include "Tutorial/TutorialManager.h"
+#include "Tutorial/TutorialStep.h"
 
 namespace game
 {
 
 Tutorial::Tutorial(TutorialId tutId, Game *game)
-    : mTutMan(new TutorialManager)
-    , mGame(game)
+    : mGame(game)
     , mId(tutId)
 {
 }
 
 Tutorial::~Tutorial()
 {
-    delete mTutMan;
-    mTutMan = nullptr;
-}
-
-void Tutorial::AddStep(TutorialStep * step)
-{
-    mTutMan->AddStep(step);
+    for(const TutorialStep * s : mSteps)
+        delete s;
 }
 
 void Tutorial::Start()
 {
+    // already started
+    if(mStepsAtStart > 0)
+        return ;
+
     mGame->SetTutorialState(mId, TS_IN_PROGRESS);
 
     OnStart();
 
-    mTutMan->Start();
+    mStepsAtStart = mSteps.size();
+
+    StartNextStep();
 }
 
 void Tutorial::SetPause(bool paused)
 {
     mPaused = paused;
 
-    mTutMan->SetPause(paused);
+    if(mCurrStep != nullptr)
+        mCurrStep->SetPause(paused);
 }
 
 void Tutorial::OnStart() { }
@@ -46,12 +47,18 @@ void Tutorial::OnEnd() { }
 
 void Tutorial::Update(float delta)
 {
-    if(mPaused)
+    if(nullptr == mCurrStep || mPaused)
         return ;
 
-    mTutMan->Update(delta);
+    mCurrStep->Update(delta);
 
-    if(mTutMan->AreAllStepsDone())
+    if(mCurrStep->IsDone())
+    {
+        FinalizeStep();
+        StartNextStep();
+    }
+
+    if(AreAllStepsDone())
     {
         mDone = true;
 
@@ -59,6 +66,27 @@ void Tutorial::Update(float delta)
 
         OnEnd();
     }
+}
+
+void Tutorial::FinalizeStep()
+{
+    mCurrStep->OnEnd();
+
+    delete mCurrStep;
+    mCurrStep = nullptr;
+
+    ++mStepsDone;
+}
+
+void Tutorial::StartNextStep()
+{
+    if(mSteps.empty())
+        return ;
+
+    mCurrStep = mSteps.front();
+    mSteps.pop_front();
+
+    mCurrStep->OnStart();
 }
 
 } // namespace game
