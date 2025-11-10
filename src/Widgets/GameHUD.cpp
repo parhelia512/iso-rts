@@ -333,9 +333,14 @@ void GameHUD::ShowDialogExit()
     mScreen->SetTutorialPause(true);
 
     if(mScreen->mTut != nullptr)
+    {
         mScreen->mTut->SetPause(true);
 
-    mDialogExit = new DialogExit(mScreen->GetGame(), mScreen);
+        mDialogExit = new DialogExit(DialogExit::BUTTONS_TUTORIAL, mScreen->GetGame(), mScreen);
+    }
+    else
+        mDialogExit = new DialogExit(DialogExit::BUTTONS_EXIT, mScreen->GetGame(), mScreen);
+
     mDialogExit->SetFocus();
 
     mDialogExit->SetFunctionOnShowingDialogSettings([this]

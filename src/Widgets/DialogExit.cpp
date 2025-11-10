@@ -2,6 +2,7 @@
 
 #include "Game.h"
 #include "Screens/Screen.h"
+#include "Screens/ScreenGame.h"
 #include "States/StatesIds.h"
 #include "Widgets/DialogSettings.h"
 #include "Widgets/GameButton.h"
@@ -226,7 +227,7 @@ namespace game
 {
 
 // ===== DIALOG =====
-DialogExit::DialogExit(Game * game, Screen * screen)
+DialogExit::DialogExit(DialogButtons buttons, Game * game, Screen * screen)
     : mOnShowingSettings([]{})
     , mOnHidingSettings([]{})
 {
@@ -259,64 +260,105 @@ DialogExit::DialogExit(Game * game, Screen * screen)
 
     // BUTTON PLANET MAP
     const int btnY0 = 78;
-    const int marginBtnV = 38;
+    const int marginBtnV = 35;
     int btnX = 0;
     int btnY = btnY0;
 
-    auto btn = new ButtonDialogExit(this);
-    btn->SetLabel("SETTINGS");
+    GameButton * btn = nullptr;
 
-    btnX = (w - btn->GetWidth()) / 2;
-    btn->SetPosition(btnX, btnY);
-
-    btn->AddOnClickFunction([this, screen]
+    if(buttons & BTN_SETTINGS)
     {
-        mButtonClose->Click();
+        btn = new ButtonDialogExit(this);
+        btn->SetLabel("SETTINGS");
 
-        DialogSettings * dialog = screen->ShowDialogSettings();
+        btnX = (w - btn->GetWidth()) / 2;
+        btn->SetPosition(btnX, btnY);
 
-        mOnShowingSettings();
+        btn->AddOnClickFunction([this, screen]
+        {
+            mButtonClose->Click();
 
-        dialog->AddOnCloseClickedFunction(mOnHidingSettings);
-    });
+            DialogSettings * dialog = screen->ShowDialogSettings();
 
-    btnY += btn->GetHeight() + marginBtnV;
+            mOnShowingSettings();
+
+            dialog->AddOnCloseClickedFunction(mOnHidingSettings);
+        });
+
+        btnY += btn->GetHeight() + marginBtnV;
+    }
 
     // BUTTON MAIN MENU
-    btn = new ButtonDialogExit(this);
-    btn->SetLabel("PLANET MAP");
-    btn->SetPosition(btnX, btnY);
-
-    btn->AddOnClickFunction([game]
+    if(buttons & BTN_PLANET_MAP)
     {
-        game->RequestNextActiveState(StateId::PLANET_MAP);
-    });
+        btn = new ButtonDialogExit(this);
+        btn->SetLabel("PLANET MAP");
 
-    btnY += btn->GetHeight() + marginBtnV;
+        btnX = (w - btn->GetWidth()) / 2;
+        btn->SetPosition(btnX, btnY);
+
+        btn->AddOnClickFunction([game]
+        {
+            game->RequestNextActiveState(StateId::PLANET_MAP);
+        });
+
+        btnY += btn->GetHeight() + marginBtnV;
+    }
 
     // BUTTON MAIN MENU
-    btn = new ButtonDialogExit(this);
-    btn->SetLabel("MAIN MENU");
-    btn->SetPosition(btnX, btnY);
-
-    btn->AddOnClickFunction([game]
+    if(buttons & BTN_MAIN_MENU)
     {
-        game->RequestNextActiveState(StateId::MAIN_MENU);
-    });
+        btn = new ButtonDialogExit(this);
+        btn->SetLabel("MAIN MENU");
 
-    btnY += btn->GetHeight() + marginBtnV;
+        btnX = (w - btn->GetWidth()) / 2;
+        btn->SetPosition(btnX, btnY);
+
+        btn->AddOnClickFunction([game]
+        {
+            game->RequestNextActiveState(StateId::MAIN_MENU);
+        });
+
+        btnY += btn->GetHeight() + marginBtnV;
+    }
+
+    // BUTTON MAIN MENU
+    if(buttons & BTN_QUIT_TUTORIAL)
+    {
+        btn = new ButtonDialogExit(this);
+        btn->SetLabel("QUIT TUTORIAL");
+
+        btnX = (w - btn->GetWidth()) / 2;
+        btn->SetPosition(btnX, btnY);
+
+        btn->AddOnClickFunction([this, game, screen]
+        {
+            mButtonClose->Click();
+
+            static_cast<ScreenGame *>(screen)->AbortTutorial();
+        });
+
+        btnY += btn->GetHeight() + marginBtnV;
+    }
 
     // BUTTON WISHLIST
-    auto btn2 = new ButtonWishlistDialogExit(this);
-
-    btn2->SetPosition(btnX, btnY);
-
-    btn2->AddOnClickFunction([game]
+    if(buttons & BTN_WHISHLIST)
     {
-        sgl::utilities::System sys;
-        sys.OpenUrlInBrowser("https://store.steampowered.com/app/1607580/Virtualord_The_Virtual_Conqueror/"
-                             "?utm_source=game&utm_medium=button&utm_campaign=game&utm_content=exitdialog");
-    });
+        auto btn2 = new ButtonWishlistDialogExit(this);
+
+        const int marginBottom = 20;
+        btnX = (w - btn2->GetWidth()) / 2;
+        btnY = h - btn2->GetHeight() - marginBottom;
+
+        btn2->SetPosition(btnX, btnY);
+
+        btn2->AddOnClickFunction([game]
+        {
+            sgl::utilities::System sys;
+            sys.OpenUrlInBrowser("https://store.steampowered.com/app/1607580/Virtualord_The_Virtual_Conqueror/"
+                                 "?utm_source=game&utm_medium=button&utm_campaign=game&utm_content=exitdialog");
+        });
+    }
 }
 
 void DialogExit::SetFunctionOnShowingDialogSettings(const std::function<void()> & f)

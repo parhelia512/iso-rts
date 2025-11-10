@@ -427,6 +427,17 @@ void ScreenGame::SetTutorialPause(bool paused)
         mTut->SetPause(paused);
 }
 
+void ScreenGame::AbortTutorial()
+{
+    if(nullptr == mTut)
+        return ;
+
+    GetGame()->SetTutorialState(TUTORIAL_MISSION_INTRO, TS_TODO);
+
+    delete mTut;
+    mTut = nullptr;
+}
+
 void ScreenGame::CollectMissionGoalReward(unsigned int index)
 {
     if(index >= mMissionGoals.size())
@@ -1576,7 +1587,9 @@ bool ScreenGame::CheckIfGoalCompleted(MissionGoal & g)
         {
             if(game->GetTutorialState(TUTORIAL_MISSION_INTRO) != TS_DONE)
             {
-                g.SetProgress(mTut->GetNumStepsDone() * 100 / mTut->GetNumStepsAtStart());
+                if(mTut != nullptr)
+                    g.SetProgress(mTut->GetNumStepsDone() * 100 / mTut->GetNumStepsAtStart());
+
                 return false;
             }
         }

@@ -95,6 +95,8 @@ public:
     void SetPause(bool paused);
     void SetTutorialPause(bool paused);
 
+    void AbortTutorial();
+
     // MISSION GOALS
     const std::vector<MissionGoal> & GetMissionGoals() const;
     void CollectMissionGoalReward(unsigned int index);

@@ -15,6 +15,8 @@ Tutorial::Tutorial(TutorialId tutId, Game *game)
 
 Tutorial::~Tutorial()
 {
+    delete mCurrStep;
+
     for(const TutorialStep * s : mSteps)
         delete s;
 }
