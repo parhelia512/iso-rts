@@ -29,6 +29,10 @@ void TutorialInfoStep::SetPause(bool paused)
     TutorialStep::SetPause(paused);
 
     mInfo->SetEnabled(!paused);
+
+    // give focus back to info panel when tutorial is resumed
+    if(!paused)
+        mInfo->SetFocus();
 }
 
 void TutorialInfoStep::OnStart()

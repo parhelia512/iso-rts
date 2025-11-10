@@ -93,6 +93,7 @@ public:
 
     bool GetPaused() const;
     void SetPause(bool paused);
+    void SetTutorialPause(bool paused);
 
     // MISSION GOALS
     const std::vector<MissionGoal> & GetMissionGoals() const;

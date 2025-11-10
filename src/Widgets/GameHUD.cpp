@@ -240,6 +240,8 @@ void GameHUD::ShowDialogMissionGoals()
     if(mDialogMissionGoals != nullptr)
         return ;
 
+    ++mVisibleDialogs;
+
     mScreen->SetPause(true);
 
     Game * game = mScreen->GetGame();
@@ -249,16 +251,16 @@ void GameHUD::ShowDialogMissionGoals()
     mDialogMissionGoals->AddFunctionOnClose([this]
     {
         HideDialogMissionGoals();
+
+        ReopenPanels();
+
+        // un-pause game
+        mScreen->SetPause(false);
     });
 
     mDialogMissionGoals->AddFunctionOnEnd([this]
     {
-        // hide dialog
-        mDialogMissionGoals->SetVisible(false);
-
-        // schedule dialog deletion
-        mDialogMissionGoals->DeleteLater();
-        mDialogMissionGoals = nullptr;
+        HideDialogMissionGoals();
 
         // show dialog game won
         ShowDialogEndMission(true);
@@ -272,19 +274,24 @@ void GameHUD::ShowDialogMissionGoals()
 
 void GameHUD::HideDialogMissionGoals()
 {
-    ReopenPanels();
+    if(mDialogMissionGoals == nullptr)
+        return ;
+
+    // hide dialog
+    mDialogMissionGoals->SetVisible(false);
+
+    --mVisibleDialogs;
 
     // schedule dialog deletion
     mDialogMissionGoals->DeleteLater();
     mDialogMissionGoals = nullptr;
-
-    // un-pause game
-    mScreen->SetPause(false);
 }
 
 void GameHUD::ShowDialogEndMission(bool won)
 {
     mScreen->SetPause(true);
+
+    ++mVisibleDialogs;
 
     // stats
     GameMap * gm = mScreen->mGameMap;
@@ -301,6 +308,8 @@ void GameHUD::ShowDialogEndMission(bool won)
 
     dialog->SetFunctionOnClose([this, dialog, won]
     {
+        --mVisibleDialogs;
+
         dialog->DeleteLater();
 
         if(won)
@@ -318,7 +327,10 @@ void GameHUD::ShowDialogExit()
     if(mDialogExit != nullptr)
         return ;
 
+    ++mVisibleDialogs;
+
     mScreen->SetPause(true);
+    mScreen->SetTutorialPause(true);
 
     if(mScreen->mTut != nullptr)
         mScreen->mTut->SetPause(true);
@@ -328,6 +340,8 @@ void GameHUD::ShowDialogExit()
 
     mDialogExit->SetFunctionOnShowingDialogSettings([this]
     {
+        ++mVisibleDialogs;
+
         TemporaryClosePanels();
 
         // keep game paused
@@ -336,20 +350,25 @@ void GameHUD::ShowDialogExit()
 
     mDialogExit->SetFunctionOnHidingDialogSettings([this]
     {
+        --mVisibleDialogs;
+
         ReopenPanels();
 
-        ResumeGame();
+        ResumeGameFromExit();
     });
 
     mDialogExit->SetFunctionOnClose([this]
     {
-        ReopenPanels();
+        --mVisibleDialogs;
 
         // schedule dialog deletion
         mDialogExit->DeleteLater();
         mDialogExit = nullptr;
 
-        ResumeGame();
+        if(0 ==mVisibleDialogs)
+            ReopenPanels();
+
+        ResumeGameFromExit();
     });
 
     TemporaryClosePanels();
@@ -362,6 +381,8 @@ void GameHUD::ShowDialogExploreTemple(Player * player, Temple * temple)
 {
     if(mDialogExploreTemple != nullptr)
         return ;
+
+    ++mVisibleDialogs;
 
     mScreen->SetPause(true);
 
@@ -402,13 +423,14 @@ void GameHUD::HideDialogExploreTemple()
     if(nullptr == mDialogExploreTemple)
         return ;
 
-    ReopenPanels();
+    --mVisibleDialogs;
 
     // delete dialog
     mDialogExploreTemple->DeleteLater();
     mDialogExploreTemple = nullptr;
 
-    // un-pause game
+    ReopenPanels();
+
     mScreen->SetPause(false);
 }
 
@@ -416,6 +438,8 @@ void GameHUD::ShowDialogNewElement(unsigned int type)
 {
     if(mDialogNewElement != nullptr)
         return;
+
+    ++mVisibleDialogs;
 
     mScreen->SetPause(true);
 
@@ -475,6 +499,8 @@ void GameHUD::HideDialogNewElement()
     // no dialog -> nothing to do
     if(nullptr == mDialogNewElement)
         return ;
+
+    --mVisibleDialogs;
 
     ReopenPanels();
 
@@ -590,6 +616,8 @@ void GameHUD::ShowDialogTrading()
     if(mDialogTrading != nullptr)
         return ;
 
+    ++mVisibleDialogs;
+
     mScreen->SetPause(true);
 
     Game * game = mScreen->GetGame();
@@ -609,6 +637,8 @@ void GameHUD::ShowDialogTrading()
 
 void GameHUD::HideDialogTrading()
 {
+    --mVisibleDialogs;
+
     ReopenPanels();
 
     // schedule dialog deletion
@@ -658,6 +688,8 @@ void GameHUD::HideDialogExploreTempleOutcome()
     if(nullptr == mDialogExploreTempleOutcome)
         return ;
 
+    --mVisibleDialogs;
+
     ReopenPanels();
 
     // schedule dialog deletion
@@ -672,6 +704,8 @@ void GameHUD::ShowDialogExploreTempleOutcome(Player * player, Temple * temple)
 {
     if(mDialogExploreTempleOutcome != nullptr)
         return ;
+
+    ++mVisibleDialogs;
 
     mScreen->SetPause(true);
 
@@ -706,6 +740,11 @@ void GameHUD::ShowDialogExploreTempleOutcome(Player * player, Temple * temple)
 
 void GameHUD::HideDialogObject()
 {
+    if(nullptr == mDialogObj)
+        return ;
+
+    --mVisibleDialogs;
+
     // hide dialog
     mDialogObj->SetVisible(false);
 
@@ -719,6 +758,8 @@ void GameHUD::HideDialogObject()
 
 void GameHUD::ShowDialogObject(GameObject * obj)
 {
+    ++mVisibleDialogs;
+
     // pause game
     mScreen->SetPause(true);
 
@@ -778,14 +819,12 @@ void GameHUD::ReopenPanels()
         mPanelObjActions->SetVisible(true);
 }
 
-void GameHUD::ResumeGame()
+void GameHUD::ResumeGameFromExit()
 {
-    // un-pause game
-    mScreen->SetPause(false);
+    if(0 == mVisibleDialogs)
+        mScreen->SetPause(false);
 
-    // un-pause tutorial
-    if(mScreen->mTut != nullptr)
-        mScreen->mTut->SetPause(false);
+    mScreen->SetTutorialPause(false);
 }
 
 GameMapProgressBar * GameHUD::CreateProgressBar(float time, PlayerFaction faction)

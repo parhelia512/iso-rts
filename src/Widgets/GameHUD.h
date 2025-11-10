@@ -106,7 +106,7 @@ private:
     void TemporaryClosePanels();
     void ReopenPanels();
 
-    void ResumeGame();
+    void ResumeGameFromExit();
 
     GameMapProgressBar * CreateProgressBar(float time, PlayerFaction faction);
 
@@ -135,6 +135,8 @@ private:
     sgl::sgui::Image * mGoalCompletedIcon = nullptr;
 
     ScreenGame * mScreen = nullptr;
+
+    int mVisibleDialogs = 0;
 };
 
 inline MiniMap * GameHUD::GetMinimap() const { return mMiniMap; }

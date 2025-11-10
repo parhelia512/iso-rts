@@ -110,8 +110,11 @@ void StepGameMissionGoalsDialog::OnStart()
 {
     TutorialInfoStep::OnStart();
 
-    // move focus to front
-    sgl::sgui::Stage::Instance()->MoveChildToFront(mFocusArea);
+    // move elements to front
+    auto stage = sgl::sgui::Stage::Instance();
+    stage->MoveChildToFront(mFocusArea);
+    stage->MoveChildToFront(GetClickFilter());
+    stage->MoveChildToFront(GetPanelInfo());
 }
 
 } // namespace game

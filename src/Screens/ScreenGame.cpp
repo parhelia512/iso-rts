@@ -407,9 +407,6 @@ void ScreenGame::SetPause(bool paused)
 {
     mPaused = paused;
 
-    if(mTut != nullptr)
-        mTut->SetPause(paused);
-
     mHUD->SetEnabled(!paused);
 
     // handle turn control panel text
@@ -422,6 +419,12 @@ void ScreenGame::SetPause(bool paused)
         else
             mHUD->ShowTurnControlTextEnemyTurn();
     }
+}
+
+void ScreenGame::SetTutorialPause(bool paused)
+{
+    if(mTut != nullptr)
+        mTut->SetPause(paused);
 }
 
 void ScreenGame::CollectMissionGoalReward(unsigned int index)
@@ -834,10 +837,7 @@ void ScreenGame::OnKeyUp(sgl::core::KeyboardEvent & event)
     // GAME
     const int key = event.GetKey();
 
-    // P -> PAUSE
-    if(key == KeyboardEvent::KEY_P)
-        SetPause(!mPaused);
-    else if(key == KeyboardEvent::KEY_ESCAPE)
+    if(key == KeyboardEvent::KEY_ESCAPE)
         mHUD->ShowDialogExit();
     // SHIFT + B -> center camera on own base
     else if(key == KeyboardEvent::KEY_B)
@@ -936,7 +936,7 @@ void ScreenGame::OnWindowExposed(sgl::graphic::WindowEvent &)
 
 void ScreenGame::OnWindowHidden(sgl::graphic::WindowEvent &)
 {
-    SetPause(true);
+    mHUD->ShowDialogExit();
 }
 
 void ScreenGame::OnWindowMouseEntered(sgl::graphic::WindowEvent & event)
