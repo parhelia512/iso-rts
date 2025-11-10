@@ -11,6 +11,10 @@ class TutorialGameIntro : public Tutorial
 {
 public:
     TutorialGameIntro(ScreenGame * screen);
+    ~TutorialGameIntro();
+
+private:
+    ScreenGame * mScreen = nullptr;
 };
 
 } // namespace game

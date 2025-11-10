@@ -1,5 +1,6 @@
 #include "Tutorial/TutorialGameIntro.h"
 
+#include "CameraMapController.h"
 #include "Game.h"
 #include "GameConstants.h"
 #include "GameMap.h"
@@ -36,6 +37,7 @@ namespace game
 
 TutorialGameIntro::TutorialGameIntro(ScreenGame * screen)
     : Tutorial(TUTORIAL_MISSION_INTRO, screen->GetGame())
+    , mScreen(screen)
 {
     // TODO these will be replaced by dynamic values soon
     constexpr float TIME_NEW_UNIT = 2.f;
@@ -91,6 +93,12 @@ TutorialGameIntro::TutorialGameIntro(ScreenGame * screen)
     AddStep(new StepGameEnableCamera(screen->mCamController));
 
     AddStep(new StepGameMapNavigation);
+}
+
+TutorialGameIntro::~TutorialGameIntro()
+{
+    // re-enable camera in game in case tutorial is quit
+    mScreen->mCamController->SetEnabled(true);
 }
 
 } // namespace game
