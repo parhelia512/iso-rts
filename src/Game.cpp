@@ -94,7 +94,7 @@ Game::Game(int argc, char * argv[])
     mStateMan->AddState(new StateSettings(this));
     mStateMan->AddState(new StateTest(this));
 
-    mStateMan->RequestNextActiveState(StateId::INIT);
+    mStateMan->SetInitialActiveState(StateId::INIT);
 
     // -- AUDIO --
     const int defVolumeMusic = 50;
