@@ -342,23 +342,20 @@ DialogExit::DialogExit(DialogButtons buttons, Game * game, Screen * screen)
     }
 
     // BUTTON WISHLIST
-    if(buttons & BTN_WHISHLIST)
+    auto btn2 = new ButtonWishlistDialogExit(this);
+
+    const int marginBottom = 20;
+    btnX = (w - btn2->GetWidth()) / 2;
+    btnY = h - btn2->GetHeight() - marginBottom;
+
+    btn2->SetPosition(btnX, btnY);
+
+    btn2->AddOnClickFunction([game]
     {
-        auto btn2 = new ButtonWishlistDialogExit(this);
-
-        const int marginBottom = 20;
-        btnX = (w - btn2->GetWidth()) / 2;
-        btnY = h - btn2->GetHeight() - marginBottom;
-
-        btn2->SetPosition(btnX, btnY);
-
-        btn2->AddOnClickFunction([game]
-        {
-            sgl::utilities::System sys;
-            sys.OpenUrlInBrowser("https://store.steampowered.com/app/1607580/Virtualord_The_Virtual_Conqueror/"
-                                 "?utm_source=game&utm_medium=button&utm_campaign=game&utm_content=exitdialog");
-        });
-    }
+        sgl::utilities::System sys;
+        sys.OpenUrlInBrowser("https://store.steampowered.com/app/1607580/Virtualord_The_Virtual_Conqueror/"
+                             "?utm_source=game&utm_medium=button&utm_campaign=game&utm_content=exitdialog");
+    });
 }
 
 void DialogExit::SetFunctionOnShowingDialogSettings(const std::function<void()> & f)
