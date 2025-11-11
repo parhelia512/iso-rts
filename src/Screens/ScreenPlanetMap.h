@@ -11,6 +11,7 @@ namespace sgl
 namespace game
 {
 
+class DialogExit;
 class PanelResources;
 class PanelPlanetActionConquer;
 class PanelPlanetActionConquerAI;
@@ -26,6 +27,8 @@ public:
     ScreenPlanetMap(Game * game);
     ~ScreenPlanetMap();
 
+    void OnKeyUp(sgl::core::KeyboardEvent & event) override;
+
     void Update(float delta) override;
     void Render() override;
 
@@ -38,6 +41,8 @@ private:
     bool TryToConquerTerritory(int index);
 
     void UpdatePlanetButtons();
+
+    void ShowDialogExit();
 
 private:
     friend class TutorialPlanetMap;
@@ -56,6 +61,8 @@ private:
     sgl::sgui::Label * mLabelDate = nullptr;
 
     PlanetMap * mPlanet = nullptr;
+
+    DialogExit * mDialogExit = nullptr;
 };
 
 } // namespace game

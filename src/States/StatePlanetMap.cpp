@@ -1,5 +1,6 @@
 #include "States/StatePlanetMap.h"
 
+#include "Game.h"
 #include "Screens/ScreenPlanetMap.h"
 #include "States/StatesIds.h"
 
@@ -14,6 +15,8 @@ StatePlanetMap::StatePlanetMap(Game * game)
 void StatePlanetMap::OnActive()
 {
     mScreen = new ScreenPlanetMap(mGame);
+
+    mGame->AddKeyboardListener(mScreen);
 }
 
 void StatePlanetMap::OnInactive()

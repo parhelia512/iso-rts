@@ -7,6 +7,7 @@
 #include "States/StatesIds.h"
 #include "Tutorial/TutorialManager.h"
 #include "Widgets/ButtonPlanetMap.h"
+#include "Widgets/DialogExit.h"
 #include "Widgets/GameUIData.h"
 #include "Widgets/PanelResources.h"
 #include "Widgets/PanelPlanetActionConquer.h"
@@ -18,6 +19,7 @@
 #include "Widgets/PlanetMap.h"
 #include "Widgets/WidgetsConstants.h"
 
+#include <sgl/core/event/KeyboardEvent.h>
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
 #include <sgl/graphic/Image.h>
@@ -437,6 +439,16 @@ ScreenPlanetMap::~ScreenPlanetMap()
     sgl::sgui::Stage::Instance()->ClearWidgets();
 }
 
+void ScreenPlanetMap::OnKeyUp(sgl::core::KeyboardEvent & event)
+{
+    using namespace sgl;
+
+    const int key = event.GetKey();
+
+    if(key == core::KeyboardEvent::KEY_ESCAPE)
+        ShowDialogExit();
+}
+
 void ScreenPlanetMap::Update(float delta)
 {
     GetGame()->GetTutorialManager()->Update(delta);
@@ -537,6 +549,43 @@ void ScreenPlanetMap::UpdatePlanetButtons()
 
         mPlanet->SetButtonState(i, occupier, ts);
     }
+}
+
+void ScreenPlanetMap::ShowDialogExit()
+{
+    if(mDialogExit != nullptr)
+        return ;
+
+    auto game = GetGame();
+    auto tutMan = game->GetTutorialManager();
+
+    if(tutMan->HasActiveTutorial())
+    {
+        tutMan->SetTutorialPause(true);
+        mDialogExit = new DialogExit(DialogExit::BUTTONS_TUTORIAL, game, this);
+    }
+    else
+    {
+        auto buttons = static_cast<DialogExit::DialogButtons>(DialogExit::BTN_MAIN_MENU | DialogExit::BTN_SETTINGS);
+        mDialogExit = new DialogExit(buttons, game, this);
+    }
+
+    mDialogExit->SetFocus();
+
+    mDialogExit->SetFunctionOnClose([this]
+    {
+        // schedule dialog deletion
+        mDialogExit->DeleteLater();
+        mDialogExit = nullptr;
+
+        GetGame()->GetTutorialManager()->SetTutorialPause(false);
+    });
+
+    // position dialog
+    auto renderer = sgl::graphic::Renderer::Instance();
+    const int posX = (renderer->GetWidth() - mDialogExit->GetWidth()) / 2;
+    const int posY = (renderer->GetHeight() - mDialogExit->GetHeight()) / 2;
+    mDialogExit->SetPosition(posX, posY);
 }
 
 } // namespace game
