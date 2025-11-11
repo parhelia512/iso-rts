@@ -32,6 +32,8 @@ public:
     void Update(float delta) override;
     void Render() override;
 
+    void SetPause(bool paused);
+
 private:
     void SetPlanetName(const char * name);
     void SetDate(const char * date);
@@ -63,6 +65,8 @@ private:
     PlanetMap * mPlanet = nullptr;
 
     DialogExit * mDialogExit = nullptr;
+
+    bool mPaused = false;
 };
 
 } // namespace game

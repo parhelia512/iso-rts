@@ -281,7 +281,7 @@ enum SpriteIdDialogTrading : unsigned int
     ID_DLG_TRADING_BTN_PLUS_DISABLED,
 };
 
-// FACTION SELECTION DIALOG
+// GENERIC GAME UI
 extern const char SpriteFileGameUI[];
 
 enum SpriteIdGameUI : unsigned int
@@ -292,7 +292,15 @@ enum SpriteIdGameUI : unsigned int
     ID_GAMEUI_GOAL_F3,
 
     // MOUSE CURSORS
-    ID_GAME_CURSOR_1
+    ID_GAME_CURSOR_1,
+};
+
+extern const char SpriteFileGameUIExp[];
+
+enum SpriteIdGameUIExp : unsigned int
+{
+    // SCREEN OVERALY BG
+    ID_SCREEN_OVERLAY_BG
 };
 
 // FACTION SELECTION DIALOG

@@ -459,6 +459,11 @@ void ScreenPlanetMap::Render()
     mBg->Render();
 }
 
+void ScreenPlanetMap::SetPause(bool paused)
+{
+    mPaused = paused;
+}
+
 void ScreenPlanetMap::SetPlanetName(const char * name)
 {
     mLabelName->SetText(name);
@@ -556,6 +561,10 @@ void ScreenPlanetMap::ShowDialogExit()
     if(mDialogExit != nullptr)
         return ;
 
+    ShowScreenOverlay();
+
+    SetPause(true);
+
     auto game = GetGame();
     auto tutMan = game->GetTutorialManager();
 
@@ -578,7 +587,10 @@ void ScreenPlanetMap::ShowDialogExit()
         mDialogExit->DeleteLater();
         mDialogExit = nullptr;
 
+        SetPause(false);
         GetGame()->GetTutorialManager()->SetTutorialPause(false);
+
+        HideScreenOverlay();
     });
 
     // position dialog

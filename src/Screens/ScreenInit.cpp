@@ -528,6 +528,14 @@ void ScreenInit::SetupTextures()
         };
 
         tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_UI_GAME], SpriteFileGameUI, rects);
+
+        std::vector<sgl::core::Rectd> rectsExp
+        {
+            // SCREEN OVERLAY BG
+            { 0, 0, 10, 10 },
+        };
+
+        tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_UI_GAME], SpriteFileGameUIExp, rectsExp);
     });
 
     // MAIN MENU

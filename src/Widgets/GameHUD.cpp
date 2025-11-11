@@ -240,6 +240,8 @@ void GameHUD::ShowDialogMissionGoals()
     if(mDialogMissionGoals != nullptr)
         return ;
 
+    mScreen->ShowScreenOverlay();
+
     ++mVisibleDialogs;
 
     mScreen->SetPause(true);
@@ -277,6 +279,8 @@ void GameHUD::HideDialogMissionGoals()
     if(mDialogMissionGoals == nullptr)
         return ;
 
+    mScreen->HideScreenOverlay();
+
     // hide dialog
     mDialogMissionGoals->SetVisible(false);
 
@@ -290,6 +294,8 @@ void GameHUD::HideDialogMissionGoals()
 void GameHUD::ShowDialogEndMission(bool won)
 {
     mScreen->SetPause(true);
+
+    mScreen->ShowScreenOverlay();
 
     ++mVisibleDialogs;
 
@@ -308,6 +314,8 @@ void GameHUD::ShowDialogEndMission(bool won)
 
     dialog->SetFunctionOnClose([this, dialog, won]
     {
+        mScreen->HideScreenOverlay();
+
         --mVisibleDialogs;
 
         dialog->DeleteLater();
@@ -326,6 +334,8 @@ void GameHUD::ShowDialogExit()
 {
     if(mDialogExit != nullptr)
         return ;
+
+    mScreen->ShowScreenOverlay();
 
     ++mVisibleDialogs;
 
@@ -364,6 +374,8 @@ void GameHUD::ShowDialogExit()
 
     mDialogExit->SetFunctionOnClose([this]
     {
+        mScreen->HideScreenOverlay();
+
         --mVisibleDialogs;
 
         // schedule dialog deletion
@@ -386,6 +398,8 @@ void GameHUD::ShowDialogExploreTemple(Player * player, Temple * temple)
 {
     if(mDialogExploreTemple != nullptr)
         return ;
+
+    mScreen->ShowScreenOverlay();
 
     ++mVisibleDialogs;
 
@@ -428,6 +442,8 @@ void GameHUD::HideDialogExploreTemple()
     if(nullptr == mDialogExploreTemple)
         return ;
 
+    mScreen->HideScreenOverlay();
+
     --mVisibleDialogs;
 
     // delete dialog
@@ -443,6 +459,8 @@ void GameHUD::ShowDialogNewElement(unsigned int type)
 {
     if(mDialogNewElement != nullptr)
         return;
+
+    mScreen->ShowScreenOverlay();
 
     ++mVisibleDialogs;
 
@@ -504,6 +522,8 @@ void GameHUD::HideDialogNewElement()
     // no dialog -> nothing to do
     if(nullptr == mDialogNewElement)
         return ;
+
+    mScreen->HideScreenOverlay();
 
     --mVisibleDialogs;
 
@@ -621,6 +641,8 @@ void GameHUD::ShowDialogTrading()
     if(mDialogTrading != nullptr)
         return ;
 
+    mScreen->ShowScreenOverlay();
+
     ++mVisibleDialogs;
 
     mScreen->SetPause(true);
@@ -643,6 +665,8 @@ void GameHUD::ShowDialogTrading()
 void GameHUD::HideDialogTrading()
 {
     --mVisibleDialogs;
+
+    mScreen->HideScreenOverlay();
 
     ReopenPanels();
 
@@ -693,6 +717,8 @@ void GameHUD::HideDialogExploreTempleOutcome()
     if(nullptr == mDialogExploreTempleOutcome)
         return ;
 
+    mScreen->HideScreenOverlay();
+
     --mVisibleDialogs;
 
     ReopenPanels();
@@ -709,6 +735,8 @@ void GameHUD::ShowDialogExploreTempleOutcome(Player * player, Temple * temple)
 {
     if(mDialogExploreTempleOutcome != nullptr)
         return ;
+
+    mScreen->ShowScreenOverlay();
 
     ++mVisibleDialogs;
 
@@ -748,6 +776,8 @@ void GameHUD::HideDialogObject()
     if(nullptr == mDialogObj)
         return ;
 
+    mScreen->HideScreenOverlay();
+
     --mVisibleDialogs;
 
     // hide dialog
@@ -765,6 +795,8 @@ void GameHUD::ShowDialogObject(GameObject * obj)
 {
     ++mVisibleDialogs;
 
+    mScreen->ShowScreenOverlay();
+
     // pause game
     mScreen->SetPause(true);
 
@@ -772,6 +804,8 @@ void GameHUD::ShowDialogObject(GameObject * obj)
     mDialogObj->SetObject(obj);
     mDialogObj->SetVisible(true);
     mDialogObj->SetFocus();
+
+    sgl::sgui::Stage::Instance()->MoveChildToFront(mDialogObj);
 
     TemporaryClosePanels();
 }

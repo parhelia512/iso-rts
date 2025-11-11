@@ -379,6 +379,8 @@ add_executable(
     src/Widgets/ResourceDisplay.cpp
     src/Widgets/ResourceTooltip.h
     src/Widgets/ResourceTooltip.cpp
+    src/Widgets/ScreenOverlay.h
+    src/Widgets/ScreenOverlay.cpp
     src/Widgets/SimpleResourceDisplay.h
     src/Widgets/SimpleResourceDisplay.cpp
     src/Widgets/WidgetsConstants.h

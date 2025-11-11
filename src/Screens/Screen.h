@@ -5,6 +5,11 @@
 #include <sgl/core/event/MouseEventListener.h>
 #include <sgl/graphic/event/WindowEventListener.h>
 
+namespace sgl
+{
+    namespace sgui { class Widget; }
+}
+
 namespace game
 {
 
@@ -27,12 +32,18 @@ public:
 
     virtual void Render() = 0;
 
+protected:
+    void ShowScreenOverlay();
+    void HideScreenOverlay();
+
 private:
     Game * mGame = nullptr;
 
     SharedScreenListener * mSharedListener = nullptr;
 
     DialogSettings * mSettings = nullptr;
+
+    sgl::sgui::Widget * mOverlay = nullptr;
 };
 
 inline Game * Screen::GetGame() const { return mGame; }
