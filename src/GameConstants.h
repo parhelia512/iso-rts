@@ -107,8 +107,8 @@ enum Planets : unsigned int
 
 enum TutorialId : unsigned int
 {
-    TUTORIAL_PLANET_MAP,
     TUTORIAL_MISSION_INTRO,
+    TUTORIAL_PLANET_MAP,
 
     NUM_TUTORIALS,
 

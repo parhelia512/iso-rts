@@ -1,15 +1,12 @@
 #include "Tutorial/Tutorial.h"
 
-#include "Game.h"
-#include "GameConstants.h"
 #include "Tutorial/TutorialStep.h"
 
 namespace game
 {
 
-Tutorial::Tutorial(TutorialId tutId, Game *game)
-    : mGame(game)
-    , mId(tutId)
+Tutorial::Tutorial(TutorialId tutId)
+    : mId(tutId)
 {
 }
 
@@ -26,8 +23,6 @@ void Tutorial::Start()
     // already started
     if(mStepsAtStart > 0)
         return ;
-
-    mGame->SetTutorialState(mId, TS_IN_PROGRESS);
 
     OnStart();
 
@@ -63,8 +58,6 @@ void Tutorial::Update(float delta)
     if(AreAllStepsDone())
     {
         mDone = true;
-
-        mGame->SetTutorialState(mId, TS_DONE);
 
         OnEnd();
     }

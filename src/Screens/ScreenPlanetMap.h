@@ -19,7 +19,6 @@ class PanelPlanetActions;
 class PanelPlanetInfo;
 class PanelPlanetResources;
 class PlanetMap;
-class Tutorial;
 
 class ScreenPlanetMap : public Screen
 {
@@ -57,8 +56,6 @@ private:
     sgl::sgui::Label * mLabelDate = nullptr;
 
     PlanetMap * mPlanet = nullptr;
-
-    Tutorial * mTut = nullptr;
 };
 
 } // namespace game

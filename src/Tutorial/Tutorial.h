@@ -5,7 +5,6 @@
 namespace game
 {
 
-class Game;
 class TutorialStep;
 
 enum TutorialId : unsigned int;
@@ -13,10 +12,10 @@ enum TutorialId : unsigned int;
 class Tutorial
 {
 public:
-    Tutorial(TutorialId tutId, Game * game);
+    Tutorial(TutorialId tutId);
     virtual ~Tutorial();
 
-    unsigned int GetId() const;
+    TutorialId GetId() const;
 
     void AddStep(TutorialStep * step);
 
@@ -46,8 +45,6 @@ private:
 
     TutorialStep * mCurrStep = nullptr;
 
-    Game * mGame = nullptr;
-
     TutorialId mId;
 
     unsigned int mStepsAtStart = 0;
@@ -57,7 +54,7 @@ private:
     bool mPaused = false;
 };
 
-inline unsigned int Tutorial::GetId() const { return mId; }
+inline TutorialId Tutorial::GetId() const { return mId; }
 
 inline bool Tutorial::IsDone() const { return mDone; }
 

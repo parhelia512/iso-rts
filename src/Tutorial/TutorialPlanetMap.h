@@ -5,12 +5,13 @@
 namespace game
 {
 
+class Screen;
 class ScreenPlanetMap;
 
 class TutorialPlanetMap : public Tutorial
 {
 public:
-    TutorialPlanetMap(ScreenPlanetMap * screen);
+    TutorialPlanetMap(Screen * screen);
 
 private:
     ScreenPlanetMap * mScreen = nullptr;

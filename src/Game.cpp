@@ -14,6 +14,7 @@
 #include "States/StatePlanetMap.h"
 #include "States/StateSettings.h"
 #include "States/StateTest.h"
+#include "Tutorial/TutorialManager.h"
 
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
@@ -43,6 +44,7 @@ bool Game::GOD_MODE = false;
 
 Game::Game(int argc, char * argv[])
     : sgl::core::Application(argc, argv)
+    , mTutMan(new TutorialManager)
     , mMapsReg(new MapsRegistry)
     , mObjsRegistry(new ObjectsDataRegistry)
     , mLocalFaction(NO_FACTION)
@@ -111,9 +113,6 @@ Game::Game(int argc, char * argv[])
     mStage = sgui::Stage::Create();
     AddKeyboardListener(mStage);
     AddMouseListener(mStage);
-
-    // -- TUTORIAL --
-    mTutorialsState.resize(NUM_TUTORIALS, TS_TODO);
 }
 
 Game::~Game()
@@ -270,20 +269,6 @@ void Game::RemoveOnSettingsChangedFunction(unsigned int fId)
 
     if(it != mOnSettingsChanged.end())
         mOnSettingsChanged.erase(it);
-}
-
-TutorialState Game::GetTutorialState(TutorialId tut)
-{
-    if(tut < NUM_TUTORIALS)
-        return mTutorialsState[tut];
-    else
-        return TS_UNKNOWN;
-}
-
-void Game::SetTutorialState(TutorialId tut, TutorialState state)
-{
-    if(tut < NUM_TUTORIALS)
-        mTutorialsState[tut] = state;
 }
 
 void Game::NotifyOnSettingsChanged()

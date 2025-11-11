@@ -5,7 +5,7 @@
 #include "MapsRegistry.h"
 #include "Player.h"
 #include "States/StatesIds.h"
-#include "Tutorial/TutorialPlanetMap.h"
+#include "Tutorial/TutorialManager.h"
 #include "Widgets/ButtonPlanetMap.h"
 #include "Widgets/GameUIData.h"
 #include "Widgets/PanelResources.h"
@@ -418,40 +418,28 @@ ScreenPlanetMap::ScreenPlanetMap(Game * game)
     sgl::media::AudioManager::Instance()->GetPlayer()->PlayMusic("game/music_01.ogg");
 
     // TUTORIAL
-    if(game->IsTutorialEnabled() && game->GetTutorialState(TUTORIAL_PLANET_MAP) == TS_TODO)
+    if(game->IsTutorialEnabled())
     {
-        mTut = new TutorialPlanetMap(this);
-        mTut->Start();
+        auto tutMan = game->GetTutorialManager();
+
+        if(tutMan->GetTutorialState(TUTORIAL_PLANET_MAP) == TS_TODO)
+        {
+            tutMan->CreateTutorial(TUTORIAL_PLANET_MAP, this);
+            tutMan->StartTutorial();
+        }
     }
 }
 
 ScreenPlanetMap::~ScreenPlanetMap()
 {
-    delete mTut;
-    mTut = nullptr;
-
-    sgl::sgui::Stage::Instance()->ClearWidgets();
-
     delete mBg;
 
-    auto stage = sgl::sgui::Stage::Instance();
-
-    stage->ClearWidgets();
+    sgl::sgui::Stage::Instance()->ClearWidgets();
 }
 
 void ScreenPlanetMap::Update(float delta)
 {
-    // TUTORIAL
-    if(mTut)
-    {
-        mTut->Update(delta);
-
-        if(mTut->IsDone())
-        {
-            delete mTut;
-            mTut = nullptr;
-        }
-    }
+    GetGame()->GetTutorialManager()->Update(delta);
 }
 
 void ScreenPlanetMap::Render()

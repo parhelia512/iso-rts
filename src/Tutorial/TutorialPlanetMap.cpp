@@ -14,13 +14,17 @@
 #include "Tutorial/StepPlanetMapSelectTerritory.h"
 #include "Tutorial/StepPlanetMapSendAI.h"
 
+#include <cassert>
+
 namespace game
 {
 
-TutorialPlanetMap::TutorialPlanetMap(ScreenPlanetMap * screen)
-    : Tutorial(TUTORIAL_PLANET_MAP, screen->GetGame())
-    , mScreen(screen)
+TutorialPlanetMap::TutorialPlanetMap(Screen * screen)
+    : Tutorial(TUTORIAL_PLANET_MAP)
+    , mScreen(dynamic_cast<ScreenPlanetMap *>(screen))
 {
+    assert(mScreen != nullptr);
+
     AddStep(new StepDelay(1.f));
     AddStep(new StepPlanetMapIntro);
     AddStep(new StepPlanetMapSelectTerritory(mScreen->mPlanet));

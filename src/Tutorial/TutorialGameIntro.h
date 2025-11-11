@@ -5,12 +5,13 @@
 namespace game
 {
 
+class Screen;
 class ScreenGame;
 
 class TutorialGameIntro : public Tutorial
 {
 public:
-    TutorialGameIntro(ScreenGame * screen);
+    TutorialGameIntro(Screen * screen);
     ~TutorialGameIntro();
 
 private:

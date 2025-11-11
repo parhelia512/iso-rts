@@ -40,7 +40,6 @@ class MoveIndicator;
 class Player;
 class PlayerAI;
 class StructureIndicator;
-class Tutorial;
 class Unit;
 class WallIndicator;
 
@@ -93,9 +92,6 @@ public:
 
     bool GetPaused() const;
     void SetPause(bool paused);
-    void SetTutorialPause(bool paused);
-
-    void AbortTutorial();
 
     // MISSION GOALS
     const std::vector<MissionGoal> & GetMissionGoals() const;
@@ -114,8 +110,6 @@ private:
     void CreateLayers();
 
     void CreateUI();
-
-    void UpdateTutorial(float delta);
 
     void LoadMapFile();
 
@@ -228,9 +222,6 @@ private:
 
     struct Cell2D mCurrCell;
     sgl::core::Pointd2D mMousePos;
-
-    // TUTORIAL
-    Tutorial * mTut = nullptr;
 
     // TURN MANAGEMENT
     Player * mLocalPlayer = nullptr;

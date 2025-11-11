@@ -31,14 +31,13 @@ namespace game
 class MapsRegistry;
 class ObjectsDataRegistry;
 class Player;
+class TutorialManager;
 
 enum GameCursorId : unsigned int;
 enum Planets : unsigned int;
 enum PlayerFaction : unsigned int;
 enum ResourceType : unsigned int;
 enum StateId : int;
-enum TutorialId : unsigned int;
-enum TutorialState : unsigned int;
 
 enum Difficulty : unsigned int
 {
@@ -117,9 +116,7 @@ public:
     unsigned int AddOnSettingsChangedFunction(const std::function<void()> & f);
     void RemoveOnSettingsChangedFunction(unsigned int fId);
 
-    // -- tutorial --
-    TutorialState GetTutorialState(TutorialId tut);
-    void SetTutorialState(TutorialId tut, TutorialState state);
+    TutorialManager * GetTutorialManager() const;
 
 private:
     void NotifyOnSettingsChanged();
@@ -133,8 +130,6 @@ private:
 
     std::unordered_map<GameCursorId, sgl::graphic::Cursor *> mCursors;
 
-    std::vector<TutorialState> mTutorialsState;
-
     sgl::graphic::Renderer * mRenderer = nullptr;
     sgl::graphic::Window * mWin = nullptr;
 
@@ -143,6 +138,8 @@ private:
     sgl::sgui::Stage * mStage = nullptr;
 
     sgl::media::AudioManager * mAudioMan = nullptr;
+
+    TutorialManager * mTutMan = nullptr;
 
     MapsRegistry * mMapsReg = nullptr;
     ObjectsDataRegistry * mObjsRegistry = nullptr;
@@ -252,5 +249,7 @@ inline void Game::SetAutoEndTurn(bool val)
 
 inline bool Game::IsTutorialEnabled() const { return mTutorialEnabled; }
 inline void Game::SetTutorialEnabled(bool val) { mTutorialEnabled = val; }
+
+inline TutorialManager * Game::GetTutorialManager() const { return mTutMan; }
 
 } // namespace game

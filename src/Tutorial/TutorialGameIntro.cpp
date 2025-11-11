@@ -32,24 +32,27 @@
 #include "Tutorial/StepGameWaitTurn.h"
 #include "Widgets/GameHUD.h"
 
+#include <cassert>
+
 namespace game
 {
 
-TutorialGameIntro::TutorialGameIntro(ScreenGame * screen)
-    : Tutorial(TUTORIAL_MISSION_INTRO, screen->GetGame())
-    , mScreen(screen)
+TutorialGameIntro::TutorialGameIntro(Screen * screen)
+    : Tutorial(TUTORIAL_MISSION_INTRO)
+    , mScreen(dynamic_cast<ScreenGame *>(screen))
 {
+    assert(mScreen);
+
     // TODO these will be replaced by dynamic values soon
     constexpr float TIME_NEW_UNIT = 2.f;
 
-    const Game * game = screen->GetGame();
-    const Player * local = game->GetLocalPlayer();
+    const Player * local = mScreen->GetGame()->GetLocalPlayer();
 
-    auto panelActions = screen->mHUD->GetPanelObjectActions();
-    auto panelObj = screen->mHUD->GetPanelSelectedObject();
-    auto panelTurn = screen->mHUD->GetPanelTurnControl();
+    auto panelActions = mScreen->mHUD->GetPanelObjectActions();
+    auto panelObj = mScreen->mHUD->GetPanelSelectedObject();
+    auto panelTurn = mScreen->mHUD->GetPanelTurnControl();
 
-    AddStep(new StepGameDisableCamera(screen->mCamController));
+    AddStep(new StepGameDisableCamera(mScreen->mCamController));
 
     AddStep(new StepDelay(1.f));
     AddStep(new StepGameIntro);
@@ -59,38 +62,38 @@ TutorialGameIntro::TutorialGameIntro(ScreenGame * screen)
     AddStep(new StepGameBaseFeatures(panelObj, panelActions));
     AddStep(new StepGameMissionGoalsIcon(panelActions));
     AddStep(new StepDelay(0.5f));
-    AddStep(new StepGameMissionGoalsDialog(screen->mHUD));
+    AddStep(new StepGameMissionGoalsDialog(mScreen->mHUD));
     AddStep(new StepDelay(0.5f));
     AddStep(new StepGameBaseBuildUnitIcon(panelActions));
     AddStep(new StepDelay(0.5f));
-    AddStep(new StepGameBaseBuildUnit(screen->mHUD));
+    AddStep(new StepGameBaseBuildUnit(mScreen->mHUD));
     // TODO replace constant with time from Base when implemented
     AddStep(new StepDelay(TIME_NEW_UNIT));
     AddStep(new StepGameUnit(local));
     AddStep(new StepDelay(0.5f));
-    AddStep(new StepGameMoveUnit(local, screen->mIsoMap));
+    AddStep(new StepGameMoveUnit(local, mScreen->mIsoMap));
     AddStep(new StepDelay(3.f));
     // TODO update based on tutorial map
     const int genR = 56;
     const int genC = 13;
-    const GameMapCell gmc = screen->mGameMap->GetCell(genR, genC);
+    const GameMapCell gmc = mScreen->mGameMap->GetCell(genR, genC);
     AddStep(new StepGameMoveCamera(200, -100));
-    AddStep(new StepGameConquerStruct(gmc.objTop, screen->mIsoMap));
+    AddStep(new StepGameConquerStruct(gmc.objTop, mScreen->mIsoMap));
     AddStep(new StepDelay(0.5f));
-    AddStep(new StepGameTurnEnergy(screen->mHUD));
+    AddStep(new StepGameTurnEnergy(mScreen->mHUD));
     AddStep(new StepDelay(0.5f));
     AddStep(new StepGameEndTurn(panelTurn));
-    AddStep(new StepGameWaitTurn(screen));
+    AddStep(new StepGameWaitTurn(mScreen));
     AddStep(new StepDelay(0.5f));
     AddStep(new StepGameEnergyRegeneration);
     AddStep(new StepGameStructDisconnected);
     AddStep(new StepGameUnitSelect(local));
     AddStep(new StepGameUnitConquerCellsIcon(panelActions));
-    AddStep(new StepGameConquerCells(local, screen->mIsoMap));
+    AddStep(new StepGameConquerCells(local, mScreen->mIsoMap));
     AddStep(new StepDelay(0.5f));
     AddStep(new StepGameStructConnected);
 
-    AddStep(new StepGameEnableCamera(screen->mCamController));
+    AddStep(new StepGameEnableCamera(mScreen->mCamController));
 
     AddStep(new StepGameMapNavigation);
 }

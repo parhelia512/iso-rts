@@ -2,8 +2,8 @@
 
 #include "Game.h"
 #include "Screens/Screen.h"
-#include "Screens/ScreenGame.h"
 #include "States/StatesIds.h"
+#include <Tutorial/TutorialManager.h>
 #include "Widgets/DialogSettings.h"
 #include "Widgets/GameButton.h"
 #include "Widgets/GameUIData.h"
@@ -335,7 +335,7 @@ DialogExit::DialogExit(DialogButtons buttons, Game * game, Screen * screen)
         {
             mButtonClose->Click();
 
-            static_cast<ScreenGame *>(screen)->AbortTutorial();
+            game->GetTutorialManager()->AbortTutorial();
         });
 
         btnY += btn->GetHeight() + marginBtnV;

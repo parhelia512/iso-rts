@@ -13,7 +13,7 @@
 #include "GameObjects/Temple.h"
 #include "GameObjects/Unit.h"
 #include "Screens/ScreenGame.h"
-#include "Tutorial/Tutorial.h"
+#include "Tutorial/TutorialManager.h"
 #include "Widgets/ButtonMinimap.h"
 #include "Widgets/ButtonPanelSelectedObject.h"
 #include "Widgets/ButtonQuickUnitSelection.h"
@@ -330,12 +330,12 @@ void GameHUD::ShowDialogExit()
     ++mVisibleDialogs;
 
     mScreen->SetPause(true);
-    mScreen->SetTutorialPause(true);
 
-    if(mScreen->mTut != nullptr)
+    auto tutMan = mScreen->GetGame()->GetTutorialManager();
+
+    if(tutMan->HasActiveTutorial())
     {
-        mScreen->mTut->SetPause(true);
-
+        tutMan->SetTutorialPause(true);
         mDialogExit = new DialogExit(DialogExit::BUTTONS_TUTORIAL, mScreen->GetGame(), mScreen);
     }
     else
@@ -829,7 +829,7 @@ void GameHUD::ResumeGameFromExit()
     if(0 == mVisibleDialogs)
         mScreen->SetPause(false);
 
-    mScreen->SetTutorialPause(false);
+    mScreen->GetGame()->GetTutorialManager()->SetTutorialPause(false);
 }
 
 GameMapProgressBar * GameHUD::CreateProgressBar(float time, PlayerFaction faction)

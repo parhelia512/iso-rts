@@ -32,7 +32,8 @@
 #include "Particles/UpdaterLootboxPrize.h"
 #include "Particles/UpdaterSingleLaser.h"
 #include "States/StatesIds.h"
-#include "Tutorial/TutorialGameIntro.h"
+#include "Tutorial/Tutorial.h"
+#include "Tutorial/TutorialManager.h"
 #include "Widgets/DialogNewElement.h"
 #include "Widgets/GameHUD.h"
 #include "Widgets/GameMapProgressBar.h"
@@ -177,10 +178,15 @@ ScreenGame::ScreenGame(Game * game)
     InitMusic();
 
     // TUTORIAL
-    if(game->IsTutorialEnabled() && game->GetTutorialState(TUTORIAL_MISSION_INTRO) == TS_TODO)
+    if(game->IsTutorialEnabled())
     {
-        mTut = new TutorialGameIntro(this);
-        mTut->Start();
+        auto tutMan = game->GetTutorialManager();
+
+        if(tutMan->GetTutorialState(TUTORIAL_MISSION_INTRO) == TS_TODO)
+        {
+            tutMan->CreateTutorial(TUTORIAL_MISSION_INTRO, this);
+            tutMan->StartTutorial();
+        }
     }
 }
 
@@ -199,8 +205,6 @@ ScreenGame::~ScreenGame()
     }
 
     game->RemoveOnSettingsChangedFunction(mIdOnSettingsChanged);
-
-    delete mTut;
 
     delete mPathfinder;
     delete mPartMan;
@@ -244,8 +248,7 @@ void ScreenGame::Update(float delta)
     mCamController->Update(delta);
 
     // always continue the TUTORIAL
-    if(mTut != nullptr)
-        UpdateTutorial(delta);
+    GetGame()->GetTutorialManager()->Update(delta);
 
     // do nothing else when paused
     if(mPaused)
@@ -419,23 +422,6 @@ void ScreenGame::SetPause(bool paused)
         else
             mHUD->ShowTurnControlTextEnemyTurn();
     }
-}
-
-void ScreenGame::SetTutorialPause(bool paused)
-{
-    if(mTut != nullptr)
-        mTut->SetPause(paused);
-}
-
-void ScreenGame::AbortTutorial()
-{
-    if(nullptr == mTut)
-        return ;
-
-    GetGame()->SetTutorialState(TUTORIAL_MISSION_INTRO, TS_TODO);
-
-    delete mTut;
-    mTut = nullptr;
 }
 
 void ScreenGame::CollectMissionGoalReward(unsigned int index)
@@ -766,17 +752,6 @@ void ScreenGame::CreateUI()
 
     // set initial focus to Stage
     sgl::sgui::Stage::Instance()->SetFocus();
-}
-
-void ScreenGame::UpdateTutorial(float delta)
-{
-    mTut->Update(delta);
-
-    if(mTut->IsDone())
-    {
-        delete mTut;
-        mTut = nullptr;
-    }
 }
 
 void ScreenGame::LoadMapFile()
@@ -1585,10 +1560,14 @@ bool ScreenGame::CheckIfGoalCompleted(MissionGoal & g)
 
         if(game->IsTutorialEnabled())
         {
-            if(game->GetTutorialState(TUTORIAL_MISSION_INTRO) != TS_DONE)
+            auto tutMan = game->GetTutorialManager();
+
+            if(tutMan->GetTutorialState(TUTORIAL_MISSION_INTRO) != TS_DONE)
             {
-                if(mTut != nullptr)
-                    g.SetProgress(mTut->GetNumStepsDone() * 100 / mTut->GetNumStepsAtStart());
+                auto tut = tutMan->GetTutorial();
+
+                if(tut != nullptr)
+                    g.SetProgress(tut->GetNumStepsDone() * 100 / tut->GetNumStepsAtStart());
 
                 return false;
             }
