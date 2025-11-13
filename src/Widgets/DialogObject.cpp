@@ -6,6 +6,7 @@
 #include "Widgets/GameUIData.h"
 #include "Widgets/ObjectVisualAttribute.h"
 #include "Widgets/ProgressBarObjectVisualStat.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/core/event/KeyboardEvent.h>
 #include <sgl/graphic/Font.h>
@@ -95,20 +96,18 @@ public:
         auto tm = graphic::TextureManager::Instance();
         //auto tex = tm->GetSprite(SpriteFilePanelSelectedObject, textIds[type]);
 
-        const char * fileFontHeader = "Lato-Regular.ttf";
         const unsigned int colorHeader = 0xb3d4e5ff;
         const int sizeHeader = 18;
 
-        graphic::Font * fontHeader = fm->GetFont(fileFontHeader, sizeHeader, graphic::Font::NORMAL);
+        auto fontHeader = fm->GetFont(WidgetsConstants::FontFileHeader, sizeHeader, graphic::Font::NORMAL);
         mHeader = new sgui::Label(HEADERS[type], fontHeader, this);
         mHeader->SetColor(colorHeader);
 
         // DATA
-        const char * fileFontData = "Lato-Regular.ttf";
         const unsigned int colorData = 0x70a7c2ff;
         const int sizeData = 18;
 
-        graphic::Font * fontData = fm->GetFont(fileFontData, sizeData, graphic::Font::NORMAL);
+        auto fontData = fm->GetFont(WidgetsConstants::FontFileText, sizeData, graphic::Font::NORMAL);
         mData = new sgui::Label(fontData, this);
         mData->SetColor(colorData);
 
@@ -161,20 +160,18 @@ public:
         // HEADER
         auto fm = graphic::FontManager::Instance();
 
-        const char * fileFontHeader = "Lato-Regular.ttf";
         const unsigned int colorHeader = 0xb3d4e5ff;
         const int sizeHeader = 18;
 
-        graphic::Font * fontHeader = fm->GetFont(fileFontHeader, sizeHeader, graphic::Font::NORMAL);
+        auto fontHeader = fm->GetFont(WidgetsConstants::FontFileHeader, sizeHeader, graphic::Font::NORMAL);
         mHeader = new sgui::Label(strHeader, fontHeader, this);
         mHeader->SetColor(colorHeader);
 
         // DATA
-        const char * fileFontData = "Lato-Regular.ttf";
         const unsigned int colorData = 0x70a7c2ff;
         const int sizeData = 18;
 
-        graphic::Font * fontData = fm->GetFont(fileFontData, sizeData, graphic::Font::NORMAL);
+        auto fontData = fm->GetFont(WidgetsConstants::FontFileText, sizeData, graphic::Font::NORMAL);
         mData = new sgui::Label(fontData, this);
         mData->SetColor(colorData);
 
@@ -255,7 +252,7 @@ DialogObject::DialogObject(const ObjectsDataRegistry * odr)
     const unsigned int colorTitle = 0xf0f3f5ff;
     const int marginTitleT = 14;
 
-    auto font = fm->GetFont("Lato-Regular.ttf", 28, sgl::graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileTitle, 28, sgl::graphic::Font::NORMAL);
     mTitle = new sgui::Label(font, this);
     mTitle->SetColor(colorTitle);
     mTitle->SetPosition(marginL, marginTitleT);

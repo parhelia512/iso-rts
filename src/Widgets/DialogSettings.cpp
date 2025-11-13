@@ -1,9 +1,10 @@
 #include "Widgets/DialogSettings.h"
 
 #include "Game.h"
+#include "Widgets/ButtonPanelTab.h"
 #include "Widgets/GameSliderH.h"
 #include "Widgets/GameUIData.h"
-#include "Widgets/ButtonPanelTab.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/core/event/KeyboardEvent.h>
 #include <sgl/graphic/Font.h>
@@ -36,7 +37,6 @@ using namespace game;
     constexpr unsigned int colorTxt = 0x73a6bfff;
     constexpr unsigned int colorTxtSlider = 0xadc2ccff;
     constexpr unsigned int sizeTxt = 22;
-    const char * fontTxt = "Lato-Regular.ttf";
 
     constexpr int blockSettingW = 500;
     constexpr int blockSettingH = 100;
@@ -89,7 +89,7 @@ public:
         using namespace sgl::graphic;
 
         auto fm = FontManager::Instance();
-        Font * font = fm->GetFont("Lato-Regular.ttf", 20, Font::NORMAL);
+        auto font = fm->GetFont(WidgetsConstants::FontFileText, 20, Font::NORMAL);
         SetLabelFont(font);
     }
 
@@ -148,7 +148,7 @@ public:
 
         // TEXT LABEL
         auto fm = FontManager::Instance();
-        Font * font = fm->GetFont("Lato-Regular.ttf", 20, Font::NORMAL);
+        auto font = fm->GetFont(WidgetsConstants::FontFileText, 20, Font::NORMAL);
         mText = new Text(txt, font, true);
         RegisterRenderable(mText);
 
@@ -414,11 +414,9 @@ DialogSettings::DialogSettings(Game * game)
 
     auto fm = graphic::FontManager::Instance();
     auto tm = graphic::TextureManager::Instance();
-    graphic::Font * font;
-    graphic::Texture * tex;
 
     // MAIN PANEL
-    tex = tm->GetSprite(SpriteFileSettings, IND_SET_PANEL);
+    auto tex = tm->GetSprite(SpriteFileSettings, IND_SET_PANEL);
     mBg = new graphic::Image(tex);
     RegisterRenderable(mBg);
 
@@ -437,7 +435,7 @@ DialogSettings::DialogSettings(Game * game)
 
     // TITLE
     const unsigned int colorTitle = 0xe6eef2ff;
-    font = fm->GetFont("Lato-Regular.ttf", 30, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileTitle, 30, graphic::Font::NORMAL);
     auto labelTitle = new sgui::Label("SETTINGS", font, this);
 
     labelTitle->SetColor(colorTitle);
@@ -532,7 +530,7 @@ void DialogSettings::CreatePanelGame(sgl::sgui::Widget * parent)
     int y = contY0;
 
     auto fm = graphic::FontManager::Instance();
-    graphic::Font * font = fm->GetFont(fontTxt, sizeTxt, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileText, sizeTxt, graphic::Font::NORMAL);
 
     auto tm = graphic::TextureManager::Instance();
 
@@ -688,7 +686,7 @@ void DialogSettings::CreatePanelAudio(sgl::sgui::Widget *parent)
     int y = contY0;
 
     auto fm = graphic::FontManager::Instance();
-    graphic::Font * font = fm->GetFont(fontTxt, sizeTxt, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileText, sizeTxt, graphic::Font::NORMAL);
 
     auto am = media::AudioManager::Instance();
     auto ap = am->GetPlayer();
@@ -819,7 +817,7 @@ void DialogSettings::CreatePanelVideo(sgl::sgui::Widget * parent)
     int y = contY0;
 
     auto fm = graphic::FontManager::Instance();
-    graphic::Font * font = fm->GetFont(fontTxt, sizeTxt, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileText, sizeTxt, graphic::Font::NORMAL);
 
     // RESOLUTION
     auto label = new sgui::Label("RESOLUTION", font, panel);

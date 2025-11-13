@@ -1,6 +1,7 @@
 #include "DialogChangelog.h"
 
-#include "GameUIData.h"
+#include "Widgets/GameUIData.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/core/event/KeyboardEvent.h>
 #include <sgl/core/event/MouseWheelEvent.h>
@@ -207,7 +208,7 @@ ButtonChangelog::ButtonChangelog()
 
     // TEXT
     auto fm = graphic::FontManager::Instance();
-    auto font = fm->GetFont("Lato-Regular.ttf", 20, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileText, 20, graphic::Font::NORMAL);
     mLabel = new sgui::TextArea(GetWidth(), GetHeight(), font, false, this);
     mLabel->setTextAlignment(sgui::TextArea::ALIGN_H_CENTER, sgui::TextArea::ALIGN_V_CENTER);
     mLabel->SetText("U\nP\nD\nA\nT\nE\nS");
@@ -262,7 +263,7 @@ DialogChangelog::DialogChangelog()
 
     // TITLE
     auto fm = graphic::FontManager::Instance();
-    auto font = fm->GetFont("Lato-Regular.ttf", 28, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileTitle, 28, graphic::Font::NORMAL);
     mTitle = new graphic::Text("NEWS & UPDATES", font);
     mTitle->SetColor(0xe3e5e5ff);
     RegisterRenderable(mTitle);

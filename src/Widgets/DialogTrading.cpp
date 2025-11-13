@@ -6,6 +6,7 @@
 #include "StatValue.h"
 #include "Widgets/GameButton.h"
 #include "Widgets/GameUIData.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/core/event/KeyboardEvent.h>
 #include <sgl/graphic/Font.h>
@@ -141,7 +142,7 @@ public:
 
         // set label font
         auto fm = graphic::FontManager::Instance();
-        graphic::Font * font = fm->GetFont("Lato-Regular.ttf", 18, graphic::Font::NORMAL);
+        auto font = fm->GetFont(WidgetsConstants::FontFileButton, 18, graphic::Font::NORMAL);
 
         SetLabelFont(font);
 
@@ -154,7 +155,7 @@ public:
         const int scbY0 = 22;
         const int scbSize = 14;
 
-        font = fm->GetFont("Lato-Regular.ttf", 12, graphic::Font::NORMAL);
+        font = fm->GetFont(WidgetsConstants::FontFileShortcut, 12, graphic::Font::NORMAL);
         mShortcut = new sgui::Label(textShortcut, font, this);
         mShortcut->SetColor(0xd5daddff);
 
@@ -233,7 +234,7 @@ DialogTrading::DialogTrading(Game * g, Player * p)
     mButtonClose->SetX(buttonX);
 
     // TITLE
-    auto fontTitle = fm->GetFont("Lato-Regular.ttf", 32, graphic::Font::NORMAL);
+    auto fontTitle = fm->GetFont(WidgetsConstants::FontFileTitle, 32, graphic::Font::NORMAL);
 
     sgui::Label * title = new sgui::Label("TRADE YOUR RESOURCES", fontTitle, this);
 
@@ -256,7 +257,7 @@ DialogTrading::DialogTrading(Game * g, Player * p)
     const int hbX3 = hbX2 + hbW2 + marginHB;
 
     const unsigned int colorHeader = 0xd6eaf5ff;
-    auto fontHeader = fm->GetFont("Lato-Regular.ttf", 22, graphic::Font::NORMAL);
+    auto fontHeader = fm->GetFont(WidgetsConstants::FontFileHeader, 22, graphic::Font::NORMAL);
 
     // RESOURCE
     sgui::Label * header = new sgui::Label("RESOURCE", fontHeader, this);
@@ -298,7 +299,7 @@ DialogTrading::DialogTrading(Game * g, Player * p)
     const int dbY3 = 375;
     const int dbY4 = 470;
 
-    auto fontData = fm->GetFont("Lato-Regular.ttf", 20, graphic::Font::NORMAL);
+    auto fontData = fm->GetFont(WidgetsConstants::FontFileText, 20, graphic::Font::NORMAL);
 
     mCallbackValIds.assign(NUM_RESOURCES, RES_INVALID);
 

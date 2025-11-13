@@ -384,8 +384,7 @@ add_executable(
     src/Widgets/SimpleResourceDisplay.h
     src/Widgets/SimpleResourceDisplay.cpp
     src/Widgets/WidgetsConstants.h
-    src/Widgets/UnitsSelector.h
-    src/Widgets/UnitsSelector.cpp
+    src/Widgets/WidgetsConstants.cpp
     src/Widgets/Test/TestComboBox.h
     src/Widgets/Test/TestComboBox.cpp
     src/Widgets/Test/TestSliderH.h

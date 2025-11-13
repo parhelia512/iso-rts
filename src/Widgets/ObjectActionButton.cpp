@@ -2,6 +2,7 @@
 
 #include "Widgets/GameSimpleTooltip.h"
 #include "Widgets/GameUIData.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
@@ -61,7 +62,7 @@ ObjectActionButton::ObjectActionButton(ActionIcon icon, const char * shortcut, i
 
     // -- CREATE SHORTCUT TEXT --
     auto fm = FontManager::Instance();
-    auto font = fm->GetFont("Lato-Bold.ttf", 13, Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileShortcut, 13, Font::NORMAL);
     mShortcut = new Text(shortcut, font, true);
 
     RegisterRenderable(mShortcut);

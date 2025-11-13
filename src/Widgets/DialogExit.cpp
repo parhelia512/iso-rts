@@ -7,6 +7,7 @@
 #include "Widgets/DialogSettings.h"
 #include "Widgets/GameButton.h"
 #include "Widgets/GameUIData.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/core/event/KeyboardEvent.h>
 #include <sgl/graphic/Font.h>
@@ -38,11 +39,10 @@ public:
     {
         using namespace sgl;
 
-        const char * fileFont = "Lato-Regular.ttf";
         const int size = 24;
 
         auto fm = graphic::FontManager::Instance();
-        graphic::Font * fnt = fm->GetFont(fileFont, size, graphic::Font::NORMAL);
+        auto fnt = fm->GetFont(WidgetsConstants::FontFileButton, size, graphic::Font::NORMAL);
         SetLabelFont(fnt);
     }
 
@@ -112,7 +112,7 @@ public:
         // TEXT LABEL
         // TODO use setLabel after adding support for icon to PushButton
         auto fm = graphic::FontManager::Instance();
-        graphic::Font * font = fm->GetFont("Lato-Regular.ttf", 18, graphic::Font::NORMAL);
+        auto font = fm->GetFont(WidgetsConstants::FontFileButton, 18, graphic::Font::NORMAL);
         mText = new graphic::Text("WISHLIST NOW", font, true);
         RegisterRenderable(mText);
 
@@ -253,7 +253,7 @@ DialogExit::DialogExit(DialogButtons buttons, Game * game, Screen * screen)
     mButtonClose->SetX(GetWidth() - mButtonClose->GetWidth());
 
     // TITLE
-    auto font = fm->GetFont("Lato-Regular.ttf", 28, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileTitle, 28, graphic::Font::NORMAL);
     mTitle = new graphic::Text("LEAVE", font);
     mTitle->SetColor(0xf1f3f4ff);
     RegisterRenderable(mTitle);

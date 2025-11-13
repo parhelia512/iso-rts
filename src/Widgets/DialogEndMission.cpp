@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "Widgets/GameButton.h"
 #include "Widgets/GameUIData.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/core/event/KeyboardEvent.h>
 #include <sgl/graphic/Font.h>
@@ -36,11 +37,10 @@ public:
     {
         using namespace sgl;
 
-        const char * fileFont = "Lato-Regular.ttf";
         const int size = 24;
 
         auto fm = graphic::FontManager::Instance();
-        graphic::Font * fnt = fm->GetFont(fileFont, size, graphic::Font::NORMAL);
+        auto fnt = fm->GetFont(WidgetsConstants::FontFileButton, size, graphic::Font::NORMAL);
         SetLabelFont(fnt);
         SetLabel("CONTINUE");
 
@@ -95,7 +95,7 @@ DialogEndMission::DialogEndMission(int time, int territoryConquered, int enemies
     mButton->SetPosition(buttonX, buttonY);
 
     // TITLE
-    auto font = fm->GetFont("Lato-Regular.ttf", 32, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileTitle, 32, graphic::Font::NORMAL);
 
     sgui::Label * title = nullptr;
 
@@ -120,7 +120,7 @@ DialogEndMission::DialogEndMission(int time, int territoryConquered, int enemies
     int widgetX = marginL;
     int widgetY = marginT;
 
-    font = fm->GetFont("Lato-Regular.ttf", 24, graphic::Font::NORMAL);
+    font = fm->GetFont(WidgetsConstants::FontFileText, 24, graphic::Font::NORMAL);
 
     // TIME DEPLOYED
     auto label = new sgui::Label("TIME DEPLOYED", font, this);

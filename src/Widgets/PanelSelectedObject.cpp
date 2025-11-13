@@ -6,6 +6,7 @@
 #include "Widgets/DigitsDisplay.h"
 #include "Widgets/GameSimpleTooltip.h"
 #include "Widgets/ProgressBarObjectVisualStat.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
@@ -296,11 +297,10 @@ PanelSelectedObject::PanelSelectedObject(const ObjectsDataRegistry * odr, sgl::s
     const int titleX = 180;
     const int titleY = 30;
 
-    const char * fileFontTile = "Lato-Bold.ttf";
     const unsigned int colorTitle = 0xe9f7fbcc;
     const int sizeTitle = 16;
 
-    graphic::Font * fntTitle = fm->GetFont(fileFontTile, sizeTitle, graphic::Font::NORMAL);
+    auto fntTitle = fm->GetFont(WidgetsConstants::FontFileTitle, sizeTitle, graphic::Font::NORMAL);
 
     mTitle = new sgui::TextArea(titleW, titleH, fntTitle, true, this);
     mTitle->SetColor(colorTitle);
