@@ -191,7 +191,7 @@ void ObjectsDataRegistry::InitObjectData()
                              GameObject::TYPE_UNIT_SOLDIER2, OCU_SOLDIER, OCAT_UNIT, 1, 1));
 
     mData.emplace(GameObject::TYPE_UNIT_SPAWNER1,
-                  ObjectData({ 7, 6, 0, 0, 0, 5, 4, 4, 0, 0, 0, 0 }, { 200, 200, 10, 10 },
+                  ObjectData({ 7, 6, 0, 0, 0, 5, 4, 4, 3, 0, 1, 0 }, { 200, 200, 10, 10 },
                              { SPR_UNIT_06_F1, SPR_UNIT_06_F2, SPR_UNIT_06_F3 }, SpriteFileUnits,
                              GameObject::TYPE_UNIT_SPAWNER1, OCU_SPAWNER, OCAT_UNIT, 1, 1));
 
