@@ -1345,6 +1345,13 @@ void ScreenInit::SetupTextures()
             { 291, 224, 96, 52 },
             { 388, 224, 96, 52 },
             { 485, 224, 96, 52 },
+            // unit 6
+            { 0, 277, 96, 61 },
+            { 96, 277, 96, 61 },
+            { 194, 277, 96, 61 },
+            { 291, 277, 96, 61 },
+            { 388, 277, 96, 61 },
+            { 485, 277, 96, 61 },
         };
 
         tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_GAME], SpriteFileUnits, rects);

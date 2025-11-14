@@ -25,6 +25,7 @@ const char * ObjectData::STR_CLASS[NUM_OBJ_CLASSES] =
     "GENERIC",
     "MEDIC",
     "SOLDIER",
+    "SPAWNER",
     "WORKER",
 
     "COLLECTABLE",

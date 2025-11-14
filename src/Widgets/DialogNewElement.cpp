@@ -543,7 +543,7 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
         {
             const ObjectData & data = dataReg->GetObjectData(t);
 
-            if(OCU_WORKER == data.GetClass())
+            if(OCU_WORKER == data.GetClass() || OCU_SPAWNER == data.GetClass())
                 mTypes.push_back(t);
         }
     }

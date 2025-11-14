@@ -29,6 +29,7 @@ enum ObjClass : unsigned int
     OCU_GENERIC,
     OCU_MEDIC,
     OCU_SOLDIER,
+    OCU_SPAWNER,
     OCU_WORKER,
 
     // OTHERS

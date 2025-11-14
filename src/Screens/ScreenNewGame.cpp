@@ -54,6 +54,7 @@ ScreenNewGame::ScreenNewGame(Game * game)
     // assign initial available units
     p->AddAvailableUnit(GameObject::TYPE_UNIT_WORKER1);
     p->AddAvailableUnit(GameObject::TYPE_UNIT_SOLDIER1);
+    p->AddAvailableUnit(GameObject::TYPE_UNIT_SPAWNER1);
     // TODO temporary for testing. In the future start only with 2 types
     p->AddAvailableUnit(GameObject::TYPE_UNIT_SCOUT1);
     p->AddAvailableUnit(GameObject::TYPE_UNIT_SOLDIER2);

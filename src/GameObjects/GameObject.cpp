@@ -84,6 +84,7 @@ const std::string GameObject::TYPE_STR_UNIT_MEDIC1("UNIT_MEDIC1");
 const std::string GameObject::TYPE_STR_UNIT_SCOUT1("UNIT_SCOUT1");
 const std::string GameObject::TYPE_STR_UNIT_SOLDIER1("UNIT_SOLDIER1");
 const std::string GameObject::TYPE_STR_UNIT_SOLDIER2("UNIT_SOLDIER2");
+const std::string GameObject::TYPE_STR_UNIT_SPAWNER1("UNIT_SPAWNER1");
 const std::string GameObject::TYPE_STR_UNIT_WORKER1("UNIT_WORKER1");
 const std::string GameObject::TYPE_STR_WALL("WALL");
 const std::string GameObject::TYPE_STR_WALL_GATE("WALL_GATE");
@@ -120,6 +121,7 @@ const GameObjectTypeId GameObject::TYPE_UNIT_MEDIC1 = h{}(TYPE_STR_UNIT_MEDIC1);
 const GameObjectTypeId GameObject::TYPE_UNIT_SCOUT1 = h{}(TYPE_STR_UNIT_SCOUT1);
 const GameObjectTypeId GameObject::TYPE_UNIT_SOLDIER1 = h{}(TYPE_STR_UNIT_SOLDIER1);
 const GameObjectTypeId GameObject::TYPE_UNIT_SOLDIER2 = h{}(TYPE_STR_UNIT_SOLDIER2);
+const GameObjectTypeId GameObject::TYPE_UNIT_SPAWNER1 = h{}(TYPE_STR_UNIT_SPAWNER1);
 const GameObjectTypeId GameObject::TYPE_UNIT_WORKER1 = h{}(TYPE_STR_UNIT_WORKER1);
 const GameObjectTypeId GameObject::TYPE_WALL = h{}(TYPE_STR_WALL);
 const GameObjectTypeId GameObject::TYPE_WALL_GATE = h{}(TYPE_STR_WALL_GATE);
@@ -154,6 +156,7 @@ const std::unordered_map<GameObjectTypeId, std::string> GameObject::TYPE_STR_MAP
     { GameObject::TYPE_UNIT_SCOUT1, TYPE_STR_UNIT_SCOUT1 },
     { GameObject::TYPE_UNIT_SOLDIER1, TYPE_STR_UNIT_SOLDIER1 },
     { GameObject::TYPE_UNIT_SOLDIER2, TYPE_STR_UNIT_SOLDIER2 },
+    { GameObject::TYPE_UNIT_SPAWNER1, TYPE_STR_UNIT_SPAWNER1 },
     { GameObject::TYPE_UNIT_WORKER1, TYPE_STR_UNIT_WORKER1 },
     { GameObject::TYPE_WALL, TYPE_STR_WALL },
     { GameObject::TYPE_WALL_GATE, TYPE_STR_WALL_GATE }
@@ -201,6 +204,7 @@ const std::unordered_map<GameObjectTypeId, std::string> GameObject::TITLES =
     { GameObject::TYPE_UNIT_SCOUT1, "SCOUT"},
     { GameObject::TYPE_UNIT_SOLDIER1, "SOLDIER"},
     { GameObject::TYPE_UNIT_SOLDIER2, "SOLDIER"},
+    { GameObject::TYPE_UNIT_SPAWNER1, "SPAWNER"},
     { GameObject::TYPE_UNIT_WORKER1, "WORKER"},
     { GameObject::TYPE_WALL, "WALL"},
     { GameObject::TYPE_WALL_GATE, "GATE"}
@@ -240,6 +244,7 @@ const std::unordered_map<GameObjectTypeId, std::string> GameObject::DESCRIPTIONS
     { GameObject::TYPE_UNIT_SCOUT1, "A light and fast unit ideal for exploring, but not for fighting."},
     { GameObject::TYPE_UNIT_SOLDIER1, "A basic soldier unit.\nUseful for defense and exploration."},
     { GameObject::TYPE_UNIT_SOLDIER2, "A slow, but versatile unit."},
+    { GameObject::TYPE_UNIT_SPAWNER1, "A spawner unit.\nIt can generate mini units that will attack enemies."},
     { GameObject::TYPE_UNIT_WORKER1, "A basic worker unit.\nIt is specialized in construction and conquest."},
     { GameObject::TYPE_WALL, "A defensive wall."},
     { GameObject::TYPE_WALL_GATE, "A gate that can be controlled to open a passage through a defensive wall."}
