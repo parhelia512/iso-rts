@@ -179,18 +179,15 @@ PlanetMap::PlanetMap()
     // CREATE BUTTONS MISSION
     const core::Pointd2D buttonsPos[MAX_MISSIONS] =
     {
-        { 199, 94 },
-        { 519, 94 },
-        { 279, 232 },
-        { 439, 232 },
-        { 39, 371 },
-        { 199, 371 },
-        { 519, 371 },
-        { 679, 371 },
-        { 279, 510 },
-        { 439, 510 },
-        { 199, 649 },
-        { 519, 649 }
+        { 314, 60 },
+        { 314, 578 },
+        { 115, 146 },
+        { 513, 146 },
+        { 115, 492 },
+        { 513, 492 },
+        { 115, 319 },
+        { 513, 319 },
+        { 302, 309 },
     };
 
     mButtonsMission = new sgui::AbstractButtonsGroup;

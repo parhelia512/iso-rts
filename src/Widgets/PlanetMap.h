@@ -37,7 +37,7 @@ private:
     void HandlePositionChanged() override;
 
 private:
-    static const unsigned int MAX_MISSIONS = 12;
+    static const unsigned int MAX_MISSIONS = 9;
 
     sgl::sgui::AbstractButtonsGroup * mButtonsMission;
 
