@@ -26,10 +26,10 @@ Hospital::Hospital(const ObjectData & data)
     const auto & atts = data.GetAttributes();
 
     // set healing range converting attribute
-    mRangeHealing = HealRanges[atts[OBJ_ATT_HEALING]];
+    mRangeHealing = HealRanges[atts[OBJ_ATT_HEALING_RANGE]];
 
     // set healing power converting attribute
-    mHealingPower = HealPowers[atts[OBJ_ATT_HEALING]];
+    mHealingPower = HealPowers[atts[OBJ_ATT_HEALING_POWER]];
 
     SetVisibilityLevel(4);
 

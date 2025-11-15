@@ -35,7 +35,7 @@ const char * ObjectData::STR_CLASS[NUM_OBJ_CLASSES] =
 const char * ObjectData::STR_ATTRIBUTES[NUM_OBJ_ATTRIBUTES] =
 {
     "ENERGY",
-    "VIEW RADIUS",
+    "VIEW RANGE",
     "FIRE POWER",
     "FIRE ACCURACY",
     "FIRE RANGE",
@@ -45,13 +45,13 @@ const char * ObjectData::STR_ATTRIBUTES[NUM_OBJ_ATTRIBUTES] =
     "SPEED",
     "CONSTRUCTION",
     "CONQUEST",
-    "HEALING",
+    "HEALING RANGE",
+    "HEALING POWER",
     "SPAWNING",
 };
 
 const ObjectData ObjectData::NullObj({}, {}, {}, nullptr, GameObject::TYPE_NULL,
                                      OC_NULL, OCAT_UNDEFINED, 0, 0);
-
 
 unsigned int ObjectData::GetIconTexId(PlayerFaction f) const
 {

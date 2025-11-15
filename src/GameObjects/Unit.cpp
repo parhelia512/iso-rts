@@ -34,11 +34,11 @@ Unit::Unit(const ObjectData & data)
     // set healing range converting attribute
     const int maxHealVal = 11;
     const int HealRanges[maxHealVal] = { 0, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4 };
-    mRangeHealing = HealRanges[mAttributes[OBJ_ATT_HEALING]];
+    mRangeHealing = HealRanges[mAttributes[OBJ_ATT_HEALING_RANGE]];
 
     // set healing power converting attribute
     const float HealPowers[maxHealVal] = { 0.f, 1.f, 2.f, 2.f, 3.f, 3.f, 4.f, 4.f, 5.f, 5.f, 6.f };
-    mHealingPower = HealPowers[mAttributes[OBJ_ATT_HEALING]];
+    mHealingPower = HealPowers[mAttributes[OBJ_ATT_HEALING_POWER]];
 
     // TODO translate stats into actual values, ex.: speed = 5 -> SetSpeed(2.f)
 
@@ -93,7 +93,8 @@ bool Unit::SetTargetAttack(GameObject * obj)
 
 bool Unit::CanHeal() const
 {
-    return mAttributes[OBJ_ATT_HEALING] > 0;
+    return mAttributes[OBJ_ATT_HEALING_RANGE] > 0 &&
+           mAttributes[OBJ_ATT_HEALING_POWER] > 0;
 }
 
 bool Unit::IsTargetHealingInRange(GameObject * obj) const
