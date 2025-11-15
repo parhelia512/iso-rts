@@ -37,6 +37,7 @@ public:
         BTN_OPEN_GATE,
         BTN_CLOSE_GATE,
         BTN_TRADE,
+        BTN_SPAWN,
         BTN_CANCEL,
 
         NUM_BUTTONS

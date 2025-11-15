@@ -147,6 +147,11 @@ bool Unit::CanConquer() const
     return mAttributes[OBJ_ATT_CONQUEST] > 0;
 }
 
+bool Unit::CanSpawn() const
+{
+    return mAttributes[OBJ_ATT_SPAWNING] > 0;
+}
+
 int Unit::GetAttribute(unsigned int index) const
 {
     if(index < mAttributes.size())

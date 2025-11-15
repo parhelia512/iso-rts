@@ -48,6 +48,8 @@ PanelObjectActions::PanelObjectActions(sgl::sgui::Widget * parent)
                                                       "Close the gate", this);
     mButtons[BTN_TRADE] = new ObjectActionButton(ObjectActionButton::TRADE, "T", KeyboardEvent::KEY_T,
                                                       "Trade your resources", this);
+    mButtons[BTN_SPAWN] = new ObjectActionButton(ObjectActionButton::SPAWN, "S", KeyboardEvent::KEY_S,
+                                                 "Spawn mini units", this);
 
     mButtons[BTN_CANCEL] = new ObjectActionButton(ObjectActionButton::CANCEL, "X", KeyboardEvent::KEY_X,
                                                   "Cancel current action", this);
@@ -100,6 +102,9 @@ void PanelObjectActions::SetObject(GameObject * obj)
 
         if(unit->CanHeal())
             mButtons[BTN_HEAL_UNIT]->SetVisible(true);
+
+        if(unit->CanSpawn())
+            mButtons[BTN_SPAWN]->SetVisible(true);
     }
     else if(objType == GameObject::TYPE_BARRACKS)
     {

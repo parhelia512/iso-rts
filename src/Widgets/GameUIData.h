@@ -376,6 +376,7 @@ enum SpriteIdObjActionButton : unsigned int
     IND_BUTTON_ICON_CANCEL,
     IND_BUTTON_ICON_HEAL,
     IND_BUTTON_ICON_TRADE,
+    IND_BUTTON_ICON_SPAWN,
 
     NUM_IND_OBJ_ACT_BUTTON
 };

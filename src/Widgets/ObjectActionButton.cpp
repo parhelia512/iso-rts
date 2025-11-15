@@ -52,6 +52,7 @@ ObjectActionButton::ObjectActionButton(ActionIcon icon, const char * shortcut, i
         IND_BUTTON_ICON_CANCEL,
         IND_BUTTON_ICON_HEAL,
         IND_BUTTON_ICON_TRADE,
+        IND_BUTTON_ICON_SPAWN,
     };
 
     static_assert(NUM_ACTION_ICONS == (sizeof(texId) / sizeof(SpriteIdObjActionButton)),

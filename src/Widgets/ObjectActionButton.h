@@ -32,6 +32,7 @@ public:
         CANCEL,
         HEAL,
         TRADE,
+        SPAWN,
 
         NUM_ACTION_ICONS
     };

@@ -40,6 +40,9 @@ public:
     // conquer
     bool CanConquer() const;
 
+    // spawning
+    bool CanSpawn() const;
+
     int GetAttribute(unsigned int index) const;
 
 public:
