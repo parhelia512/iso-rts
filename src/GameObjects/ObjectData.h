@@ -70,6 +70,7 @@ enum ObjAttId : unsigned int
     OBJ_ATT_CONSTRUCTION,
     OBJ_ATT_CONQUEST,
     OBJ_ATT_HEALING,
+    OBJ_ATT_SPAWNING,
 
     NUM_OBJ_ATTRIBUTES,
 };

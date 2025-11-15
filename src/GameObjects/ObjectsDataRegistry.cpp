@@ -171,32 +171,32 @@ void ObjectsDataRegistry::InitObjectData()
                              GameObject::TYPE_TREES, OCO_SCENE, OCAT_UNDEFINED, 1, 1));
 
     mData.emplace(GameObject::TYPE_UNIT_MEDIC1,
-                  ObjectData({ 6, 5, 0, 0, 0, 6, 4, 4, 2, 0, 0, 5 }, { 500, 500, 0, 0 },
+                  ObjectData({ 6, 5, 0, 0, 0, 6, 4, 4, 2, 0, 0, 5, 0 }, { 500, 500, 0, 0 },
                              { SPR_UNIT_05_F1, SPR_UNIT_05_F2, SPR_UNIT_05_F3}, SpriteFileUnits,
                              GameObject::TYPE_UNIT_MEDIC1, OCU_MEDIC, OCAT_UNIT, 1, 1));
 
     mData.emplace(GameObject::TYPE_UNIT_SCOUT1,
-                  ObjectData({ 4, 4, 1, 2, 2, 4, 2, 2, 5, 2, 3, 0 }, { 300, 300, 0, 0 },
+                  ObjectData({ 4, 4, 1, 2, 2, 4, 2, 2, 5, 2, 3, 0, 0 }, { 300, 300, 0, 0 },
                              { SPR_UNIT_04_F1, SPR_UNIT_04_F2, SPR_UNIT_04_F3}, SpriteFileUnits,
                              GameObject::TYPE_UNIT_SCOUT1, OCU_SOLDIER, OCAT_UNIT, 1, 1));
 
     mData.emplace(GameObject::TYPE_UNIT_SOLDIER1,
-                  ObjectData({ 4, 5, 4, 5, 4, 3, 3, 2, 4, 0, 3, 0 }, { 200, 200, 0, 0 },
+                  ObjectData({ 4, 5, 4, 5, 4, 3, 3, 2, 4, 0, 3, 0, 0 }, { 200, 200, 0, 0 },
                              { SPR_UNIT_02_F1, SPR_UNIT_02_F2, SPR_UNIT_02_F3 }, SpriteFileUnits,
                              GameObject::TYPE_UNIT_SOLDIER1, OCU_SOLDIER, OCAT_UNIT, 1, 1));
 
     mData.emplace(GameObject::TYPE_UNIT_SOLDIER2,
-                  ObjectData({ 6, 5, 5, 4, 5, 4, 5, 6, 3, 0, 2, 0 }, { 400, 400, 0, 0 },
+                  ObjectData({ 6, 5, 5, 4, 5, 4, 5, 6, 3, 0, 2, 0, 0 }, { 400, 400, 0, 0 },
                              { SPR_UNIT_03_F1, SPR_UNIT_03_F2, SPR_UNIT_03_F3 }, SpriteFileUnits,
                              GameObject::TYPE_UNIT_SOLDIER2, OCU_SOLDIER, OCAT_UNIT, 1, 1));
 
     mData.emplace(GameObject::TYPE_UNIT_SPAWNER1,
-                  ObjectData({ 7, 6, 0, 0, 0, 5, 4, 4, 3, 0, 1, 0 }, { 200, 200, 10, 10 },
+                  ObjectData({ 7, 6, 0, 0, 0, 5, 4, 4, 3, 0, 0, 0, 4 }, { 200, 200, 10, 10 },
                              { SPR_UNIT_06_F1, SPR_UNIT_06_F2, SPR_UNIT_06_F3 }, SpriteFileUnits,
                              GameObject::TYPE_UNIT_SPAWNER1, OCU_SPAWNER, OCAT_UNIT, 1, 1));
 
     mData.emplace(GameObject::TYPE_UNIT_WORKER1,
-                  ObjectData({ 6, 6, 1, 1, 1, 4, 3, 2, 4, 5, 5, 0 }, { 150, 150, 0, 0 },
+                  ObjectData({ 6, 6, 1, 1, 1, 4, 3, 2, 4, 5, 5, 0, 0 }, { 150, 150, 0, 0 },
                              { SPR_UNIT_01_F1, SPR_UNIT_01_F2, SPR_UNIT_01_F3 }, SpriteFileUnits,
                              GameObject::TYPE_UNIT_WORKER1, OCU_WORKER, OCAT_UNIT, 1, 1));
 

@@ -46,6 +46,7 @@ const char * ObjectData::STR_ATTRIBUTES[NUM_OBJ_ATTRIBUTES] =
     "CONSTRUCTION",
     "CONQUEST",
     "HEALING",
+    "SPAWNING",
 };
 
 const ObjectData ObjectData::NullObj({}, {}, {}, nullptr, GameObject::TYPE_NULL,
