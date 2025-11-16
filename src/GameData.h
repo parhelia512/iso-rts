@@ -155,6 +155,48 @@ enum SpriteIdIndicators : unsigned int
     NUM_INF_AREA_ELEMS = IND_INF_AREA_L_F2 - IND_INF_AREA_L_F1
 };
 
+// MINI UNITS
+extern const char SpriteFileMiniUnits[];
+
+enum SpriteIdMiniUnits : unsigned int
+{
+    // unit 1 - FACTION 1
+    SID_MUNIT_01_1X_F1,
+    SID_MUNIT_01_1X_F1_SEL,
+    SID_MUNIT_01_2X_F1,
+    SID_MUNIT_01_2X_F1_SEL,
+    SID_MUNIT_01_3X_F1,
+    SID_MUNIT_01_3X_F1_SEL,
+    SID_MUNIT_01_4X_F1,
+    SID_MUNIT_01_4X_F1_SEL,
+    SID_MUNIT_01_5X_F1,
+    SID_MUNIT_01_5X_F1_SEL,
+
+    // unit 1 - FACTION 2
+    SID_MUNIT_01_1X_F2,
+    SID_MUNIT_01_1X_F2_SEL,
+    SID_MUNIT_01_2X_F2,
+    SID_MUNIT_01_2X_F2_SEL,
+    SID_MUNIT_01_3X_F2,
+    SID_MUNIT_01_3X_F2_SEL,
+    SID_MUNIT_01_4X_F2,
+    SID_MUNIT_01_4X_F2_SEL,
+    SID_MUNIT_01_5X_F2,
+    SID_MUNIT_01_5X_F2_SEL,
+
+    // unit 1 - FACTION 3
+    SID_MUNIT_01_1X_F3,
+    SID_MUNIT_01_1X_F3_SEL,
+    SID_MUNIT_01_2X_F3,
+    SID_MUNIT_01_2X_F3_SEL,
+    SID_MUNIT_01_3X_F3,
+    SID_MUNIT_01_3X_F3_SEL,
+    SID_MUNIT_01_4X_F3,
+    SID_MUNIT_01_4X_F3_SEL,
+    SID_MUNIT_01_5X_F3,
+    SID_MUNIT_01_5X_F3_SEL,
+};
+
 // ROCKS
 extern const char SpriteRocksFile[];
 
