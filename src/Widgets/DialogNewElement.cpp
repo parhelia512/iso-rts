@@ -779,24 +779,24 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
     int panelsX = panelsX0;
     int panelsY = panelsY0;
 
-    for(int c = 0; c < VIS_ATT_COLS; ++c)
+    for(int r = 0; r < VIS_ATT_ROWS; ++r)
     {
-        const int ind0 = c * VIS_ATT_ROWS;
+        const int ind0 = r * VIS_ATT_COLS;
 
-        for(int r = 0; r < VIS_ATT_ROWS; ++r)
+        for(int c = 0; c < VIS_ATT_COLS; ++c)
         {
-            const int ind = ind0 + r;
+            const int ind = ind0 + c;
 
             auto panAtt = new ObjectVisualAttribute(this);
             panAtt->SetPosition(panelsX, panelsY);
 
             mVisAtt[ind] = panAtt;
 
-            panelsY += panAtt->GetHeight() - panelBorder;
+            panelsX += panAtt->GetWidth() - panelBorder;
         }
 
-        panelsX += mVisAtt[0]->GetWidth() - panelBorder;
-        panelsY = panelsY0;
+        panelsX = panelsX0;
+        panelsY += mVisAtt[0]->GetHeight() - panelBorder;
     }
 
     // BUTTON BUILD
