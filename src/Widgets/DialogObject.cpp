@@ -292,19 +292,19 @@ DialogObject::DialogObject(const ObjectsDataRegistry * odr)
     int attY = attY0;
     int ind = 0;
 
-    for(int c = 0; c < VIS_ATT_COLS; ++c)
+    for(int r = 0; r < VIS_ATT_ROWS; ++r)
     {
-        for(int r = 0; r < VIS_ATT_ROWS; ++r)
+        for(int c = 0; c < VIS_ATT_COLS; ++c)
         {
             mVisAtt[ind] = new ObjectVisualAttribute(this);
             mVisAtt[ind]->SetPosition(attX, attY);
             ++ind;
 
-            attY += mVisAtt[0]->GetHeight();
+            attX += mVisAtt[0]->GetWidth();
         }
 
-        attX += mVisAtt[0]->GetWidth();
-        attY = attY0;
+        attX = attX0;
+        attY += mVisAtt[0]->GetHeight();
     }
 }
 
