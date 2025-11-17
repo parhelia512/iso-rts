@@ -93,6 +93,8 @@ add_executable(
     src/GameObjects/Hospital.cpp
     src/GameObjects/LootBox.h
     src/GameObjects/LootBox.cpp
+    src/GameObjects/MiniUnit.h
+    src/GameObjects/MiniUnit.cpp
     src/GameObjects/ObjectData.h
     src/GameObjects/ObjectData.cpp
     src/GameObjects/ObjectsDataRegistry.h

@@ -195,6 +195,10 @@ enum SpriteIdMiniUnits : unsigned int
     SID_MUNIT_01_4X_F3_SEL,
     SID_MUNIT_01_5X_F3,
     SID_MUNIT_01_5X_F3_SEL,
+
+    // 2 sprites per unit squad (1-5 elements): unselected and selected
+    NUM_MUNIT_SPRITES_PER_SQUAD = 2,
+    NUM_MUNIT_SPRITES_PER_FACTION = SID_MUNIT_01_1X_F2 - SID_MUNIT_01_1X_F1,
 };
 
 // ROCKS

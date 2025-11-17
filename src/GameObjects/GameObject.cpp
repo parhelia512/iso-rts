@@ -63,6 +63,7 @@ const std::string GameObject::TYPE_STR_DEFENSIVE_TOWER("DEF_TOWER");
 const std::string GameObject::TYPE_STR_DIAMONDS("DIAMONDS");
 const std::string GameObject::TYPE_STR_HOSPITAL("HOSPITAL");
 const std::string GameObject::TYPE_STR_LOOTBOX("LOOTBOX");
+const std::string GameObject::TYPE_STR_MINI_UNIT1("MINIUNIT1");
 const std::string GameObject::TYPE_STR_MOUNTAINS("MOUNTAINS");
 const std::string GameObject::TYPE_STR_PRACTICE_TARGET("TARGET");
 const std::string GameObject::TYPE_STR_RADAR_STATION("RADAR_STATION");
@@ -100,6 +101,7 @@ const GameObjectTypeId GameObject::TYPE_DEFENSIVE_TOWER = h{}(TYPE_STR_DEFENSIVE
 const GameObjectTypeId GameObject::TYPE_DIAMONDS = h{}(TYPE_STR_DIAMONDS);
 const GameObjectTypeId GameObject::TYPE_HOSPITAL = h{}(TYPE_STR_HOSPITAL);
 const GameObjectTypeId GameObject::TYPE_LOOTBOX = h{}(TYPE_STR_LOOTBOX);
+const GameObjectTypeId GameObject::TYPE_MINI_UNIT1 = h{}(TYPE_STR_MINI_UNIT1);
 const GameObjectTypeId GameObject::TYPE_MOUNTAINS = h{}(TYPE_STR_MOUNTAINS);
 const GameObjectTypeId GameObject::TYPE_PRACTICE_TARGET = h{}(TYPE_STR_PRACTICE_TARGET);
 const GameObjectTypeId GameObject::TYPE_RADAR_STATION = h{}(TYPE_STR_RADAR_STATION);
@@ -135,6 +137,7 @@ const std::unordered_map<GameObjectTypeId, std::string> GameObject::TYPE_STR_MAP
     { GameObject::TYPE_DEFENSIVE_TOWER, TYPE_STR_DEFENSIVE_TOWER },
     { GameObject::TYPE_HOSPITAL, TYPE_STR_HOSPITAL },
     { GameObject::TYPE_LOOTBOX, TYPE_STR_LOOTBOX },
+    { GameObject::TYPE_MINI_UNIT1, TYPE_STR_MINI_UNIT1 },
     { GameObject::TYPE_MOUNTAINS, TYPE_STR_MOUNTAINS },
     { GameObject::TYPE_PRACTICE_TARGET, TYPE_STR_PRACTICE_TARGET },
     { GameObject::TYPE_RADAR_STATION, TYPE_STR_RADAR_STATION },
@@ -183,6 +186,7 @@ const std::unordered_map<GameObjectTypeId, std::string> GameObject::TITLES =
     { GameObject::TYPE_DEFENSIVE_TOWER, "DEFENSIVE TOWER"},
     { GameObject::TYPE_HOSPITAL, "HOSPITAL"},
     { GameObject::TYPE_LOOTBOX, "LOOT BOX"},
+    { GameObject::TYPE_MINI_UNIT1, "MINI UNIT 1"},
     { GameObject::TYPE_MOUNTAINS, "MOUNTAINS"},
     { GameObject::TYPE_PRACTICE_TARGET, "PRACTICE TARGET"},
     { GameObject::TYPE_RADAR_STATION, "RADAR STATION"},
@@ -221,6 +225,7 @@ const std::unordered_map<GameObjectTypeId, std::string> GameObject::DESCRIPTIONS
     { GameObject::TYPE_DEFENSIVE_TOWER, "A basic defensive tower."},
     { GameObject::TYPE_HOSPITAL, "A structure that creates medics and that can heal units."},
     { GameObject::TYPE_LOOTBOX, "A loot box that can be collected by a unit to obtain various resources."},
+    { GameObject::TYPE_MINI_UNIT1, "Standard mini unit that will attack a target automatically."},
     { GameObject::TYPE_MOUNTAINS, "Some mountains"},
     { GameObject::TYPE_PRACTICE_TARGET, "A practice target.\nIt can be used to train your units "
                                         "and to improve their attack skills."},
@@ -255,6 +260,7 @@ const GameObjectCategoryId GameObject::CAT_NULL = 0;
 
 const GameObjectCategoryId GameObject::CAT_COLLECTABLE = h{}("COLLECTABLE");
 const GameObjectCategoryId GameObject::CAT_GENERIC = h{}("GENERIC");
+const GameObjectCategoryId GameObject::CAT_MINI_UNIT = h{}("MINI_UNIT");
 const GameObjectCategoryId GameObject::CAT_RES_GENERATOR = h{}("RES_GEN");
 const GameObjectCategoryId GameObject::CAT_RES_STORAGE = h{}("RES_STORAGE");
 const GameObjectCategoryId GameObject::CAT_SCENE_OBJ = h{}("SCENE_OBJ");

@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "ObjectData.h"
 
-#include <vector>
+#include <array>
 
 namespace game
 {
