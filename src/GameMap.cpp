@@ -1669,23 +1669,21 @@ void GameMap::CreateMiniUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D
     ApplyLocalVisibility();
 }
 
-Cell2D GameMap::GetNewMiniUnitDestination(GameObject * gen) const
+Cell2D GameMap::GetNewMiniUnitDestination(const Cell2D & genCell) const
 {
     // TODO quick code that will need to be improved later
-    const GameMapCell * genCell = gen->GetCell();
-
     const int maxDist = 2;
 
-    for(int d = 1; d < maxDist; ++d)
+    for(int d = 1; d <= maxDist; ++d)
     {
-        const int r0 = (d < genCell->row) ? genCell->row - d : 0;
-        const int r1uc = genCell->row + d;
+        const int r0 = (d < genCell.row) ? genCell.row - d : 0;
+        const int r1uc = genCell.row + d;
         const int r1 = r1uc < mRows ? r1uc + 1 : mRows;
 
         for(int r = r0; r < r1; ++r)
         {
-            const int c0 = (d < genCell->col) ? genCell->col - d : 0;
-            const int c1uc = genCell->col + d;
+            const int c0 = (d < genCell.col) ? genCell.col - d : 0;
+            const int c1uc = genCell.col + d;
             const int c1 = c1uc < mCols ? c1uc + 1 : mCols;
 
             for(int c = c0; c < c1; ++c)

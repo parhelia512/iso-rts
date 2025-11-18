@@ -144,7 +144,7 @@ public:
     bool CanCreateMiniUnit(GameObjectTypeId ut, GameObject * gen, int elements, Player * player);
     void CreateMiniUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & dest,
                         int elements, Player * player);
-    Cell2D GetNewMiniUnitDestination(GameObject * gen) const;
+    Cell2D GetNewMiniUnitDestination(const Cell2D & genCell) const;
 
     // move units
     bool CanUnitMove(const Cell2D & start, const Cell2D & end, Player * player) const;

@@ -1730,7 +1730,8 @@ bool ScreenGame::SetupNewMiniUnits(GameObjectTypeId type, GameObject * gen, Play
         return false;
 
     // find where to build
-    Cell2D cell = mGameMap->GetNewMiniUnitDestination(gen);
+    const Cell2D gc(gen->GetRow0(), gen->GetCol0());
+    const Cell2D cell = mGameMap->GetNewMiniUnitDestination(gc);
 
     if(-1 == cell.row || -1 == cell.col)
     {
