@@ -99,6 +99,8 @@ add_executable(
     src/GameObjects/ObjectData.cpp
     src/GameObjects/ObjectsDataRegistry.h
     src/GameObjects/ObjectsDataRegistry.cpp
+    src/GameObjects/GameObjectsGroup.h
+    src/GameObjects/GameObjectsGroup.cpp
     src/GameObjects/PracticeTarget.h
     src/GameObjects/PracticeTarget.cpp
     src/GameObjects/RadarStation.h

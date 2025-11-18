@@ -10,6 +10,7 @@
 #include "GameObjects/Base.h"
 #include "GameObjects/Blobs.h"
 #include "GameObjects/Diamonds.h"
+#include "GameObjects/GameObjectsGroup.h"
 #include "GameObjects/LootBox.h"
 #include "GameObjects/ResourceGenerator.h"
 #include "GameObjects/Structure.h"
@@ -499,10 +500,12 @@ void Player::ClearSelectedObject()
     if(nullptr == mSelObj)
         return ;
 
-    mSelObj->SetSelected(false);
+    auto og = mSelObj->GetGroup();
 
-    if(mSelObj->GetObjectCategory() == GameObject::CAT_UNIT)
-        static_cast<Unit *>(mSelObj)->SetActiveAction(GameObjectActionType::IDLE);
+    if(og != nullptr)
+        og->SetSelected(false);
+    else
+        mSelObj->SetSelected(false);
 
     mSelObj = nullptr;
 }
@@ -514,10 +517,22 @@ void Player::SetSelectedObject(GameObject * obj)
 
     mSelObj = obj;
 
-    // reset active action
-    mSelObj->SetActiveActionToDefault();
+    auto og = mSelObj->GetGroup();
 
-    mSelObj->SetSelected(true);
+    if(og != nullptr)
+    {
+        og->DoForAll([](GameObject * o)
+        {
+            o->SetActiveActionToDefault();
+            o->SetSelected(true);
+        });
+    }
+    else
+    {
+        // reset active action
+        mSelObj->SetActiveActionToDefault();
+        mSelObj->SetSelected(true);
+    }
 }
 
 void Player::AddResourceGenerator(ResourceGenerator * gen)

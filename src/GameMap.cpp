@@ -1635,8 +1635,8 @@ bool GameMap::CanCreateMiniUnit(GameObjectTypeId ut, GameObject * gen, int eleme
     return true;
 }
 
-void GameMap::CreateMiniUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & dest,
-                             int elements, Player * player)
+GameObject * GameMap::CreateMiniUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & dest,
+                                     int elements, Player * player)
 {
     const int ind = dest.row * mCols + dest.col;
     GameMapCell & gcell = mCells[ind];
@@ -1663,10 +1663,11 @@ void GameMap::CreateMiniUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D
     mObjects.push_back(mu);
     mObjectsSet.insert(mu);
 
-
     // update visibility map
     AddPlayerObjVisibility(mu, player);
     ApplyLocalVisibility();
+
+    return mu;
 }
 
 Cell2D GameMap::GetNewMiniUnitDestination(const Cell2D & genCell) const

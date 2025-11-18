@@ -16,6 +16,7 @@
 #include "AI/WallBuildPath.h"
 #include "GameObjects/Base.h"
 #include "GameObjects/DefensiveTower.h"
+#include "GameObjects/GameObjectsGroup.h"
 #include "GameObjects/Hospital.h"
 #include "GameObjects/ObjectsDataRegistry.h"
 #include "GameObjects/Temple.h"
@@ -52,6 +53,7 @@
 #include <sgl/media/AudioPlayer.h>
 #include <sgl/sgui/Stage.h>
 
+#include <cassert>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
@@ -656,7 +658,9 @@ void ScreenGame::CreateUI()
 
         ClearCellOverlays();
 
-        SetupNewMiniUnits(GameObject::TYPE_MINI_UNIT1, unit, mLocalPlayer, 3, 5);
+        // TODO move this to HUD when dialog to control creation is done
+        auto og = new GameObjectsGroup;
+        SetupNewMiniUnits(GameObject::TYPE_MINI_UNIT1, unit, og, mLocalPlayer, 4, rand() % 5);
     });
 
     // WALL GATE
@@ -1722,8 +1726,9 @@ int ScreenGame::CellToIndex(const Cell2D & cell) const
     return cell.row * mIsoMap->GetNumCols() + cell.col;
 }
 
-bool ScreenGame::SetupNewMiniUnits(GameObjectTypeId type, GameObject * gen, Player * player, int num,
-                                   int elements, const std::function<void(bool)> & onDone)
+bool ScreenGame::SetupNewMiniUnits(GameObjectTypeId type, GameObject * gen, GameObjectsGroup * group,
+                                   Player * player, int num, int elements,
+                                   const std::function<void(bool)> & onDone)
 {
     // check if create is possible
     if(!mGameMap->CanCreateMiniUnit(type, gen, elements, player))
@@ -1748,12 +1753,16 @@ bool ScreenGame::SetupNewMiniUnits(GameObjectTypeId type, GameObject * gen, Play
 
     GameMapProgressBar * pb = mHUD->CreateProgressBarInCell(cell, timeBuild, player->GetFaction());
 
-    pb->AddFunctionOnCompleted([this, cell, player, gen, type, elements, num]
+    pb->AddFunctionOnCompleted([this, cell, player, gen, type, elements, num, group]
     {
         gen->ActionStepCompleted(SPAWN);
         gen->SetCurrentAction(GameObjectActionType::IDLE);
 
-        mGameMap->CreateMiniUnit(type, gen, cell, elements, player);
+        auto mu = mGameMap->CreateMiniUnit(type, gen, cell, elements, player);
+
+        assert(mu != nullptr);
+
+        mu->SetGroup(group);
 
         // add unit to map if cell is visible to local player
         if(mGameMap->IsCellVisibleToLocalPlayer(cell.row, cell.col))
@@ -1762,7 +1771,7 @@ bool ScreenGame::SetupNewMiniUnits(GameObjectTypeId type, GameObject * gen, Play
         SetObjectActionCompleted(gen);
 
         if(num > 1)
-            SetupNewMiniUnits(GameObject::TYPE_MINI_UNIT1, gen, mLocalPlayer, num - 1, elements);
+            SetupNewMiniUnits(GameObject::TYPE_MINI_UNIT1, gen, group, mLocalPlayer, num - 1, elements);
     });
 
     // store active action

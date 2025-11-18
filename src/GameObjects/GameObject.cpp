@@ -7,6 +7,7 @@
 #include "GameMapCell.h"
 #include "IsoObject.h"
 #include "Player.h"
+#include "GameObjects/GameObjectsGroup.h"
 #include "Particles/DataParticleDamage.h"
 #include "Particles/UpdaterDamage.h"
 #include "Screens/ScreenGame.h"
@@ -286,7 +287,40 @@ GameObject::GameObject(GameObjectTypeId type, GameObjectCategoryId cat, int rows
     mObjColors.push_back(0xFF00FFFF);
 }
 
-GameObject::~GameObject() { delete mIsoObj; }
+GameObject::~GameObject()
+{
+    delete mIsoObj;
+
+    ClearGroup();
+}
+
+// GROUP
+void GameObject::SetGroup(GameObjectsGroup * g)
+{
+    // always clear current group
+    ClearGroup();
+
+    // but exit if g is NULL
+    if(nullptr == g)
+        return ;
+
+    mGroup = g;
+    mGroup->AddObject(this);
+}
+
+void GameObject::ClearGroup()
+{
+    if(nullptr == mGroup)
+        return ;
+
+    mGroup->RemoveObject(this);
+
+    // delete group object when empty
+    if(mGroup->IsEmpty())
+        delete mGroup;
+
+    mGroup = nullptr;
+}
 
 void GameObject::OnPositionChanged() { }
 

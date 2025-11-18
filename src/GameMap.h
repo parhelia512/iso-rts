@@ -19,6 +19,7 @@ class ControlMap;
 class Game;
 class GameObject;
 class IsoMap;
+class GameObject;
 class ObjectData;
 class ObjectPath;
 class Player;
@@ -142,8 +143,8 @@ public:
 
     // create mini units
     bool CanCreateMiniUnit(GameObjectTypeId ut, GameObject * gen, int elements, Player * player);
-    void CreateMiniUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & dest,
-                        int elements, Player * player);
+    GameObject * CreateMiniUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & dest,
+                                int elements, Player * player);
     Cell2D GetNewMiniUnitDestination(const Cell2D & genCell) const;
 
     // move units

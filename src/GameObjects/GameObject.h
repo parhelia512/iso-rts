@@ -35,6 +35,7 @@ enum GameObjectActionType : unsigned int
 };
 
 class GameMap;
+class GameObjectsGroup;
 class IsoObject;
 class Player;
 class ScreenGame;
@@ -106,6 +107,12 @@ public:
 public:
     GameObject(GameObjectTypeId type, GameObjectCategoryId cat, int rows, int cols);
     virtual ~GameObject();
+
+    // GROUP
+    bool IsInGroup() const;
+    const GameObjectsGroup * GetGroup() const;
+    void SetGroup(GameObjectsGroup * g);
+    void ClearGroup();
 
     void SetGameMap(GameMap * map);
     void SetScreen(ScreenGame * screen);
@@ -282,6 +289,8 @@ private:
 private:
     std::map<unsigned int, std::function<void()>> mOnValueChanged;
 
+    GameObjectsGroup * mGroup = nullptr;
+
     IsoObject * mIsoObj = nullptr;
 
     unsigned int mObjId;
@@ -326,6 +335,9 @@ private:
     bool mVisited = false;
     bool mLinked = false;
 };
+
+inline bool GameObject::IsInGroup() const { return mGroup != nullptr; }
+inline const GameObjectsGroup * GameObject::GetGroup() const { return mGroup; }
 
 inline void GameObject::SetGameMap(GameMap * map) { mGameMap = map; }
 inline void GameObject::SetScreen(ScreenGame * screen) { mScreen = screen; }
