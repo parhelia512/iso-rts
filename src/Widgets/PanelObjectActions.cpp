@@ -48,8 +48,10 @@ PanelObjectActions::PanelObjectActions(sgl::sgui::Widget * parent)
                                                       "Close the gate", this);
     mButtons[BTN_TRADE] = new ObjectActionButton(ObjectActionButton::TRADE, "T", KeyboardEvent::KEY_T,
                                                       "Trade your resources", this);
-    mButtons[BTN_SPAWN] = new ObjectActionButton(ObjectActionButton::SPAWN, "S", KeyboardEvent::KEY_S,
+    mButtons[BTN_SPAWN] = new ObjectActionButton(ObjectActionButton::SPAWN, "G", KeyboardEvent::KEY_G,
                                                  "Spawn mini units", this);
+    mButtons[BTN_SELF_DESTROY] = new ObjectActionButton(ObjectActionButton::SELF_DESTROY, "T", KeyboardEvent::KEY_T,
+                                                        "Self destruction", this);
 
     mButtons[BTN_CANCEL] = new ObjectActionButton(ObjectActionButton::CANCEL, "X", KeyboardEvent::KEY_X,
                                                   "Cancel current action", this);
@@ -76,6 +78,10 @@ void PanelObjectActions::SetObject(GameObject * obj)
 
     // ENABLE BUTTONS
     const GameObjectTypeId objType = mObj->GetObjectType();
+
+    // self destruction available for all, but base
+    if(objType != GameObject::TYPE_BASE)
+        mButtons[BTN_SELF_DESTROY]->SetVisible(true);
 
     if(objType == GameObject::TYPE_BASE)
     {

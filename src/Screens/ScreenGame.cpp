@@ -717,6 +717,32 @@ void ScreenGame::CreateUI()
     });
 
     // GENERIC ACTIONS
+    // self destruction
+    panelObjActions->AddButtonFunction(PanelObjectActions::BTN_SELF_DESTROY, [this]
+    {
+        ClearCellOverlays();
+
+        GameObject * selObj = mLocalPlayer->GetSelectedObject();
+
+        auto og = selObj->GetGroup();
+
+        // in case object is part of a group -> destroy all members
+        if(og != nullptr)
+        {
+            og->DoForAll([](GameObject * o)
+            {
+                const float h = o->GetMaxHealth();
+                o->Hit(h, NO_FACTION);
+            });
+        }
+        // standard single object -> destroy
+        else
+        {
+            const float h = selObj->GetMaxHealth();
+            selObj->Hit(h, NO_FACTION);
+        }
+    });
+
     // upgrade
     panelObjActions->AddButtonFunction(PanelObjectActions::BTN_UPGRADE, [this]
     {

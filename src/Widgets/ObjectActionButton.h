@@ -33,6 +33,7 @@ public:
         HEAL,
         TRADE,
         SPAWN,
+        SELF_DESTROY,
 
         NUM_ACTION_ICONS
     };

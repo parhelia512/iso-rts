@@ -502,8 +502,10 @@ void Player::ClearSelectedObject()
 
     auto og = mSelObj->GetGroup();
 
+    // in case object is part of a group -> deselect all members
     if(og != nullptr)
         og->SetSelected(false);
+    // standard single object -> deselect
     else
         mSelObj->SetSelected(false);
 
@@ -519,6 +521,7 @@ void Player::SetSelectedObject(GameObject * obj)
 
     auto og = mSelObj->GetGroup();
 
+    // in case object is part of a group -> select all members
     if(og != nullptr)
     {
         og->DoForAll([](GameObject * o)
@@ -527,6 +530,7 @@ void Player::SetSelectedObject(GameObject * obj)
             o->SetSelected(true);
         });
     }
+    // standard single object -> select
     else
     {
         // reset active action
