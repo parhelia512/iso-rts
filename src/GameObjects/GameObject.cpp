@@ -552,7 +552,7 @@ void GameObject::Hit(float damage, PlayerFaction attacker)
 
     SumHealth(-damage);
 
-    const int numPart0 = 20 * mRows * mCols;
+    const int numPart0 = 40 * mRows * mCols;
     int numPart = numPart0;
 
     const int maxQuad = 4;
@@ -568,6 +568,9 @@ void GameObject::Hit(float damage, PlayerFaction attacker)
         sgl::utilities::UniformDistribution genQuad(quad0, maxQuad - 1);
 
         ang0 += angInc * genQuad.GetNextValue();
+
+        const int partDestroyedMult = 2;
+        numPart *= partDestroyedMult;
     }
     // hit and destroyed -> use all quadrants
     else
@@ -615,8 +618,8 @@ void GameObject::Hit(float damage, PlayerFaction attacker)
     sgl::utilities::UniformDistribution genSpeed(minSpeed, maxSpeed);
 
     // random generator for decay speed
-    const int minDecSpeed = 250;
-    const int maxDecSpeed = 500;
+    const int minDecSpeed = 200;
+    const int maxDecSpeed = 400;
     sgl::utilities::UniformDistribution genDecSpeed(minDecSpeed, maxDecSpeed);
 
     // random generator for scale
