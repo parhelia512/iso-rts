@@ -943,7 +943,7 @@ void ScreenInit::SetupTextures()
         tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_GAME], SpriteFileIndicators, rects);
     });
 
-    // PARTICLES
+    // MINI UNITS
     mJobs.emplace_back([this, tm]
     {
         const std::vector<sgl::core::Rectd> rects
@@ -985,7 +985,7 @@ void ScreenInit::SetupTextures()
             { 485, 206, 96, 58 },
         };
 
-        tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_GAME], SpriteFileParticles, rects);
+        tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_GAME], SpriteFileMiniUnits, rects);
     });
 
     // PARTICLES
