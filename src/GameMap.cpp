@@ -1630,7 +1630,21 @@ void GameMap::CreateUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & d
 
 bool GameMap::CanCreateMiniUnit(GameObjectTypeId ut, GameObject * gen, int elements, Player * player)
 {
-    // TODO
+    // generator is not owned by the player
+    if(gen->GetFaction() != player->GetFaction())
+        return false;
+
+    // check if player has enough resources
+    const auto & costs = GetObjectData(ut).GetCosts();
+
+    if(!player->HasEnough(Player::Stat::ENERGY, costs[RES_ENERGY] * elements) ||
+       !player->HasEnough(Player::Stat::MATERIAL, costs[RES_MATERIAL1] * elements) ||
+       !player->HasEnough(Player::Stat::DIAMONDS, costs[RES_DIAMONDS] * elements) ||
+       !player->HasEnough(Player::Stat::BLOBS, costs[RES_BLOBS] * elements))
+        return false;
+
+    if(!gen->HasEnergyForActionStep(GameObjectActionType::SPAWN))
+        return false;
 
     return true;
 }
@@ -1644,6 +1658,15 @@ GameObject * GameMap::CreateMiniUnit(GameObjectTypeId ut, GameObject * gen, cons
     const PlayerFaction faction = player->GetFaction();
     const ObjectData & data = GetObjectData(ut);
 
+    // pay costs
+    const auto & costs = data.GetCosts();
+
+    player->SumResource(Player::Stat::ENERGY, -costs[RES_ENERGY] * elements);
+    player->SumResource(Player::Stat::MATERIAL, -costs[RES_MATERIAL1] * elements);
+    player->SumResource(Player::Stat::DIAMONDS, -costs[RES_DIAMONDS] * elements);
+    player->SumResource(Player::Stat::BLOBS, -costs[RES_BLOBS] * elements);
+
+    // create object
     auto mu = new MiniUnit(data, elements);
     mu->SetFaction(faction);
     mu->SetCell(&mCells[ind]);

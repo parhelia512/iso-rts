@@ -71,7 +71,7 @@ void ObjectsDataRegistry::InitObjectData()
                              GameObject::TYPE_LOOTBOX, OCO_COLLECTABLE, OCAT_UNDEFINED, 1, 1));
 
     mData.emplace(GameObject::TYPE_MINI_UNIT1,
-                  ObjectData({ 4, 5, 4, 5, 4, 3, 3, 2, 4, 0, 3, 0, 0, 0 }, { 50, 50, 0, 0 },
+                  ObjectData({ 4, 5, 4, 5, 4, 3, 3, 2, 5, 0, 0, 0, 0, 0 }, { 20, 20, 0, 0 },
                              { SID_MUNIT_01_5X_F1, SID_MUNIT_01_5X_F2, SID_MUNIT_01_5X_F3 }, SpriteFileMiniUnits,
                              GameObject::TYPE_MINI_UNIT1, OCMU_SOLDIER, OCAT_MINI_UNIT, 1, 1));
 
