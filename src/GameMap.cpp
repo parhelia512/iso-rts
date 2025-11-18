@@ -1721,6 +1721,33 @@ Cell2D GameMap::GetNewMiniUnitDestination(const Cell2D & genCell) const
     return Cell2D(-1, -1);
 }
 
+void GameMap::DamageArea(const Cell2D & center, int radius, float damage)
+{
+    const int r0 = (radius < center.row) ? center.row - radius : 0;
+    const int r1uc = center.row + radius;
+    const int r1 = r1uc < mRows ? r1uc + 1 : mRows;
+
+    for(int r = r0; r < r1; ++r)
+    {
+        const int c0 = (radius < center.col) ? center.col - radius : 0;
+        const int c1uc = center.col + radius;
+        const int c1 = c1uc < mCols ? c1uc + 1 : mCols;
+
+        const int ind0 = r * mCols;
+
+        for(int c = c0; c < c1; ++c)
+        {
+            const int ind = ind0 + c;
+
+            if(mCells[ind].objTop != nullptr)
+                mCells[ind].objTop->Hit(damage, NO_FACTION);
+
+            if(mCells[ind].objBottom != nullptr)
+                mCells[ind].objBottom->Hit(damage, NO_FACTION);
+        }
+    }
+}
+
 bool GameMap::CanUnitMove(const Cell2D & start, const Cell2D & end, Player * player) const
 {
     const unsigned int r0 = static_cast<unsigned int>(start.row);
