@@ -136,9 +136,15 @@ public:
 
     // unit create
     bool CanCreateUnit(GameObjectTypeId ut, GameObject * gen, Player * player);
-    Cell2D GetNewUnitDestination(GameObject * gen);
+    Cell2D GetNewUnitDestination(GameObject * gen) const;
     void StartCreateUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & dest, Player * player);
     void CreateUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & dest, Player * player);
+
+    // create mini units
+    bool CanCreateMiniUnit(GameObjectTypeId ut, GameObject * gen, int elements, Player * player);
+    void CreateMiniUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & dest,
+                        int elements, Player * player);
+    Cell2D GetNewMiniUnitDestination(GameObject * gen) const;
 
     // move units
     bool CanUnitMove(const Cell2D & start, const Cell2D & end, Player * player) const;

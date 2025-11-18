@@ -11,13 +11,15 @@ namespace game
 class MiniUnit : public GameObject
 {
 public:
-    MiniUnit(const ObjectData & data);
+    MiniUnit(const ObjectData & data, int elements);
 
     int GetNumElements() const;
     void SetNumElements(int num);
 
 private:
     void UpdateGraphics() override;
+
+    void SetImage();
 
 private:
     // attributes
@@ -26,6 +28,6 @@ private:
     int mElements = 1;
 };
 
-int MiniUnit::GetNumElements() const { return mElements; }
+inline int MiniUnit::GetNumElements() const { return mElements; }
 
 } // namespace game

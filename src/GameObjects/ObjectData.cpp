@@ -8,6 +8,7 @@ namespace game
 
 const char * ObjectData::STR_CLASS[NUM_OBJ_CLASSES] =
 {
+    // STRUCTURES
     "BARRACKS",
     "BASE",
     "GENERATOR",
@@ -22,12 +23,17 @@ const char * ObjectData::STR_CLASS[NUM_OBJ_CLASSES] =
     "WALL",
     "GATE",
 
+    // MINI UNITS
+    "SOLDIER",
+
+    // UNITS
     "GENERIC",
     "MEDIC",
     "SOLDIER",
     "SPAWNER",
     "WORKER",
 
+    // OTHERS
     "COLLECTABLE",
     "SCENE"
 };

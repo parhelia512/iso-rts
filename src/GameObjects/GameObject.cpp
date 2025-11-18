@@ -36,6 +36,7 @@ const float GameObject::ACTION_COSTS[NUM_OBJ_ACTIONS] =
     30.f,       // BUILD_STRUCTURE
     10.f,       // BUILD_WALL
     5.f,        // HEAL
+    4.f,        // SPAWN
     1.f         // TOGGLE_GATE
 };
 
@@ -50,6 +51,7 @@ const int GameObject::ACTION_EXPERIENCE[NUM_OBJ_ACTIONS] =
     5,      // BUILD_STRUCTURE
     2,      // BUILD_WALL
     2,      // HEAL
+    5,      // SPAWN
     1,      // TOGGLE_GATE
 };
 

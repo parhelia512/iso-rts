@@ -22,6 +22,7 @@
 #include "GameObjects/DiamondsGenerator.h"
 #include "GameObjects/Hospital.h"
 #include "GameObjects/LootBox.h"
+#include "GameObjects/MiniUnit.h"
 #include "GameObjects/ObjectData.h"
 #include "GameObjects/ObjectsDataRegistry.h"
 #include "GameObjects/PracticeTarget.h"
@@ -489,7 +490,6 @@ GameObject * GameMap::CreateObject(unsigned int layerId, GameObjectTypeId type,
             o2a.owner = mGame->GetPlayerByIndex(variant);
             faction = o2a.owner->GetFaction();
         }
-
 
         auto b = new Base;
         o2a.obj = b;
@@ -1419,7 +1419,7 @@ bool GameMap::CanCreateUnit(GameObjectTypeId ut, GameObject * gen, Player * play
     return false;
 }
 
-Cell2D GameMap::GetNewUnitDestination(GameObject * gen)
+Cell2D GameMap::GetNewUnitDestination(GameObject * gen) const
 {
     const int r1 = gen->GetRow1() > 0 ? gen->GetRow1() - 1 : 0;
     const int c1 = gen->GetCol1() > 0 ? gen->GetCol1() - 1 : 0;
@@ -1616,8 +1616,6 @@ void GameMap::CreateUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & d
 
     mIsoMap->GetLayer(OBJECTS2)->AddObject(unit->GetIsoObject(), r, c);
 
-    unit->OnPositionChanged();
-
     // store unit in map list and in registry
     mObjects.push_back(unit);
     mObjectsSet.insert(unit);
@@ -1627,8 +1625,78 @@ void GameMap::CreateUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & d
 
     // update visibility map
     AddPlayerObjVisibility(unit, player);
-
     ApplyLocalVisibility();
+}
+
+bool GameMap::CanCreateMiniUnit(GameObjectTypeId ut, GameObject * gen, int elements, Player * player)
+{
+    // TODO
+
+    return true;
+}
+
+void GameMap::CreateMiniUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & dest,
+                             int elements, Player * player)
+{
+    const int ind = dest.row * mCols + dest.col;
+    GameMapCell & gcell = mCells[ind];
+
+    const PlayerFaction faction = player->GetFaction();
+    const ObjectData & data = GetObjectData(ut);
+
+    auto mu = new MiniUnit(data, elements);
+    mu->SetFaction(faction);
+    mu->SetCell(&mCells[ind]);
+
+    // links to other objects
+    mu->SetGameMap(this);
+    mu->SetScreen(mScreenGame);
+
+    // update cell
+    gcell.objTop = mu;
+    gcell.walkable = false;
+    gcell.changing = false;
+
+    mIsoMap->GetLayer(OBJECTS2)->AddObject(mu->GetIsoObject(), dest.row, dest.col);
+
+    // store unit in map list and in registry
+    mObjects.push_back(mu);
+    mObjectsSet.insert(mu);
+
+
+    // update visibility map
+    AddPlayerObjVisibility(mu, player);
+    ApplyLocalVisibility();
+}
+
+Cell2D GameMap::GetNewMiniUnitDestination(GameObject * gen) const
+{
+    // TODO quick code that will need to be improved later
+    const GameMapCell * genCell = gen->GetCell();
+
+    const int maxDist = 2;
+
+    for(int d = 1; d < maxDist; ++d)
+    {
+        const int r0 = (d < genCell->row) ? genCell->row - d : 0;
+        const int r1uc = genCell->row + d;
+        const int r1 = r1uc < mRows ? r1uc + 1 : mRows;
+
+        for(int r = r0; r < r1; ++r)
+        {
+            const int c0 = (d < genCell->col) ? genCell->col - d : 0;
+            const int c1uc = genCell->col + d;
+            const int c1 = c1uc < mCols ? c1uc + 1 : mCols;
+
+            for(int c = c0; c < c1; ++c)
+            {
+                if(mCells[r * mCols + c].walkable)
+                    return Cell2D(r, c);
+            }
+        }
+    }
+
+    return Cell2D(-1, -1);
 }
 
 bool GameMap::CanUnitMove(const Cell2D & start, const Cell2D & end, Player * player) const

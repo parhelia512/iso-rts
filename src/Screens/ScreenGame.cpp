@@ -62,6 +62,7 @@ namespace game
 {
 
 // NOTE these will be replaced by dynamic values soon
+constexpr float TIME_NEW_MINI_UNIT = 1.f;
 constexpr float TIME_NEW_UNIT = 2.f;
 constexpr float TIME_CONQUEST = 2.f;
 
@@ -645,6 +646,17 @@ void ScreenGame::CreateUI()
         ClearCellOverlays();
 
         ShowMoveIndicator(unit, mCurrCell);
+    });
+
+    // spawn mini-units
+    panelObjActions->AddButtonFunction(PanelObjectActions::BTN_SPAWN, [this]
+    {
+        auto unit = static_cast<Unit *>(mLocalPlayer->GetSelectedObject());
+        unit->SetActiveAction(GameObjectActionType::SPAWN);
+
+        ClearCellOverlays();
+
+        SetupNewMiniUnits(GameObject::TYPE_MINI_UNIT1, unit, mLocalPlayer, 3, 5);
     });
 
     // WALL GATE
@@ -1710,6 +1722,61 @@ int ScreenGame::CellToIndex(const Cell2D & cell) const
     return cell.row * mIsoMap->GetNumCols() + cell.col;
 }
 
+bool ScreenGame::SetupNewMiniUnits(GameObjectTypeId type, GameObject * gen, Player * player, int num,
+                                   int elements, const std::function<void(bool)> & onDone)
+{
+    // check if create is possible
+    if(!mGameMap->CanCreateMiniUnit(type, gen, elements, player))
+        return false;
+
+    // find where to build
+    Cell2D cell = mGameMap->GetNewMiniUnitDestination(gen);
+
+    if(-1 == cell.row || -1 == cell.col)
+    {
+        std::cout << "[WAR] GameMap::GetNewMiniUnitDestination FAILED" << std::endl;
+        return false;
+    }
+
+    // set time to build
+    float timeBuild = TIME_NEW_MINI_UNIT;
+
+    // special time for invisible AI
+    if(!player->IsLocal() && !mGameMap->IsObjectVisibleToLocalPlayer(gen))
+        timeBuild = TIME_AI_MIN;
+
+    GameMapProgressBar * pb = mHUD->CreateProgressBarInCell(cell, timeBuild, player->GetFaction());
+
+    pb->AddFunctionOnCompleted([this, cell, player, gen, type, elements, num]
+    {
+        gen->ActionStepCompleted(SPAWN);
+        gen->SetCurrentAction(GameObjectActionType::IDLE);
+
+        mGameMap->CreateMiniUnit(type, gen, cell, elements, player);
+
+        // add unit to map if cell is visible to local player
+        if(mGameMap->IsCellVisibleToLocalPlayer(cell.row, cell.col))
+            AddObjectToMinimap(cell, type, player->GetFaction());
+
+        SetObjectActionCompleted(gen);
+
+        if(num > 1)
+            SetupNewMiniUnits(GameObject::TYPE_MINI_UNIT1, gen, mLocalPlayer, num - 1, elements);
+    });
+
+    // store active action
+    mObjActionsToDo.emplace_back(gen, GameObjectActionType::SPAWN, cell, pb, onDone);
+
+    gen->SetActiveAction(GameObjectActionType::IDLE);
+    gen->SetCurrentAction(GameObjectActionType::SPAWN);
+
+    // disable actions panel (if action is done by local player)
+    if(player->IsLocal())
+        mHUD->SetLocalActionsEnabled(false);
+
+    return true;
+}
+
 bool ScreenGame::SetupNewUnit(GameObjectTypeId type, GameObject * gen, Player * player,
                               const std::function<void(bool)> & onDone)
 {
@@ -1752,14 +1819,7 @@ bool ScreenGame::SetupNewUnit(GameObjectTypeId type, GameObject * gen, Player * 
 
         // add unit to map if cell is visible to local player
         if(mGameMap->IsCellVisibleToLocalPlayer(cell.row, cell.col))
-        {
-            const ObjectData & data = GetGame()->GetObjectsRegistry()->GetObjectData(type);
-
-            const PlayerFaction faction = player->GetFaction();
-            const auto type = static_cast<MiniMap::MiniMapElemType>(MiniMap::MME_FACTION1 + faction);
-            MiniMap * mm = mHUD->GetMinimap();
-            mm->AddElement(cell.row, cell.col, data.GetRows(), data.GetCols(), type, faction);
-        }
+            AddObjectToMinimap(cell, type, player->GetFaction());
 
         SetObjectActionCompleted(gen);
     });
@@ -3201,6 +3261,15 @@ void ScreenGame::UpdateCurrentCell()
 
     if(sel != nullptr && sel->GetObjectCategory() == GameObject::CAT_UNIT)
         ShowActiveIndicators(static_cast<Unit *>(sel), cell);
+}
+
+void ScreenGame::AddObjectToMinimap(const Cell2D & cell, GameObjectTypeId type, PlayerFaction f)
+{
+    const ObjectData & data = GetGame()->GetObjectsRegistry()->GetObjectData(type);
+    const auto mtype = static_cast<MiniMap::MiniMapElemType>(MiniMap::MME_FACTION1 + f);
+
+    MiniMap * mm = mHUD->GetMinimap();
+    mm->AddElement(cell.row, cell.col, data.GetRows(), data.GetCols(), mtype, f);
 }
 
 void ScreenGame::SetMissionRewards()

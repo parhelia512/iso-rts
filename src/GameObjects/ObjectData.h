@@ -25,6 +25,9 @@ enum ObjClass : unsigned int
     OCS_WALL,
     OCS_WALL_GATE,
 
+    // MINI UNITS
+    OCMU_SOLDIER,
+
     // UNITS
     OCU_GENERIC,
     OCU_MEDIC,
@@ -85,6 +88,7 @@ enum ObjFamily : unsigned int
     OCAT_TECHNOLOGY,
 
     // UNIT
+    OCAT_MINI_UNIT,
     OCAT_UNIT,
 
     NUM_OBJ_CATEGORIES,

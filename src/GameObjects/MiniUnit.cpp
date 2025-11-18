@@ -10,10 +10,12 @@
 namespace game
 {
 
-MiniUnit::MiniUnit(const ObjectData & data)
+MiniUnit::MiniUnit(const ObjectData & data, int elements)
     : GameObject(data.GetType(), GameObject::CAT_MINI_UNIT, data.GetRows(), data.GetCols())
     , mAttributes(data.GetAttributes())
+    , mElements(elements)
 {
+    SetImage();
 }
 
 void MiniUnit::SetNumElements(int num)
@@ -35,6 +37,11 @@ void MiniUnit::SetNumElements(int num)
 
 void MiniUnit::UpdateGraphics()
 {
+    SetImage();
+}
+
+void MiniUnit::SetImage()
+{
     const PlayerFaction faction = GetFaction();
 
     // avoid to set an image when there's no owner set
@@ -43,7 +50,7 @@ void MiniUnit::UpdateGraphics()
 
     const unsigned int texInd = SID_MUNIT_01_1X_F1 +
                                 (NUM_MUNIT_SPRITES_PER_FACTION * faction) +
-                                (NUM_MUNIT_SPRITES_PER_SQUAD * mElements) +
+                                (NUM_MUNIT_SPRITES_PER_SQUAD * (mElements - 1)) +
                                 static_cast<unsigned int>(IsSelected());
 
     auto * tm = sgl::graphic::TextureManager::Instance();
