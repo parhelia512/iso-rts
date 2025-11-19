@@ -56,7 +56,7 @@ enum SpriteCollectiblesId : unsigned int
 };
 
 // INDICATORS
-extern const char SpriteFileIndicators[];
+extern const char SpriteFileMapIndicators[];
 
 enum SpriteIdIndicators : unsigned int
 {
@@ -143,6 +143,14 @@ enum SpriteIdIndicators : unsigned int
     IND_INF_AREA_CONN_T_F3,
     IND_INF_AREA_CONN_R_F3,
     IND_INF_AREA_CONN_B_F3,
+
+    // PATH INDICATORS
+    ID_MIND_PATH_F1,
+    ID_MIND_PATH_DEST_F1,
+    ID_MIND_PATH_F2,
+    ID_MIND_PATH_DEST_F2,
+    ID_MIND_PATH_F3,
+    ID_MIND_PATH_DEST_F3,
 
     // TOTAL
     NUM_IND_SPRITES,

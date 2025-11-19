@@ -219,7 +219,7 @@ void ControlMap::UpdateVisualAreas()
                     const unsigned int typef = type + (NUM_INF_AREA_ELEMS * pf);
 
                     IsoObject * marker = GetNewMarker();
-                    marker->SetTexture(tm->GetSprite(SpriteFileIndicators, typef));
+                    marker->SetTexture(tm->GetSprite(SpriteFileMapIndicators, typef));
 
                     mLayer->AddObject(marker, r, c);
                 }

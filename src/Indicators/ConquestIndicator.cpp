@@ -32,7 +32,7 @@ void ConquestIndicator::SetFaction(PlayerFaction faction)
     const unsigned int indSprite = IND_CONQUEST_F1 + faction;
 
     auto tm = TextureManager::Instance();
-    Texture * tex = tm->GetSprite(SpriteFileIndicators, indSprite);
+    Texture * tex = tm->GetSprite(SpriteFileMapIndicators, indSprite);
 
     SetTexture(tex);
 }

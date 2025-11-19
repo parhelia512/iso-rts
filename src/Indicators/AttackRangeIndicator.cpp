@@ -21,7 +21,7 @@ void AttackRangeIndicator::SetFaction(PlayerFaction faction)
     const unsigned int indSprite = IND_ATTACK_F1 + faction;
 
     auto tm = TextureManager::Instance();
-    Texture * tex = tm->GetSprite(SpriteFileIndicators, indSprite);
+    Texture * tex = tm->GetSprite(SpriteFileMapIndicators, indSprite);
 
     SetTexture(tex);
 }

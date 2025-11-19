@@ -214,13 +214,13 @@ void WallIndicator::UpdateImage()
     // not in a valid state
     if(NO_FACTION == mFaction || WB_INVALID == mBlock)
     {
-        SetTexture(tm->GetSprite(SpriteFileIndicators, IND_WB_INVALID));
+        SetTexture(tm->GetSprite(SpriteFileMapIndicators, IND_WB_INVALID));
         return ;
     }
 
     // upate object body
     const unsigned int index = IND_WB_FIRST + (mFaction * NUM_WALL_BLOCKS) + mBlock;
-    SetTexture(tm->GetSprite(SpriteFileIndicators, index));
+    SetTexture(tm->GetSprite(SpriteFileMapIndicators, index));
 }
 
 void WallIndicator::UpdateCostColor()

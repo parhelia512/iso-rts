@@ -938,10 +938,18 @@ void ScreenInit::SetupTextures()
             { 388, 445, 96, 48 },
             { 485, 445, 96, 48 },
             { 0, 494, 96, 48 },
-            { 97, 494, 96, 48 }
+            { 97, 494, 96, 48 },
+
+            // MOVE PATH
+            { 582, 147, 96, 48 },
+            { 582, 196, 96, 48 },
+            { 582, 245, 96, 48 },
+            { 582, 294, 96, 48 },
+            { 582, 343, 96, 48 },
+            { 582, 392, 96, 48 },
         };
 
-        tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_GAME], SpriteFileIndicators, rects);
+        tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_GAME], SpriteFileMapIndicators, rects);
     });
 
     // MINI UNITS
