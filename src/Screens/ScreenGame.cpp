@@ -722,9 +722,9 @@ void ScreenGame::CreateUI()
     {
         ClearCellOverlays();
 
-        GameObject * selObj = mLocalPlayer->GetSelectedObject();
+        GameObject * obj = mLocalPlayer->GetSelectedObject();
 
-        auto og = selObj->GetGroup();
+        auto og = obj->GetGroup();
 
         // in case object is part of a group -> destroy all members
         if(og != nullptr)
@@ -738,13 +738,8 @@ void ScreenGame::CreateUI()
         // standard single object -> destroy
         else
         {
-            const Cell2D center(selObj->GetRow0(), selObj->GetCol0());
-            const int damageRadius = 1;
-
-            const float h = selObj->GetMaxHealth();
-            selObj->Hit(h, NO_FACTION);
-
-            mGameMap->DamageArea(center, damageRadius, h);
+            const float h = obj->GetMaxHealth();
+            obj->Hit(h, NO_FACTION);
         }
     });
 
