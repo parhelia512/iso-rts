@@ -50,9 +50,12 @@ PanelObjectActions::PanelObjectActions(sgl::sgui::Widget * parent)
                                                       "Trade your resources", this);
     mButtons[BTN_SPAWN] = new ObjectActionButton(ObjectActionButton::SPAWN, "G", KeyboardEvent::KEY_G,
                                                  "Spawn mini units", this);
-    mButtons[BTN_SELF_DESTROY] = new ObjectActionButton(ObjectActionButton::SELF_DESTROY, "T", KeyboardEvent::KEY_T,
-                                                        "Self destruction", this);
+    mButtons[BTN_SET_TARGET] = new ObjectActionButton(ObjectActionButton::SET_TARGET, "T",
+                                                        KeyboardEvent::KEY_T, "Set target destination", this);
 
+    // keep these 2 last
+    mButtons[BTN_SELF_DESTROY] = new ObjectActionButton(ObjectActionButton::SELF_DESTROY, "B",
+                                                        KeyboardEvent::KEY_B, "Self destruction", this);
     mButtons[BTN_CANCEL] = new ObjectActionButton(ObjectActionButton::CANCEL, "X", KeyboardEvent::KEY_X,
                                                   "Cancel current action", this);
 }
@@ -111,6 +114,10 @@ void PanelObjectActions::SetObject(GameObject * obj)
 
         if(unit->CanSpawn())
             mButtons[BTN_SPAWN]->SetVisible(true);
+    }
+    else if(mObj->GetObjectCategory() == GameObject::CAT_MINI_UNIT)
+    {
+        mButtons[BTN_SET_TARGET]->SetVisible(true);
     }
     else if(objType == GameObject::TYPE_BARRACKS)
     {

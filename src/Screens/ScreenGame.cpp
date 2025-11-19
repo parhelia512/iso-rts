@@ -658,6 +658,12 @@ void ScreenGame::CreateUI()
         SetupNewMiniUnits(GameObject::TYPE_MINI_UNIT1, unit, og, mLocalPlayer, 4, rand() % 5);
     });
 
+    // set target destination for mini units
+    panelObjActions->AddButtonFunction(PanelObjectActions::BTN_SET_TARGET, [this]
+    {
+        ClearCellOverlays();
+    });
+
     // WALL GATE
     panelObjActions->AddButtonFunction(PanelObjectActions::BTN_OPEN_GATE,
                                        [this, panelObjActions]

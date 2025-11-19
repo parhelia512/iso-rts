@@ -39,6 +39,7 @@ public:
         BTN_TRADE,
         BTN_SPAWN,
         BTN_SELF_DESTROY,
+        BTN_SET_TARGET,
         BTN_CANCEL,
 
         NUM_BUTTONS

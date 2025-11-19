@@ -34,6 +34,7 @@ public:
         TRADE,
         SPAWN,
         SELF_DESTROY,
+        SET_TARGET,
 
         NUM_ACTION_ICONS
     };

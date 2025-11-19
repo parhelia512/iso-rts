@@ -1604,6 +1604,7 @@ void ScreenInit::SetupTextures()
             { 265, 127, 52, 52 },
             { 318, 127, 52, 52 },
             { 0, 180, 52, 52 },
+            { 53, 180, 52, 52 },
         };
 
         tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_UI_GAME], SpriteFileObjActionButton, rects);
