@@ -41,6 +41,9 @@
 #include "Screens/ScreenGame.h"
 #include "Widgets/MiniMap.h"
 
+#include <sgl/media/AudioManager.h>
+#include <sgl/media/AudioPlayer.h>
+
 #include <algorithm>
 #include <cmath>
 #include <iostream>
@@ -2660,6 +2663,9 @@ void GameMap::Update(float delta)
             mObjectsSet.erase(obj);
 
             DestroyObject(obj);
+
+            auto player = sgl::media::AudioManager::Instance()->GetPlayer();
+            player->PlaySound("game/explosion-01.ogg");
         }
         else
             ++itObj;
