@@ -1721,29 +1721,94 @@ Cell2D GameMap::GetNewMiniUnitDestination(const Cell2D & genCell) const
     return Cell2D(-1, -1);
 }
 
-void GameMap::DamageArea(const Cell2D & center, int radius, float damage)
+void GameMap::DamageArea(const Cell2D & srcBR, const Cell2D & srcTL, int radius, float maxDamage)
 {
-    const int r0 = (radius < center.row) ? center.row - radius : 0;
-    const int r1uc = center.row + radius;
-    const int r1 = r1uc < mRows ? r1uc + 1 : mRows;
-
-    for(int r = r0; r < r1; ++r)
+    for(int rad = 1; rad <= radius; ++rad)
     {
-        const int c0 = (radius < center.col) ? center.col - radius : 0;
-        const int c1uc = center.col + radius;
-        const int c1 = c1uc < mCols ? c1uc + 1 : mCols;
+        const float damage = std::roundf(maxDamage / rad);
 
-        const int ind0 = r * mCols;
+        // ALONG COLS FROM LEFT TO RIGHT
+        const int c0UC = srcTL.col - rad;
+        const int c0 = (c0UC > 0) ? c0UC : 0;
+        const int c1UC = srcBR.col + rad;
+        const int c1 = (c1UC <= mCols) ? c1UC : mCols;
 
-        for(int c = c0; c < c1; ++c)
+        // TOP
+        const int tRow = srcTL.row - rad;
+
+        if(tRow >= 0)
         {
-            const int ind = ind0 + c;
+            const int ind0 = tRow * mCols;
 
-            if(mCells[ind].objTop != nullptr)
-                mCells[ind].objTop->Hit(damage, NO_FACTION);
+            for(int c = c0; c < c1; ++c)
+            {
+                const int ind = ind0 + c;
 
-            if(mCells[ind].objBottom != nullptr)
-                mCells[ind].objBottom->Hit(damage, NO_FACTION);
+                if(mCells[ind].objTop != nullptr)
+                    mCells[ind].objTop->Hit(damage, NO_FACTION);
+
+                if(mCells[ind].objBottom != nullptr)
+                    mCells[ind].objBottom->Hit(damage, NO_FACTION);
+            }
+        }
+
+        // BOTTOM
+        const int bRow = srcBR.row + rad;
+
+        if(bRow < mRows)
+        {
+            const int ind0 = bRow * mCols;
+
+            for(int c = c0; c < c1; ++c)
+            {
+                const int ind = ind0 + c;
+
+                if(mCells[ind].objTop != nullptr)
+                    mCells[ind].objTop->Hit(damage, NO_FACTION);
+
+                if(mCells[ind].objBottom != nullptr)
+                    mCells[ind].objBottom->Hit(damage, NO_FACTION);
+            }
+        }
+
+        // ALONG ROWS FROM TOP TO BOTTOM
+        const int r0UC = srcTL.row - rad + 1;
+        const int r0 = (r0UC > 0) ? r0UC : 0;
+        const int r1UC = srcBR.row + rad;
+        const int r1 = (r1UC <= mRows) ? r1UC : mRows;
+
+        // LEFT
+        const int lCol = srcTL.col - rad;
+
+        if(lCol >= 0)
+        {
+            for(int r = r0; r < r1; ++r)
+            {
+                const int ind = r * mCols + lCol;
+
+                if(mCells[ind].objTop != nullptr)
+                    mCells[ind].objTop->Hit(damage, NO_FACTION);
+
+                if(mCells[ind].objBottom != nullptr)
+                    mCells[ind].objBottom->Hit(damage, NO_FACTION);
+            }
+        }
+
+        // RIGHT
+        const int rCol = srcBR.col + rad;
+
+        if(rCol < mCols)
+        {
+            for(int r = r0; r < r1; ++r)
+            {
+                const int ind = r * mCols + rCol;
+
+                if(mCells[ind].objTop != nullptr)
+                    mCells[ind].objTop->Hit(damage, NO_FACTION);
+
+                if(mCells[ind].objBottom != nullptr)
+                    mCells[ind].objBottom->Hit(damage, NO_FACTION);
+            }
         }
     }
 }
@@ -2576,6 +2641,12 @@ void GameMap::Update(float delta)
         if(obj->IsDestroyed())
         {
             GameObject * obj = *itObj;
+
+            // apply damage to surrounding area based on onject's energy and size
+            const int damageRadius = obj->GetRows();
+            const float maxDamage = obj->GetEnergy();
+            DamageArea(Cell2D(obj->GetRow0(), obj->GetCol0()), Cell2D(obj->GetRow1(), obj->GetCol1()),
+                       damageRadius, maxDamage);
 
             DestroyObjectPaths(obj);
 

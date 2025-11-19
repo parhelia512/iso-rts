@@ -148,7 +148,7 @@ public:
     Cell2D GetNewMiniUnitDestination(const Cell2D & genCell) const;
 
     // damage
-    void DamageArea(const Cell2D & center, int radius, float damage);
+    void DamageArea(const Cell2D & srcBR, const Cell2D & srcTL, int radius, float maxDamage);
 
     // move units
     bool CanUnitMove(const Cell2D & start, const Cell2D & end, Player * player) const;
