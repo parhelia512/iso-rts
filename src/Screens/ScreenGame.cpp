@@ -304,14 +304,15 @@ void ScreenGame::Render()
 
 void ScreenGame::OnObjectDestroyed(GameObject * obj)
 {
-    Player * owner = GetGame()->GetPlayerByFaction(obj->GetFaction());
-
     // clear action in progress
     ClearObjectAction(obj);
 
     // clear selection if object is selected
-    if(owner->GetSelectedObject() == obj)
+    if(obj->IsSelected())
+    {
+        Player * owner = GetGame()->GetPlayerByFaction(obj->GetFaction());
         ClearSelection(owner);
+    }
 
     // remove object from mini map
     mHUD->GetMinimap()->RemoveElement(obj->GetRow0(), obj->GetCol0());

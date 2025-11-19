@@ -62,6 +62,4 @@ private:
     GameObject * mObj = nullptr;
 };
 
-inline void PanelSelectedObject::ClearObject() { mObj = nullptr; }
-
 } // namespace game

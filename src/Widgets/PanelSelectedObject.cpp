@@ -384,6 +384,17 @@ void PanelSelectedObject::AddFunctionOnShowInfo(const std::function<void()> & f)
     mButtonShowInfo->AddOnClickFunction(f);
 }
 
+void PanelSelectedObject::ClearObject()
+{
+    if(nullptr == mObj)
+        return ;
+
+    mObj->RemoveFunctionOnValueChanged(mFuncValuesChangedId);
+    mFuncValuesChangedId = 0;
+
+    mObj = nullptr;
+}
+
 void PanelSelectedObject::SetObject(GameObject * obj)
 {
     using namespace sgl;
