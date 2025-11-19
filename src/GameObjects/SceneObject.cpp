@@ -16,10 +16,10 @@ SceneObject::SceneObject(GameObjectTypeId type, GameObjectVariantId part, int ro
     mVariant = part;
 
     // set object health
-    float health = 1000.f;
+    float health = 100.f;
 
     if(TYPE_MOUNTAINS == type)
-        const float health = 10000.f;
+        health = 4000.f;
 
     SetMaxHealth(health);
     SetHealth(health);
