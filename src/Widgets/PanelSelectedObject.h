@@ -28,6 +28,7 @@ public:
     void AddFunctionOnClose(const std::function<void()> & f);
     void AddFunctionOnShowInfo(const std::function<void()> & f);
 
+    void ClearObject();
     void SetObject(GameObject * obj);
 
 private:
@@ -60,5 +61,7 @@ private:
 
     GameObject * mObj = nullptr;
 };
+
+inline void PanelSelectedObject::ClearObject() { mObj = nullptr; }
 
 } // namespace game

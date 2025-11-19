@@ -611,6 +611,7 @@ void GameHUD::HideGoalCompletedIcon()
 void GameHUD::HidePanelSelectedObject()
 {
     mButtonPanelSelObj->SetVisible(false);
+    mPanelSelObj->ClearObject();
     mPanelSelObj->SetVisible(false);
 }
 
