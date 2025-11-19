@@ -2577,8 +2577,6 @@ void GameMap::Update(float delta)
         {
             GameObject * obj = *itObj;
 
-            mScreenGame->ClearObjectAction(obj);
-
             DestroyObjectPaths(obj);
 
             Player * p = mGame->GetPlayerByFaction(obj->GetFaction());
@@ -3064,6 +3062,8 @@ void GameMap::AddObjectToMap(const ObjectToAdd & o2a)
 
 void GameMap::DestroyObject(GameObject * obj)
 {
+    mScreenGame->OnObjectDestroyed(obj);
+
     Player * owner = mGame->GetPlayerByFaction(obj->GetFaction());
 
     if(owner != nullptr)
@@ -3073,10 +3073,6 @@ void GameMap::DestroyObject(GameObject * obj)
         // owner is local Player
         if(owner == localPlayer)
         {
-            // clear selection if object is selected
-            if(owner->GetSelectedObject() == obj)
-                mScreenGame->ClearSelection(owner);
-
             // update visibility map
             // NOTE only local player for now
             DelPlayerObjVisibility(obj, localPlayer);
@@ -3119,9 +3115,6 @@ void GameMap::DestroyObject(GameObject * obj)
     IsoObject * isoObj = obj->GetIsoObject();
     IsoLayer * layer = isoObj->GetLayer();
     layer->ClearObject(isoObj);
-
-    // remove object from mini map
-    mScreenGame->GetMiniMap()->RemoveElement(obj->GetRow0(), obj->GetCol0());
 
     // finally delete the object
     delete obj;

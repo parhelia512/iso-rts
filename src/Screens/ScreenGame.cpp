@@ -302,25 +302,19 @@ void ScreenGame::Render()
     mPartMan->Render();
 }
 
-void ScreenGame::ClearObjectAction(GameObject * obj)
+void ScreenGame::OnObjectDestroyed(GameObject * obj)
 {
-    auto it = mObjActions.begin();
+    Player * owner = GetGame()->GetPlayerByFaction(obj->GetFaction());
 
-    // search selected object in active actions
-    while(it != mObjActions.end())
-    {
-        if(it->obj == obj)
-        {
-            if(it->progressBar != nullptr)
-                it->progressBar->DeleteLater();
+    // clear action in progress
+    ClearObjectAction(obj);
 
-            mObjActions.erase(it);
+    // clear selection if object is selected
+    if(owner->GetSelectedObject() == obj)
+        ClearSelection(owner);
 
-            return ;
-        }
-
-        ++it;
-    }
+    // remove object from mini map
+    mHUD->GetMinimap()->RemoveElement(obj->GetRow0(), obj->GetCol0());
 }
 
 sgl::graphic::ParticlesUpdater * ScreenGame::GetParticleUpdater(ParticlesUpdaterId updaterId)
@@ -1379,6 +1373,27 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
 
         if(done)
             ai->RegisterActionInProgress(action);
+    }
+}
+
+void ScreenGame::ClearObjectAction(GameObject * obj)
+{
+    auto it = mObjActions.begin();
+
+    // search selected object in active actions
+    while(it != mObjActions.end())
+    {
+        if(it->obj == obj)
+        {
+            if(it->progressBar != nullptr)
+                it->progressBar->DeleteLater();
+
+            mObjActions.erase(it);
+
+            return ;
+        }
+
+        ++it;
     }
 }
 

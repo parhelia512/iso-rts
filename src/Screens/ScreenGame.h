@@ -74,7 +74,8 @@ public:
     void OnWindowMouseEntered(sgl::graphic::WindowEvent & event) override;
     void OnWindowMouseLeft(sgl::graphic::WindowEvent & event) override;
 
-    void ClearObjectAction(GameObject * obj);
+    void OnObjectDestroyed(GameObject * obj);
+
     void SetObjectActionCompleted(GameObject * obj);
     void SetObjectActionFailed(GameObject * obj);
 
@@ -117,6 +118,7 @@ private:
     void UpdateAI(float delta);
     void ExecuteAIAction(PlayerAI * ai);
 
+    void ClearObjectAction(GameObject * obj);
     void CancelObjectAction(GameObject * obj);
     void SetObjectActionDone(GameObject * obj, bool successful);
     void FinalizeObjectAction(const GameObjectAction & action, bool successful);
