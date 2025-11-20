@@ -95,6 +95,8 @@ add_executable(
     src/GameObjects/LootBox.cpp
     src/GameObjects/MiniUnit.h
     src/GameObjects/MiniUnit.cpp
+    src/GameObjects/MiniUnitsGroup.h
+    src/GameObjects/MiniUnitsGroup.cpp
     src/GameObjects/ObjectData.h
     src/GameObjects/ObjectData.cpp
     src/GameObjects/ObjectsDataRegistry.h

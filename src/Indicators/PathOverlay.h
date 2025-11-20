@@ -17,7 +17,7 @@ public:
     ~PathOverlay();
 
     void ClearPath();
-    void SetPath(const std::vector<unsigned int> & path, PlayerFaction faction, int cost);
+    void SetPath(const std::vector<unsigned int> & path, PlayerFaction faction, int cost = -1);
 
 private:
     PathIndicator * GetNewIndicator(PlayerFaction faction, bool final);

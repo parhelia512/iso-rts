@@ -16,8 +16,8 @@
 #include "AI/WallBuildPath.h"
 #include "GameObjects/Base.h"
 #include "GameObjects/DefensiveTower.h"
-#include "GameObjects/GameObjectsGroup.h"
 #include "GameObjects/Hospital.h"
+#include "GameObjects/MiniUnitsGroup.h"
 #include "GameObjects/ObjectsDataRegistry.h"
 #include "GameObjects/Temple.h"
 #include "GameObjects/Unit.h"
@@ -26,6 +26,7 @@
 #include "Indicators/ConquestIndicator.h"
 #include "Indicators/HealingRangeIndicator.h"
 #include "Indicators/MoveIndicator.h"
+#include "Indicators/PathOverlay.h"
 #include "Indicators/StructureIndicator.h"
 #include "Indicators/WallIndicator.h"
 #include "Particles/UpdaterDamage.h"
@@ -172,6 +173,10 @@ ScreenGame::ScreenGame(Game * game)
     // UI
     CreateUI();
 
+    // OVERLAYS
+    mPathOverlay = new PathOverlay(mIsoMap->GetLayer(MapLayers::CELL_OVERLAYS4),
+                                   mIsoMap->GetNumRows(), mIsoMap->GetNumCols());
+
     // set initial camera position
     CenterCameraOverPlayerBase();
 
@@ -211,6 +216,8 @@ ScreenGame::~ScreenGame()
 
     delete mPathfinder;
     delete mPartMan;
+
+    delete mPathOverlay;
 
     for(auto ind : mAttIndicators)
         delete ind;
@@ -364,6 +371,14 @@ void ScreenGame::SelectObject(GameObject * obj, Player * player)
             auto tower = static_cast<DefensiveTower *>(obj);
             const int range = tower->GetAttackRange();
             ShowAttackIndicators(tower, range);
+        }
+
+        if(obj->GetObjectCategory() == GameObject::CAT_MINI_UNIT)
+        {
+            auto group = static_cast<MiniUnitsGroup *>(obj->GetGroup());
+
+            if(group->HasPathSet())
+                mPathOverlay->SetPath(group->GetPath(), obj->GetFaction());
         }
     }
 
@@ -654,14 +669,23 @@ void ScreenGame::CreateUI()
         ClearCellOverlays();
 
         // TODO move this to HUD when dialog to control creation is done
-        auto og = new GameObjectsGroup;
-        SetupNewMiniUnits(GameObject::TYPE_MINI_UNIT1, unit, og, mLocalPlayer, 4, rand() % 5);
+        auto og = new MiniUnitsGroup;
+        SetupNewMiniUnits(GameObject::TYPE_MINI_UNIT1, unit, og, mLocalPlayer, 3, rand() % 5);
     });
 
     // set target destination for mini units
     panelObjActions->AddButtonFunction(PanelObjectActions::BTN_SET_TARGET, [this]
     {
-        ClearCellOverlays();
+        auto mu = mLocalPlayer->GetSelectedObject();
+
+        auto group = static_cast<MiniUnitsGroup *>(mu->GetGroup());
+
+        group->DoForAll([](GameObject * obj)
+        {
+            obj->SetActiveAction(GameObjectActionType::SET_TARGET);
+        });
+
+        // TODO show an indicator that highlights the target point
     });
 
     // WALL GATE
@@ -762,6 +786,25 @@ void ScreenGame::CreateUI()
             return ;
 
         const GameObjectActionType action = selObj->GetActiveAction();
+
+        // special case MiniUnits
+        if(selObj->GetObjectCategory() == GameObject::CAT_MINI_UNIT)
+        {
+            auto group = static_cast<MiniUnitsGroup *>(selObj->GetGroup());
+
+            if(group->HasPathSet())
+            {
+                mPathOverlay->ClearPath();
+
+                group->ClearPath();
+
+                group->DoForAll([](GameObject * obj)
+                {
+                    obj->SetCurrentAction(GameObjectActionType::IDLE);
+                    obj->SetActiveActionToDefault();
+                });
+            }
+        }
 
         if(action == CONQUER_CELL || action == BUILD_WALL)
         {
@@ -2600,6 +2643,41 @@ void ScreenGame::HandleUnitBuildWallOnMouseUp(Unit * unit, const Cell2D & clickC
     mWallPath.insert(mWallPath.end(), path.begin(), path.end());
 }
 
+void ScreenGame::HandleMiniUnitSetTargetOnMouseUp(GameObject * obj, const Cell2D & clickCell)
+{
+    using namespace sgl;
+
+    const Cell2D objCell(obj->GetRow0(), obj->GetCol0());
+    const int clickInd = clickCell.row * mGameMap->GetNumCols() + clickCell.col;
+
+    const Player * player = GetGame()->GetPlayerByFaction(obj->GetFaction());
+
+    // destination is NOT visible and walkable
+    if(!mLocalPlayer->IsCellVisible(clickInd) ||
+       !mGameMap->IsCellWalkable(clickCell.row, clickCell.col))
+    {
+        PlayLocalActionErrorSFX(player);
+        return ;
+    }
+
+    // TODO define start point
+    const Cell2D start = objCell;
+
+    const auto po = ai::Pathfinder::NO_OPTION;
+    const auto path = mPathfinder->MakePath(start.row, start.col, clickCell.row, clickCell.col, po);
+
+    mPathOverlay->SetPath(path, obj->GetFaction());
+
+    auto group = static_cast<MiniUnitsGroup *>(obj->GetGroup());
+    group->SetPath(std::move(path));
+
+    // reset active action
+    group->DoForAll([](GameObject * o)
+    {
+        o->SetActiveActionToDefault();
+    });
+}
+
 void ScreenGame::HandleSelectionClick(sgl::core::MouseButtonEvent & event)
 {
     GameObject * currSel = mLocalPlayer->GetSelectedObject();
@@ -2756,6 +2834,13 @@ void ScreenGame::HandleActionClick(sgl::core::MouseButtonEvent & event)
             HandleUnitBuildWallOnMouseUp(selUnit, clickCell);
         else if (action == GameObjectActionType::BUILD_STRUCTURE)
             HandleUnitBuildStructureOnMouseUp(selUnit, clickCell);
+    }
+    else if(selObj->GetObjectCategory() == GameObject::CAT_MINI_UNIT)
+    {
+        const GameObjectActionType action = selObj->GetActiveAction();
+
+        if(action == GameObjectActionType::SET_TARGET)
+            HandleMiniUnitSetTargetOnMouseUp(selObj, clickCell);
     }
     else if(selObj->GetObjectType() == GameObject::TYPE_HOSPITAL)
     {

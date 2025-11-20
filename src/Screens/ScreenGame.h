@@ -38,6 +38,7 @@ class IsoLayer;
 class IsoMap;
 class MiniMap;
 class MoveIndicator;
+class PathOverlay;
 class Player;
 class PlayerAI;
 class StructureIndicator;
@@ -156,6 +157,8 @@ private:
     void HandleUnitBuildStructureOnMouseUp(Unit * unit, const Cell2D & clickCell);
     void HandleUnitBuildWallOnMouseUp(Unit * unit, const Cell2D & clickCell);
 
+    void HandleMiniUnitSetTargetOnMouseUp(GameObject * obj, const Cell2D & clickCell);
+
     void HandleSelectionClick(sgl::core::MouseButtonEvent & event);
     void HandleActionClick(sgl::core::MouseButtonEvent & event);
 
@@ -229,6 +232,9 @@ private:
 
     struct Cell2D mCurrCell;
     sgl::core::Pointd2D mMousePos;
+
+    // MAP OVERLAYS
+    PathOverlay * mPathOverlay = nullptr;
 
     // TURN MANAGEMENT
     Player * mLocalPlayer = nullptr;

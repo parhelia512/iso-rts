@@ -18,6 +18,9 @@ enum GameObjectActionType : unsigned int
     // BASE
     BUILD_UNIT,
 
+    // MINI UNIT
+    SET_TARGET,
+
     // UNIT
     MOVE,
     CONQUER_CELL,
@@ -110,7 +113,7 @@ public:
 
     // GROUP
     bool IsInGroup() const;
-    const GameObjectsGroup * GetGroup() const;
+    GameObjectsGroup * GetGroup() const;
     void SetGroup(GameObjectsGroup * g);
     void ClearGroup();
 
@@ -337,7 +340,7 @@ private:
 };
 
 inline bool GameObject::IsInGroup() const { return mGroup != nullptr; }
-inline const GameObjectsGroup * GameObject::GetGroup() const { return mGroup; }
+inline GameObjectsGroup * GameObject::GetGroup() const { return mGroup; }
 
 inline void GameObject::SetGameMap(GameMap * map) { mGameMap = map; }
 inline void GameObject::SetScreen(ScreenGame * screen) { mScreen = screen; }
