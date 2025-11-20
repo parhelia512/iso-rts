@@ -319,6 +319,15 @@ void ScreenMainMenu::CreateChangelog()
 
     contY += textNewFeat->GetHeight() + paddingV;
 
+    // CONTENT BLOCK: FIXES
+    auto textFix = new sgui::TextArea(contentW, minBlockH, font, true, content);
+    textFix->SetText("FIXES\n"
+                     "- Fixed crash when selecting object after another selected one was destroyed.\n");
+    textFix->SetPosition(contX, contY);
+    textFix->SetColor(colorContent);
+
+    contY += textFix->GetHeight() + paddingV;
+
     /*
     // CONTENT BLOCK: CHANGES
     auto textChange = new sgui::TextArea(contentW, minBlockH, font, true, content);
@@ -328,13 +337,6 @@ void ScreenMainMenu::CreateChangelog()
     textChange->SetColor(colorContent);
 
     contY += textChange->GetHeight() + paddingV;
-
-    // CONTENT BLOCK: FIXES
-    auto textFix = new sgui::TextArea(contentW, minBlockH, font, true, content);
-    textFix->SetText("FIXES\n"
-                    );
-    textFix->SetPosition(contX, contY);
-    textFix->SetColor(colorContent);
     */
 
     // set content
