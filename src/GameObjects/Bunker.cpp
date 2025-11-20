@@ -65,8 +65,6 @@ void Bunker::Update(float delta)
 void Bunker::UpdateGraphics()
 {
     SetImage();
-
-    SetDefaultColors();
 }
 
 void Bunker::SetImage()

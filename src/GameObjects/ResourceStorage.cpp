@@ -41,8 +41,6 @@ ResourceStorage::ResourceStorage(GameObjectTypeId type, int rows, int cols)
 void ResourceStorage::UpdateGraphics()
 {
     SetImage();
-
-    SetDefaultColors();
 }
 
 void ResourceStorage::OnLinkedChanged()

@@ -53,8 +53,6 @@ unsigned int WallGate::GetCostMaterial(unsigned int level)
 void WallGate::UpdateGraphics()
 {
     SetImage();
-
-    SetDefaultColors();
 }
 
 void WallGate::SetImage()

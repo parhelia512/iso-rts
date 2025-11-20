@@ -22,8 +22,6 @@ RadarStation::RadarStation()
 void RadarStation::UpdateGraphics()
 {
     SetImage();
-
-    SetDefaultColors();
 }
 
 void RadarStation::OnLinkedChanged()

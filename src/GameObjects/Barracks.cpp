@@ -20,8 +20,6 @@ Barracks::Barracks()
 void Barracks::UpdateGraphics()
 {
     SetImage();
-
-    SetDefaultColors();
 }
 
 void Barracks::SetImage()

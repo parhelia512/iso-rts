@@ -164,8 +164,6 @@ int Unit::GetAttribute(unsigned int index) const
 void Unit::UpdateGraphics()
 {
     SetImage();
-
-    SetDefaultColors();
 }
 
 void Unit::SetImage()

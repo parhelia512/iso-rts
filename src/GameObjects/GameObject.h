@@ -219,8 +219,6 @@ protected:
     virtual void OnFactionChanged();
     virtual void OnLinkedChanged();
 
-    void SetDefaultColors();
-
     GameMap * GetGameMap() const;
     ScreenGame * GetScreen() const;
 
@@ -244,6 +242,8 @@ protected:
 
 private:
     void RestoreTurnEnergy();
+
+    void SetDefaultColors();
 
 private:
     static unsigned int counter;

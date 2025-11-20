@@ -73,8 +73,6 @@ void Base::OnNewTurn(PlayerFaction faction)
 void Base::UpdateGraphics()
 {
     SetImage();
-
-    SetDefaultColors();
 }
 
 void Base::SetImage()

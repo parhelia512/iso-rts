@@ -89,8 +89,6 @@ void ResourceGenerator::OnNewTurn(PlayerFaction faction)
 void ResourceGenerator::UpdateGraphics()
 {
     SetImage();
-
-    SetDefaultColors();
 }
 
 void ResourceGenerator::SetImage()

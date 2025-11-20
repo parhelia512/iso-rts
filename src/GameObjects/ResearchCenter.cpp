@@ -20,8 +20,6 @@ ResearchCenter::ResearchCenter()
 void ResearchCenter::UpdateGraphics()
 {
     SetImage();
-
-    SetDefaultColors();
 }
 
 void ResearchCenter::SetImage()

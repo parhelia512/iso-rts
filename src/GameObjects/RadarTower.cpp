@@ -22,8 +22,6 @@ RadarTower::RadarTower()
 void RadarTower::UpdateGraphics()
 {
     SetImage();
-
-    SetDefaultColors();
 }
 
 void RadarTower::OnLinkedChanged()

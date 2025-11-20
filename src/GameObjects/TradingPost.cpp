@@ -22,8 +22,6 @@ TradingPost::TradingPost(const ObjectData & data)
 void TradingPost::UpdateGraphics()
 {
     SetImage();
-
-    SetDefaultColors();
 }
 
 void TradingPost::SetImage()

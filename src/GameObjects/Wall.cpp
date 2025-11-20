@@ -32,8 +32,6 @@ unsigned int Wall::GetCostMaterial(unsigned int level)
 void Wall::UpdateGraphics()
 {
     SetImage();
-
-    SetDefaultColors();
 }
 
 void Wall::SetImage()

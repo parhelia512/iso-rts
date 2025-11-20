@@ -73,8 +73,6 @@ void Hospital::Update(float delta)
 void Hospital::UpdateGraphics()
 {
     SetImage();
-
-    SetDefaultColors();
 }
 
 void Hospital::SetImage()

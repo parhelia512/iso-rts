@@ -65,8 +65,6 @@ void DefensiveTower::Update(float delta)
 void DefensiveTower::UpdateGraphics()
 {
     SetImage();
-
-    SetDefaultColors();
 }
 
 void DefensiveTower::SetImage()

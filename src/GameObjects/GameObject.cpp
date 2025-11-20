@@ -382,6 +382,8 @@ void GameObject::SetFaction(PlayerFaction f)
 
     mFaction = f;
 
+    SetDefaultColors();
+
     OnFactionChanged();
 
     UpdateGraphics();
@@ -676,6 +678,28 @@ void GameObject::Update(float) { }
 void GameObject::OnFactionChanged() { }
 void GameObject::OnLinkedChanged() { }
 
+void GameObject::NotifyValueChanged()
+{
+    for(const auto & it : mOnValueChanged)
+        it.second();
+}
+
+void GameObject::RestoreTurnEnergy()
+{
+    const float basePerc = 0.5f;
+    const float baseEnergy = mMaxEnergy * basePerc;
+    const float newEnergy = (mMaxEnergy - baseEnergy) * mEnergyRegPower;
+    const float prevEnergy = mEnergy * mEnergyRegPower;
+    const float energy = std::roundf(baseEnergy + prevEnergy + newEnergy);
+
+    SumEnergy(energy);
+
+#ifdef DEV_MODE
+    if(Game::GOD_MODE && IsFactionLocal())
+        SetEnergy(mMaxEnergy * 5);
+#endif
+}
+
 void GameObject::SetDefaultColors()
 {
     // clear current colors
@@ -721,28 +745,6 @@ void GameObject::SetDefaultColors()
             mObjColors.push_back(0x595959ff);
         break;
     }
-}
-
-void GameObject::NotifyValueChanged()
-{
-    for(const auto & it : mOnValueChanged)
-        it.second();
-}
-
-void GameObject::RestoreTurnEnergy()
-{
-    const float basePerc = 0.5f;
-    const float baseEnergy = mMaxEnergy * basePerc;
-    const float newEnergy = (mMaxEnergy - baseEnergy) * mEnergyRegPower;
-    const float prevEnergy = mEnergy * mEnergyRegPower;
-    const float energy = std::roundf(baseEnergy + prevEnergy + newEnergy);
-
-    SumEnergy(energy);
-
-#ifdef DEV_MODE
-    if(Game::GOD_MODE && IsFactionLocal())
-        SetEnergy(mMaxEnergy * 5);
-#endif
 }
 
 } // namespace game
