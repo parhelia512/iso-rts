@@ -137,6 +137,10 @@ add_executable(
     src/Indicators/HealingRangeIndicator.cpp
     src/Indicators/MoveIndicator.h
     src/Indicators/MoveIndicator.cpp
+    src/Indicators/PathIndicator.h
+    src/Indicators/PathIndicator.cpp
+    src/Indicators/PathOverlay.h
+    src/Indicators/PathOverlay.cpp
     src/Indicators/StructureIndicator.h
     src/Indicators/StructureIndicator.cpp
     src/Indicators/WallIndicator.h

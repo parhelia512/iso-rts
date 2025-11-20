@@ -2,7 +2,6 @@
 
 #include <sgl/core/Point.h>
 
-#include <string>
 #include <vector>
 
 namespace game
