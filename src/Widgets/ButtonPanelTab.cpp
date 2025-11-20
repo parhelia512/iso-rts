@@ -1,6 +1,7 @@
 #include "Widgets/ButtonPanelTab.h"
 
 #include "Widgets/GameUIData.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
@@ -25,7 +26,7 @@ ButtonPanelTab::ButtonPanelTab(const char * text, sgl::sgui::Widget * parent)
 
     // LABEL
     auto fm = graphic::FontManager::Instance();
-    graphic::Font * font = fm->GetFont("Lato-Regular.ttf", 24, graphic::Font::NORMAL);
+    graphic::Font * font = fm->GetFont(WidgetsConstants::FontFileButton, 24, graphic::Font::NORMAL);
 
     mLabel = new graphic::Text(text, font);
     RegisterRenderable(mLabel);

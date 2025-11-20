@@ -2,6 +2,7 @@
 
 #include "Tutorial/TutorialConstants.h"
 #include "Widgets/GameUIData.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/core/event/KeyboardEvent.h>
 #include <sgl/core/event/MouseButtonEvent.h>
@@ -64,7 +65,7 @@ PanelInfoTutorial::PanelInfoTutorial(int w, int h)
     const int marginBottom = 20;
 
     auto fm = graphic::FontManager::Instance();
-    auto font = fm->GetFont("Lato-Regular.ttf", 18, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileText, 18, graphic::Font::NORMAL);
 
     mLabelContinue = new sgui::Label("LEFT CLICK here or press SPACE to continue", font, this);
     mLabelContinue->SetColor(0x6c8093ff);
@@ -91,7 +92,7 @@ void PanelInfoTutorial::AddInfoEntry(const char * text, unsigned int color, floa
 
     // text area
     auto fm = graphic::FontManager::Instance();
-    auto font = fm->GetFont("Lato-Regular.ttf", 20, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileText, 20, graphic::Font::NORMAL);
 
     const int areaW = GetWidth() - (2 * marginSide);
     const int areaH = 0;

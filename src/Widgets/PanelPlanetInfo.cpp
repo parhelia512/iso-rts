@@ -18,8 +18,6 @@
 namespace game
 {
 
-const char * fileFont = "Lato-Regular.ttf";
-
 PanelPlanetInfo::PanelPlanetInfo()
     : sgl::sgui::Widget(nullptr)
     , mOccupier(NO_FACTION)
@@ -39,20 +37,19 @@ PanelPlanetInfo::PanelPlanetInfo()
     SetSize(tex->GetWidth(), tex->GetHeight());
 
     // TITLE
-
     const unsigned int colorTitle = 0xe9f7fbcc;
 
-    graphic::Font * fnt = fm->GetFont(fileFont, WidgetsConstants::FontSizePlanetMapTitle,
-                                      graphic::Font::NORMAL);
+    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFileTitle,
+                                      WidgetsConstants::FontSizePlanetMapTitle, graphic::Font::NORMAL);
     mTitle = new graphic::Text("INFO", fnt);
     mTitle->SetColor(colorTitle);
     RegisterRenderable(mTitle);
 
     // -- DATA --
-    graphic::Font * fntHeader = fm->GetFont(fileFont, WidgetsConstants::FontSizePlanetMapHeader,
-                                         graphic::Font::NORMAL);
-    graphic::Font * fntData = fm->GetFont(fileFont, WidgetsConstants::FontSizePlanetMapText,
-                                          graphic::Font::NORMAL);
+    graphic::Font * fntHeader = fm->GetFont(WidgetsConstants::FontFileHeader,
+                                            WidgetsConstants::FontSizePlanetMapHeader, graphic::Font::NORMAL);
+    graphic::Font * fntData = fm->GetFont(WidgetsConstants::FontFileText,
+                                          WidgetsConstants::FontSizePlanetMapText, graphic::Font::NORMAL);
 
     // LINE SIZE
     mHeaderSize = new graphic::Text("SIZE", fntHeader);
@@ -254,8 +251,8 @@ void PanelPlanetInfo::UpdateTerritorySize()
     // create new text
     auto fm = graphic::FontManager::Instance();
 
-    graphic::Font * fntData = fm->GetFont(fileFont, WidgetsConstants::FontSizePlanetMapText,
-                                          graphic::Font::NORMAL);
+    graphic::Font * fntData = fm->GetFont(WidgetsConstants::FontFileText,
+                                          WidgetsConstants::FontSizePlanetMapText, graphic::Font::NORMAL);
 
     if(mRows > 0 && mCols > 0)
     {
@@ -282,8 +279,8 @@ void PanelPlanetInfo::UpdateTerritoryStatus()
     // create new text
     auto fm = graphic::FontManager::Instance();
 
-    graphic::Font * fntData = fm->GetFont(fileFont, WidgetsConstants::FontSizePlanetMapText,
-                                          graphic::Font::NORMAL);
+    graphic::Font * fntData = fm->GetFont(WidgetsConstants::FontFileText,
+                                          WidgetsConstants::FontSizePlanetMapText, graphic::Font::NORMAL);
 
     if(mStatus < NUM_TERRITORY_STATUSES)
     {
@@ -317,8 +314,8 @@ void PanelPlanetInfo::UpdateTerritoryOccupier()
     // create new text
     auto fm = graphic::FontManager::Instance();
 
-    graphic::Font * fntData = fm->GetFont(fileFont, WidgetsConstants::FontSizePlanetMapText,
-                                          graphic::Font::NORMAL);
+    graphic::Font * fntData = fm->GetFont(WidgetsConstants::FontFileText,
+                                          WidgetsConstants::FontSizePlanetMapText, graphic::Font::NORMAL);
 
     if(mOccupier < NUM_FACTIONS)
     {
@@ -358,8 +355,8 @@ void PanelPlanetInfo::UpdateMissionType()
     // create new text
     auto fm = graphic::FontManager::Instance();
 
-    graphic::Font * fntData = fm->GetFont(fileFont, WidgetsConstants::FontSizePlanetMapText,
-                                         graphic::Font::NORMAL);
+    graphic::Font * fntData = fm->GetFont(WidgetsConstants::FontFileText,
+                                          WidgetsConstants::FontSizePlanetMapText, graphic::Font::NORMAL);
 
     if(mMission < NUM_MISSION_CATEGORIES)
         mLabelMission = new graphic::Text(MISSION_CATEGORY_TITLE[mMission], fntData);

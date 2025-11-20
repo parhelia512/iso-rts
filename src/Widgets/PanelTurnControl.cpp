@@ -5,6 +5,7 @@
 #include "Widgets/GameSimpleTooltip.h"
 #include "Widgets/GameUIData.h"
 #include "Widgets/ProgressBarTurnEnergy.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/core/event/KeyboardEvent.h>
 #include <sgl/graphic/Font.h>
@@ -117,10 +118,9 @@ PanelTurnControl::PanelTurnControl(Player * player, sgl::sgui::Widget * parent)
     mButtonEndTurn = new ButtonEndTurn(this);
 
     // TEXT
-    const char * fontFile = "Lato-Regular.ttf";
     const int fontSize = 28;
     const unsigned int colorText = 0x76a7bcff;
-    graphic::Font * font = fm->GetFont(fontFile, fontSize, graphic::Font::NORMAL);
+    graphic::Font * font = fm->GetFont(WidgetsConstants::FontFileText, fontSize, graphic::Font::NORMAL);
 
     mText = new sgui::Label(font, this);
     mText->SetColor(colorText);

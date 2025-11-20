@@ -1,5 +1,7 @@
 #include "Widgets/DigitsDisplay.h"
 
+#include "Widgets/WidgetsConstants.h"
+
 #include <sgl/graphic/Camera.h>
 #include <sgl/graphic/DummyRenderable.h>
 #include <sgl/graphic/Font.h>
@@ -73,7 +75,7 @@ void DigitsDisplay::SetSuffix(const std::string & suffix)
 }
 
 void DigitsDisplay::SetValue(int val)
-{    
+{
     // same value as current -> do nothing
     if(val == mValue)
         return ;
@@ -110,7 +112,7 @@ void DigitsDisplay::UpdateDigits(bool force)
     ss << val << mSuffix;
 
     auto fm = FontManager::Instance();
-    Font * font = fm->GetFont("Lato-Regular.ttf", mFontSize, Font::NORMAL);
+    Font * font = fm->GetFont(WidgetsConstants::FontFileText, mFontSize, Font::NORMAL);
     sgl::core::Sized size = font->GetTextSize(ss.str().c_str());
 
     // create zeroes

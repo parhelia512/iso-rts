@@ -18,7 +18,6 @@ namespace
 {
     constexpr unsigned int textColor = 0x80a2b3ff;
     constexpr int textSize = 18;
-    const char * fileFont = "Lato-Regular.ttf";
 }
 
 namespace game
@@ -42,8 +41,8 @@ PanelPlanetActionConquer::PanelPlanetActionConquer()
     // TITLE
     const unsigned int colorTitle = 0xe9f7fbcc;
 
-    graphic::Font * fnt = fm->GetFont(fileFont, WidgetsConstants::FontSizePlanetMapTitle,
-                                      graphic::Font::NORMAL);
+    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFileTitle,
+                                      WidgetsConstants::FontSizePlanetMapTitle, graphic::Font::NORMAL);
     mTitle = new graphic::Text("CONQUER", fnt);
     mTitle->SetColor(colorTitle);
     RegisterRenderable(mTitle);
@@ -93,7 +92,7 @@ void PanelPlanetActionConquer::CreateContentStart()
     const int w = GetWidth();
 
     // DESCRIPTION
-    graphic::Font * fnt = fm->GetFont(fileFont, textSize, graphic::Font::NORMAL);
+    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFileText, textSize, graphic::Font::NORMAL);
 
     const int marginL = 20;
     const int marginR = 20;

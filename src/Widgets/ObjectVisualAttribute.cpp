@@ -1,6 +1,7 @@
 #include "ObjectVisualAttribute.h"
 
 #include "Widgets/GameUIData.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
@@ -28,7 +29,7 @@ ObjectVisualAttribute::ObjectVisualAttribute(sgl::sgui::Widget * parent)
     SetSize(mBg->GetWidth(), mBg->GetHeight());
 
     // LABEL
-    auto font = fm->GetFont("Lato-Regular.ttf", 18, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileText, 18, graphic::Font::NORMAL);
     mLabel = new sgui::Label(font, this);
     mLabel->SetColor(0xf1f2f4ff);
     mLabel->SetVisible(false);

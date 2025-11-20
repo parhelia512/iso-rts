@@ -1,6 +1,7 @@
 #include "ResourceTooltip.h"
 
-#include "GameUIData.h"
+#include "Widgets/GameUIData.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
@@ -34,19 +35,21 @@ ResourceTooltip::ResourceTooltip(const char * title)
     SetSize(mBg->GetWidth(), mBg->GetHeight());
 
     // TITLE
-    auto font = fm->GetFont("Lato-Regular.ttf", 18, graphic::Font::NORMAL);
-    mTitle = new graphic::Text(title, font);
+    auto fontTitle = fm->GetFont(WidgetsConstants::FontFileTitle, 18, graphic::Font::NORMAL);
+    mTitle = new graphic::Text(title, fontTitle);
     mTitle->SetColor(0xd6e7f5ff);
     RegisterRenderable(mTitle);
 
     // LABELS
-    mLabelIn = new sgui::Label(font, this);
+    auto fontLabel = fm->GetFont(WidgetsConstants::FontFileText, 18, graphic::Font::NORMAL);
+
+    mLabelIn = new sgui::Label(fontLabel, this);
     mLabelIn->SetColor(colorLabels);
 
-    mLabelOut = new sgui::Label(font, this);
+    mLabelOut = new sgui::Label(fontLabel, this);
     mLabelOut->SetColor(colorLabels);
 
-    mLabelTot = new sgui::Label(font, this);
+    mLabelTot = new sgui::Label(fontLabel, this);
     mLabelTot->SetColor(colorLabels);
 
     // init labels

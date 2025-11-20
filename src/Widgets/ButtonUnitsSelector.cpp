@@ -1,6 +1,7 @@
 #include "ButtonUnitsSelector.h"
 
 #include "GameTestData.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
@@ -30,7 +31,7 @@ ButtonUnitsSelector::ButtonUnitsSelector(const char * text)
 
     // set label font
     auto fm = FontManager::Instance();
-    Font * font = fm->GetFont("Lato-Bold.ttf", 24, Font::NORMAL);
+    Font * font = fm->GetFont(WidgetsConstants::FontFileButton, 24, Font::NORMAL);
 
     SetLabelFont(font);
 

@@ -16,6 +16,7 @@ public:
     static const char * FontFileButton;
     static const char * FontFileHeader;
     static const char * FontFileShortcut;
+    static const char * FontFileStrongText;
     static const char * FontFileText;
     static const char * FontFileTitle;
 

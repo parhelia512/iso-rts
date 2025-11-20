@@ -13,6 +13,7 @@ const unsigned int WidgetsConstants::colorPlanetMapLackRes = 0xcc8b85ff;
 const char * WidgetsConstants::FontFileButton = "Lato-Bold.ttf";
 const char * WidgetsConstants::FontFileHeader = "Lato-Bold.ttf";
 const char * WidgetsConstants::FontFileShortcut = "Lato-Bold.ttf";
+const char * WidgetsConstants::FontFileStrongText = "Lato-Bold.ttf";
 const char * WidgetsConstants::FontFileText = "Lato-Regular.ttf";
 const char * WidgetsConstants::FontFileTitle = "Lato-Bold.ttf";
 
