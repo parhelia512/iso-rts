@@ -88,28 +88,32 @@ void PathIndicator::SetCost(int cost)
         return ;
     }
 
-    // OK -> delete old text and create new one
+    // OK -> delete old graphics and create new one
     mCost = cost;
 
+    delete mIconCost;
     delete mTextCost;
 
-    const unsigned int color[] =
-    {
-        0xfbd3d0ff,
-        0xd0fbd3ff,
-        0xd0f0fbff,
-    };
-
     // create label
+    const unsigned int color = 0xfcf1cfff;
+    const int fontSize = 14;
+
     auto fm = graphic::FontManager::Instance();
-    graphic::Font * font = fm->GetFont("Lato-Bold.ttf", 12, graphic::Font::NORMAL);
+    graphic::Font * font = fm->GetFont("Lato-Bold.ttf", fontSize, graphic::Font::NORMAL);
 
     std::ostringstream s;
-    s << cost;
+    s << -cost;
 
     mTextCost = new graphic::Text(s.str().c_str(), font);
-    mTextCost->SetColor(color[mFaction]);
+    mTextCost->SetColor(color);
 
+    //create icon
+    auto tm = graphic::TextureManager::Instance();
+    graphic::Texture * tex = tm->GetSprite(SpriteFileMapIndicators, ID_MIND_ICON_ENERGY);
+
+    mIconCost = new graphic::Image(tex);
+
+    // now position graphics
     UpdatePositions();
 }
 
@@ -155,10 +159,18 @@ void PathIndicator::OnPositionChanged()
 
 void PathIndicator::UpdatePositions()
 {
-    const int yPadding = 16;
-    const int x = GetX() + (GetWidth() - mTextCost->GetWidth()) / 2;
-    const int y = GetY() + ((GetHeight() - mTextCost->GetHeight()) / 2) - yPadding;
-    mTextCost->SetPosition(x, y);
+    const int marginCont = 2;
+    const int contW0 = mTextCost->GetWidth() + marginCont;
+    const int contW = contW0 + mIconCost->GetWidth();
+
+    const int paddingY = 24;
+    const int x0 = GetX() + (GetWidth() - contW) / 2;
+    const int y0 = GetY() + ((GetHeight() - mTextCost->GetHeight()) / 2) - paddingY;
+    mTextCost->SetPosition(x0, y0);
+
+    const int x1 = x0 + contW0;
+    const int y1 = GetY() + ((GetHeight() - mIconCost->GetHeight()) / 2) - paddingY;
+    mIconCost->SetPosition(x1, y1);
 }
 
 } // namespace game

@@ -947,6 +947,13 @@ void ScreenInit::SetupTextures()
             { 582, 294, 96, 48 },
             { 582, 343, 96, 48 },
             { 582, 392, 96, 48 },
+
+            // ICON RESOURCES COST
+            { 582, 441, 16, 16 },
+            { 599, 441, 16, 16 },
+            { 616, 441, 16, 16 },
+            { 633, 441, 16, 16 },
+            { 650, 441, 16, 16 },
         };
 
         tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_GAME], SpriteFileMapIndicators, rects);
