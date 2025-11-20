@@ -174,7 +174,7 @@ ScreenGame::ScreenGame(Game * game)
     CreateUI();
 
     // OVERLAYS
-    mPathOverlay = new PathOverlay(mIsoMap->GetLayer(MapLayers::CELL_OVERLAYS4),
+    mPathOverlay = new PathOverlay(mIsoMap->GetLayer(MapLayers::CELL_OVERLAYS3),
                                    mIsoMap->GetNumRows(), mIsoMap->GetNumCols());
 
     // set initial camera position
@@ -797,13 +797,13 @@ void ScreenGame::CreateUI()
                 mPathOverlay->ClearPath();
 
                 group->ClearPath();
-
-                group->DoForAll([](GameObject * obj)
-                {
-                    obj->SetCurrentAction(GameObjectActionType::IDLE);
-                    obj->SetActiveActionToDefault();
-                });
             }
+
+            group->DoForAll([](GameObject * obj)
+            {
+                obj->SetCurrentAction(GameObjectActionType::IDLE);
+                obj->SetActiveActionToDefault();
+            });
         }
 
         if(action == CONQUER_CELL || action == BUILD_WALL)
