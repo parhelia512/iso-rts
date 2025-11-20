@@ -7,10 +7,10 @@ class WidgetsConstants
 {
 public:
     // COLORS
-    static constexpr unsigned int colorPlanetMapHeader = 0xb0c5cfff;
-    static constexpr unsigned int colorPlanetMapData = 0x80a2b3ff;
-    static constexpr unsigned int colorPlanetMapEnoughRes = 0x85cc85ff;
-    static constexpr unsigned int colorPlanetMapLackRes = 0xcc8b85ff;
+    static const unsigned int colorPlanetMapHeader;
+    static const unsigned int colorPlanetMapData;
+    static const unsigned int colorPlanetMapEnoughRes;
+    static const unsigned int colorPlanetMapLackRes;
 
     // FONT FILES
     static const char * FontFileButton;
@@ -20,9 +20,9 @@ public:
     static const char * FontFileTitle;
 
     // FONT SIZES
-    static constexpr int FontSizePlanetMapTitle = 28;
-    static constexpr int FontSizePlanetMapHeader = 24;
-    static constexpr int FontSizePlanetMapText = 22;
+    static const int FontSizePlanetMapTitle;
+    static const int FontSizePlanetMapHeader;
+    static const int FontSizePlanetMapText;
 };
 
 } // namespace game
