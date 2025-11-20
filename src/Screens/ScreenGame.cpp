@@ -2647,7 +2647,6 @@ void ScreenGame::HandleMiniUnitSetTargetOnMouseUp(GameObject * obj, const Cell2D
 {
     using namespace sgl;
 
-    const Cell2D objCell(obj->GetRow0(), obj->GetCol0());
     const int clickInd = clickCell.row * mGameMap->GetNumCols() + clickCell.col;
 
     const Player * player = GetGame()->GetPlayerByFaction(obj->GetFaction());
@@ -2660,15 +2659,30 @@ void ScreenGame::HandleMiniUnitSetTargetOnMouseUp(GameObject * obj, const Cell2D
         return ;
     }
 
-    // TODO define start point
-    const Cell2D start = objCell;
+    // find shortest path to destination checking all MiniUnits in group
+    auto group = static_cast<MiniUnitsGroup *>(obj->GetGroup());
 
-    const auto po = ai::Pathfinder::NO_OPTION;
-    const auto path = mPathfinder->MakePath(start.row, start.col, clickCell.row, clickCell.col, po);
+    std::vector<unsigned int> path;
+
+    group->DoForAll([this, clickCell, &path](GameObject * o)
+    {
+        const Cell2D start(o->GetRow0(), o->GetCol0());
+
+        const auto po = ai::Pathfinder::NO_OPTION;
+        const auto p = mPathfinder->MakePath(start.row, start.col, clickCell.row, clickCell.col, po);
+
+        if(path.empty() || (!p.empty() && p.size() < path.size()))
+            path = std::move(p);
+    });
+
+    if(path.empty())
+    {
+        PlayLocalActionErrorSFX(player);
+        return ;
+    }
 
     mPathOverlay->SetPath(path, obj->GetFaction());
 
-    auto group = static_cast<MiniUnitsGroup *>(obj->GetGroup());
     group->SetPath(std::move(path));
 
     // reset active action
