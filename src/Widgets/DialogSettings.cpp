@@ -34,15 +34,18 @@ namespace
 
 using namespace game;
 
-    constexpr unsigned int colorTxt = 0x73a6bfff;
-    constexpr unsigned int colorTxtSlider = 0xadc2ccff;
-    constexpr unsigned int sizeTxt = 22;
+constexpr unsigned int colorTxt = 0x73a6bfff;
+constexpr unsigned int colorTxtSlider = 0xadc2ccff;
+constexpr unsigned int sizeTxt = 22;
 
-    constexpr int blockSettingW = 500;
-    constexpr int blockSettingH = 100;
+constexpr int blockSettingW = 500;
+constexpr int blockSettingH = 100;
 
-    constexpr int contX0 = 30;
-    constexpr int contY0 = 40;
+constexpr int contX0 = 30;
+constexpr int contY0 = 40;
+
+constexpr int minResW = 1024;
+constexpr float minResRatio = 1.25f;
 
 // ====== BUTTON CLOSE =====
 class ButtonCloseSettings : public sgl::sgui::ImageButton
@@ -843,14 +846,12 @@ void DialogSettings::CreatePanelVideo(sgl::sgui::Widget * parent)
     {
         for(int m = 0; m < win->GetNumDisplayModes(d); ++m)
         {
-            graphic::DisplayMode dm = win->GetDisplayMode(d, m);
+            const graphic::DisplayMode dm = win->GetDisplayMode(d, m);
 
             // display requirements
-            const int minW = 1280;
-            const float minRatio = 1.6f;
             const float ratio = static_cast<float>(dm.width) / static_cast<float>(dm.height);
 
-            if(ratio < minRatio || dm.width < minW)
+            if(ratio < minResRatio || dm.width < minResW)
                 continue ;
 
             /// add combo item
@@ -863,6 +864,19 @@ void DialogSettings::CreatePanelVideo(sgl::sgui::Widget * parent)
                 currIndex = validModes;
 
             ++validModes;
+        }
+
+        // fallback to first resolution if no good one is found
+        if(0 == validModes)
+        {
+            const graphic::DisplayMode dm = win->GetDisplayMode(d, 0);
+
+            /// add combo item
+            std::ostringstream oss;
+            oss << dm.width << "x" << dm.height << " @ " << dm.refresh << "Hz";
+            mComboRes->AddItem(new ComboBoxItemResolution(d, 0, oss.str().c_str()));
+
+            currIndex = 0;
         }
 
         mComboRes->SetActiveItem(currIndex);
@@ -949,14 +963,12 @@ void DialogSettings::UpdateCurrentResolution()
     {
         for(int m = 0; m < win->GetNumDisplayModes(d); ++m)
         {
-            graphic::DisplayMode dm = win->GetDisplayMode(d, m);
+            const graphic::DisplayMode dm = win->GetDisplayMode(d, m);
 
             // display requirements
-            const int minW = 1280;
-            const float minRatio = 1.6f;
             const float ratio = static_cast<float>(dm.width) / static_cast<float>(dm.height);
 
-            if(ratio < minRatio || dm.width < minW)
+            if(ratio < minResRatio || dm.width < minResW)
                 continue ;
 
             // record current mode
@@ -965,6 +977,10 @@ void DialogSettings::UpdateCurrentResolution()
 
             ++validModes;
         }
+
+        // fallback to first resolution if no good one is found
+        if(0 == validModes)
+            currIndex = 0;
 
         mComboRes->SetActiveItem(currIndex);
 
