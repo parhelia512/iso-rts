@@ -322,7 +322,9 @@ void ScreenMainMenu::CreateChangelog()
     // CONTENT BLOCK: FIXES
     auto textFix = new sgui::TextArea(contentW, minBlockH, font, true, content);
     textFix->SetText("FIXES\n"
-                     "- Fixed crash when selecting object after another selected one was destroyed.\n");
+                     "- Fixed crash when selecting object after another selected one was destroyed.\n"
+                     "- Fixed crash in Settings when no video mode is found.\n"
+                     );
     textFix->SetPosition(contX, contY);
     textFix->SetColor(colorContent);
 
