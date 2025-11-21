@@ -84,6 +84,7 @@ public:
     static const GameObjectTypeId TYPE_UNIT_SOLDIER1;
     static const GameObjectTypeId TYPE_UNIT_SOLDIER2;
     static const GameObjectTypeId TYPE_UNIT_SPAWNER1;
+    static const GameObjectTypeId TYPE_UNIT_SPAWNER2;
     static const GameObjectTypeId TYPE_UNIT_WORKER1;
     static const GameObjectTypeId TYPE_WALL;
     static const GameObjectTypeId TYPE_WALL_GATE;
@@ -280,6 +281,7 @@ private:
     static const std::string TYPE_STR_UNIT_SOLDIER1;
     static const std::string TYPE_STR_UNIT_SOLDIER2;
     static const std::string TYPE_STR_UNIT_SPAWNER1;
+    static const std::string TYPE_STR_UNIT_SPAWNER2;
     static const std::string TYPE_STR_UNIT_WORKER1;
     static const std::string TYPE_STR_WALL;
     static const std::string TYPE_STR_WALL_GATE;

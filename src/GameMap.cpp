@@ -390,8 +390,9 @@ void GameMap::CreateObjectFromFile(unsigned int layerId, GameObjectTypeId type, 
 {
     const auto pf = static_cast<PlayerFaction>(faction);
 
-    if(GameObject::TYPE_UNIT_SCOUT1 == type || GameObject::TYPE_UNIT_SOLDIER1 == type ||
-       GameObject::TYPE_UNIT_SOLDIER2 == type || GameObject::TYPE_UNIT_SPAWNER1 == type ||
+    if(GameObject::TYPE_UNIT_MEDIC1 == type || GameObject::TYPE_UNIT_SCOUT1 == type ||
+       GameObject::TYPE_UNIT_SOLDIER1 == type || GameObject::TYPE_UNIT_SOLDIER2 == type ||
+       GameObject::TYPE_UNIT_SPAWNER1 == type || GameObject::TYPE_UNIT_SPAWNER2 == type ||
        GameObject::TYPE_UNIT_WORKER1 == type)
     {
         Player * owner =  mGame->GetPlayerByFaction(pf);

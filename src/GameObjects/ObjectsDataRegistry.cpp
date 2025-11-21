@@ -255,11 +255,18 @@ void ObjectsDataRegistry::InitObjectData()
                              GameObject::TYPE_UNIT_SOLDIER2, OCU_SOLDIER, OCAT_UNIT, 1, 1));
 
     mData.emplace(GameObject::TYPE_UNIT_SPAWNER1,
-                  ObjectData({ {OBJ_ATT_ENERGY, 7}, {OBJ_ATT_VIEW_RANGE, 6}, {OBJ_ATT_REGENERATION, 5},
-                               {OBJ_ATT_RESISTANCE, 4}, {OBJ_ATT_SHIELD, 4},  {OBJ_ATT_SPEED, 3}, {OBJ_ATT_SPAWNING, 5} },
-                             { 200, 200, 10, 10 },
+                  ObjectData({ {OBJ_ATT_ENERGY, 6}, {OBJ_ATT_VIEW_RANGE, 5}, {OBJ_ATT_REGENERATION, 4},
+                               {OBJ_ATT_RESISTANCE, 3}, {OBJ_ATT_SHIELD, 3},  {OBJ_ATT_SPEED, 4}, {OBJ_ATT_SPAWNING, 3} },
+                             { 200, 200, 5, 5 },
                              { SPR_UNIT_06_F1, SPR_UNIT_06_F2, SPR_UNIT_06_F3 }, SpriteFileUnits,
                              GameObject::TYPE_UNIT_SPAWNER1, OCU_SPAWNER, OCAT_UNIT, 1, 1));
+
+    mData.emplace(GameObject::TYPE_UNIT_SPAWNER2,
+                  ObjectData({ {OBJ_ATT_ENERGY, 7}, {OBJ_ATT_VIEW_RANGE, 6}, {OBJ_ATT_REGENERATION, 5},
+                              {OBJ_ATT_RESISTANCE, 4}, {OBJ_ATT_SHIELD, 4},  {OBJ_ATT_SPEED, 3}, {OBJ_ATT_SPAWNING, 5} },
+                             { 300, 300, 25, 25 },
+                             { SPR_UNIT_07_F1, SPR_UNIT_07_F2, SPR_UNIT_07_F3 }, SpriteFileUnits,
+                             GameObject::TYPE_UNIT_SPAWNER2, OCU_SPAWNER, OCAT_UNIT, 1, 1));
 
     mData.emplace(GameObject::TYPE_UNIT_WORKER1,
                   ObjectData({ {OBJ_ATT_ENERGY, 6}, {OBJ_ATT_VIEW_RANGE, 6}, {OBJ_ATT_FIRE_POWER, 1},

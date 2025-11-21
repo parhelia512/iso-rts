@@ -778,6 +778,7 @@ enum SpriteIdUnitQuickSel : unsigned int
     IND_UQS_UNIT4_F1,
     IND_UQS_UNIT5_F1,
     IND_UQS_UNIT6_F1,
+    IND_UQS_UNIT7_F1,
     // UNITS F2
     IND_UQS_UNIT1_F2,
     IND_UQS_UNIT2_F2,
@@ -785,6 +786,7 @@ enum SpriteIdUnitQuickSel : unsigned int
     IND_UQS_UNIT4_F2,
     IND_UQS_UNIT5_F2,
     IND_UQS_UNIT6_F2,
+    IND_UQS_UNIT7_F2,
     // UNITS F3
     IND_UQS_UNIT1_F3,
     IND_UQS_UNIT2_F3,
@@ -792,6 +794,7 @@ enum SpriteIdUnitQuickSel : unsigned int
     IND_UQS_UNIT4_F3,
     IND_UQS_UNIT5_F3,
     IND_UQS_UNIT6_F3,
+    IND_UQS_UNIT7_F3,
 
     NUM_UQS_UNIT_SPRITE_PER_FACTION = IND_UQS_UNIT1_F2 - IND_UQS_UNIT1_F1
 };
