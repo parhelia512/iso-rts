@@ -91,6 +91,8 @@ public:
         auto fm = FontManager::Instance();
         auto font = fm->GetFont(WidgetsConstants::FontFileText, 20, Font::NORMAL);
         SetLabelFont(font);
+
+        SetGraphics(sgl::sgui::AbstractButton::NORMAL);
     }
 
 private:
@@ -104,7 +106,12 @@ private:
 
     void OnStateChanged(sgl::sgui::AbstractButton::VisualState state) override
     {
-        using namespace sgl::graphic;
+        SetGraphics(state);
+    }
+
+    void SetGraphics(sgl::sgui::AbstractButton::VisualState state)
+    {
+        using namespace sgl;
 
         // BODY
         const unsigned int texIds[NUM_VISUAL_STATES] =
@@ -116,8 +123,8 @@ private:
             IND_SET_CB_NORMAL,
         };
 
-        auto tm = TextureManager::Instance();
-        Texture * tex = tm->GetSprite(SpriteFileSettings, texIds[state]);
+        auto tm = graphic::TextureManager::Instance();
+        graphic::Texture * tex = tm->GetSprite(SpriteFileSettings, texIds[state]);
         SetBodyTexture(tex);
 
         // TEXT
@@ -130,7 +137,7 @@ private:
             0xd7eaf4ff
         };
 
-       SetLabelColor(txtColors[state]);
+        SetLabelColor(txtColors[state]);
     }
 };
 
