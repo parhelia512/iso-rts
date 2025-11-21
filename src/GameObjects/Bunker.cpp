@@ -25,7 +25,7 @@ Bunker::Bunker(const ObjectData & data)
     : Structure(TYPE_DEFENSIVE_TOWER, CAT_GENERIC, data.GetRows(), data.GetCols())
 {
     // set attack range converting attribute
-    mAttackRange = attRanges[data.GetAttributes()[OBJ_ATT_FIRE_RANGE]];
+    mAttackRange = attRanges[data.GetAttribute(OBJ_ATT_FIRE_RANGE)];
 
     SetImage();
 }

@@ -3,6 +3,7 @@
 #include "GameObjectTypes.h"
 
 #include <array>
+#include <unordered_map>
 #include <vector>
 
 namespace game
@@ -109,14 +110,15 @@ public:
     static const ObjectData NullObj;
 
 public:
-    ObjectData(const std::array<int, NUM_OBJ_ATTRIBUTES> & atts,
+    ObjectData(const std::unordered_map<ObjAttId, int> & atts,
                const std::array<int, NUM_OBJ_COSTS> & costs,
                const std::vector<unsigned int> & texIds,
                const char * file, GameObjectTypeId type, ObjClass oClass,
                ObjFamily family,
                unsigned int rows, unsigned int cols);
 
-    const std::array<int, NUM_OBJ_ATTRIBUTES> & GetAttributes() const;
+    const std::unordered_map<ObjAttId, int> & GetAttributes() const;
+    int GetAttribute(ObjAttId attID) const;
     const std::array<int, NUM_OBJ_COSTS> & GetCosts() const;
 
     unsigned int GetIconTexId(PlayerFaction f) const;
@@ -130,7 +132,7 @@ public:
     int GetCols() const;
 
 private:
-    std::array<int, NUM_OBJ_ATTRIBUTES> mAttributes;
+    std::unordered_map<ObjAttId, int> mAttributes;
     std::array<int, NUM_OBJ_COSTS> mCosts;
 
     std::vector<unsigned int> mIconTexIds;
@@ -144,7 +146,7 @@ private:
     unsigned int mCols;
 };
 
-inline ObjectData::ObjectData(const std::array<int, NUM_OBJ_ATTRIBUTES> & atts,
+inline ObjectData::ObjectData(const std::unordered_map<ObjAttId, int> & atts,
                               const std::array<int, NUM_OBJ_COSTS> & costs,
                               const std::vector<unsigned int> & texIds,
                               const char * file, GameObjectTypeId type, ObjClass oClass,
@@ -161,9 +163,16 @@ inline ObjectData::ObjectData(const std::array<int, NUM_OBJ_ATTRIBUTES> & atts,
 {
 }
 
-inline const std::array<int, NUM_OBJ_ATTRIBUTES> & ObjectData::GetAttributes() const
+inline const std::unordered_map<ObjAttId, int> & ObjectData::GetAttributes() const
 {
     return mAttributes;
+}
+
+inline int ObjectData::GetAttribute(ObjAttId attID) const
+{
+    const auto it = mAttributes.find(attID);
+
+    return (it != mAttributes.end()) ? it->second : 0;
 }
 
 inline const std::array<int, NUM_OBJ_COSTS> & ObjectData::GetCosts() const

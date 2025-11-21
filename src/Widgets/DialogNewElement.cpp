@@ -978,13 +978,11 @@ void DialogNewElement::ShowData(int ind)
         mLabelsCost[i]->SetText(std::to_string(costs[i]).c_str());
 
     // ATTRIBUTES
-    const auto & atts = data.GetAttributes();
-    const int numAtts = atts.size();
     int attsAdded = 0;
 
-    for(int i = 0; i < numAtts; ++i)
+    for(unsigned int i = 0; i < NUM_OBJ_ATTRIBUTES; ++i)
     {
-        const int val = atts[i];
+        const int val = data.GetAttribute(static_cast<ObjAttId>(i));
 
         if(val > 0)
         {

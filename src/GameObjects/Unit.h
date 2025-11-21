@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "ObjectData.h"
 
-#include <array>
+#include <unordered_map>
 
 namespace game
 {
@@ -43,7 +43,7 @@ public:
     // spawning
     bool CanSpawn() const;
 
-    int GetAttribute(unsigned int index) const;
+    int GetAttribute(ObjAttId attID) const;
 
 public:
     static unsigned int TypeToIndex(GameObjectTypeId type);
@@ -62,7 +62,7 @@ private:
 
 private:
     // attributes
-    std::array<int, NUM_OBJ_ATTRIBUTES> mAttributes;
+    std::unordered_map<ObjAttId, int> mAttributes;
 
     // weapon
     float mTimeAttack = 0.25f;

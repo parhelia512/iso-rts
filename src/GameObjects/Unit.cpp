@@ -60,9 +60,9 @@ Unit::Unit(const ObjectData & data)
 
 bool Unit::CanAttack() const
 {
-    return mAttributes[OBJ_ATT_FIRE_ACCURACY] > 0 &&
-           mAttributes[OBJ_ATT_FIRE_POWER] > 0 &&
-           mAttributes[OBJ_ATT_FIRE_RANGE] > 0;
+    return GetAttribute(OBJ_ATT_FIRE_ACCURACY) > 0 &&
+           GetAttribute(OBJ_ATT_FIRE_POWER) > 0 &&
+           GetAttribute(OBJ_ATT_FIRE_RANGE) > 0;
 }
 
 bool Unit::IsTargetAttackInRange(const GameObject * obj) const
@@ -93,8 +93,8 @@ bool Unit::SetTargetAttack(GameObject * obj)
 
 bool Unit::CanHeal() const
 {
-    return mAttributes[OBJ_ATT_HEALING_RANGE] > 0 &&
-           mAttributes[OBJ_ATT_HEALING_POWER] > 0;
+    return GetAttribute(OBJ_ATT_HEALING_RANGE) > 0 &&
+           GetAttribute(OBJ_ATT_HEALING_POWER) > 0;
 }
 
 bool Unit::IsTargetHealingInRange(GameObject * obj) const
@@ -138,27 +138,26 @@ void Unit::Update(float delta)
 
 bool Unit::CanBuild() const
 {
-    return mAttributes[OBJ_ATT_CONSTRUCTION] > 0;
+    return GetAttribute(OBJ_ATT_CONSTRUCTION) > 0;
 }
 
 void Unit::ClearStructureToBuild() { mStructToBuild = GameObject::TYPE_NULL; }
 
 bool Unit::CanConquer() const
 {
-    return mAttributes[OBJ_ATT_CONQUEST] > 0;
+    return GetAttribute(OBJ_ATT_CONQUEST) > 0;
 }
 
 bool Unit::CanSpawn() const
 {
-    return mAttributes[OBJ_ATT_SPAWNING] > 0;
+    return GetAttribute(OBJ_ATT_SPAWNING) > 0;
 }
 
-int Unit::GetAttribute(unsigned int index) const
+int Unit::GetAttribute(ObjAttId attID) const
 {
-    if(index < mAttributes.size())
-        return mAttributes[index];
-    else
-        return 0;
+    const auto it = mAttributes.find(attID);
+
+    return (it != mAttributes.end()) ? it->second : 0;
 }
 
 void Unit::UpdateGraphics()

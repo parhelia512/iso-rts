@@ -352,13 +352,11 @@ void DialogObject::SetObject(GameObject * obj)
     static_cast<ObjectExtendedVisualStat *>(mStatHealth)->SetValue(obj->GetHealth(), obj->GetMaxHealth());
 
     // ATTRIBUTES
-    const auto & atts = data.GetAttributes();
-    const int numAtts = atts.size();
     int statsAdded = 0;
 
-    for(int i = 0; i < numAtts; ++i)
+    for(unsigned int i = 0; i < NUM_OBJ_ATTRIBUTES; ++i)
     {
-        const int val = atts[i];
+        const int val = data.GetAttribute(static_cast<ObjAttId>(i));
 
         if(val > 0)
         {

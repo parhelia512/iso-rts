@@ -23,13 +23,11 @@ Hospital::Hospital(const ObjectData & data)
     : Structure(GameObject::TYPE_HOSPITAL, GameObject::CAT_GENERIC, 2, 2)
 {
     // SET ATTRIBUTES values in range [1-10]
-    const auto & atts = data.GetAttributes();
-
     // set healing range converting attribute
-    mRangeHealing = HealRanges[atts[OBJ_ATT_HEALING_RANGE]];
+    mRangeHealing = HealRanges[data.GetAttribute(OBJ_ATT_HEALING_RANGE)];
 
     // set healing power converting attribute
-    mHealingPower = HealPowers[atts[OBJ_ATT_HEALING_POWER]];
+    mHealingPower = HealPowers[data.GetAttribute(OBJ_ATT_HEALING_POWER)];
 
     SetVisibilityLevel(4);
 

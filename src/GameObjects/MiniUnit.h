@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "ObjectData.h"
 
-#include <array>
+#include <unordered_map>
 
 namespace game
 {
@@ -23,7 +23,7 @@ private:
 
 private:
     // attributes
-    std::array<int, NUM_OBJ_ATTRIBUTES> mAttributes;
+    std::unordered_map<ObjAttId, int> mAttributes;
 
     int mElements = 1;
 };
