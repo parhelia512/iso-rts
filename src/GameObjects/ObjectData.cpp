@@ -54,6 +54,7 @@ const char * ObjectData::STR_ATTRIBUTES[NUM_OBJ_ATTRIBUTES] =
     "HEALING RANGE",
     "HEALING POWER",
     "SPAWNING",
+    "STORAGE"
 };
 
 const ObjectData ObjectData::NullObj({}, {}, {}, nullptr, GameObject::TYPE_NULL,
