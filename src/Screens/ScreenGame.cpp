@@ -670,7 +670,8 @@ void ScreenGame::CreateUI()
 
         // TODO move this to HUD when dialog to control creation is done
         auto og = new MiniUnitsGroup;
-        SetupNewMiniUnits(GameObject::TYPE_MINI_UNIT1, unit, og, mLocalPlayer, 3, rand() % 5);
+        const int numSquads = 1 + rand() % 5;
+        SetupNewMiniUnits(GameObject::TYPE_MINI_UNIT1, unit, og, mLocalPlayer, 3, numSquads);
     });
 
     // set target destination for mini units

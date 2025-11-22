@@ -1751,10 +1751,12 @@ void GameMap::DamageArea(const Cell2D & srcBR, const Cell2D & srcTL, int radius,
             {
                 const int ind = ind0 + c;
 
-                if(mCells[ind].objTop != nullptr)
+
+
+                if(mCells[ind].objTop != nullptr && !mCells[ind].objTop->IsDestroyed())
                     mCells[ind].objTop->Hit(damage, NO_FACTION);
 
-                if(mCells[ind].objBottom != nullptr)
+                if(mCells[ind].objBottom != nullptr && !mCells[ind].objBottom->IsDestroyed())
                     mCells[ind].objBottom->Hit(damage, NO_FACTION);
             }
         }
@@ -1770,10 +1772,10 @@ void GameMap::DamageArea(const Cell2D & srcBR, const Cell2D & srcTL, int radius,
             {
                 const int ind = ind0 + c;
 
-                if(mCells[ind].objTop != nullptr)
+                if(mCells[ind].objTop != nullptr && !mCells[ind].objTop->IsDestroyed())
                     mCells[ind].objTop->Hit(damage, NO_FACTION);
 
-                if(mCells[ind].objBottom != nullptr)
+                if(mCells[ind].objBottom != nullptr && !mCells[ind].objBottom->IsDestroyed())
                     mCells[ind].objBottom->Hit(damage, NO_FACTION);
             }
         }
@@ -1793,10 +1795,10 @@ void GameMap::DamageArea(const Cell2D & srcBR, const Cell2D & srcTL, int radius,
             {
                 const int ind = r * mCols + lCol;
 
-                if(mCells[ind].objTop != nullptr)
+                if(mCells[ind].objTop != nullptr && !mCells[ind].objTop->IsDestroyed())
                     mCells[ind].objTop->Hit(damage, NO_FACTION);
 
-                if(mCells[ind].objBottom != nullptr)
+                if(mCells[ind].objBottom != nullptr && !mCells[ind].objBottom->IsDestroyed())
                     mCells[ind].objBottom->Hit(damage, NO_FACTION);
             }
         }
@@ -1810,10 +1812,10 @@ void GameMap::DamageArea(const Cell2D & srcBR, const Cell2D & srcTL, int radius,
             {
                 const int ind = r * mCols + rCol;
 
-                if(mCells[ind].objTop != nullptr)
+                if(mCells[ind].objTop != nullptr && !mCells[ind].objTop->IsDestroyed())
                     mCells[ind].objTop->Hit(damage, NO_FACTION);
 
-                if(mCells[ind].objBottom != nullptr)
+                if(mCells[ind].objBottom != nullptr && !mCells[ind].objBottom->IsDestroyed())
                     mCells[ind].objBottom->Hit(damage, NO_FACTION);
             }
         }
