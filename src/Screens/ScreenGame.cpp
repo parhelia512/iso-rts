@@ -669,7 +669,7 @@ void ScreenGame::CreateUI()
         ClearCellOverlays();
 
         // TODO move this to HUD when dialog to control creation is done
-        auto og = new MiniUnitsGroup;
+        auto og = mGameMap->CreateMiniUnitsGroup(unit->GetFaction());
         const int numSquads = 1 + rand() % 5;
         SetupNewMiniUnits(GameObject::TYPE_MINI_UNIT1, unit, og, mLocalPlayer, 3, numSquads);
     });
@@ -2684,7 +2684,7 @@ void ScreenGame::HandleMiniUnitSetTargetOnMouseUp(GameObject * obj, const Cell2D
 
     mPathOverlay->SetPath(path, obj->GetFaction());
 
-    group->SetPath(std::move(path));
+    group->SetPath(std::move(path), clickCell);
 
     // reset active action
     group->DoForAll([](GameObject * o)

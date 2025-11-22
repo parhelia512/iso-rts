@@ -330,10 +330,6 @@ void GameObject::ClearGroup()
 
     mGroup->RemoveObject(this);
 
-    // delete group object when empty
-    if(mGroup->IsEmpty())
-        delete mGroup;
-
     mGroup = nullptr;
 }
 

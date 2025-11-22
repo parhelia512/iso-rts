@@ -23,6 +23,7 @@
 #include "GameObjects/Hospital.h"
 #include "GameObjects/LootBox.h"
 #include "GameObjects/MiniUnit.h"
+#include "GameObjects/MiniUnitsGroup.h"
 #include "GameObjects/ObjectData.h"
 #include "GameObjects/ObjectsDataRegistry.h"
 #include "GameObjects/PracticeTarget.h"
@@ -83,6 +84,9 @@ GameMap::~GameMap()
 
     for(GameObject * obj : mObjects)
         delete obj;
+
+    for(MiniUnitsGroup * g : mMiniUnitsGroups)
+        delete g;
 
     for(CollectableGenerator * cg : mCollGen)
         delete cg;
@@ -1728,6 +1732,15 @@ Cell2D GameMap::GetNewMiniUnitDestination(const Cell2D & genCell) const
     return Cell2D(-1, -1);
 }
 
+MiniUnitsGroup * GameMap::CreateMiniUnitsGroup(PlayerFaction faction)
+{
+    auto group = new MiniUnitsGroup(faction);
+
+    mMiniUnitsGroups.emplace_back(group);
+
+    return group;
+}
+
 void GameMap::DamageArea(const Cell2D & srcBR, const Cell2D & srcTL, int radius, float maxDamage)
 {
     for(int rad = 1; rad <= radius; ++rad)
@@ -2626,6 +2639,9 @@ void GameMap::OnNewTurn(PlayerFaction faction)
     // notify all generators
     for(CollectableGenerator * cg : mCollGen)
         cg->OnNewTurn();
+
+    // update groups
+    UpdateMiniUnitsGroups(faction);
 }
 
 int GameMap::GetFactionMoneyPerTurn(PlayerFaction faction)
@@ -3706,6 +3722,38 @@ const ObjectData & GameMap::GetObjectData(GameObjectTypeId t) const
 {
     const ObjectsDataRegistry * objReg = mGame->GetObjectsRegistry();
     return objReg->GetObjectData(t);
+}
+
+void GameMap::UpdateMiniUnitsGroups(PlayerFaction faction)
+{
+    auto it = mMiniUnitsGroups.begin();
+
+    while(it != mMiniUnitsGroups.end())
+    {
+        auto group = *it;
+
+        // not right faction -> skip
+        if(group->GetFaction() != faction)
+        {
+            ++it;
+            continue;
+        }
+
+        // empty group -> destroy
+        if(group->IsEmpty())
+        {
+            delete group;
+
+            it = mMiniUnitsGroups.erase(it);
+
+            continue;
+        }
+
+        // update
+        // TODO
+
+        ++it;
+    }
 }
 
 } // namespace game

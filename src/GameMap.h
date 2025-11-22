@@ -20,6 +20,7 @@ class Game;
 class GameObject;
 class IsoMap;
 class GameObject;
+class MiniUnitsGroup;
 class ObjectData;
 class ObjectPath;
 class Player;
@@ -147,6 +148,8 @@ public:
                                 int elements, Player * player);
     Cell2D GetNewMiniUnitDestination(const Cell2D & genCell) const;
 
+    MiniUnitsGroup * CreateMiniUnitsGroup(PlayerFaction faction);
+
     // damage
     void DamageArea(const Cell2D & srcBR, const Cell2D & srcTL, int radius, float maxDamage);
 
@@ -227,11 +230,13 @@ private:
     void UpdateConquerPaths(float delta);
     void UpdateWallBuildPaths(float delta);
     void UpdateObjectsToAdd();
-
     void UpdateWalls(const Cell2D & center);
     void UpdateWall(const Cell2D & cell);
 
     const ObjectData & GetObjectData(GameObjectTypeId t) const;
+
+    // new turn methods
+    void UpdateMiniUnitsGroups(PlayerFaction faction);
 
 private:
     struct ObjectToAdd
@@ -258,6 +263,7 @@ private:
     std::vector<ObjectPath *> mPaths;
     std::vector<ConquerPath *> mConquerPaths;
     std::vector<WallBuildPath *> mWallBuildPaths;
+    std::vector<MiniUnitsGroup *> mMiniUnitsGroups;
 
     ControlMap * mControlMap = nullptr;
 
