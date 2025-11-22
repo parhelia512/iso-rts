@@ -16,6 +16,11 @@
 #include <sgl/graphic/TextureManager.h>
 #include <sgl/utilities/UniformDistribution.h>
 
+namespace
+{
+const float minDelta = 0.01f;
+}
+
 namespace game
 {
 
@@ -412,13 +417,11 @@ void GameObject::SetObjectVariant(GameObjectVariantId var)
 
 bool GameObject::IsHealthMax() const
 {
-    const float delta = 0.01f;
-    return  mHealth >= mMaxHealth || (mMaxHealth - mHealth) < delta;
+    return  mHealth >= mMaxHealth || (mMaxHealth - mHealth) < minDelta;
 }
 
 void GameObject::SetHealth(float val)
 {
-    const float minDelta = 0.01f;
     const float oldH = mHealth;
 
     mHealth = val;
@@ -441,13 +444,11 @@ void GameObject::SumHealth(float val)
 
 bool GameObject::IsEnergyMax() const
 {
-    const float delta = 0.01f;
-    return  mEnergy >= mMaxEnergy || (mMaxEnergy - mEnergy) < delta;
+    return  mEnergy >= mMaxEnergy || (mMaxEnergy - mEnergy) < minDelta;
 }
 
 void GameObject::SetEnergy(float val)
 {
-    const float minDelta = 0.01f;
     const float oldEn = mEnergy;
 
     mEnergy = val;
@@ -561,6 +562,10 @@ float GameObject::GetSpeed() const
 void GameObject::Hit(float damage, PlayerFaction attacker)
 {
     using namespace sgl::graphic;
+
+    // already destroyed -> do nothing
+    if(IsDestroyed())
+        return ;
 
     SumHealth(-damage);
 

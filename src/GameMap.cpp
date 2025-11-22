@@ -3187,7 +3187,11 @@ void GameMap::DestroyObject(GameObject * obj)
             GameMapCell & cell = mCells[ind];
 
             cell.walkable = true;
-            cell.objTop = nullptr;
+
+            if(cell.objTop == obj)
+                cell.objTop = nullptr;
+            else if(cell.objBottom == obj)
+                cell.objBottom = nullptr;
 
             // update cell image
             UpdateCellType(ind, cell);
