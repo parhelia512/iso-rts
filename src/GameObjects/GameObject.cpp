@@ -81,6 +81,7 @@ const std::string GameObject::TYPE_STR_RES_STORAGE_DIAMONDS("RESSTOR_DIAM");
 const std::string GameObject::TYPE_STR_RES_STORAGE_ENERGY("RESSTOR_ENER");
 const std::string GameObject::TYPE_STR_RES_STORAGE_MATERIAL("RESSTOR_MAT");
 const std::string GameObject::TYPE_STR_ROCKS("ROCKS");
+const std::string GameObject::TYPE_STR_SPAWN_TOWER("SPAWN_TOWER");
 const std::string GameObject::TYPE_STR_TEMPLE("TEMPLE");
 const std::string GameObject::TYPE_STR_TRADING_POST("TRADING_POST");
 const std::string GameObject::TYPE_STR_TREES("TREES");
@@ -120,6 +121,7 @@ const GameObjectTypeId GameObject::TYPE_RES_STORAGE_DIAMONDS = h{}(TYPE_STR_RES_
 const GameObjectTypeId GameObject::TYPE_RES_STORAGE_ENERGY = h{}(TYPE_STR_RES_STORAGE_ENERGY);
 const GameObjectTypeId GameObject::TYPE_RES_STORAGE_MATERIAL = h{}(TYPE_STR_RES_STORAGE_MATERIAL);
 const GameObjectTypeId GameObject::TYPE_ROCKS = h{}(TYPE_STR_ROCKS);
+const GameObjectTypeId GameObject::TYPE_SPAWN_TOWER = h{}(TYPE_STR_SPAWN_TOWER);
 const GameObjectTypeId GameObject::TYPE_TEMPLE = h{}(TYPE_STR_TEMPLE);
 const GameObjectTypeId GameObject::TYPE_TRADING_POST = h{}(TYPE_STR_TRADING_POST);
 const GameObjectTypeId GameObject::TYPE_TREES = h{}(TYPE_STR_TREES);
@@ -157,6 +159,7 @@ const std::unordered_map<GameObjectTypeId, std::string> GameObject::TYPE_STR_MAP
     { GameObject::TYPE_RES_STORAGE_ENERGY, TYPE_STR_RES_STORAGE_ENERGY },
     { GameObject::TYPE_RES_STORAGE_MATERIAL, TYPE_STR_RES_STORAGE_MATERIAL },
     { GameObject::TYPE_ROCKS, TYPE_STR_ROCKS },
+    { GameObject::TYPE_SPAWN_TOWER, TYPE_STR_SPAWN_TOWER },
     { GameObject::TYPE_TEMPLE, TYPE_STR_TEMPLE },
     { GameObject::TYPE_TREES, TYPE_STR_TREES },
     { GameObject::TYPE_TRADING_POST, TYPE_STR_TRADING_POST },
@@ -207,6 +210,7 @@ const std::unordered_map<GameObjectTypeId, std::string> GameObject::TITLES =
     { GameObject::TYPE_RES_STORAGE_ENERGY, "ENERGY STORAGE"},
     { GameObject::TYPE_RES_STORAGE_MATERIAL, "MATERIAL STORAGE"},
     { GameObject::TYPE_ROCKS, "ROCKS"},
+    { GameObject::TYPE_SPAWN_TOWER, "SPAWNING TOWER"},
     { GameObject::TYPE_TEMPLE, "TEMPLE"},
     { GameObject::TYPE_TRADING_POST, "TRADING POST"},
     { GameObject::TYPE_TREES, "TREES"},
@@ -249,6 +253,7 @@ const std::unordered_map<GameObjectTypeId, std::string> GameObject::DESCRIPTIONS
     { GameObject::TYPE_RES_STORAGE_ENERGY, "Storage unit that can contain 500 units of energy."},
     { GameObject::TYPE_RES_STORAGE_MATERIAL, "Storage unit that can contain 250 units of material."},
     { GameObject::TYPE_ROCKS, "Some rocks."},
+    { GameObject::TYPE_SPAWN_TOWER, "A structure that can generate up to 12 squads of automated mini units."},
     { GameObject::TYPE_TEMPLE, "An ancient temple that can be explored."},
     { GameObject::TYPE_TREES, "A single tree which will slowly grow into a forest."},
     { GameObject::TYPE_TRADING_POST, "This structure allows you to buy and to sell resources."},

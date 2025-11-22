@@ -117,6 +117,8 @@ add_executable(
     src/GameObjects/ResourceStorage.cpp
     src/GameObjects/SceneObject.h
     src/GameObjects/SceneObject.cpp
+    src/GameObjects/SpawningTower.h
+    src/GameObjects/SpawningTower.cpp
     src/GameObjects/Structure.h
     src/GameObjects/Structure.cpp
     src/GameObjects/Temple.h

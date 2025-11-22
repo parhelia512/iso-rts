@@ -136,6 +136,13 @@ void PanelObjectActions::SetObject(GameObject * obj)
         else
             mButtons[BTN_CANCEL]->SetVisible(false);
     }
+    else if(objType == GameObject::TYPE_SPAWN_TOWER)
+    {
+        if(obj->IsLinked())
+            mButtons[BTN_SPAWN]->SetVisible(true);
+        else
+            mButtons[BTN_CANCEL]->SetVisible(false);
+    }
     else if(objType == GameObject::TYPE_TRADING_POST)
     {
         if(obj->IsLinked())

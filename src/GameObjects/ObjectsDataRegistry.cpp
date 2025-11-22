@@ -200,6 +200,14 @@ void ObjectsDataRegistry::InitObjectData()
                   ObjectData({}, {}, { ROCKS_ROW_1 }, SpriteRocksFile,
                              GameObject::TYPE_ROCKS, OCO_SCENE, OCAT_UNDEFINED, 1, 1));
 
+    mData.emplace(GameObject::TYPE_SPAWN_TOWER,
+                  ObjectData({ {OBJ_ATT_ENERGY, 8}, {OBJ_ATT_VIEW_RANGE, 4}, {OBJ_ATT_REGENERATION, 3},
+                              {OBJ_ATT_RESISTANCE, 4}, {OBJ_ATT_SHIELD, 5} },
+                             { 750, 500, 50, 50 },
+                             { ID_STRUCT_SPAWN_TOWER_F1, ID_STRUCT_SPAWN_TOWER_F2, ID_STRUCT_SPAWN_TOWER_F3,
+                              ID_STRUCT_SPAWN_TOWER }, SpriteFileStructures, GameObject::TYPE_SPAWN_TOWER,
+                             OCS_TOWER, OCAT_GENERIC, 2, 2));
+
     mData.emplace(GameObject::TYPE_TEMPLE,
                   ObjectData({ {OBJ_ATT_ENERGY, 8}, {OBJ_ATT_VIEW_RANGE, 4}, {OBJ_ATT_REGENERATION, 1},
                                {OBJ_ATT_RESISTANCE, 1}, {OBJ_ATT_SHIELD, 1} },
