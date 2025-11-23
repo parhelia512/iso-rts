@@ -31,7 +31,7 @@ PanelPlanetActions::PanelPlanetActions()
     SetSize(tex->GetWidth(), tex->GetHeight());
 
     // TITLE
-    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFileTitle,
+    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFilePanelTitle,
                                       WidgetsConstants::FontSizePlanetMapTitle, graphic::Font::NORMAL);
     mTitle = new graphic::Text("ACTIONS", fnt);
     mTitle->SetColor(WidgetsConstants::colorPanelTitle);

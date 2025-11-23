@@ -45,7 +45,7 @@ PanelPlanetActionConquerAI::PanelPlanetActionConquerAI(Player * player, int mone
     SetSize(tex->GetWidth(), tex->GetHeight());
 
     // TITLE
-    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFileTitle,
+    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFilePanelTitle,
                                       WidgetsConstants::FontSizePlanetMapTitle, graphic::Font::NORMAL);
     mTitle = new graphic::Text("SEND AI", fnt);
     mTitle->SetColor(WidgetsConstants::colorPanelTitle);

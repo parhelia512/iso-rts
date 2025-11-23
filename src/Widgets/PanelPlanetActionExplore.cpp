@@ -44,7 +44,7 @@ PanelPlanetActionExplore::PanelPlanetActionExplore(Player * player, int money, i
     SetSize(tex->GetWidth(), tex->GetHeight());
 
     // TITLE
-    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFileTitle,
+    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFilePanelTitle,
                                       WidgetsConstants::FontSizePlanetMapTitle, graphic::Font::NORMAL);
     mTitle = new graphic::Text("EXPLORE", fnt);
     mTitle->SetColor(WidgetsConstants::colorPanelTitle);

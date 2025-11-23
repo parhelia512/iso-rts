@@ -277,7 +277,7 @@ DialogMissionGoals::DialogMissionGoals(ScreenGame * screen)
     const int sizeTitle = 28;
     const int marginTitleT = 14;
 
-    auto font = fm->GetFont(WidgetsConstants::FontFileTitle, sizeTitle, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileDialogTitle, sizeTitle, graphic::Font::NORMAL);
     auto title = new sgui::Label("MISSION GOALS", font, this);
     title->SetColor(WidgetsConstants::colorDialogTitle);
 

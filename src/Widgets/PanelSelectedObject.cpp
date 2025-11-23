@@ -299,7 +299,7 @@ PanelSelectedObject::PanelSelectedObject(const ObjectsDataRegistry * odr, sgl::s
 
     const int sizeTitle = 16;
 
-    auto fntTitle = fm->GetFont(WidgetsConstants::FontFileTitle, sizeTitle, graphic::Font::NORMAL);
+    auto fntTitle = fm->GetFont(WidgetsConstants::FontFilePanelTitle, sizeTitle, graphic::Font::NORMAL);
 
     mTitle = new sgui::TextArea(titleW, titleH, fntTitle, true, this);
     mTitle->SetColor(WidgetsConstants::colorPanelTitle);

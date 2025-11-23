@@ -251,7 +251,7 @@ DialogObject::DialogObject(const ObjectsDataRegistry * odr)
     // TITLE
     const int marginTitleT = 14;
 
-    auto font = fm->GetFont(WidgetsConstants::FontFileTitle, 28, sgl::graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 28, sgl::graphic::Font::NORMAL);
     mTitle = new sgui::Label(font, this);
     mTitle->SetColor(WidgetsConstants::colorDialogTitle);
     mTitle->SetPosition(marginL, marginTitleT);

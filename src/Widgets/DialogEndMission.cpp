@@ -95,7 +95,7 @@ DialogEndMission::DialogEndMission(int time, int territoryConquered, int enemies
     mButton->SetPosition(buttonX, buttonY);
 
     // TITLE
-    auto font = fm->GetFont(WidgetsConstants::FontFileTitle, 32, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 32, graphic::Font::NORMAL);
 
     sgui::Label * title = nullptr;
 

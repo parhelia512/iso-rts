@@ -444,7 +444,7 @@ DialogSettings::DialogSettings(Game * game)
     mButtonBack->SetX(GetWidth() - mButtonBack->GetWidth());
 
     // TITLE
-    auto font = fm->GetFont(WidgetsConstants::FontFileTitle, 30, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 30, graphic::Font::NORMAL);
     auto labelTitle = new sgui::Label("SETTINGS", font, this);
 
     labelTitle->SetColor(WidgetsConstants::colorDialogTitle);

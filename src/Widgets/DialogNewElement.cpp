@@ -591,7 +591,7 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
     mBtnClose->SetX(GetWidth() - mBtnClose->GetWidth());
 
     // TITLE
-    auto font = fm->GetFont(WidgetsConstants::FontFileTitle, 28, sgl::graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 28, sgl::graphic::Font::NORMAL);
 
     if(ETYPE_STRUCTURES == type)
         mTitle = new sgui::Label("CREATE NEW STRUCTURE", font, this);

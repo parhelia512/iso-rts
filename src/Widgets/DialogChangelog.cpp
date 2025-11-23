@@ -263,7 +263,7 @@ DialogChangelog::DialogChangelog()
 
     // TITLE
     auto fm = graphic::FontManager::Instance();
-    auto font = fm->GetFont(WidgetsConstants::FontFileTitle, 28, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 28, graphic::Font::NORMAL);
     mTitle = new graphic::Text("NEWS & UPDATES", font);
     mTitle->SetColor(WidgetsConstants::colorDialogTitle);
     RegisterRenderable(mTitle);

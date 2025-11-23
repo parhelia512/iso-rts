@@ -11,6 +11,9 @@ public:
     static const unsigned int colorPlanetMapData;
     static const unsigned int colorPlanetMapEnoughRes;
     static const unsigned int colorPlanetMapLackRes;
+    static const unsigned int colorDialogHeader1;
+    static const unsigned int colorDialogHeader2;
+    static const unsigned int colorDialogText;
     static const unsigned int colorDialogTitle;
     static const unsigned int colorPanelTitle;
     static const unsigned int colorTooltipTitle;
@@ -21,7 +24,8 @@ public:
     static const char * FontFileShortcut;
     static const char * FontFileStrongText;
     static const char * FontFileText;
-    static const char * FontFileTitle;
+    static const char * FontFileDialogTitle;
+    static const char * FontFilePanelTitle;
 
     // FONT SIZES
     static const int FontSizePlanetMapTitle;

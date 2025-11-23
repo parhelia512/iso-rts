@@ -35,7 +35,7 @@ ResourceTooltip::ResourceTooltip(const char * title)
     SetSize(mBg->GetWidth(), mBg->GetHeight());
 
     // TITLE
-    auto fontTitle = fm->GetFont(WidgetsConstants::FontFileTitle, 18, graphic::Font::NORMAL);
+    auto fontTitle = fm->GetFont(WidgetsConstants::FontFilePanelTitle, 18, graphic::Font::NORMAL);
     mTitle = new graphic::Text(title, fontTitle);
     mTitle->SetColor(WidgetsConstants::colorTooltipTitle);
     RegisterRenderable(mTitle);

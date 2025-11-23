@@ -37,7 +37,7 @@ PanelPlanetResources::PanelPlanetResources()
     const int marginHeaderX = 20;
     const int marginHeaderY = 15;
 
-    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFileTitle,
+    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFilePanelTitle,
                                       WidgetsConstants::FontSizePlanetMapTitle, graphic::Font::NORMAL);
     auto label = new sgui::Label("RESOURCES", fnt, this);
     label->SetColor(WidgetsConstants::colorPanelTitle);

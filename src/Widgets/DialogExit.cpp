@@ -253,7 +253,7 @@ DialogExit::DialogExit(DialogButtons buttons, Game * game, Screen * screen)
     mButtonClose->SetX(GetWidth() - mButtonClose->GetWidth());
 
     // TITLE
-    auto font = fm->GetFont(WidgetsConstants::FontFileTitle, 28, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 28, graphic::Font::NORMAL);
     mTitle = new graphic::Text("LEAVE", font);
     mTitle->SetColor(WidgetsConstants::colorDialogTitle);
     RegisterRenderable(mTitle);

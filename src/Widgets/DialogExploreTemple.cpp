@@ -96,7 +96,7 @@ DialogExploreTemple::DialogExploreTemple(Player * player, Temple * temple)
     SetSize(w, h);
 
     // TITLE
-    auto fontTitle = fm->GetFont(WidgetsConstants::FontFileTitle, 32, graphic::Font::NORMAL);
+    auto fontTitle = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 32, graphic::Font::NORMAL);
 
     sgui::Label * title = new sgui::Label("EXPLORE ABANDONED TEMPLE", fontTitle, this);
 
@@ -411,7 +411,7 @@ DialogExploreTempleOutcome::DialogExploreTempleOutcome(Player * player, Temple *
     SetSize(w, h);
 
     // TITLE
-    auto fontTitle = fm->GetFont(WidgetsConstants::FontFileTitle, 32, graphic::Font::NORMAL);
+    auto fontTitle = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 32, graphic::Font::NORMAL);
 
     sgui::Label * title = new sgui::Label("TEMPLE EXPLORATION OUTCOME", fontTitle, this);
 

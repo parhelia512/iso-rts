@@ -50,7 +50,6 @@ ScreenFactionSelection::ScreenFactionSelection(Game * game)
 
     panelMain->SetPosition(pmX, pmY);
 
-    const unsigned int colorHeader = 0xdbebf0ff;
     const unsigned int colorText = 0xb8d3e0ff;
 
     const int marginL = 50;
@@ -65,12 +64,12 @@ ScreenFactionSelection::ScreenFactionSelection(Game * game)
     int y = y0;
 
     // LABEL "SELECT YOUR FACTION"
-    fnt = fm->GetFont(WidgetsConstants::FontFileTitle, 40, graphic::Font::NORMAL);
+    fnt = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 40, graphic::Font::NORMAL);
     sgui::Label * labelTitle = new sgui::Label("SELECT YOUR FACTION", fnt, panelMain);
     labelTitle->SetPosition(x, y);
     labelTitle->SetColor(WidgetsConstants::colorDialogTitle);
 
-    graphic::Font * fntFaction = fm->GetFont(WidgetsConstants::FontFileHeader, 32, graphic::Font::NORMAL);
+    graphic::Font * fntFaction = fm->GetFont(WidgetsConstants::FontFilePanelTitle, 32, graphic::Font::NORMAL);
     graphic::Font * fntTxt = fm->GetFont(WidgetsConstants::FontFileText, 20, graphic::Font::NORMAL);
 
     // BUTTON BACK
@@ -101,7 +100,7 @@ ScreenFactionSelection::ScreenFactionSelection(Game * game)
     auto labelFactionName = new sgui::Label(FACTIONS_NAME[FACTION_1], fntFaction, panelFaction);
     int labelX = (panelFaction->GetWidth() - labelFactionName->GetWidth()) * 0.5f;
     labelFactionName->SetPosition(labelX, 10);
-    labelFactionName->SetColor(colorHeader);
+    labelFactionName->SetColor(WidgetsConstants::colorPanelTitle);
 
     y += panelFaction->GetHeight() + marginPanelsH;
 
@@ -158,7 +157,7 @@ ScreenFactionSelection::ScreenFactionSelection(Game * game)
     labelFactionName = new sgui::Label(FACTIONS_NAME[FACTION_2], fntFaction, panelFaction);
     labelX = (panelFaction->GetWidth() - labelFactionName->GetWidth()) * 0.5f;
     labelFactionName->SetPosition(labelX, 10);
-    labelFactionName->SetColor(colorHeader);
+    labelFactionName->SetColor(WidgetsConstants::colorPanelTitle);
 
     y += panelFaction->GetHeight() + marginPanelsH;
 
@@ -210,10 +209,10 @@ ScreenFactionSelection::ScreenFactionSelection(Game * game)
     panelFaction->SetPosition(x, y);
 
     fnt = fm->GetFont("Lato-Regular.ttf", 32, graphic::Font::NORMAL);
-    labelFactionName = new sgui::Label(FACTIONS_NAME[FACTION_3], fnt, panelFaction);
+    labelFactionName = new sgui::Label(FACTIONS_NAME[FACTION_3], fntFaction, panelFaction);
     labelX = (panelFaction->GetWidth() - labelFactionName->GetWidth()) * 0.5f;
     labelFactionName->SetPosition(labelX, 10);
-    labelFactionName->SetColor(colorHeader);
+    labelFactionName->SetColor(WidgetsConstants::colorPanelTitle);
 
     y += panelFaction->GetHeight() + marginPanelsH;
 

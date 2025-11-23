@@ -234,7 +234,7 @@ DialogTrading::DialogTrading(Game * g, Player * p)
     mButtonClose->SetX(buttonX);
 
     // TITLE
-    auto fontTitle = fm->GetFont(WidgetsConstants::FontFileTitle, 32, graphic::Font::NORMAL);
+    auto fontTitle = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 32, graphic::Font::NORMAL);
 
     sgui::Label * title = new sgui::Label("TRADE YOUR RESOURCES", fontTitle, this);
 
