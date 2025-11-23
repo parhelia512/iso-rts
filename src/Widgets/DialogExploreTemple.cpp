@@ -103,7 +103,7 @@ DialogExploreTemple::DialogExploreTemple(Player * player, Temple * temple)
     const int titleX = (w - title->GetWidth()) / 2;
     const int titleY = 10;
     title->SetPosition(titleX, titleY);
-    title->SetColor(0xf1f3f4ff);
+    title->SetColor(WidgetsConstants::colorDialogTitle);
 
     // HORIZ BAR 1
     tex = tm->GetSprite(SpriteFileDialogExploreTemple, ID_DLG_EXTM_LINE_H);
@@ -418,7 +418,7 @@ DialogExploreTempleOutcome::DialogExploreTempleOutcome(Player * player, Temple *
     const int titleX = (w - title->GetWidth()) / 2;
     const int titleY = 10;
     title->SetPosition(titleX, titleY);
-    title->SetColor(0xf1f3f4ff);
+    title->SetColor(WidgetsConstants::colorDialogTitle);
 
     // EXPLANATION
     const int descAreaW = w - (marginSide * 2);

@@ -107,7 +107,7 @@ DialogEndMission::DialogEndMission(int time, int territoryConquered, int enemies
     const int titleX = (w - title->GetWidth()) / 2;
     const int titleY = 10;
     title->SetPosition(titleX, titleY);
-    title->SetColor(0xf1f3f4ff);
+    title->SetColor(WidgetsConstants::colorDialogTitle);
 
     // -- CONTENT --
     const int limitR = 720;

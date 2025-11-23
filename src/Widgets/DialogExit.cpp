@@ -255,7 +255,7 @@ DialogExit::DialogExit(DialogButtons buttons, Game * game, Screen * screen)
     // TITLE
     auto font = fm->GetFont(WidgetsConstants::FontFileTitle, 28, graphic::Font::NORMAL);
     mTitle = new graphic::Text("LEAVE", font);
-    mTitle->SetColor(0xf1f3f4ff);
+    mTitle->SetColor(WidgetsConstants::colorDialogTitle);
     RegisterRenderable(mTitle);
 
     // BUTTON PLANET MAP

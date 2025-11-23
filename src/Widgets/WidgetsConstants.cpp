@@ -8,6 +8,9 @@ const unsigned int WidgetsConstants::colorPlanetMapHeader = 0xb0c5cfff;
 const unsigned int WidgetsConstants::colorPlanetMapData = 0x80a2b3ff;
 const unsigned int WidgetsConstants::colorPlanetMapEnoughRes = 0x85cc85ff;
 const unsigned int WidgetsConstants::colorPlanetMapLackRes = 0xcc8b85ff;
+const unsigned int WidgetsConstants::colorDialogTitle = 0xe6f9ffff;
+const unsigned int WidgetsConstants::colorPanelTitle = 0xe6f9ffff;
+const unsigned int WidgetsConstants::colorTooltipTitle = 0xe6f9ffff;
 
 // FONT FILES
 const char * WidgetsConstants::FontFileButton = "Lato-Bold.ttf";

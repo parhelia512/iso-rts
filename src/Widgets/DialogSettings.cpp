@@ -444,11 +444,10 @@ DialogSettings::DialogSettings(Game * game)
     mButtonBack->SetX(GetWidth() - mButtonBack->GetWidth());
 
     // TITLE
-    const unsigned int colorTitle = 0xe6eef2ff;
     auto font = fm->GetFont(WidgetsConstants::FontFileTitle, 30, graphic::Font::NORMAL);
     auto labelTitle = new sgui::Label("SETTINGS", font, this);
 
-    labelTitle->SetColor(colorTitle);
+    labelTitle->SetColor(WidgetsConstants::colorDialogTitle);
     labelTitle->SetPosition(marginContLeft, marginContTop);
 
     // BUTTONS PANEL

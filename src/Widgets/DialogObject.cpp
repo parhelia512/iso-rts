@@ -249,12 +249,11 @@ DialogObject::DialogObject(const ObjectsDataRegistry * odr)
     const int marginL = 30;
 
     // TITLE
-    const unsigned int colorTitle = 0xf0f3f5ff;
     const int marginTitleT = 14;
 
     auto font = fm->GetFont(WidgetsConstants::FontFileTitle, 28, sgl::graphic::Font::NORMAL);
     mTitle = new sgui::Label(font, this);
-    mTitle->SetColor(colorTitle);
+    mTitle->SetColor(WidgetsConstants::colorDialogTitle);
     mTitle->SetPosition(marginL, marginTitleT);
 
     // IMAGE

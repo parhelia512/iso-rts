@@ -7,6 +7,7 @@
 #include "Widgets/ButtonDialogContinue.h"
 #include "Widgets/ButtonDialogSelect.h"
 #include "Widgets/GameUIData.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
@@ -49,7 +50,6 @@ ScreenFactionSelection::ScreenFactionSelection(Game * game)
 
     panelMain->SetPosition(pmX, pmY);
 
-    const unsigned int colorTitle = 0xedf5f7ff;
     const unsigned int colorHeader = 0xdbebf0ff;
     const unsigned int colorText = 0xb8d3e0ff;
 
@@ -65,13 +65,13 @@ ScreenFactionSelection::ScreenFactionSelection(Game * game)
     int y = y0;
 
     // LABEL "SELECT YOUR FACTION"
-    fnt = fm->GetFont("Lato-Regular.ttf", 40, graphic::Font::NORMAL);
+    fnt = fm->GetFont(WidgetsConstants::FontFileTitle, 40, graphic::Font::NORMAL);
     sgui::Label * labelTitle = new sgui::Label("SELECT YOUR FACTION", fnt, panelMain);
     labelTitle->SetPosition(x, y);
-    labelTitle->SetColor(colorTitle);
+    labelTitle->SetColor(WidgetsConstants::colorDialogTitle);
 
-    graphic::Font * fntFaction = fm->GetFont("Lato-Regular.ttf", 32, graphic::Font::NORMAL);
-    graphic::Font * fntTxt = fm->GetFont("Lato-Regular.ttf", 20, graphic::Font::NORMAL);
+    graphic::Font * fntFaction = fm->GetFont(WidgetsConstants::FontFileHeader, 32, graphic::Font::NORMAL);
+    graphic::Font * fntTxt = fm->GetFont(WidgetsConstants::FontFileText, 20, graphic::Font::NORMAL);
 
     // BUTTON BACK
     auto btnBack = new ButtonDialogBack(panelMain);

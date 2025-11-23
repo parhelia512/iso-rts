@@ -37,12 +37,10 @@ PanelPlanetInfo::PanelPlanetInfo()
     SetSize(tex->GetWidth(), tex->GetHeight());
 
     // TITLE
-    const unsigned int colorTitle = 0xe9f7fbcc;
-
     graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFileTitle,
                                       WidgetsConstants::FontSizePlanetMapTitle, graphic::Font::NORMAL);
     mTitle = new graphic::Text("INFO", fnt);
-    mTitle->SetColor(colorTitle);
+    mTitle->SetColor(WidgetsConstants::colorPanelTitle);
     RegisterRenderable(mTitle);
 
     // -- DATA --

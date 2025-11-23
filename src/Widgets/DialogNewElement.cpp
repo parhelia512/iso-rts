@@ -298,7 +298,7 @@ public:
         // TITLE
         auto tm = sgl::graphic::TextureManager::Instance();
         sgl::graphic::Texture * tex = tm->GetSprite(SpriteFileDialogNewElement, IND_DLG_NEWE_PANEL_NORMAL);
-        auto font = fm->GetFont(WidgetsConstants::FontFileTitle, 16, Font::NORMAL);
+        auto font = fm->GetFont(WidgetsConstants::FontFileButton, 16, Font::NORMAL);
         mTitle = new sgl::sgui::TextArea(tex->GetWidth(), TITLE_H, font, false, this);
         mTitle->setTextAlignment(sgl::sgui::TextArea::ALIGN_H_CENTER, sgl::sgui::TextArea::ALIGN_V_CENTER);
 

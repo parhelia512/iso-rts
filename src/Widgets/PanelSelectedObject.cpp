@@ -297,13 +297,12 @@ PanelSelectedObject::PanelSelectedObject(const ObjectsDataRegistry * odr, sgl::s
     const int titleX = 180;
     const int titleY = 30;
 
-    const unsigned int colorTitle = 0xe9f7fbcc;
     const int sizeTitle = 16;
 
     auto fntTitle = fm->GetFont(WidgetsConstants::FontFileTitle, sizeTitle, graphic::Font::NORMAL);
 
     mTitle = new sgui::TextArea(titleW, titleH, fntTitle, true, this);
-    mTitle->SetColor(colorTitle);
+    mTitle->SetColor(WidgetsConstants::colorPanelTitle);
     mTitle->setTextAlignmentHorizontal(sgui::TextArea::ALIGN_H_CENTER);
     mTitle->SetPosition(titleX, titleY);
 

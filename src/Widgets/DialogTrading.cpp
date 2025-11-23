@@ -241,7 +241,7 @@ DialogTrading::DialogTrading(Game * g, Player * p)
     const int titleX = (w - title->GetWidth()) / 2;
     const int titleY = 5;
     title->SetPosition(titleX, titleY);
-    title->SetColor(0xf0f3f5ff);
+    title->SetColor(WidgetsConstants::colorDialogTitle);
 
     // -- HEADERS --
     const int hbH = 40;

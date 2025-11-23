@@ -44,7 +44,7 @@ GameSimpleTooltip::GameSimpleTooltip(const char * text)
     mBgRight = new graphic::Image(tex);
     RegisterRenderable(mBgRight);
 
-    // TITLE
+    // LABEL
     auto font = fm->GetFont(WidgetsConstants::FontFileText, 16, graphic::Font::NORMAL);
     mLabel = new graphic::Text(text, font);
     mLabel->SetColor(0x98bbd9ff);

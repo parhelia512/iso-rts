@@ -37,7 +37,7 @@ ResourceTooltip::ResourceTooltip(const char * title)
     // TITLE
     auto fontTitle = fm->GetFont(WidgetsConstants::FontFileTitle, 18, graphic::Font::NORMAL);
     mTitle = new graphic::Text(title, fontTitle);
-    mTitle->SetColor(0xd6e7f5ff);
+    mTitle->SetColor(WidgetsConstants::colorTooltipTitle);
     RegisterRenderable(mTitle);
 
     // LABELS

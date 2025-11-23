@@ -31,12 +31,10 @@ PanelPlanetActions::PanelPlanetActions()
     SetSize(tex->GetWidth(), tex->GetHeight());
 
     // TITLE
-    const unsigned int colorTitle = 0xe9f7fbcc;
-
     graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFileTitle,
                                       WidgetsConstants::FontSizePlanetMapTitle, graphic::Font::NORMAL);
     mTitle = new graphic::Text("ACTIONS", fnt);
-    mTitle->SetColor(colorTitle);
+    mTitle->SetColor(WidgetsConstants::colorPanelTitle);
     RegisterRenderable(mTitle);
 
     // BUTTONS
