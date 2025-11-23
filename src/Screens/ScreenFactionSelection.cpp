@@ -50,8 +50,6 @@ ScreenFactionSelection::ScreenFactionSelection(Game * game)
 
     panelMain->SetPosition(pmX, pmY);
 
-    const unsigned int colorText = 0xb8d3e0ff;
-
     const int marginL = 50;
     const int marginPanelsH = 15;
     const int marginTxt = 10;
@@ -117,7 +115,7 @@ ScreenFactionSelection::ScreenFactionSelection(Game * game)
     const char * desc1 = "Trained warriors and expert weapon makers. They hate the Domens.";
     auto txtArea = new sgui::TextArea(txtW, txtH, desc1, fntTxt, false, panelTxt);
     txtArea->SetPosition(txtX, txtY);
-    txtArea->SetColor(colorText);
+    txtArea->SetColor(WidgetsConstants::colorPanelText);
 
     y += panelTxt->GetHeight() + marginPanelsH;
 
@@ -172,7 +170,7 @@ ScreenFactionSelection::ScreenFactionSelection(Game * game)
     const char * desc2 = "Masters of engineering and science. Long time enemies of the Zulox.";
     txtArea = new sgui::TextArea(txtW, txtH, desc2, fntTxt, false, panelTxt);
     txtArea->SetPosition(txtX, txtY);
-    txtArea->SetColor(colorText);
+    txtArea->SetColor(WidgetsConstants::colorPanelText);
 
     y += panelTxt->GetHeight() + marginPanelsH;
 
@@ -227,7 +225,7 @@ ScreenFactionSelection::ScreenFactionSelection(Game * game)
     const char * desc3 = "Great explorers and very versatile. They have never fought other factions until now.";
     txtArea = new sgui::TextArea(txtW, txtH, desc3, fntTxt, false, panelTxt);
     txtArea->SetPosition(txtX, txtY);
-    txtArea->SetColor(colorText);
+    txtArea->SetColor(WidgetsConstants::colorPanelText);
 
     y += panelTxt->GetHeight() + marginPanelsH;
 
@@ -286,8 +284,6 @@ int ScreenFactionSelection::AddPanelStats(int x, int y, const std::array<int, NU
 {
     using namespace sgl;
 
-    const unsigned int colorHeader = 0xdbebf0ff;
-
     auto tm = graphic::TextureManager::Instance();
     auto fm = graphic::FontManager::Instance();
 
@@ -295,7 +291,7 @@ int ScreenFactionSelection::AddPanelStats(int x, int y, const std::array<int, NU
     auto panel = new sgui::Image(tex, parent);
     panel->SetPosition(x, y);
 
-    graphic::Font * fnt = fm->GetFont("Lato-Bold.ttf", 20, graphic::Font::NORMAL);
+    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFilePanelHeader, 20, graphic::Font::NORMAL);
 
     const int marginHeaderB = 5;
     const int marginBlockB = 36;
@@ -314,8 +310,6 @@ int ScreenFactionSelection::AddPanelStats(int x, int y, const std::array<int, NU
         "TECHNOLOGY"
     };
 
-    const unsigned int colorPipOff = 0x365463ff;
-
     for(unsigned int i = 0; i < NUM_FACTION_STATS; ++i)
     {
         const unsigned int stat = stats[i];
@@ -323,7 +317,7 @@ int ScreenFactionSelection::AddPanelStats(int x, int y, const std::array<int, NU
         // header label
         auto header0 = new sgui::Label(strHeader[i], fnt, panelContent);
         header0->SetPosition(contX, contY);
-        header0->SetColor(colorHeader);
+        header0->SetColor(WidgetsConstants::colorPanelHeader);
 
         contY += header0->GetHeight() + marginHeaderB;
 

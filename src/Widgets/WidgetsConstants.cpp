@@ -12,6 +12,8 @@ const unsigned int WidgetsConstants::colorDialogHeader1 = 0xd1f0faff;
 const unsigned int WidgetsConstants::colorDialogHeader2 = 0x9dd1e2ff;
 const unsigned int WidgetsConstants::colorDialogText = 0x7eb3ceff;
 const unsigned int WidgetsConstants::colorDialogTitle = 0xe6f9ffff;
+const unsigned int WidgetsConstants::colorPanelHeader = 0xd1ecfaff;
+const unsigned int WidgetsConstants::colorPanelText = 0x7eb3ceff;
 const unsigned int WidgetsConstants::colorPanelTitle = 0xe6f9ffff;
 const unsigned int WidgetsConstants::colorTooltipTitle = 0xe6f9ffff;
 
@@ -22,6 +24,7 @@ const char * WidgetsConstants::FontFileShortcut = "Lato-Bold.ttf";
 const char * WidgetsConstants::FontFileStrongText = "Lato-Bold.ttf";
 const char * WidgetsConstants::FontFileText = "Lato-Regular.ttf";
 const char * WidgetsConstants::FontFileDialogTitle = "Lato-Regular.ttf";
+const char * WidgetsConstants::FontFilePanelHeader = "Lato-Bold.ttf";
 const char * WidgetsConstants::FontFilePanelTitle = "Lato-Regular.ttf";
 
 // FONT SIZES

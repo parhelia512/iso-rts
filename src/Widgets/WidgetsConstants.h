@@ -15,6 +15,8 @@ public:
     static const unsigned int colorDialogHeader2;
     static const unsigned int colorDialogText;
     static const unsigned int colorDialogTitle;
+    static const unsigned int colorPanelHeader;
+    static const unsigned int colorPanelText;
     static const unsigned int colorPanelTitle;
     static const unsigned int colorTooltipTitle;
 
@@ -25,6 +27,7 @@ public:
     static const char * FontFileStrongText;
     static const char * FontFileText;
     static const char * FontFileDialogTitle;
+    static const char * FontFilePanelHeader;
     static const char * FontFilePanelTitle;
 
     // FONT SIZES
