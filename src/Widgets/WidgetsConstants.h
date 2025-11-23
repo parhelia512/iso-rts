@@ -7,8 +7,6 @@ class WidgetsConstants
 {
 public:
     // COLORS
-    static const unsigned int colorPlanetMapHeader;
-    static const unsigned int colorPlanetMapData;
     static const unsigned int colorPlanetMapEnoughRes;
     static const unsigned int colorPlanetMapLackRes;
     static const unsigned int colorDialogHeader1;

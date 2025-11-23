@@ -16,7 +16,6 @@
 
 namespace
 {
-    constexpr unsigned int textColor = 0x80a2b3ff;
     constexpr int textSize = 18;
 }
 
@@ -99,7 +98,7 @@ void PanelPlanetActionConquer::CreateContentStart()
     const char * txt = "Start a mission to conquer the territory.\n\n"
                        "You will personally lead the construction of a new base and your troops in battle.";
     auto text = new sgui::TextArea(contW, contH, txt, fnt, false, mContentStart);
-    text->SetColor(textColor);
+    text->SetColor(WidgetsConstants::colorPanelText);
 }
 
 void PanelPlanetActionConquer::HandlePositionChanged()
@@ -116,7 +115,7 @@ void PanelPlanetActionConquer::UpdatePositions()
 
     const int marginL = 20;
     const int marginT = 15;
-    const int marginTextT = 5;
+    const int marginTextT = 20;
 
     int x;
     int y;

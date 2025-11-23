@@ -44,32 +44,32 @@ PanelPlanetInfo::PanelPlanetInfo()
     RegisterRenderable(mTitle);
 
     // -- DATA --
-    graphic::Font * fntHeader = fm->GetFont(WidgetsConstants::FontFileHeader,
+    graphic::Font * fntHeader = fm->GetFont(WidgetsConstants::FontFilePanelHeader,
                                             WidgetsConstants::FontSizePlanetMapHeader, graphic::Font::NORMAL);
     graphic::Font * fntData = fm->GetFont(WidgetsConstants::FontFileText,
                                           WidgetsConstants::FontSizePlanetMapText, graphic::Font::NORMAL);
 
     // LINE SIZE
     mHeaderSize = new graphic::Text("SIZE", fntHeader);
-    mHeaderSize->SetColor(WidgetsConstants::colorPlanetMapHeader);
+    mHeaderSize->SetColor(WidgetsConstants::colorPanelHeader);
     RegisterRenderable(mHeaderSize);
 
     mLabelSize = new graphic::Text("?", fntData);
-    mLabelSize->SetColor(WidgetsConstants::colorPlanetMapData);
+    mLabelSize->SetColor(WidgetsConstants::colorPanelText);
     RegisterRenderable(mLabelSize);
 
     // LINE STATUS
     mHeaderStatus = new graphic::Text("STATUS", fntHeader);
-    mHeaderStatus->SetColor(WidgetsConstants::colorPlanetMapHeader);
+    mHeaderStatus->SetColor(WidgetsConstants::colorPanelHeader);
     RegisterRenderable(mHeaderStatus);
 
     mLabelStatus = new graphic::Text("?", fntData);
-    mLabelStatus->SetColor(WidgetsConstants::colorPlanetMapData);
+    mLabelStatus->SetColor(WidgetsConstants::colorPanelText);
     RegisterRenderable(mLabelStatus);
 
     // LINE VALUE
     mHeaderValue = new graphic::Text("VALUE", fntHeader);
-    mHeaderValue->SetColor(WidgetsConstants::colorPlanetMapHeader);
+    mHeaderValue->SetColor(WidgetsConstants::colorPanelHeader);
     RegisterRenderable(mHeaderValue);
 
     tex = tm->GetSprite(SpriteFilePlanetMap, IND_PM_STARS_0);
@@ -78,20 +78,20 @@ PanelPlanetInfo::PanelPlanetInfo()
 
     // LINE OCCUPIER
     mHeaderOccupier = new graphic::Text("OCCUPIER", fntHeader);
-    mHeaderOccupier->SetColor(WidgetsConstants::colorPlanetMapHeader);
+    mHeaderOccupier->SetColor(WidgetsConstants::colorPanelHeader);
     RegisterRenderable(mHeaderOccupier);
 
     mLabelOccupier = new graphic::Text("?", fntData);
-    mLabelOccupier->SetColor(WidgetsConstants::colorPlanetMapData);
+    mLabelOccupier->SetColor(WidgetsConstants::colorPanelText);
     RegisterRenderable(mLabelOccupier);
 
     // LINE MISSION
     mHeaderMission = new graphic::Text("MISSION", fntHeader);
-    mHeaderMission->SetColor(WidgetsConstants::colorPlanetMapHeader);
+    mHeaderMission->SetColor(WidgetsConstants::colorPanelHeader);
     RegisterRenderable(mHeaderMission);
 
     mLabelMission = new graphic::Text("?", fntData);
-    mLabelMission->SetColor(WidgetsConstants::colorPlanetMapData);
+    mLabelMission->SetColor(WidgetsConstants::colorPanelText);
     RegisterRenderable(mLabelMission);
 
     // position elements
@@ -262,7 +262,7 @@ void PanelPlanetInfo::UpdateTerritorySize()
     else
         mLabelSize = new graphic::Text("?", fntData);
 
-    mLabelSize->SetColor(WidgetsConstants::colorPlanetMapData);
+    mLabelSize->SetColor(WidgetsConstants::colorPanelText);
     RegisterRenderable(mLabelSize);
 }
 
@@ -297,7 +297,7 @@ void PanelPlanetInfo::UpdateTerritoryStatus()
     else
         mLabelStatus = new graphic::Text("?", fntData);
 
-    mLabelStatus->SetColor(WidgetsConstants::colorPlanetMapData);
+    mLabelStatus->SetColor(WidgetsConstants::colorPanelText);
     RegisterRenderable(mLabelStatus);
 }
 
@@ -327,7 +327,7 @@ void PanelPlanetInfo::UpdateTerritoryOccupier()
         else
             mLabelOccupier = new graphic::Text("?", fntData);
 
-        mLabelOccupier->SetColor(WidgetsConstants::colorPlanetMapData);
+        mLabelOccupier->SetColor(WidgetsConstants::colorPanelText);
     }
 
     RegisterRenderable(mLabelOccupier);
@@ -364,7 +364,7 @@ void PanelPlanetInfo::UpdateMissionType()
     else
         mLabelMission = new graphic::Text("?", fntData);
 
-    mLabelMission->SetColor(WidgetsConstants::colorPlanetMapData);
+    mLabelMission->SetColor(WidgetsConstants::colorPanelText);
     RegisterRenderable(mLabelMission);
 }
 

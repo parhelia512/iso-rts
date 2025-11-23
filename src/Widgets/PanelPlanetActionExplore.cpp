@@ -17,7 +17,6 @@
 
 namespace
 {
-    constexpr unsigned int textColor = 0x80a2b3ff;
     constexpr int textSize = 18;
 }
 
@@ -149,7 +148,7 @@ void PanelPlanetActionExplore::CreateContentStart(int money, int energy, int mat
     const char * txt = "Send a squad of scouts to explore the territory.\n\n"
                        "This will cost you:";
     auto text = new sgui::TextArea(contW, contH, txt, fnt, false, mContentStart);
-    text->SetColor(textColor);
+    text->SetColor(WidgetsConstants::colorPanelText);
 
     // COSTS
     auto contCosts = new sgui::Widget(mContentStart);
@@ -219,7 +218,7 @@ void PanelPlanetActionExplore::CreateContentFailure()
                        "but the exploration failed.\n\n"
                        "Your squad has been destroyed by the enemy.";
     auto text = new sgui::TextArea(contW, contH, txt, fnt, false, mContentFailure);
-    text->SetColor(textColor);
+    text->SetColor(WidgetsConstants::colorPanelText);
 }
 
 void PanelPlanetActionExplore::CreateContentSuccess()
@@ -243,7 +242,7 @@ void PanelPlanetActionExplore::CreateContentSuccess()
                        "the exploration was successful!\n\n"
                        "Check out the other panels for the results.";
     auto text = new sgui::TextArea(contW, contH, txt, fnt, false, mContentSuccess);
-    text->SetColor(textColor);
+    text->SetColor(WidgetsConstants::colorPanelText);
 }
 
 void PanelPlanetActionExplore::HandlePositionChanged()
@@ -260,7 +259,7 @@ void PanelPlanetActionExplore::UpdatePositions()
 
     const int marginL = 20;
     const int marginT = 15;
-    const int marginTextT = 5;
+    const int marginTextT = 20;
 
     int x;
     int y;

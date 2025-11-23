@@ -17,7 +17,6 @@
 
 namespace
 {
-    constexpr unsigned int textColor = 0x80a2b3ff;
     constexpr int textSize = 18;
 }
 
@@ -143,7 +142,7 @@ void PanelPlanetActionConquerAI::CreateContentStart(int money, int energy, int m
     const char * txt = "Send an AI general to conquer the territory.\n\n"
                        "This will cost you:";
     auto text = new sgui::TextArea(contW, contH, txt, fnt, false, mContentStart);
-    text->SetColor(textColor);
+    text->SetColor(WidgetsConstants::colorPanelText);
 
     // COSTS
     auto contCosts = new sgui::Widget(mContentStart);
@@ -230,7 +229,7 @@ void PanelPlanetActionConquerAI::CreateContentFailure()
                        "but the conquest failed.\n\n"
                        "Your enemy has prevailed.";
     auto text = new sgui::TextArea(contW, contH, txt, fnt, false, mContentFailure);
-    text->SetColor(textColor);
+    text->SetColor(WidgetsConstants::colorPanelText);
 }
 
 void PanelPlanetActionConquerAI::CreateContentSuccess()
@@ -254,7 +253,7 @@ void PanelPlanetActionConquerAI::CreateContentSuccess()
                        "the conquest was successful!\n\n"
                        "Your resources have been replenished.";
     auto text = new sgui::TextArea(contW, contH, txt, fnt, false, mContentSuccess);
-    text->SetColor(textColor);
+    text->SetColor(WidgetsConstants::colorPanelText);
 }
 
 void PanelPlanetActionConquerAI::HandlePositionChanged()
@@ -271,7 +270,7 @@ void PanelPlanetActionConquerAI::UpdatePositions()
 
     const int marginL = 20;
     const int marginT = 15;
-    const int marginTextT = 5;
+    const int marginTextT = 20;
 
     int x;
     int y;
