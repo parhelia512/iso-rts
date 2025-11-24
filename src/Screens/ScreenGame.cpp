@@ -154,7 +154,7 @@ ScreenGame::ScreenGame(Game * game)
     mCamController->SetMapArea(pT, pR, pB, pL);
 
     // init pathfinder
-    mPathfinder->SetMap(mGameMap, mGameMap->GetNumRows(), mGameMap->GetNumCols());
+    mPathfinder->SetMap(mGameMap);
 
     // -- PLAYERS --
     for(int i = 0; i < GetGame()->GetNumPlayers(); ++i)
