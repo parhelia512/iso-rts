@@ -314,6 +314,7 @@ void ScreenMainMenu::CreateChangelog()
                          "- Custom cursor in game.\n"
                          "- You can pause and quit the tutorial.\n"
                          "- 2 new units and 1 new structure that can spawn mini units (TD mechanics).\n"
+                         "- Added SHIFT + SPACE shortcut to end turn.\n"
                          );
     textNewFeat->SetPosition(contX, contY);
     textNewFeat->SetColor(colorContent);
