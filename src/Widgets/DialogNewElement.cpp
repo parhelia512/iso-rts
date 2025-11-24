@@ -815,7 +815,7 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
         const int btnY = 55;
         int btnX = marginL;
 
-        auto btn = new ButtonPanelTab("RESOURCES", this);
+        auto btn = new ButtonPanelTab("GENERIC", this);
         btn->SetPosition(btnX, btnY);
         mButtonsStructures->AddButton(btn);
 
@@ -827,13 +827,13 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
 
         btnX += btn->GetWidth();
 
-        btn = new ButtonPanelTab("TECHNOLOGY", this);
+        btn = new ButtonPanelTab("RESOURCES", this);
         btn->SetPosition(btnX, btnY);
         mButtonsStructures->AddButton(btn);
 
         btnX += btn->GetWidth();
 
-        btn = new ButtonPanelTab("GENERIC", this);
+        btn = new ButtonPanelTab("TECHNOLOGY", this);
         btn->SetPosition(btnX, btnY);
         mButtonsStructures->AddButton(btn);
 
@@ -849,10 +849,10 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
 
             const ObjFamily categories[NUM_CAT] =
             {
-                OCAT_RESOURCES,
+                OCAT_GENERIC,
                 OCAT_DEFENSE,
+                OCAT_RESOURCES,
                 OCAT_TECHNOLOGY,
-                OCAT_GENERIC
             };
 
             ShowStructuresByFamily(categories[ind]);
