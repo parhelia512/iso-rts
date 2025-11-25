@@ -61,6 +61,13 @@
 #include <string>
 #include <vector>
 
+namespace
+{
+const char * TEXT_ENEMY_TURN = "ENEMY TURN";
+const char * TEXT_MOVING_MU = "MOVING MINI UNITS";
+const char * TEXT_PAUSE = "GAME PAUSED";
+}
+
 namespace game
 {
 
@@ -295,7 +302,7 @@ void ScreenGame::Update(float delta)
     mGameMap->Update(delta);
 
     // -- AI --
-    if(!mAiPlayers.empty())
+    if(!IsCurrentTurnLocal())
          UpdateAI(delta);
 
     // check game end
@@ -427,13 +434,13 @@ void ScreenGame::SetPause(bool paused)
 
     // handle turn control panel text
     if(paused)
-        mHUD->ShowTurnControlTextGamePaused();
+        mHUD->ShowTurnControlText(TEXT_PAUSE);
     else
     {
         if(IsCurrentTurnLocal())
             mHUD->ShowTurnControlPanel();
         else
-            mHUD->ShowTurnControlTextEnemyTurn();
+            mHUD->ShowTurnControlText(TEXT_ENEMY_TURN);
     }
 }
 
@@ -476,6 +483,11 @@ void ScreenGame::CollectMissionGoalReward(unsigned int index)
     g.SetRewardCollected();
 
     UpdateGoalCompletedIcon();
+}
+
+bool ScreenGame::CanLocalPlayerInteract() const
+{
+    return IsCurrentTurnLocal() && !mGameMap->AreMiniUnitsMoving();
 }
 
 void ScreenGame::OnApplicationQuit(sgl::core::ApplicationEvent & event)
@@ -981,7 +993,7 @@ void ScreenGame::OnMouseButtonUp(sgl::core::MouseButtonEvent & event)
         return ;
 
     // no interaction during enemy turn
-    if(!IsCurrentTurnLocal())
+    if(!CanLocalPlayerInteract())
         return ;
 
     if(event.GetButton() == sgl::core::MouseEvent::BUTTON_LEFT)
@@ -999,7 +1011,7 @@ void ScreenGame::OnMouseMotion(sgl::core::MouseMotionEvent & event)
     mCamController->HandleMouseMotion(event);
 
     // no interaction during enemy turn
-    if(!IsCurrentTurnLocal())
+    if(!CanLocalPlayerInteract())
         return ;
 
     UpdateCurrentCell();
@@ -1023,12 +1035,14 @@ void ScreenGame::OnWindowMouseLeft(sgl::graphic::WindowEvent & event)
     mCamController->HandleMouseLeftWindow();
 }
 
+void ScreenGame::OnMiniUnitsGroupsMoveFinished()
+{
+    if(IsCurrentTurnLocal())
+        mHUD->ShowTurnControlPanel();
+}
+
 void ScreenGame::UpdateAI(float delta)
 {
-    // nothing to do during local player turn
-    if(IsCurrentTurnLocal())
-        return ;
-
     // convert player playing turn to AI index
     const int turnAI = mActivePlayerIdx - 1;
 
@@ -3629,14 +3643,19 @@ void ScreenGame::EndTurn()
     // new active player is local player
     if(IsCurrentTurnLocal())
     {
-        mHUD->ShowTurnControlPanel();
+        if(mGameMap->AreMiniUnitsMoving())
+            mHUD->ShowTurnControlText(TEXT_MOVING_MU);
+        else
+        {
+            mHUD->ShowTurnControlPanel();
 
-        // reset focus to Stage
-        sgl::sgui::Stage::Instance()->SetFocus();
+            // reset focus to Stage
+            sgl::sgui::Stage::Instance()->SetFocus();
+        }
     }
     // new active player is AI
     else
-        mHUD->ShowTurnControlTextEnemyTurn();
+        mHUD->ShowTurnControlText(TEXT_ENEMY_TURN);
 }
 
 void ScreenGame::PlayLocalActionErrorSFX(const Player * player)

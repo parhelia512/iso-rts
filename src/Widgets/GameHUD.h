@@ -81,8 +81,7 @@ public:
     const PanelSelectedObject * GetPanelSelectedObject() const;
 
     void ShowTurnControlPanel();
-    void ShowTurnControlTextEnemyTurn();
-    void ShowTurnControlTextGamePaused();
+    void ShowTurnControlText(const char * text);
     const PanelTurnControl * GetPanelTurnControl() const;
 
     void ShowDialogTrading();

@@ -250,6 +250,7 @@ private:
     void ContinueMiniUnitGroupMove(const ObjectPath * lastPath);
     void ClearMiniUnitsGroupMoveCompleted();
     void ClearMiniUnitsGroupMoveFailed();
+    void ClearMovingMiniUnitsGroup();
 
 private:
     struct ObjectToAdd

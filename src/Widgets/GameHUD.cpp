@@ -627,14 +627,9 @@ void GameHUD::ShowTurnControlPanel()
     mPanelTurnCtrl->ShowPanel();
 }
 
-void GameHUD::ShowTurnControlTextEnemyTurn()
+void GameHUD::ShowTurnControlText(const char * text)
 {
-    mPanelTurnCtrl->ShowText("ENEMY TURN");
-}
-
-void GameHUD::ShowTurnControlTextGamePaused()
-{
-    mPanelTurnCtrl->ShowText("- GAME PAUSED -");
+    mPanelTurnCtrl->ShowText(text);
 }
 
 void GameHUD::ShowDialogTrading()

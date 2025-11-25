@@ -3908,7 +3908,7 @@ void GameMap::ClearMiniUnitsGroupMoveCompleted()
     auto group = mMiniUnitsGroupsToMove.back();
     group->ClearPath();
 
-    mMiniUnitsGroupsToMove.pop_back();
+    ClearMovingMiniUnitsGroup();
 }
 
 // NOTE this assumes that the current group moving is last one in the list
@@ -3930,8 +3930,16 @@ void GameMap::ClearMiniUnitsGroupMoveFailed()
     // clear path from group as there's no recovery for now
     group->ClearPath();
 
+    ClearMovingMiniUnitsGroup();
+}
+
+void GameMap::ClearMovingMiniUnitsGroup()
+{
     // clear element from list
     mMiniUnitsGroupsToMove.pop_back();
+
+    if(mMiniUnitsGroupsToMove.empty())
+        mScreenGame->OnMiniUnitsGroupsMoveFinished();
 }
 
 } // namespace game

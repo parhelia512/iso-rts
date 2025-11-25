@@ -75,6 +75,8 @@ public:
     void OnWindowMouseEntered(sgl::graphic::WindowEvent & event) override;
     void OnWindowMouseLeft(sgl::graphic::WindowEvent & event) override;
 
+    void OnMiniUnitsGroupsMoveFinished();
+
     void OnObjectDestroyed(GameObject * obj);
 
     void SetObjectActionCompleted(GameObject * obj);
@@ -102,6 +104,8 @@ public:
 
     // TURN SYSTEM
     bool IsCurrentTurnLocal() const;
+
+    bool CanLocalPlayerInteract() const;
 
 private:
     void OnApplicationQuit(sgl::core::ApplicationEvent & event) override;
