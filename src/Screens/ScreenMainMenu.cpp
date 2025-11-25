@@ -326,6 +326,7 @@ void ScreenMainMenu::CreateChangelog()
     textFix->SetText("FIXES\n"
                      "- Fixed crash when selecting object after another selected one was destroyed.\n"
                      "- Fixed crash in Settings when no video mode is found.\n"
+                     "- Fixed selecting unit with quick selection buttons while AI is playing.\n"
                      );
     textFix->SetPosition(contX, contY);
     textFix->SetColor(colorContent);

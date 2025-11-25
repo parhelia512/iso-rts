@@ -683,8 +683,7 @@ void GameHUD::SetLocalActionsEnabled(bool enabled)
     mPanelTurnCtrl->SetButtonEndTurnEnabled(enabled);
 
     // QUICK UNIT SELECTION
-    Player * player = mScreen->GetGame()->GetLocalPlayer();
-    const unsigned int numButtons = player->GetNumUnits();;
+    const unsigned int numButtons = mScreen->mLocalPlayer->GetNumUnits();
 
     for(unsigned int i = 0; i < numButtons; ++i)
         mGroupUnitSel->GetButton(i)->SetEnabled(enabled);

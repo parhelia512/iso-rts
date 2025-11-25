@@ -3647,6 +3647,7 @@ void ScreenGame::EndTurn()
             mHUD->ShowTurnControlText(TEXT_MOVING_MU);
         else
         {
+            mHUD->SetLocalActionsEnabled(true);
             mHUD->ShowTurnControlPanel();
 
             // reset focus to Stage
@@ -3655,7 +3656,10 @@ void ScreenGame::EndTurn()
     }
     // new active player is AI
     else
+    {
+        mHUD->SetLocalActionsEnabled(false);
         mHUD->ShowTurnControlText(TEXT_ENEMY_TURN);
+    }
 }
 
 void ScreenGame::PlayLocalActionErrorSFX(const Player * player)
