@@ -2653,7 +2653,7 @@ void GameMap::OnNewTurn(PlayerFaction faction)
 
     // select groups of mini units to move
     DeleteEmptyMiniUnitsGroups();
-    SelectMiniUnitsGroupsToMove(faction);
+    InitMiniUnitsGroupsToMove(faction);
 }
 
 int GameMap::GetFactionMoneyPerTurn(PlayerFaction faction)
@@ -3757,7 +3757,7 @@ void GameMap::DeleteEmptyMiniUnitsGroups()
     }
 }
 
-void GameMap::SelectMiniUnitsGroupsToMove(PlayerFaction faction)
+void GameMap::InitMiniUnitsGroupsToMove(PlayerFaction faction)
 {
     // populate list of groups to move
     for(auto g : mMiniUnitsGroups)
@@ -3766,15 +3766,24 @@ void GameMap::SelectMiniUnitsGroupsToMove(PlayerFaction faction)
             mMiniUnitsGroupsToMove.emplace_back(g);
     }
 
-    // init the first one to move, if any
+    // start to move
     if(!mMiniUnitsGroupsToMove.empty())
+        SetNextMiniUnitsGroupToMove();
+}
+
+void GameMap::SetNextMiniUnitsGroupToMove()
+{
+    while(!mMiniUnitsGroupsToMove.empty())
     {
-        if(!InitMiniUnitGroupMove())
+        if(StartMiniUnitGroupMove())
+            return ;
+        // init failed -> clear group from the list and try next
+        else
             ClearMiniUnitsGroupMoveFailed();
     }
 }
 
-bool GameMap::InitMiniUnitGroupMove()
+bool GameMap::StartMiniUnitGroupMove()
 {
     auto group = mMiniUnitsGroupsToMove.back();
 
@@ -3923,18 +3932,6 @@ void GameMap::ClearMiniUnitsGroupMoveFailed()
 
     // clear element from list
     mMiniUnitsGroupsToMove.pop_back();
-}
-
-void GameMap::SetNextMiniUnitsGroupToMove()
-{
-    while(!mMiniUnitsGroupsToMove.empty())
-    {
-        if(InitMiniUnitGroupMove())
-            return ;
-        // init failed -> clear group from the list and try next
-        else
-            ClearMiniUnitsGroupMoveFailed();
-    }
 }
 
 } // namespace game

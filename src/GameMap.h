@@ -244,12 +244,12 @@ private:
 
     // mini units
     void DeleteEmptyMiniUnitsGroups();
-    void SelectMiniUnitsGroupsToMove(PlayerFaction faction);
-    bool InitMiniUnitGroupMove();
+    void InitMiniUnitsGroupsToMove(PlayerFaction faction);
+    void SetNextMiniUnitsGroupToMove();
+    bool StartMiniUnitGroupMove();
     void ContinueMiniUnitGroupMove(const ObjectPath * lastPath);
     void ClearMiniUnitsGroupMoveCompleted();
     void ClearMiniUnitsGroupMoveFailed();
-    void SetNextMiniUnitsGroupToMove();
 
 private:
     struct ObjectToAdd
