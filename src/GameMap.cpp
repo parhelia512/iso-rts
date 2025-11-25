@@ -43,6 +43,7 @@
 #include "Screens/ScreenGame.h"
 #include "Widgets/MiniMap.h"
 
+#include <sgl/ai/Pathfinder.h>
 #include <sgl/media/AudioManager.h>
 #include <sgl/media/AudioPlayer.h>
 
@@ -76,10 +77,15 @@ GameMap::GameMap(Game * game, ScreenGame * sg, IsoMap * isoMap)
     mCasualties[FACTION_2] = 0;
     mCasualties[FACTION_3] = 0;
     mCasualties[NO_FACTION] = 0;
+
+    // PATHFINDER
+    mPathfinder = new sgl::ai::Pathfinder;
 }
 
 GameMap::~GameMap()
 {
+    delete mPathfinder;
+
     delete mControlMap;
 
     for(GameObject * obj : mObjects)
@@ -220,6 +226,9 @@ void GameMap::SetSize(unsigned int rows, unsigned int cols)
 
     // init control map
     mControlMap->SetSize(rows, cols);
+
+    // finish init of pathfinder
+    mPathfinder->SetMap(this);
 }
 
 void GameMap::CreateCollectableGenerator(unsigned int r, unsigned int c, ResourceType type)
@@ -1901,7 +1910,9 @@ bool GameMap::MoveUnit(ObjectPath * path)
     const bool started = path->Start();
 
     if(started)
-        mPaths.emplace_back(path);
+        mPathsToAdd.emplace_back(path);
+    else
+        delete path;
 
     return started;
 }
@@ -2640,8 +2651,9 @@ void GameMap::OnNewTurn(PlayerFaction faction)
     for(CollectableGenerator * cg : mCollGen)
         cg->OnNewTurn();
 
-    // update groups
-    UpdateMiniUnitsGroups(faction);
+    // select groups of mini units to move
+    DeleteEmptyMiniUnitsGroups();
+    SelectMiniUnitsGroupsToMove(faction);
 }
 
 int GameMap::GetFactionMoneyPerTurn(PlayerFaction faction)
@@ -3456,6 +3468,11 @@ void GameMap::DestroyObjectPaths(GameObject * obj)
 
 void GameMap::UpdateObjectPaths(float delta)
 {
+    // merge object actions to do with object actions list
+    mPaths.insert(mPaths.end(), mPathsToAdd.begin(), mPathsToAdd.end());
+    mPathsToAdd.clear();
+
+    // now process all paths
     auto itPath = mPaths.begin();
 
     while(itPath != mPaths.end())
@@ -3464,16 +3481,12 @@ void GameMap::UpdateObjectPaths(float delta)
 
         path->Update(delta);
 
-        const ObjectPath::PathState state = path->GetState();
+        if(path->IsTerminated())
+        {
+            // AUTO MOVING MINI UNITS -> continue if possible
+            if(path->GetObject()->GetObjectCategory() == GameObject::CAT_MINI_UNIT)
+                ContinueMiniUnitGroupMove(path);
 
-        if(state == ObjectPath::PathState::COMPLETED || state == ObjectPath::PathState::ABORTED)
-        {
-            delete path;
-            itPath = mPaths.erase(itPath);
-        }
-        else if(state == ObjectPath::PathState::FAILED)
-        {
-            // TODO try to recover from failed path
             delete path;
             itPath = mPaths.erase(itPath);
         }
@@ -3724,7 +3737,7 @@ const ObjectData & GameMap::GetObjectData(GameObjectTypeId t) const
     return objReg->GetObjectData(t);
 }
 
-void GameMap::UpdateMiniUnitsGroups(PlayerFaction faction)
+void GameMap::DeleteEmptyMiniUnitsGroups()
 {
     auto it = mMiniUnitsGroups.begin();
 
@@ -3732,27 +3745,195 @@ void GameMap::UpdateMiniUnitsGroups(PlayerFaction faction)
     {
         auto group = *it;
 
-        // not right faction -> skip
-        if(group->GetFaction() != faction)
-        {
-            ++it;
-            continue;
-        }
-
         // empty group -> destroy
         if(group->IsEmpty())
         {
             delete group;
 
             it = mMiniUnitsGroups.erase(it);
+        }
+        else
+            ++it;
+    }
+}
 
-            continue;
+void GameMap::SelectMiniUnitsGroupsToMove(PlayerFaction faction)
+{
+    // populate list of groups to move
+    for(auto g : mMiniUnitsGroups)
+    {
+        if(g->GetFaction() == faction && g->HasPathSet())
+            mMiniUnitsGroupsToMove.emplace_back(g);
+    }
+
+    // init the first one to move, if any
+    if(!mMiniUnitsGroupsToMove.empty())
+    {
+        if(!InitMiniUnitGroupMove())
+            ClearMiniUnitsGroupMoveFailed();
+    }
+}
+
+bool GameMap::InitMiniUnitGroupMove()
+{
+    auto group = mMiniUnitsGroupsToMove.back();
+
+    const Cell2D & target = group->GetPathTarget();
+
+    // find shortest path to destination checking all MiniUnits in group
+    std::vector<unsigned int> path;
+    GameObject * obj = nullptr;
+
+    group->DoForAll([this, target, &obj, &path](GameObject * o)
+    {
+        // mark unit to be moved
+        o->SetActiveAction(MOVE);
+
+        const Cell2D start(o->GetRow0(), o->GetCol0());
+        const auto po = sgl::ai::Pathfinder::INCLUDE_START;
+        const auto p = mPathfinder->MakePath(start.row, start.col, target.row, target.col, po);
+
+        if(path.empty() || (!p.empty() && p.size() < path.size()))
+        {
+            obj = o;
+            path = std::move(p);
+        }
+    });
+
+    // can't find a valid path to target -> cancel it
+    if(path.empty())
+        return false;
+
+    // path found -> start the move of the leader (first) mini unit
+    obj->SetCurrentAction(MOVE);
+
+    auto op = new ObjectPath(obj, mIsoMap, this, mScreenGame);
+    op->SetPath(path);
+
+    return MoveUnit(op);
+}
+
+void GameMap::ContinueMiniUnitGroupMove(const ObjectPath * lastPath)
+{
+    const unsigned int lastStep = lastPath->GetLastStepDone();
+
+    // previous mini unit didn't move at all
+    if(0 == lastStep)
+    {
+        ClearMiniUnitsGroupMoveFailed();
+        SetNextMiniUnitsGroupToMove();
+
+        return ;
+    }
+
+    // reset action of moved unit
+    auto lastMoved = lastPath->GetObject();
+    lastMoved->SetActiveAction(IDLE);
+    lastMoved->SetCurrentAction(IDLE);
+
+    // set new target for next unit as step before previous unit's target
+    const std::vector<unsigned int> & pathIndexes = lastPath->GetPath();
+    const unsigned int targetInd = pathIndexes[lastStep - 1];
+    const Cell2D target(targetInd / mCols, targetInd % mCols);
+
+    // find shortest path to destination checking all MiniUnits in group
+    auto group = mMiniUnitsGroupsToMove.back();
+
+    std::vector<unsigned int> path;
+    GameObject * obj = nullptr;
+    int moved = 0;
+
+    group->DoForAll([this, target, &obj, &path, &moved](GameObject * o)
+    {
+        // already moved
+        if(o->GetActiveAction() != MOVE)
+        {
+            ++moved;
+            return ;
         }
 
-        // update
-        // TODO
+        const Cell2D start(o->GetRow0(), o->GetCol0());
+        const auto po = sgl::ai::Pathfinder::INCLUDE_START;
+        const auto p = mPathfinder->MakePath(start.row, start.col, target.row, target.col, po);
 
-        ++it;
+        if(path.empty() || (!p.empty() && p.size() < path.size()))
+        {
+            obj = o;
+            path = std::move(p);
+        }
+    });
+
+    // moved all mini units of group
+    if(moved == group->GetNumObjects())
+    {
+        ClearMiniUnitsGroupMoveCompleted();
+        SetNextMiniUnitsGroupToMove();
+
+        return ;
+    }
+
+    // can't find a valid path to target -> cancel it
+    if(path.empty())
+    {
+        ClearMiniUnitsGroupMoveFailed();
+        SetNextMiniUnitsGroupToMove();
+
+        return ;
+    }
+
+    // path found -> start the move of the leader (first) mini unit
+    obj->SetCurrentAction(MOVE);
+
+    auto op = new ObjectPath(obj, mIsoMap, this, mScreenGame);
+    op->SetPath(path);
+
+    if(!MoveUnit(op))
+    {
+        ClearMiniUnitsGroupMoveFailed();
+        SetNextMiniUnitsGroupToMove();
+    }
+}
+
+void GameMap::ClearMiniUnitsGroupMoveCompleted()
+{
+    auto group = mMiniUnitsGroupsToMove.back();
+    group->ClearPath();
+
+    mMiniUnitsGroupsToMove.pop_back();
+}
+
+// NOTE this assumes that the current group moving is last one in the list
+void GameMap::ClearMiniUnitsGroupMoveFailed()
+{
+    // list empty -> nothing to do
+    if(mMiniUnitsGroupsToMove.empty())
+        return ;
+
+    auto group = mMiniUnitsGroupsToMove.back();
+
+    // reset mini units action
+    group->DoForAll([](GameObject * o)
+    {
+        o->SetActiveAction(IDLE);
+        o->SetCurrentAction(IDLE);
+    });
+
+    // clear path from group as there's no recovery for now
+    group->ClearPath();
+
+    // clear element from list
+    mMiniUnitsGroupsToMove.pop_back();
+}
+
+void GameMap::SetNextMiniUnitsGroupToMove()
+{
+    while(!mMiniUnitsGroupsToMove.empty())
+    {
+        if(InitMiniUnitGroupMove())
+            return ;
+        // init failed -> clear group from the list and try next
+        else
+            ClearMiniUnitsGroupMoveFailed();
     }
 }
 

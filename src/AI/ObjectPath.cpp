@@ -206,8 +206,9 @@ bool ObjectPath::Fail()
     {
         mState = FAILED;
 
-        // clear action data once the action is completed
-        mScreen->SetObjectActionFailed(mObj);
+        // clear action data once the action is completed - only for units
+        if(mObj->GetObjectCategory() == GameObject::CAT_UNIT)
+            mScreen->SetObjectActionFailed(mObj);
     }
     else
         mState = FAILED;
@@ -221,8 +222,9 @@ bool ObjectPath::Finish()
     {
         mState = COMPLETED;
 
-        // clear action data once the action is completed
-        mScreen->SetObjectActionCompleted(mObj);
+        // clear action data once the action is completed - only for units
+        if(mObj->GetObjectCategory() == GameObject::CAT_UNIT)
+            mScreen->SetObjectActionCompleted(mObj);
     }
     else
         mState = COMPLETED;

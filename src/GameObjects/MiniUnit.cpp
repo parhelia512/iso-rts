@@ -15,6 +15,15 @@ MiniUnit::MiniUnit(const ObjectData & data, int elements)
     , mAttributes(data.GetAttributes())
     , mElements(elements)
 {
+    // SET CONCRETE ATTRIBUTES
+    const float maxStatVal = 10.f;
+
+    // set actual speed
+    const float maxSpeed = 10.f;
+    const float speed = maxSpeed * static_cast<float>(mAttributes[OBJ_ATT_SPEED]) / maxStatVal;
+    SetSpeed(speed);
+
+    // INIT GRAPHICS
     SetImage();
 }
 

@@ -10,6 +10,11 @@
 #include <unordered_set>
 #include <vector>
 
+namespace sgl
+{
+    namespace ai { class Pathfinder; }
+}
+
 namespace game
 {
 
@@ -142,13 +147,15 @@ public:
     void StartCreateUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & dest, Player * player);
     void CreateUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & dest, Player * player);
 
-    // create mini units
+    // mini units
     bool CanCreateMiniUnit(GameObjectTypeId ut, GameObject * gen, int elements, Player * player);
     GameObject * CreateMiniUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & dest,
                                 int elements, Player * player);
     Cell2D GetNewMiniUnitDestination(const Cell2D & genCell) const;
 
     MiniUnitsGroup * CreateMiniUnitsGroup(PlayerFaction faction);
+
+    bool AreMiniUnitsMoving() const;
 
     // damage
     void DamageArea(const Cell2D & srcBR, const Cell2D & srcTL, int radius, float maxDamage);
@@ -174,8 +181,8 @@ public:
     bool MoveObjectDown(GameObject * obj);
     bool MoveObjectUp(GameObject * obj);
 
-    unsigned int GetNumRows() const;
-    unsigned int GetNumCols() const;
+    unsigned int GetNumRows() const override;
+    unsigned int GetNumCols() const override;
 
     int ApproxDistance(const Cell2D & c1, const Cell2D & c2) const;
     int ApproxDistance(const GameObject * obj1, const GameObject * obj2) const;
@@ -235,8 +242,14 @@ private:
 
     const ObjectData & GetObjectData(GameObjectTypeId t) const;
 
-    // new turn methods
-    void UpdateMiniUnitsGroups(PlayerFaction faction);
+    // mini units
+    void DeleteEmptyMiniUnitsGroups();
+    void SelectMiniUnitsGroupsToMove(PlayerFaction faction);
+    bool InitMiniUnitGroupMove();
+    void ContinueMiniUnitGroupMove(const ObjectPath * lastPath);
+    void ClearMiniUnitsGroupMoveCompleted();
+    void ClearMiniUnitsGroupMoveFailed();
+    void SetNextMiniUnitsGroupToMove();
 
 private:
     struct ObjectToAdd
@@ -261,9 +274,14 @@ private:
     std::unordered_set<const GameObject *> mObjectsSet;
     std::vector<CollectableGenerator *> mCollGen;
     std::vector<ObjectPath *> mPaths;
+    std::vector<ObjectPath *> mPathsToAdd;
     std::vector<ConquerPath *> mConquerPaths;
     std::vector<WallBuildPath *> mWallBuildPaths;
+
     std::vector<MiniUnitsGroup *> mMiniUnitsGroups;
+    std::vector<MiniUnitsGroup *> mMiniUnitsGroupsToMove;
+
+    sgl::ai::Pathfinder * mPathfinder = nullptr;
 
     ControlMap * mControlMap = nullptr;
 
@@ -384,6 +402,8 @@ inline void GameMap::RegisterEnemyKill(PlayerFaction killer) { ++mEnemiesKilled[
 inline void GameMap::RegisterCasualty(PlayerFaction killed) { ++mCasualties[killed]; }
 inline unsigned int GameMap::GetEnemiesKilled(PlayerFaction killer) const { return mEnemiesKilled.at(killer); }
 inline unsigned int GameMap::GetCasualties(PlayerFaction faction) const { return mCasualties.at(faction); }
+
+inline bool GameMap::AreMiniUnitsMoving() const { return !mMiniUnitsGroupsToMove.empty(); }
 
 /**
  * @brief Gets a GameMapCell object from the map. No boundaries check is done.

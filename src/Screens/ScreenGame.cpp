@@ -2163,7 +2163,7 @@ bool ScreenGame::SetupUnitMove(Unit * unit, const Cell2D & start, const Cell2D &
     }
 
     auto op = new ObjectPath(unit, mIsoMap, mGameMap, this);
-    op->SetPathCells(path);
+    op->SetPath(path);
 
     if(mGameMap->MoveUnit(op))
     {
@@ -2592,7 +2592,7 @@ void ScreenGame::HandleUnitBuildWallOnMouseUp(Unit * unit, const Cell2D & clickC
                 }
 
                 auto op = new ObjectPath(unit, mIsoMap, mGameMap, this);
-                op->SetPathCells(pathMov);
+                op->SetPath(pathMov);
 
                 const bool res = mGameMap->MoveUnit(op);
 
@@ -3344,7 +3344,7 @@ void ScreenGame::ShowMoveIndicator(GameObject * obj, const Cell2D & dest)
                                                 sgl::ai::Pathfinder::ALL_OPTIONS);
 
         ObjectPath op(obj, mIsoMap, mGameMap, this);
-        op.SetPathCells(path);
+        op.SetPath(path);
 
         mMoveInd->SetCost(op.GetPathCost());
     }

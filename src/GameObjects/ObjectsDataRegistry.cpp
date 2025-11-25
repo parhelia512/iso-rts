@@ -88,7 +88,7 @@ void ObjectsDataRegistry::InitObjectData()
     mData.emplace(GameObject::TYPE_MINI_UNIT1,
                   ObjectData({ {OBJ_ATT_ENERGY, 4}, {OBJ_ATT_VIEW_RANGE, 5}, {OBJ_ATT_FIRE_POWER, 3},
                                {OBJ_ATT_FIRE_ACCURACY, 4}, {OBJ_ATT_FIRE_RANGE, 3}, {OBJ_ATT_REGENERATION, 3},
-                               {OBJ_ATT_RESISTANCE, 3}, {OBJ_ATT_SHIELD, 2},  {OBJ_ATT_SPEED, 5} },
+                               {OBJ_ATT_RESISTANCE, 3}, {OBJ_ATT_SHIELD, 2},  {OBJ_ATT_SPEED, 8} },
                              { 20, 20, 0, 0 },
                              { SID_MUNIT_01_5X_F1, SID_MUNIT_01_5X_F2, SID_MUNIT_01_5X_F3 }, SpriteFileMiniUnits,
                              GameObject::TYPE_MINI_UNIT1, OCMU_SOLDIER, OCAT_MINI_UNIT, 1, 1));
