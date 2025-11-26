@@ -1038,7 +1038,10 @@ void ScreenGame::OnWindowMouseLeft(sgl::graphic::WindowEvent & event)
 void ScreenGame::OnMiniUnitsGroupsMoveFinished()
 {
     if(IsCurrentTurnLocal())
+    {
         mHUD->ShowTurnControlPanel();
+        mHUD->SetLocalActionsEnabled(true);
+    }
 }
 
 void ScreenGame::UpdateAI(float delta)
