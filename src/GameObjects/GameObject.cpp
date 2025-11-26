@@ -450,7 +450,8 @@ bool GameObject::HasEnergyForActionStep(GameObjectActionType action) const
     {
         const float cost = GetActionEnergyCost(action);
 
-        if(mOwner != nullptr)
+        // do not consider turn energy for mini units
+        if(mOwner != nullptr && mCategory != CAT_MINI_UNIT)
             return GetEnergy() >= cost && mOwner->GetTurnEnergy() >= cost;
         else
             return GetEnergy() >= cost;
@@ -468,7 +469,8 @@ void GameObject::ActionStepCompleted(GameObjectActionType action)
 
         SumEnergy(costEnergy);
 
-        if(mOwner)
+        // do not consider turn energy for mini units
+        if(mOwner != nullptr && mCategory != CAT_MINI_UNIT)
             mOwner->SumTurnEnergy(costEnergy);
 
         // EXPERIENCE
