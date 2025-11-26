@@ -40,6 +40,8 @@ public:
                                     ID_TURN_CONTROL_BUTTON_NORMAL
                                  }, SpriteFilePanelTurnControl, parent)
     {
+        using namespace sgl;
+
         // tooltip
         const int ttDelay = 500;
         auto tt = new GameSimpleTooltip("End your turn");
@@ -47,7 +49,7 @@ public:
         SetTooltipDelay(ttDelay);
 
         // shortcut
-        SetShortcutKey(sgl::core::KeyboardEvent::KEY_BACKSPACE);
+        SetShortcutKey(core::KeyboardEvent::KEY_SPACE, core::KeyboardEvent::MOD_SHIFT);
     }
 
     void HandleMouseOver() override

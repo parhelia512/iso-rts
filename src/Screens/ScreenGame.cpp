@@ -924,8 +924,6 @@ void ScreenGame::OnKeyUp(sgl::core::KeyboardEvent & event)
 
     if(key == KeyboardEvent::KEY_ESCAPE)
         mHUD->ShowDialogExit();
-    if(key == KeyboardEvent::KEY_SPACE && event.IsModShiftDown())
-        EndTurn();
     // SHIFT + B -> center camera on own base
     else if(key == KeyboardEvent::KEY_B)
     {
