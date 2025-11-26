@@ -261,7 +261,6 @@ const GameObjectVariantId GameObject::VAR_0 = 0;
 GameObject::GameObject(GameObjectTypeId type, GameObjectCategoryId cat, int rows, int cols)
     : mIsoObj(new IsoObject(rows, cols))
     , mObjId(++counter)
-    , mFaction(NO_FACTION)
     , mType(type)
     , mCategory(cat)
     , mRows(rows)
@@ -301,6 +300,20 @@ void GameObject::ClearGroup()
     mGroup->RemoveObject(this);
 
     mGroup = nullptr;
+}
+
+void GameObject::SetOwner(Player * p)
+{
+    if(p == mOwner)
+        return ;
+
+    mOwner = p;
+
+    SetDefaultColors();
+
+    OnFactionChanged();
+
+    UpdateGraphics();
 }
 
 void GameObject::OnPositionChanged() { }
@@ -346,30 +359,21 @@ int GameObject::GetCol0() const { return mCell->col; }
 int GameObject::GetRow1() const { return 1 + mCell->row - mRows; }
 int GameObject::GetCol1() const { return 1 + mCell->col - mCols; }
 
+PlayerFaction GameObject::GetFaction() const
+{
+    if(mOwner != nullptr)
+        return mOwner->GetFaction();
+    else
+        return NO_FACTION;
+}
+
 bool GameObject::IsFactionLocal() const
 {
-    if(nullptr == mScreen)
+    if(mOwner != nullptr)
+        return mOwner->IsLocal();
+    else
         return false;
-
-    Player * p = mScreen->GetGame()->GetPlayerByFaction(mFaction);
-
-    return p != nullptr && p->IsLocal();
 }
-
-void GameObject::SetFaction(PlayerFaction f)
-{
-    if(f == mFaction)
-        return ;
-
-    mFaction = f;
-
-    SetDefaultColors();
-
-    OnFactionChanged();
-
-    UpdateGraphics();
-}
-
 
 void GameObject::SetObjectVariant(GameObjectVariantId var)
 {
@@ -446,12 +450,8 @@ bool GameObject::HasEnergyForActionStep(GameObjectActionType action) const
     {
         const float cost = GetActionEnergyCost(action);
 
-        if(mFaction != NO_FACTION)
-        {
-            Player * p = mScreen->GetGame()->GetPlayerByFaction(mFaction);
-
-            return GetEnergy() >= cost && p->GetTurnEnergy() >= cost;
-        }
+        if(mOwner != nullptr)
+            return GetEnergy() >= cost && mOwner->GetTurnEnergy() >= cost;
         else
             return GetEnergy() >= cost;
     }
@@ -468,11 +468,8 @@ void GameObject::ActionStepCompleted(GameObjectActionType action)
 
         SumEnergy(costEnergy);
 
-        if(mFaction != NO_FACTION)
-        {
-            Player * p = mScreen->GetGame()->GetPlayerByFaction(mFaction);
-            p->SumTurnEnergy(costEnergy);
-        }
+        if(mOwner)
+            mOwner->SumTurnEnergy(costEnergy);
 
         // EXPERIENCE
         SumExperience(GetActionExperienceGain(action));
@@ -565,10 +562,12 @@ void GameObject::Hit(float damage, PlayerFaction attacker)
 
         // record stats for players
         // NOTE register kills only when destroying enemies
-        if(mFaction != NO_FACTION)
+        if(mOwner != nullptr)
+        {
             mGameMap->RegisterEnemyKill(attacker);
 
-        mGameMap->RegisterCasualty(mFaction);
+            mGameMap->RegisterCasualty(GetFaction());
+        }
     }
 
     float ang1 = ang0 + angInc;
@@ -650,7 +649,7 @@ void GameObject::SetActiveActionToDefault() { mActiveAction = IDLE; }
 
 void GameObject::OnNewTurn(PlayerFaction faction)
 {
-    if(mFaction == faction)
+    if(GetFaction() == faction)
         RestoreTurnEnergy();
 }
 
@@ -729,7 +728,7 @@ void GameObject::SetDefaultColors()
     mObjColors.clear();
 
     // assign new colors based on faction
-    switch(mFaction)
+    switch(GetFaction())
     {
         case FACTION_1:
             mObjColors.push_back(0xd9938cff);

@@ -121,6 +121,7 @@ public:
 
     void SetGameMap(GameMap * map);
     void SetScreen(ScreenGame * screen);
+    void SetOwner(Player * p);
 
     unsigned int GetObjectId() const;
 
@@ -165,7 +166,6 @@ public:
 
     PlayerFaction GetFaction() const;
     bool IsFactionLocal() const;
-    void SetFaction(PlayerFaction f);
 
     GameObjectTypeId GetObjectType() const;
     std::string GetObjectTypeStr() const;
@@ -306,10 +306,10 @@ private:
 
     GameMap * mGameMap = nullptr;
     ScreenGame * mScreen = nullptr;
+    Player * mOwner = nullptr;
 
     const GameMapCell * mCell = nullptr;
 
-    PlayerFaction mFaction;
     GameObjectTypeId mType = TYPE_NULL;
     GameObjectCategoryId mCategory = CAT_NULL;
 
@@ -383,8 +383,6 @@ inline bool GameObject::IsDestroyed() const
 inline const GameMapCell * GameObject::GetCell() const { return mCell; }
 
 inline int GameObject::GetVisibilityLevel() const { return mVisLevel; }
-
-inline PlayerFaction GameObject::GetFaction() const { return mFaction; }
 
 inline GameObjectTypeId GameObject::GetObjectType() const { return mType; }
 

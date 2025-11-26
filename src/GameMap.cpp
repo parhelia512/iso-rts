@@ -546,7 +546,7 @@ GameObject * GameMap::CreateObject(unsigned int layerId, GameObjectTypeId type,
     o2a.obj->SetScreen(mScreenGame);
 
     // assign owner
-    o2a.obj->SetFaction(faction);
+    o2a.obj->SetOwner(o2a.owner);
 
     // set object properties
     o2a.obj->SetCell(&mCells[ind0]);
@@ -1132,9 +1132,10 @@ void GameMap::ConquerStructure(const Cell2D & end, Player * player)
         }
     }
 
-    // assign owner to object
     Player * prevOwner = mGame->GetPlayerByFaction(obj->GetFaction());
-    obj->SetFaction(player->GetFaction());
+
+    // assign owner to object
+    obj->SetOwner(player);
 
     // update player
     player->SumCells(1);
@@ -1618,11 +1619,10 @@ void GameMap::CreateUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & d
     const int ind = r * mCols + c;
     GameMapCell & gcell = mCells[ind];
 
-    const PlayerFaction faction = player->GetFaction();
     const ObjectData & data = GetObjectData(ut);
 
     Unit * unit = new Unit(data);
-    unit->SetFaction(faction);
+    unit->SetOwner(player);
     unit->SetCell(&mCells[ind]);
 
     // links to other objects
@@ -1675,7 +1675,6 @@ GameObject * GameMap::CreateMiniUnit(GameObjectTypeId ut, GameObject * gen, cons
     const int ind = dest.row * mCols + dest.col;
     GameMapCell & gcell = mCells[ind];
 
-    const PlayerFaction faction = player->GetFaction();
     const ObjectData & data = GetObjectData(ut);
 
     // pay costs
@@ -1688,7 +1687,7 @@ GameObject * GameMap::CreateMiniUnit(GameObjectTypeId ut, GameObject * gen, cons
 
     // create object
     auto mu = new MiniUnit(data, elements);
-    mu->SetFaction(faction);
+    mu->SetOwner(player);
     mu->SetCell(&mCells[ind]);
 
     // links to other objects
