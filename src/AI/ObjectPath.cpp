@@ -26,9 +26,7 @@ ObjectPath::ObjectPath(GameObject * obj, IsoMap * im, GameMap * gm, ScreenGame *
 bool ObjectPath::InitNextMove()
 {
     // not enough energy -> FAIL
-    // TODO remove type check if mObj is changed into mUnit like for other paths
-    if(mObj->GetObjectCategory() == GameObject::CAT_UNIT &&
-       !static_cast<Unit *>(mObj)->HasEnergyForActionStep(MOVE))
+    if(!mObj->HasEnergyForActionStep(MOVE))
         return Fail();
 
     // check if next destination is walkable
@@ -177,9 +175,8 @@ void ObjectPath::Update(float delta)
         mGameMap->AddPlayerObjVisibility(mObj, player);
         mGameMap->ApplyVisibility(player);
 
-        // TODO remove check if mObj is changed into mUnit like for other paths
-        if(mObj->GetObjectCategory() == GameObject::CAT_UNIT)
-            static_cast<Unit *>(mObj)->ActionStepCompleted(MOVE);
+        // set action step completed for energy and experience update
+        mObj->ActionStepCompleted(MOVE);
 
         // update cell counter
         ++mNextCell;

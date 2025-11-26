@@ -243,6 +243,11 @@ protected:
     GameObjectVariantId mVariant = VAR_0;
 
 private:
+    // NOTE no boundary check, assuming valid action
+    virtual float GetActionEnergyCost(GameObjectActionType action) const;
+    // NOTE no boundary check, assuming valid action
+    virtual float GetActionExperienceGain(GameObjectActionType action) const;
+
     void RestoreTurnEnergy();
 
     void SetDefaultColors();
@@ -289,9 +294,6 @@ private:
     static const std::string TYPE_STR_WALL_GATE;
 
     static const std::unordered_map<GameObjectTypeId, std::string> TYPE_STR_MAP;
-
-    static const float ACTION_COSTS[NUM_OBJ_ACTIONS];
-    static const int ACTION_EXPERIENCE[NUM_OBJ_ACTIONS];
 
 private:
     std::map<unsigned int, std::function<void()>> mOnValueChanged;
@@ -417,7 +419,7 @@ inline void GameObject::SetMaxEnergy(float val) { mMaxEnergy = val; }
 inline float GameObject::GetEnergyForActionStep(GameObjectActionType action) const
 {
     if(action < NUM_OBJ_ACTIONS)
-        return ACTION_COSTS[action];
+        return GetActionEnergyCost(action);
     else
         return 0.f;
 }

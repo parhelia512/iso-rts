@@ -31,36 +31,6 @@ const unsigned int GameObject::COLOR_VIS = 0xFFFFFFFF;
 
 unsigned int GameObject::counter = 0;
 
-const float GameObject::ACTION_COSTS[NUM_OBJ_ACTIONS] =
-{
-    0.f,        // IDLE
-    10.f,       // BUILD_UNIT
-    5.f,        // MOVE
-    10.f,       // CONQUER_CELL
-    20.f,       // CONQUER_STRUCTURE
-    2.f,        // ATTACK
-    30.f,       // BUILD_STRUCTURE
-    10.f,       // BUILD_WALL
-    5.f,        // HEAL
-    4.f,        // SPAWN
-    1.f         // TOGGLE_GATE
-};
-
-const int GameObject::ACTION_EXPERIENCE[NUM_OBJ_ACTIONS] =
-{
-    0,      // IDLE
-    10,     // BUILD_UNIT
-    1,      // MOVE
-    2,      // CONQUER_CELL
-    5,      // CONQUER_STRUCTURE
-    1,      // ATTACK
-    5,      // BUILD_STRUCTURE
-    2,      // BUILD_WALL
-    2,      // HEAL
-    5,      // SPAWN
-    1,      // TOGGLE_GATE
-};
-
 // -- OBJECT TYPE --
 const std::string GameObject::TYPE_STR_BARRACKS("BARRACKS");
 const std::string GameObject::TYPE_STR_BASE("BASE");
@@ -474,7 +444,7 @@ bool GameObject::HasEnergyForActionStep(GameObjectActionType action) const
 {
     if(action < NUM_OBJ_ACTIONS)
     {
-        const float cost = ACTION_COSTS[action];
+        const float cost = GetActionEnergyCost(action);
 
         if(mFaction != NO_FACTION)
         {
@@ -494,7 +464,7 @@ void GameObject::ActionStepCompleted(GameObjectActionType action)
     if(action < NUM_OBJ_ACTIONS)
     {
         // ENERGY
-        const float costEnergy = -ACTION_COSTS[action];
+        const float costEnergy = -GetActionEnergyCost(action);
 
         SumEnergy(costEnergy);
 
@@ -505,7 +475,7 @@ void GameObject::ActionStepCompleted(GameObjectActionType action)
         }
 
         // EXPERIENCE
-        SumExperience(ACTION_EXPERIENCE[action]);
+        SumExperience(GetActionExperienceGain(action));
     }
 }
 
@@ -693,6 +663,48 @@ void GameObject::NotifyValueChanged()
 {
     for(const auto & it : mOnValueChanged)
         it.second();
+}
+
+float GameObject::GetActionEnergyCost(GameObjectActionType action) const
+{
+    constexpr float ACTION_COSTS[NUM_OBJ_ACTIONS] =
+    {
+        0.f,        // IDLE
+        10.f,       // BUILD_UNIT
+        0.f,        // SET_TARGET
+        5.f,        // MOVE
+        10.f,       // CONQUER_CELL
+        20.f,       // CONQUER_STRUCTURE
+        2.f,        // ATTACK
+        30.f,       // BUILD_STRUCTURE
+        10.f,       // BUILD_WALL
+        5.f,        // HEAL
+        4.f,        // SPAWN
+        1.f         // TOGGLE_GATE
+    };
+
+    return ACTION_COSTS[action];
+}
+
+float GameObject::GetActionExperienceGain(GameObjectActionType action) const
+{
+    constexpr int ACTION_EXPERIENCE[NUM_OBJ_ACTIONS] =
+    {
+        0,      // IDLE
+        10,     // BUILD_UNIT
+        0,      // SET_TARGET
+        1,      // MOVE
+        2,      // CONQUER_CELL
+        5,      // CONQUER_STRUCTURE
+        1,      // ATTACK
+        5,      // BUILD_STRUCTURE
+        2,      // BUILD_WALL
+        2,      // HEAL
+        5,      // SPAWN
+        1,      // TOGGLE_GATE
+    };
+
+    return ACTION_EXPERIENCE[action];
 }
 
 void GameObject::RestoreTurnEnergy()
