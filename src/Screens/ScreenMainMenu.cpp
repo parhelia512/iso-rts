@@ -315,11 +315,23 @@ void ScreenMainMenu::CreateChangelog()
                          "- You can pause and quit the tutorial.\n"
                          "- 2 new units and 1 new structure that can spawn mini units (TD mechanics).\n"
                          "- Added SHIFT + SPACE shortcut to end turn.\n"
+                         "- Mini units move automatically at the beginning of each turn when they"
+                         " have a target set.\n"
                          );
     textNewFeat->SetPosition(contX, contY);
     textNewFeat->SetColor(colorContent);
 
     contY += textNewFeat->GetHeight() + paddingV;
+
+    // CONTENT BLOCK: CHANGES
+    auto textChange = new sgui::TextArea(contentW, minBlockH, font, true, content);
+    textChange->SetText("CHANGES\n"
+                        "- New icon for \"end turn\" button.\n"
+                        );
+    textChange->SetPosition(contX, contY);
+    textChange->SetColor(colorContent);
+
+    contY += textChange->GetHeight() + paddingV;
 
     // CONTENT BLOCK: FIXES
     auto textFix = new sgui::TextArea(contentW, minBlockH, font, true, content);
@@ -330,19 +342,6 @@ void ScreenMainMenu::CreateChangelog()
                      );
     textFix->SetPosition(contX, contY);
     textFix->SetColor(colorContent);
-
-    contY += textFix->GetHeight() + paddingV;
-
-    /*
-    // CONTENT BLOCK: CHANGES
-    auto textChange = new sgui::TextArea(contentW, minBlockH, font, true, content);
-    textChange->SetText("CHANGES\n"
-                     );
-    textChange->SetPosition(contX, contY);
-    textChange->SetColor(colorContent);
-
-    contY += textChange->GetHeight() + paddingV;
-    */
 
     // set content
     mDialogChangelog->SetContent(content);
