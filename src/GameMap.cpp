@@ -3843,6 +3843,8 @@ void GameMap::ContinueMiniUnitGroupMove(const ObjectPath * prevOP)
     prevMU->SetCurrentAction(GameObjectActionType::IDLE);
     prevMU->SetActiveAction(GameObjectActionType::IDLE);
 
+    Cell2D target;
+
     // previous MiniUnit reached group target
     if(prevMU->GetRow0() == group->GetPathTarget().row && prevMU->GetCol0() == group->GetPathTarget().col)
     {
@@ -3857,12 +3859,19 @@ void GameMap::ContinueMiniUnitGroupMove(const ObjectPath * prevOP)
 
             return ;
         }
-    }
 
-    // next target is start of previous path
-    const std::vector<unsigned int> & prevPath = group->GetPath();
-    const unsigned int targetInd = prevPath[0];
-    const Cell2D target(targetInd / mCols, targetInd % mCols);
+        // next target is new target
+        target = group->GetPathTarget();
+    }
+    // group target not reached yet
+    else
+    {
+        // next target is step before previous mini unit
+        const std::vector<unsigned int> & prevPath = prevOP->GetPath();
+        const unsigned int targetInd = prevPath[lastStep - 1];
+        target.row = targetInd / mCols;
+        target.col = targetInd % mCols;
+    }
 
     std::vector<unsigned int> path;
     GameObject * obj = nullptr;
@@ -3910,10 +3919,6 @@ void GameMap::ContinueMiniUnitGroupMove(const ObjectPath * prevOP)
 
         return ;
     }
-
-    // merge prev and new path to it
-    path.pop_back();
-    path.insert(path.end(), prevPath.begin(), prevPath.end());
 
     group->SetPath(std::move(path));
 
