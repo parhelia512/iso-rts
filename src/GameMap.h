@@ -247,8 +247,8 @@ private:
     void InitMiniUnitsGroupsToMove(PlayerFaction faction);
     void SetNextMiniUnitsGroupToMove();
     bool StartMiniUnitGroupMove();
-    void ContinueMiniUnitGroupMove(const ObjectPath * lastPath);
-    void ClearMiniUnitsGroupMoveCompleted();
+    void ContinueMiniUnitGroupMove(const ObjectPath * prevOP);
+    void ClearMiniUnitsGroupMoveCompleted(bool finished);
     void ClearMiniUnitsGroupMoveFailed();
     void ClearMovingMiniUnitsGroup();
 

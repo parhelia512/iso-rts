@@ -22,7 +22,10 @@ public:
     // PATH
     void ClearPath();
     const std::vector<unsigned int> & GetPath() const;
-    void SetPath(const std::vector<unsigned int> && path, const Cell2D & target);
+    void SetPath(const std::vector<unsigned int> && path);
+    void SetTarget(const Cell2D & target);
+
+    bool PopPathTargetBack(int mapCols);
 
     bool HasPathSet() const;
 
@@ -45,9 +48,13 @@ inline const std::vector<unsigned int> & MiniUnitsGroup::GetPath() const
     return mPath;
 }
 
-inline void MiniUnitsGroup::SetPath(const std::vector<unsigned int> && path, const Cell2D & target)
+inline void MiniUnitsGroup::SetPath(const std::vector<unsigned int> && path)
 {
     mPath = path;
+}
+
+inline void MiniUnitsGroup::SetTarget(const Cell2D & target)
+{
     mTarget = target;
 }
 

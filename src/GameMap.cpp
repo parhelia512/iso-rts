@@ -3766,8 +3766,7 @@ void GameMap::InitMiniUnitsGroupsToMove(PlayerFaction faction)
     }
 
     // start to move
-    if(!mMiniUnitsGroupsToMove.empty())
-        SetNextMiniUnitsGroupToMove();
+    SetNextMiniUnitsGroupToMove();
 }
 
 void GameMap::SetNextMiniUnitsGroupToMove()
@@ -3794,12 +3793,15 @@ bool GameMap::StartMiniUnitGroupMove()
 
     group->DoForAll([this, target, &obj, &path](GameObject * o)
     {
-        // mark unit to be moved
-        o->SetActiveAction(MOVE);
+        // skip mini units that have already reached target
+        if(!static_cast<MiniUnit *>(o)->IsMoving())
+            return ;
 
-        const Cell2D start(o->GetRow0(), o->GetCol0());
-        const auto po = sgl::ai::Pathfinder::INCLUDE_START;
-        const auto p = mPathfinder->MakePath(start.row, start.col, target.row, target.col, po);
+        // flag all mini units that need to move this turn
+        o->SetActiveAction(GameObjectActionType::MOVE);
+
+        const auto p = mPathfinder->MakePath(o->GetRow0(), o->GetCol0(), target.row, target.col,
+                                             sgl::ai::Pathfinder::INCLUDE_START);
 
         if(path.empty() || (!p.empty() && p.size() < path.size()))
         {
@@ -3813,19 +3815,19 @@ bool GameMap::StartMiniUnitGroupMove()
         return false;
 
     // path found -> start the move of the leader (first) mini unit
-    obj->SetCurrentAction(MOVE);
-
     auto op = new ObjectPath(obj, mIsoMap, this, mScreenGame);
     op->SetPath(path);
+
+    obj->SetCurrentAction(GameObjectActionType::MOVE);
 
     return MoveUnit(op);
 }
 
-void GameMap::ContinueMiniUnitGroupMove(const ObjectPath * lastPath)
+void GameMap::ContinueMiniUnitGroupMove(const ObjectPath * prevOP)
 {
-    const unsigned int lastStep = lastPath->GetLastStepDone();
+    const unsigned int lastStep = prevOP->GetLastStepDone();
 
-    // previous mini unit didn't move at all
+    // previous mini unit didn't move at all -> error
     if(0 == lastStep)
     {
         ClearMiniUnitsGroupMoveFailed();
@@ -3834,35 +3836,55 @@ void GameMap::ContinueMiniUnitGroupMove(const ObjectPath * lastPath)
         return ;
     }
 
-    // reset action of moved unit
-    auto lastMoved = lastPath->GetObject();
-    lastMoved->SetActiveAction(IDLE);
-    lastMoved->SetCurrentAction(IDLE);
-
-    // set new target for next unit as step before previous unit's target
-    const std::vector<unsigned int> & pathIndexes = lastPath->GetPath();
-    const unsigned int targetInd = pathIndexes[lastStep - 1];
-    const Cell2D target(targetInd / mCols, targetInd % mCols);
-
-    // find shortest path to destination checking all MiniUnits in group
+    auto prevMU = prevOP->GetObject();
     auto group = mMiniUnitsGroupsToMove.back();
+
+    // mark mini unit moved for this turn
+    prevMU->SetCurrentAction(GameObjectActionType::IDLE);
+    prevMU->SetActiveAction(GameObjectActionType::IDLE);
+
+    // previous MiniUnit reached group target
+    if(prevMU->GetRow0() == group->GetPathTarget().row && prevMU->GetCol0() == group->GetPathTarget().col)
+    {
+        // mark mini unit done
+        static_cast<MiniUnit *>(prevMU)->SetMoving(false);
+
+        // move group target back to path[n-1] and clear if this fails (it shouldn't)
+        if(!group->PopPathTargetBack(mCols))
+        {
+            ClearMiniUnitsGroupMoveFailed();
+            SetNextMiniUnitsGroupToMove();
+
+            return ;
+        }
+    }
+
+    // next target is start of previous path
+    const std::vector<unsigned int> & prevPath = group->GetPath();
+    const unsigned int targetInd = prevPath[0];
+    const Cell2D target(targetInd / mCols, targetInd % mCols);
 
     std::vector<unsigned int> path;
     GameObject * obj = nullptr;
+    int done = 0;
     int moved = 0;
 
-    group->DoForAll([this, target, &obj, &path, &moved](GameObject * o)
+    group->DoForAll([this, target, &obj, &path, &done, &moved](GameObject * o)
     {
-        // already moved
-        if(o->GetActiveAction() != MOVE)
+        // already moved this turn
+        if(o->GetActiveAction() == GameObjectActionType::IDLE)
         {
             ++moved;
+
+            // target reached
+            if(!static_cast<MiniUnit *>(o)->IsMoving())
+                ++done;
+
             return ;
         }
 
-        const Cell2D start(o->GetRow0(), o->GetCol0());
-        const auto po = sgl::ai::Pathfinder::INCLUDE_START;
-        const auto p = mPathfinder->MakePath(start.row, start.col, target.row, target.col, po);
+        const auto p = mPathfinder->MakePath(o->GetRow0(), o->GetCol0(), target.row, target.col,
+                                             sgl::ai::Pathfinder::INCLUDE_START);
 
         if(path.empty() || (!p.empty() && p.size() < path.size()))
         {
@@ -3871,16 +3893,16 @@ void GameMap::ContinueMiniUnitGroupMove(const ObjectPath * lastPath)
         }
     });
 
-    // moved all mini units of group
+    // moved all mini units of group for this turn
     if(moved == group->GetNumObjects())
     {
-        ClearMiniUnitsGroupMoveCompleted();
+        ClearMiniUnitsGroupMoveCompleted(done == moved);
         SetNextMiniUnitsGroupToMove();
 
         return ;
     }
 
-    // can't find a valid path to target -> cancel it
+    // can't find a valid path to target -> failed
     if(path.empty())
     {
         ClearMiniUnitsGroupMoveFailed();
@@ -3889,9 +3911,13 @@ void GameMap::ContinueMiniUnitGroupMove(const ObjectPath * lastPath)
         return ;
     }
 
-    // path found -> start the move of the leader (first) mini unit
-    obj->SetCurrentAction(MOVE);
+    // merge prev and new path to it
+    path.pop_back();
+    path.insert(path.end(), prevPath.begin(), prevPath.end());
 
+    group->SetPath(std::move(path));
+
+    // path found -> start move
     auto op = new ObjectPath(obj, mIsoMap, this, mScreenGame);
     op->SetPath(path);
 
@@ -3902,10 +3928,31 @@ void GameMap::ContinueMiniUnitGroupMove(const ObjectPath * lastPath)
     }
 }
 
-void GameMap::ClearMiniUnitsGroupMoveCompleted()
+void GameMap::ClearMiniUnitsGroupMoveCompleted(bool finished)
 {
     auto group = mMiniUnitsGroupsToMove.back();
-    group->ClearPath();
+
+    // finished completely -> clear group path
+    if(finished)
+        group->ClearPath();
+    // all moved for this turn, but not all reached target yet -> update group path
+    else
+    {
+        std::vector<unsigned int> path;
+        const Cell2D & target = group->GetPathTarget();
+
+        group->DoForAll([this, target, &path](GameObject * o)
+        {
+            const auto p = mPathfinder->MakePath(o->GetRow0(), o->GetCol0(), target.row, target.col,
+                                                 sgl::ai::Pathfinder::NO_OPTION);
+
+            if(path.empty() || (!p.empty() && p.size() < path.size()))
+                path = std::move(p);
+        });
+
+        if(!path.empty())
+            group->SetPath(std::move(path));
+    }
 
     ClearMovingMiniUnitsGroup();
 }
@@ -3919,15 +3966,15 @@ void GameMap::ClearMiniUnitsGroupMoveFailed()
 
     auto group = mMiniUnitsGroupsToMove.back();
 
+    group->ClearPath();
+
     // reset mini units action
     group->DoForAll([](GameObject * o)
     {
-        o->SetActiveAction(IDLE);
-        o->SetCurrentAction(IDLE);
+        static_cast<MiniUnit *>(o)->SetMoving(false);
+        o->SetActiveAction(GameObjectActionType::IDLE);
+        o->SetCurrentAction(GameObjectActionType::IDLE);
     });
-
-    // clear path from group as there's no recovery for now
-    group->ClearPath();
 
     ClearMovingMiniUnitsGroup();
 }

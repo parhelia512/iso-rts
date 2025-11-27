@@ -17,6 +17,7 @@
 #include "GameObjects/Base.h"
 #include "GameObjects/DefensiveTower.h"
 #include "GameObjects/Hospital.h"
+#include "GameObjects/MiniUnit.h"
 #include "GameObjects/MiniUnitsGroup.h"
 #include "GameObjects/ObjectsDataRegistry.h"
 #include "GameObjects/Temple.h"
@@ -2691,11 +2692,13 @@ void ScreenGame::HandleMiniUnitSetTargetOnMouseUp(GameObject * obj, const Cell2D
         o->SetActiveAction(GameObjectActionType::MOVE);
         o->SetCurrentAction(GameObjectActionType::IDLE);
 
+        static_cast<MiniUnit *>(o)->SetMoving(true);
+
         // find path to target
         const Cell2D start(o->GetRow0(), o->GetCol0());
 
-        const auto po = ai::Pathfinder::NO_OPTION;
-        const auto p = mPathfinder->MakePath(start.row, start.col, clickCell.row, clickCell.col, po);
+        const auto p = mPathfinder->MakePath(start.row, start.col, clickCell.row, clickCell.col,
+                                             ai::Pathfinder::NO_OPTION);
 
         if(path.empty() || (!p.empty() && p.size() < path.size()))
             path = std::move(p);
@@ -2705,9 +2708,10 @@ void ScreenGame::HandleMiniUnitSetTargetOnMouseUp(GameObject * obj, const Cell2D
     if(path.empty())
     {
         // reset active action
-        group->DoForAll([](GameObject * obj)
+        group->DoForAll([](GameObject * o)
         {
-            obj->SetActiveAction(GameObjectActionType::IDLE);
+            static_cast<MiniUnit *>(o)->SetMoving(false);
+            o->SetActiveAction(GameObjectActionType::IDLE);
         });
 
         PlayLocalActionErrorSFX(player);
@@ -2717,13 +2721,8 @@ void ScreenGame::HandleMiniUnitSetTargetOnMouseUp(GameObject * obj, const Cell2D
 
     mPathOverlay->SetPath(path, obj->GetFaction());
 
-    group->SetPath(std::move(path), clickCell);
-
-    // reset active action
-    group->DoForAll([](GameObject * o)
-    {
-        o->SetActiveActionToDefault();
-    });
+    group->SetPath(std::move(path));
+    group->SetTarget(clickCell);
 }
 
 void ScreenGame::HandleSelectionClick(sgl::core::MouseButtonEvent & event)
