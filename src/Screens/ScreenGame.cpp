@@ -802,22 +802,7 @@ void ScreenGame::CreateUI()
 
         // special case MiniUnits
         if(selObj->GetObjectCategory() == GameObject::CAT_MINI_UNIT)
-        {
-            auto group = static_cast<MiniUnitsGroup *>(selObj->GetGroup());
-
-            if(group->HasPathSet())
-            {
-                mPathOverlay->ClearPath();
-
-                group->ClearPath();
-            }
-
-            group->DoForAll([](GameObject * obj)
-            {
-                obj->SetCurrentAction(GameObjectActionType::IDLE);
-                obj->SetActiveActionToDefault();
-            });
-        }
+            CancelMiniUnitsGroupPath(selObj->GetGroup());
 
         if(action == CONQUER_CELL || action == BUILD_WALL)
         {
@@ -1614,6 +1599,24 @@ void ScreenGame::FinalizeObjectAction(const GameObjectAction & action, bool succ
 
     // execute done callback
     action.onDone(successful);
+}
+
+void ScreenGame::CancelMiniUnitsGroupPath(GameObjectsGroup * group)
+{
+    auto muGroup = dynamic_cast<MiniUnitsGroup *>(group);
+
+    if(nullptr == muGroup)
+        return ;
+
+    mPathOverlay->ClearPath();
+
+    muGroup->ClearPath();
+
+    muGroup->DoForAll([](GameObject * obj)
+    {
+        obj->SetActiveAction(GameObjectActionType::IDLE);
+        obj->SetCurrentAction(GameObjectActionType::IDLE);
+    });
 }
 
 void ScreenGame::UpdateGameEnd()
@@ -2684,6 +2687,11 @@ void ScreenGame::HandleMiniUnitSetTargetOnMouseUp(GameObject * obj, const Cell2D
 
     group->DoForAll([this, clickCell, &path](GameObject * o)
     {
+        // init action states
+        o->SetActiveAction(GameObjectActionType::MOVE);
+        o->SetCurrentAction(GameObjectActionType::IDLE);
+
+        // find path to target
         const Cell2D start(o->GetRow0(), o->GetCol0());
 
         const auto po = ai::Pathfinder::NO_OPTION;
@@ -2693,9 +2701,17 @@ void ScreenGame::HandleMiniUnitSetTargetOnMouseUp(GameObject * obj, const Cell2D
             path = std::move(p);
     });
 
+    // can't find a valid path
     if(path.empty())
     {
+        // reset active action
+        group->DoForAll([](GameObject * obj)
+        {
+            obj->SetActiveAction(GameObjectActionType::IDLE);
+        });
+
         PlayLocalActionErrorSFX(player);
+
         return ;
     }
 

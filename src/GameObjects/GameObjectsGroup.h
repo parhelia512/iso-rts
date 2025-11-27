@@ -11,6 +11,8 @@ class GameObject;
 class GameObjectsGroup
 {
 public:
+    virtual ~GameObjectsGroup() = default;
+
     // basic objects handling
     void AddObject(GameObject * o);
     void RemoveObject(GameObject * o);

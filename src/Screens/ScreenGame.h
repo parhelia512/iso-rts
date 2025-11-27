@@ -128,6 +128,8 @@ private:
     void SetObjectActionDone(GameObject * obj, bool successful);
     void FinalizeObjectAction(const GameObjectAction & action, bool successful);
 
+    void CancelMiniUnitsGroupPath(GameObjectsGroup * group);
+
     void UpdateGameEnd();
     bool CheckIfGoalCompleted(MissionGoal & g);
     void UpdateGoalCompletedIcon();
