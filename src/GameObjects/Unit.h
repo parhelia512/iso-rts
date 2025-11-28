@@ -34,6 +34,7 @@ public:
     // build
     bool CanBuild() const;
     float GetTimeBuildStructure() const;
+    float GetTimeBuildWall() const;
     void ClearStructureToBuild();
     void SetStructureToBuild(GameObjectTypeId type);
     GameObjectTypeId GetStructureToBuild() const;

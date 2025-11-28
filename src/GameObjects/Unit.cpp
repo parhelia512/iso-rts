@@ -147,6 +147,12 @@ float Unit::GetTimeBuildStructure() const
     return GetTime(maxTime, GetAttribute(OBJ_ATT_CONSTRUCTION));
 }
 
+float Unit::GetTimeBuildWall() const
+{
+    const float maxTime = 3.f;
+    return GetTime(maxTime, GetAttribute(OBJ_ATT_CONSTRUCTION));
+}
+
 void Unit::ClearStructureToBuild() { mStructToBuild = GameObject::TYPE_NULL; }
 
 bool Unit::CanConquer() const
