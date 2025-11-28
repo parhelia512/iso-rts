@@ -1,11 +1,9 @@
 #include "GameObjects/Unit.h"
 
-#include "Game.h"
 #include "GameConstants.h"
 #include "GameData.h"
 #include "GameMap.h"
 #include "IsoObject.h"
-#include "Player.h"
 #include "GameObjects/ObjectData.h"
 #include "Particles/DataParticleHealing.h"
 #include "Particles/DataParticleSingleLaser.h"
@@ -176,23 +174,15 @@ bool Unit::CanSpawn() const
     return GetAttribute(OBJ_ATT_SPAWNING) > 0;
 }
 
+float Unit::GetTimeSpawnMiniUnit() const
+{
+    const float maxTime = 2.f;
+    return GetTime(maxTime, GetAttribute(OBJ_ATT_SPAWNING));
+}
+
 void Unit::UpdateGraphics()
 {
     SetImage();
-}
-
-float Unit::GetTime(float maxTime, float attribute) const
-{
-#ifdef DEV_MODE
-    if(Game::GOD_MODE)
-        return TIME_GOD_MODE;
-#endif
-
-    // special time for invisible AI
-    if(!GetOwner()->IsLocal() && !GetGameMap()->IsObjectVisibleToLocalPlayer(this))
-        return TIME_AI_MIN;
-
-    return maxTime * attribute / MAX_STAV_VAL;
 }
 
 void Unit::SetImage()

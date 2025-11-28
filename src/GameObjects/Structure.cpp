@@ -17,6 +17,12 @@ Structure::Structure(const ObjectData & data)
     HideIconEnergy();
 }
 
+float Structure::GetTimeBuildUnit() const
+{
+    const float maxTime = 5.f;
+    return GetTime(maxTime, GetAttribute(OBJ_ATT_CONSTRUCTION));
+}
+
 void Structure::OnPositionChanged()
 {
     PositionIconEnergy();

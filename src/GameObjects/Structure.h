@@ -12,6 +12,8 @@ class Structure : public GameObject
 public:
     Structure(const ObjectData & data);
 
+    float GetTimeBuildUnit() const;
+
     void OnPositionChanged() override;
 
 protected:

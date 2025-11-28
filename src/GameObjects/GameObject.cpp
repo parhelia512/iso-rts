@@ -674,6 +674,21 @@ void GameObject::NotifyValueChanged()
         it.second();
 }
 
+
+float GameObject::GetTime(float maxTime, float attribute) const
+{
+#ifdef DEV_MODE
+    if(Game::GOD_MODE)
+        return TIME_GOD_MODE;
+#endif
+
+    // special time for invisible AI
+    if(mOwner != nullptr && !mOwner->IsLocal() && !GetGameMap()->IsObjectVisibleToLocalPlayer(this))
+        return TIME_AI_MIN;
+
+    return maxTime * attribute / MAX_STAV_VAL;
+}
+
 float GameObject::GetActionEnergyCost(GameObjectActionType action) const
 {
     constexpr float ACTION_COSTS[NUM_OBJ_ACTIONS] =

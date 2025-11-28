@@ -12,6 +12,8 @@ class SpawningTower : public Structure
 public:
     SpawningTower(const ObjectData & data);
 
+    float GetTimeSpawnMiniUnit() const;
+
 private:
     void UpdateGraphics() override;
 

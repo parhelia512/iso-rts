@@ -5,6 +5,7 @@
 #include "GameConstants.h"
 #include "GameMap.h"
 #include "Player.h"
+#include "GameObjects/Base.h"
 #include "Screens/ScreenGame.h"
 #include "Tutorial/StepDelay.h"
 #include "Tutorial/StepGameBase.h"
@@ -43,21 +44,20 @@ TutorialGameIntro::TutorialGameIntro(Screen * screen)
 {
     assert(mScreen);
 
-    // TODO these will be replaced by dynamic values soon
-    constexpr float TIME_NEW_UNIT = 2.f;
-
     const Player * local = mScreen->GetGame()->GetLocalPlayer();
 
     auto panelActions = mScreen->mHUD->GetPanelObjectActions();
     auto panelObj = mScreen->mHUD->GetPanelSelectedObject();
     auto panelTurn = mScreen->mHUD->GetPanelTurnControl();
 
+    auto localBase = local->GetBase();
+
     AddStep(new StepGameDisableCamera(mScreen->mCamController));
 
     AddStep(new StepDelay(1.f));
     AddStep(new StepGameIntro);
     AddStep(new StepDelay(0.3f));
-    AddStep(new StepGameBase(local->GetBase()));
+    AddStep(new StepGameBase(localBase));
     AddStep(new StepDelay(0.5f));
     AddStep(new StepGameBaseFeatures(panelObj, panelActions));
     AddStep(new StepGameMissionGoalsIcon(panelActions));
@@ -67,8 +67,7 @@ TutorialGameIntro::TutorialGameIntro(Screen * screen)
     AddStep(new StepGameBaseBuildUnitIcon(panelActions));
     AddStep(new StepDelay(0.5f));
     AddStep(new StepGameBaseBuildUnit(mScreen->mHUD));
-    // TODO replace constant with time from Base when implemented
-    AddStep(new StepDelay(TIME_NEW_UNIT));
+    AddStep(new StepDelay(localBase->GetTimeBuildUnit()));
     AddStep(new StepGameUnit(local));
     AddStep(new StepDelay(0.5f));
     AddStep(new StepGameMoveUnit(local, mScreen->mIsoMap));

@@ -44,6 +44,7 @@ public:
 
     // spawning
     bool CanSpawn() const;
+    float GetTimeSpawnMiniUnit() const;
 
 public:
     static unsigned int TypeToIndex(GameObjectTypeId type);
@@ -51,8 +52,6 @@ public:
 
 private:
     void UpdateGraphics() override;
-
-    float GetTime(float maxTime, float attribute) const;
 
     void SetImage();
 

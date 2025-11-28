@@ -239,6 +239,8 @@ protected:
 
     void NotifyValueChanged();
 
+    float GetTime(float maxTime, float attribute) const;
+
 protected:
     static const unsigned int COLOR_FOW;
     static const unsigned int COLOR_VIS;

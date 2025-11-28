@@ -19,6 +19,12 @@ SpawningTower::SpawningTower(const ObjectData & data)
     SetImage();
 }
 
+float SpawningTower::GetTimeSpawnMiniUnit() const
+{
+    const float maxTime = 2.f;
+    return GetTime(maxTime, GetAttribute(OBJ_ATT_SPAWNING));
+}
+
 void SpawningTower::UpdateGraphics()
 {
     SetImage();

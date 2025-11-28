@@ -20,6 +20,7 @@
 #include "GameObjects/MiniUnit.h"
 #include "GameObjects/MiniUnitsGroup.h"
 #include "GameObjects/ObjectsDataRegistry.h"
+#include "GameObjects/SpawningTower.h"
 #include "GameObjects/Temple.h"
 #include "GameObjects/Unit.h"
 #include "GameObjects/WallGate.h"
@@ -71,12 +72,6 @@ const char * TEXT_PAUSE = "GAME PAUSED";
 
 namespace game
 {
-
-// NOTE these will be replaced by dynamic values soon
-constexpr float TIME_NEW_MINI_UNIT = 1.f;
-constexpr float TIME_NEW_UNIT = 2.f;
-
-constexpr float TIME_AUTO_END_TURN = 2.f;
 
 ScreenGame::ScreenGame(Game * game)
     : Screen(game)
@@ -1839,13 +1834,14 @@ bool ScreenGame::SetupNewMiniUnits(GameObjectTypeId type, GameObject * gen, Game
     }
 
     // set time to build
-    float timeBuild = TIME_NEW_MINI_UNIT;
+    float timeSpawn = 0.f;
 
-    // special time for invisible AI
-    if(!player->IsLocal() && !mGameMap->IsObjectVisibleToLocalPlayer(gen))
-        timeBuild = TIME_AI_MIN;
+    if(gen->GetObjectCategory() == GameObject::CAT_UNIT)
+        timeSpawn = static_cast<Unit *>(gen)->GetTimeSpawnMiniUnit();
+    else if(gen->GetObjectType() == GameObject::TYPE_SPAWN_TOWER)
+        timeSpawn = static_cast<SpawningTower *>(gen)->GetTimeSpawnMiniUnit();
 
-    GameMapProgressBar * pb = mHUD->CreateProgressBarInCell(cell, timeBuild, player->GetFaction());
+    GameMapProgressBar * pb = mHUD->CreateProgressBarInCell(cell, timeSpawn, player->GetFaction());
 
     pb->AddFunctionOnCompleted([this, cell, player, gen, type, elements, num, group]
     {
@@ -1900,19 +1896,10 @@ bool ScreenGame::SetupNewUnit(GameObjectTypeId type, GameObject * gen, Player * 
     mGameMap->StartCreateUnit(type, gen, cell, player);
 
     // create and init progress bar
-    // TODO get time from generator
+    assert(gen->IsStructure());
 
-#ifdef DEV_MODE
-    float timeBuild = Game::GOD_MODE ? 0.1f : TIME_NEW_UNIT;
-#else
-    float timeBuild = TIME_NEW_UNIT;
-#endif
-
-    // special time for invisible AI
-    if(!player->IsLocal() && !mGameMap->IsObjectVisibleToLocalPlayer(gen))
-        timeBuild = TIME_AI_MIN;
-
-    GameMapProgressBar * pb = mHUD->CreateProgressBarInCell(cell, timeBuild, player->GetFaction());
+    auto pb = mHUD->CreateProgressBarInCell(cell, static_cast<Structure *>(gen)->GetTimeBuildUnit(),
+                                            player->GetFaction());
 
     pb->AddFunctionOnCompleted([this, cell, player, gen, type]
     {
