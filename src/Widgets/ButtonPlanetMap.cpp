@@ -12,9 +12,6 @@
 namespace game
 {
 
-const int tooltipDelay = 500;
-const int tooltipShowing = 2500;
-
 // -- PRIMARY BUTTON --
 ButtonPlanetMap::ButtonPlanetMap(sgl::sgui::Widget * parent) :
     GameButton(SpriteFilePlanetMap,
@@ -32,12 +29,14 @@ ButtonPlanetMap::ButtonPlanetMap(sgl::sgui::Widget * parent) :
     SetLabelFont(fnt);
 }
 
-void ButtonPlanetMap::SetTooltipText(const char * tooltip)
+void ButtonPlanetMap::SetTooltipText(const char * text)
 {
-    auto tt = new GameSimpleTooltip(tooltip);
+    const int timeShowing = 2500;
+
+    auto tt = new GameSimpleTooltip(text);
     SetTooltip(tt);
-    SetTooltipDelay(tooltipDelay);
-    SetTooltipShowingTime(tooltipShowing);
+    SetTooltipDelay(WidgetsConstants::timeTooltipButtonDelay);
+    SetTooltipShowingTime(timeShowing);
 }
 
 void ButtonPlanetMap::HandleMouseOver()

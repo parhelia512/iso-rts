@@ -32,6 +32,9 @@ public:
     static const int FontSizePlanetMapTitle;
     static const int FontSizePlanetMapHeader;
     static const int FontSizePlanetMapText;
+
+    // TIMES
+    static const int timeTooltipButtonDelay;
 };
 
 } // namespace game

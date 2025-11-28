@@ -73,7 +73,7 @@ ObjectActionButton::ObjectActionButton(ActionIcon icon, const char * shortcut, i
     // TOOLTIP
     auto tt = new GameSimpleTooltip(tooltip);
     SetTooltip(tt);
-    SetTooltipDelay(500);
+    SetTooltipDelay(WidgetsConstants::timeTooltipButtonDelay);
     SetTooltipShowingTime(2000);
 
     // set initial visual state

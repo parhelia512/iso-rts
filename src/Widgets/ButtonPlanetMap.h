@@ -10,7 +10,7 @@ class ButtonPlanetMap : public GameButton
 public:
     ButtonPlanetMap(sgl::sgui::Widget * parent);
 
-    void SetTooltipText(const char * tooltip);
+    void SetTooltipText(const char * text);
 
 private:
     void HandleMouseOver() override;

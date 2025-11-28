@@ -30,4 +30,7 @@ const int WidgetsConstants::FontSizePlanetMapTitle = 28;
 const int WidgetsConstants::FontSizePlanetMapHeader = 24;
 const int WidgetsConstants::FontSizePlanetMapText = 22;
 
+// TIMES
+const int WidgetsConstants::timeTooltipButtonDelay = 500;
+
 } // namespace game

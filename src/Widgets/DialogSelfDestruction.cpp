@@ -2,6 +2,7 @@
 
 #include "Screens/Screen.h"
 #include "Widgets/GameButton.h"
+#include "Widgets/GameSimpleTooltip.h"
 #include "Widgets/GameUIData.h"
 #include "Widgets/WidgetsConstants.h"
 
@@ -40,6 +41,16 @@ public:
         auto fm = graphic::FontManager::Instance();
         auto fnt = fm->GetFont(WidgetsConstants::FontFileButton, size, graphic::Font::NORMAL);
         SetLabelFont(fnt);
+    }
+
+    void SetTooltipText(const char * text)
+    {
+        const int timeShowing = 4000;
+
+        auto tt = new GameSimpleTooltip(text);
+        SetTooltip(tt);
+        SetTooltipDelay(WidgetsConstants::timeTooltipButtonDelay);
+        SetTooltipShowingTime(timeShowing);
     }
 
     void HandleMouseOver() override
@@ -134,6 +145,7 @@ DialogSelfDestruction::DialogSelfDestruction()
     mBtnDestroy = btn;
 
     btn->SetLabel("DESTROY");
+    btn->SetTooltipText("It will dismantle this object without damaging anything around it.");
 
     btnX = (w - btn->GetWidth()) / 2;
     btn->SetPosition(btnX, btnY);
@@ -145,6 +157,7 @@ DialogSelfDestruction::DialogSelfDestruction()
     mBtnBlowup = btn;
 
     btn->SetLabel("BLOW UP");
+    btn->SetTooltipText("It will blow this object up damaging everything that surrounds it.");
 
     btnX = (w - btn->GetWidth()) / 2;
     btn->SetPosition(btnX, btnY);

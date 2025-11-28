@@ -43,10 +43,9 @@ public:
         using namespace sgl;
 
         // tooltip
-        const int ttDelay = 500;
         auto tt = new GameSimpleTooltip("End your turn");
         SetTooltip(tt);
-        SetTooltipDelay(ttDelay);
+        SetTooltipDelay(WidgetsConstants::timeTooltipButtonDelay);
 
         // shortcut
         SetShortcutKey(core::KeyboardEvent::KEY_SPACE, core::KeyboardEvent::MOD_SHIFT);

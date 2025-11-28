@@ -126,10 +126,9 @@ public:
             "Experience"
         };
 
-        const int ttDelay = 500;
         auto tt = new GameSimpleTooltip(tooltipText[type]);
         SetTooltip(tt);
-        SetTooltipDelay(ttDelay);
+        SetTooltipDelay(WidgetsConstants::timeTooltipButtonDelay);
     }
 
     void SetValue(float val, float max)
@@ -208,11 +207,10 @@ public:
                 "Show the upgrade panel of this object"
             };
 
-        const int ttDelay = 500;
         const int ttTime = 3500;
         auto tt = new GameSimpleTooltip(tooltipText[f]);
         SetTooltip(tt);
-        SetTooltipDelay(ttDelay);
+        SetTooltipDelay(WidgetsConstants::timeTooltipButtonDelay);
         SetTooltipShowingTime(ttTime);
     }
 
@@ -309,10 +307,9 @@ PanelSelectedObject::PanelSelectedObject(const ObjectsDataRegistry * odr, sgl::s
     // LEVEL
     mBarLvl = new sgui::Image(this);
 
-    const int ttDelay = 500;
     auto tt = new GameSimpleTooltip("Experience level");
     mBarLvl->SetTooltip(tt);
-    mBarLvl->SetTooltipDelay(ttDelay);
+    mBarLvl->SetTooltipDelay(WidgetsConstants::timeTooltipButtonDelay);
 
     // STATS
     mStatEnergy = new ObjectVisualStat(ObjectVisualStat::VST_ENERGY, this);
