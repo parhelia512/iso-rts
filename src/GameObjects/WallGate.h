@@ -17,7 +17,7 @@ public:
     };
 
 public:
-    WallGate(GameObjectVariantId orientation);
+    WallGate(const ObjectData & data, GameObjectVariantId orientation);
 
     bool IsOpen() const;
     bool Toggle();

@@ -11,7 +11,7 @@ namespace game
 {
 
 MiniUnit::MiniUnit(const ObjectData & data, int elements)
-    : GameObject(data.GetType(), GameObject::CAT_MINI_UNIT, data.GetRows(), data.GetCols())
+    : GameObject(data)
     , mAttributes(data.GetAttributes())
     , mElements(elements)
 {

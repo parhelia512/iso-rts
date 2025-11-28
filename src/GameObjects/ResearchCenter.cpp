@@ -9,8 +9,8 @@
 namespace game
 {
 
-ResearchCenter::ResearchCenter()
-    : Structure(GameObject::TYPE_RESEARCH_CENTER, GameObject::CAT_GENERIC, 2, 2)
+ResearchCenter::ResearchCenter(const ObjectData & data)
+    : Structure(data)
 {
     SetVisibilityLevel(4);
 

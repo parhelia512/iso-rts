@@ -24,34 +24,33 @@ namespace game
 {
 
 Unit::Unit(const ObjectData & data)
-    : GameObject(data.GetType(), GameObject::CAT_UNIT, data.GetRows(), data.GetCols())
-    , mAttributes(data.GetAttributes())
+    : GameObject(data)
     , mStructToBuild(GameObject::TYPE_NULL)
 {
     // set attack range converting attribute
     const int maxAttVal = 11;
     const int attRanges[maxAttVal] = { 0, 2, 3, 4, 5, 6, 8, 9, 10, 11, 13 };
-    mRangeAttack = attRanges[mAttributes[OBJ_ATT_FIRE_RANGE]];
+    mRangeAttack = attRanges[GetAttribute(OBJ_ATT_FIRE_RANGE)];
 
     // set healing range converting attribute
     const int maxHealVal = 11;
     const int HealRanges[maxHealVal] = { 0, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4 };
-    mRangeHealing = HealRanges[mAttributes[OBJ_ATT_HEALING_RANGE]];
+    mRangeHealing = HealRanges[GetAttribute(OBJ_ATT_HEALING_RANGE)];
 
     // set healing power converting attribute
     const float HealPowers[maxHealVal] = { 0.f, 1.f, 2.f, 2.f, 3.f, 3.f, 4.f, 4.f, 5.f, 5.f, 6.f };
-    mHealingPower = HealPowers[mAttributes[OBJ_ATT_HEALING_POWER]];
+    mHealingPower = HealPowers[GetAttribute(OBJ_ATT_HEALING_POWER)];
 
     // TODO translate stats into actual values, ex.: speed = 5 -> SetSpeed(2.f)
 
     // SET CONCRETE ATTRIBUTES
     // set actual speed
     const float maxSpeed = 5.f;
-    const float speed = maxSpeed * static_cast<float>(mAttributes[OBJ_ATT_SPEED]) / MAX_STAV_VAL;
+    const float speed = maxSpeed * static_cast<float>(GetAttribute(OBJ_ATT_SPEED)) / MAX_STAV_VAL;
     SetSpeed(speed);
 
     // set regeneration power
-    const float regPower = mAttributes[OBJ_ATT_REGENERATION] / MAX_STAV_VAL;
+    const float regPower = GetAttribute(OBJ_ATT_REGENERATION) / MAX_STAV_VAL;
     SetRegPower(regPower);
 
     // set visibility
@@ -175,13 +174,6 @@ float Unit::GetTimeConquestStructure() const
 bool Unit::CanSpawn() const
 {
     return GetAttribute(OBJ_ATT_SPAWNING) > 0;
-}
-
-int Unit::GetAttribute(ObjAttId attID) const
-{
-    const auto it = mAttributes.find(attID);
-
-    return (it != mAttributes.end()) ? it->second : 0;
 }
 
 void Unit::UpdateGraphics()

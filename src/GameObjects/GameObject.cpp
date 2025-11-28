@@ -247,24 +247,25 @@ const std::unordered_map<GameObjectTypeId, std::string> GameObject::DESCRIPTIONS
 const GameObjectCategoryId GameObject::CAT_NULL = 0;
 
 const GameObjectCategoryId GameObject::CAT_COLLECTABLE = h{}("COLLECTABLE");
-const GameObjectCategoryId GameObject::CAT_GENERIC = h{}("GENERIC");
 const GameObjectCategoryId GameObject::CAT_MINI_UNIT = h{}("MINI_UNIT");
 const GameObjectCategoryId GameObject::CAT_RES_GENERATOR = h{}("RES_GEN");
 const GameObjectCategoryId GameObject::CAT_RES_STORAGE = h{}("RES_STORAGE");
 const GameObjectCategoryId GameObject::CAT_SCENE_OBJ = h{}("SCENE_OBJ");
+const GameObjectCategoryId GameObject::CAT_STRUCTURE = h{}("STRUCTURE");
 const GameObjectCategoryId GameObject::CAT_UNIT = h{}("UNIT");
 
 // -- OBJECT VARIANT --
 const GameObjectVariantId GameObject::VAR_0 = 0;
 
 // -- CONSTRUCTOR & DESTRUCTOR --
-GameObject::GameObject(GameObjectTypeId type, GameObjectCategoryId cat, int rows, int cols)
-    : mIsoObj(new IsoObject(rows, cols))
+GameObject::GameObject(const ObjectData & data)
+    : mAttributes(data.GetAttributes())
+    , mIsoObj(new IsoObject(data.GetRows(), data.GetCols()))
     , mObjId(++counter)
-    , mType(type)
-    , mCategory(cat)
-    , mRows(rows)
-    , mCols(cols)
+    , mType(data.GetType())
+    , mCategory(data.GetCategory())
+    , mRows(data.GetRows())
+    , mCols(data.GetCols())
 {
     // default colors to mark objects that haven't set any
     mObjColors.push_back(0xFFFFFFFF);
@@ -512,6 +513,13 @@ void GameObject::RemoveFunctionOnValueChanged(unsigned int fId)
 
     if(it != mOnValueChanged.end())
         mOnValueChanged.erase(it);
+}
+
+int GameObject::GetAttribute(ObjAttId attID) const
+{
+    const auto it = mAttributes.find(attID);
+
+    return (it != mAttributes.end()) ? it->second : 0;
 }
 
 float GameObject::GetSpeed() const

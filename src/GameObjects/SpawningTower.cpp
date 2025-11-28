@@ -12,7 +12,7 @@ namespace game
 {
 
 SpawningTower::SpawningTower(const ObjectData & data)
-    : Structure(GameObject::TYPE_SPAWN_TOWER, GameObject::CAT_GENERIC, data.GetRows(), data.GetCols())
+    : Structure(data)
 {
     SetVisibilityLevel(4);
 

@@ -8,7 +8,7 @@ namespace game
 class Trees : public GameObject
 {
 public:
-    Trees(GameObjectVariantId var);
+    Trees(const ObjectData & data, GameObjectVariantId var);
 
     void OnNewTurn(PlayerFaction faction) override;
 

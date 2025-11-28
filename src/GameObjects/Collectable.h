@@ -11,13 +11,13 @@ class Player;
 class Collectable : public GameObject
 {
 public:
-    Collectable(GameObjectTypeId type, int rows, int cols);
+    Collectable(const ObjectData & data);
 
     virtual void Collected(Player * collector);
 };
 
-inline Collectable::Collectable(GameObjectTypeId type, int rows, int cols) :
-    GameObject(type, GameObject::CAT_COLLECTABLE, rows, cols)
+inline Collectable::Collectable(const ObjectData & data) :
+    GameObject(data)
 {
 }
 

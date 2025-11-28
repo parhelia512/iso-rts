@@ -15,12 +15,12 @@
 namespace game
 {
 
-ResourceGenerator::ResourceGenerator(GameObjectTypeId type, int rows, int cols)
-    : Structure(type, CAT_RES_GENERATOR, rows, cols)
+ResourceGenerator::ResourceGenerator(const ObjectData & data)
+    : Structure(data)
 {
-    if(TYPE_RES_GEN_ENERGY == type || TYPE_RES_GEN_ENERGY_SOLAR == type)
+    if(TYPE_RES_GEN_ENERGY == data.GetType() || TYPE_RES_GEN_ENERGY_SOLAR == data.GetType())
         mResource = RES_ENERGY;
-    else if(TYPE_RES_GEN_MATERIAL == type || TYPE_RES_GEN_MATERIAL_EXTRACT == type)
+    else if(TYPE_RES_GEN_MATERIAL == data.GetType() || TYPE_RES_GEN_MATERIAL_EXTRACT == data.GetType())
         mResource = RES_MATERIAL1;
     else
     {

@@ -460,31 +460,31 @@ GameObject * GameMap::CreateObject(unsigned int layerId, GameObjectTypeId type,
 
     if(GameObject::TYPE_MOUNTAINS == type ||
        GameObject::TYPE_ROCKS == type)
-        o2a.obj = new SceneObject(type, variant, rows, cols);
+        o2a.obj = new SceneObject(data, variant);
     else if(GameObject::TYPE_RES_GEN_ENERGY == type ||
        GameObject::TYPE_RES_GEN_MATERIAL == type ||
        GameObject::TYPE_RES_GEN_ENERGY_SOLAR == type ||
        GameObject::TYPE_RES_GEN_MATERIAL_EXTRACT == type)
-        o2a.obj = new ResourceGenerator(type, rows, cols);
+        o2a.obj = new ResourceGenerator(data);
     else if(GameObject::TYPE_RES_STORAGE_BLOBS == type ||
             GameObject::TYPE_RES_STORAGE_DIAMONDS == type ||
             GameObject::TYPE_RES_STORAGE_ENERGY == type ||
             GameObject::TYPE_RES_STORAGE_MATERIAL == type)
-        o2a.obj = new ResourceStorage(type, rows, cols);
+        o2a.obj = new ResourceStorage(data);
     else if(GameObject::TYPE_DIAMONDS == type)
-        o2a.obj = new Diamonds;
+        o2a.obj = new Diamonds(data);
     else if(GameObject::TYPE_BLOBS == type)
-        o2a.obj  = new Blobs;
+        o2a.obj  = new Blobs(data);
     else if(GameObject::TYPE_TREES == type)
-        o2a.obj  = new Trees(variant);
+        o2a.obj  = new Trees(data, variant);
     else if(GameObject::TYPE_RADAR_STATION == type)
-        o2a.obj = new RadarStation;
+        o2a.obj = new RadarStation(data);
     else if(GameObject::TYPE_RADAR_TOWER == type)
-        o2a.obj = new RadarTower;
+        o2a.obj = new RadarTower(data);
     else if(GameObject::TYPE_BARRACKS == type)
-        o2a.obj = new Barracks;
+        o2a.obj = new Barracks(data);
     else if(GameObject::TYPE_RESEARCH_CENTER == type)
-        o2a.obj = new ResearchCenter;
+        o2a.obj = new ResearchCenter(data);
     else if(GameObject::TYPE_HOSPITAL == type)
         o2a.obj = new Hospital(data);
     else if(GameObject::TYPE_DEFENSIVE_TOWER == type)
@@ -496,13 +496,15 @@ GameObject * GameMap::CreateObject(unsigned int layerId, GameObjectTypeId type,
     else if(GameObject::TYPE_TRADING_POST == type)
         o2a.obj = new TradingPost(data);
     else if(GameObject::TYPE_WALL == type)
-        o2a.obj = new Wall(variant);
+        o2a.obj = new Wall(data, variant);
     else if(GameObject::TYPE_WALL_GATE == type)
-        o2a.obj = new WallGate(variant);
+        o2a.obj = new WallGate(data, variant);
     else if(GameObject::TYPE_LOOTBOX == type)
-        o2a.obj = new LootBox;
+        o2a.obj = new LootBox(data);
     else if(GameObject::TYPE_TEMPLE == type)
-        o2a.obj = new Temple;
+        o2a.obj = new Temple(data);
+    else if(GameObject::TYPE_PRACTICE_TARGET == type)
+        o2a.obj = new PracticeTarget(data);
     else if(GameObject::TYPE_BASE == type || GameObject::TYPE_BASE_SPOT == type)
     {
         if(GameObject::TYPE_BASE_SPOT == type)
@@ -511,7 +513,9 @@ GameObject * GameMap::CreateObject(unsigned int layerId, GameObjectTypeId type,
             faction = o2a.owner->GetFaction();
         }
 
-        auto b = new Base;
+        // needeed to bypass BaseSpot data
+        const ObjectData & dataBase = GetObjectData(GameObject::TYPE_BASE);
+        auto b = new Base(dataBase);
         o2a.obj = b;
 
         // base cells update
@@ -532,8 +536,6 @@ GameObject * GameMap::CreateObject(unsigned int layerId, GameObjectTypeId type,
         o2a.owner->SetBase(b);
         o2a.owner->SumCells(rows * cols);
     }
-    else if(GameObject::TYPE_PRACTICE_TARGET == type)
-        o2a.obj = new PracticeTarget;
     // this should never happen
     else
     {

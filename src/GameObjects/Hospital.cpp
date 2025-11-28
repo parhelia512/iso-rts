@@ -20,7 +20,7 @@ const int HealRanges[maxAttVals] = { 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6 };
 const float HealPowers[maxAttVals] = { 0.f, 1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f, 8.f, 9.f, 10.f };
 
 Hospital::Hospital(const ObjectData & data)
-    : Structure(GameObject::TYPE_HOSPITAL, GameObject::CAT_GENERIC, 2, 2)
+    : Structure(data)
 {
     // SET ATTRIBUTES values in range [1-10]
     // set healing range converting attribute

@@ -3,8 +3,6 @@
 #include "GameObject.h"
 #include "ObjectData.h"
 
-#include <unordered_map>
-
 namespace game
 {
 
@@ -47,8 +45,6 @@ public:
     // spawning
     bool CanSpawn() const;
 
-    int GetAttribute(ObjAttId attID) const;
-
 public:
     static unsigned int TypeToIndex(GameObjectTypeId type);
     static GameObjectTypeId IndexToType(unsigned int ind);
@@ -67,9 +63,6 @@ private:
     void Heal();
 
 private:
-    // attributes
-    std::unordered_map<ObjAttId, int> mAttributes;
-
     // weapon
     float mTimeAttack = 0.25f;
     float mTimerAttack = 0.f;

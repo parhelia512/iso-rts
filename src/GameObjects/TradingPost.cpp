@@ -12,7 +12,7 @@ namespace game
 {
 
 TradingPost::TradingPost(const ObjectData & data)
-    : Structure(GameObject::TYPE_TRADING_POST, GameObject::CAT_GENERIC, data.GetRows(), data.GetCols())
+    : Structure(data)
 {
     SetVisibilityLevel(4);
 

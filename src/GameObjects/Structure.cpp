@@ -7,18 +7,14 @@
 namespace game
 {
 
-Structure::Structure(GameObjectTypeId type, GameObjectCategoryId cat, int rows, int cols)
-    : GameObject(type, cat, rows, cols)
+Structure::Structure(const ObjectData & data)
+    : GameObject(data)
     , mIconEnergy(new BlinkingIconEnergy)
 {
     SetStructure(true);
     SetStatic(true);
 
     HideIconEnergy();
-}
-
-Structure::~Structure()
-{
 }
 
 void Structure::OnPositionChanged()

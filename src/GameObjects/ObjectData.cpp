@@ -57,7 +57,7 @@ const char * ObjectData::STR_ATTRIBUTES[NUM_OBJ_ATTRIBUTES] =
     "STORAGE"
 };
 
-const ObjectData ObjectData::NullObj({}, {}, {}, nullptr, GameObject::TYPE_NULL,
+const ObjectData ObjectData::NullObj({}, {}, {}, nullptr, GameObject::TYPE_NULL, GameObject::CAT_NULL,
                                      OC_NULL, OCAT_UNDEFINED, 0, 0);
 
 unsigned int ObjectData::GetIconTexId(PlayerFaction f) const

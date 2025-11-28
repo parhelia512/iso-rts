@@ -10,7 +10,7 @@ class BlobsGenerator;
 class Blobs : public Collectable
 {
 public:
-    Blobs();
+    Blobs(const ObjectData & data);
 
     int GetNum() const;
     void MaximizeUnits();

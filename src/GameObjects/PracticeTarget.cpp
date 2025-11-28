@@ -8,8 +8,8 @@
 namespace game
 {
 
-PracticeTarget::PracticeTarget()
-    : Structure(TYPE_PRACTICE_TARGET, CAT_GENERIC, 1, 1)
+PracticeTarget::PracticeTarget(const ObjectData & data)
+    : Structure(data)
 {
     const float health = 1000.f;
     SetMaxHealth(health);

@@ -51,7 +51,7 @@ public:
     };
 
 public:
-    SceneObject(GameObjectTypeId type, GameObjectVariantId part, int rows, int cols);
+    SceneObject(const ObjectData & data, GameObjectVariantId part);
 
 protected:
     void UpdateGraphics() override;

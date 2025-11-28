@@ -17,8 +17,8 @@ namespace
 namespace game
 {
 
-Trees::Trees(GameObjectVariantId var)
-    : GameObject(TYPE_TREES, CAT_SCENE_OBJ, 1, 1)
+Trees::Trees(const ObjectData & data, GameObjectVariantId var)
+    : GameObject(data)
 {
     mVariant = var;
 

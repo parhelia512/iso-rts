@@ -22,7 +22,7 @@ const int maxAttVal = 11;
 const int attRanges[maxAttVal] = { 0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 14 };
 
 DefensiveTower::DefensiveTower(const ObjectData & data)
-    : Structure(TYPE_DEFENSIVE_TOWER, CAT_GENERIC, data.GetRows(), data.GetCols())
+    : Structure(data)
 {
     // set attack range converting attribute
     mAttackRange = attRanges[data.GetAttribute(OBJ_ATT_FIRE_RANGE)];

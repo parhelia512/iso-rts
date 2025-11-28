@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameObjectTypes.h"
+#include "GameObjects/ObjectData.h"
 
 #include <functional>
 #include <map>
@@ -97,11 +98,11 @@ public:
     static const GameObjectCategoryId CAT_NULL;
 
     static const GameObjectCategoryId CAT_COLLECTABLE;
-    static const GameObjectCategoryId CAT_GENERIC;
     static const GameObjectCategoryId CAT_MINI_UNIT;
     static const GameObjectCategoryId CAT_RES_GENERATOR;
     static const GameObjectCategoryId CAT_RES_STORAGE;
     static const GameObjectCategoryId CAT_SCENE_OBJ;
+    static const GameObjectCategoryId CAT_STRUCTURE;
     static const GameObjectCategoryId CAT_UNIT;
 
     // -- OBJECT VARIANT --
@@ -110,7 +111,7 @@ public:
     static std::string GetObjectTypeStr(const GameObjectTypeId type);
 
 public:
-    GameObject(GameObjectTypeId type, GameObjectCategoryId cat, int rows, int cols);
+    GameObject(const ObjectData & data);
     virtual ~GameObject();
 
     // GROUP
@@ -200,6 +201,9 @@ public:
 
     unsigned int AddFunctionOnValueChanged(const std::function<void()> & f);
     void RemoveFunctionOnValueChanged(unsigned int fId);
+
+    // ATTRIBUTES
+    int GetAttribute(ObjAttId attID) const;
 
     float GetSpeed() const;
 
@@ -298,6 +302,8 @@ private:
 
 private:
     std::map<unsigned int, std::function<void()>> mOnValueChanged;
+
+    std::unordered_map<ObjAttId, int> mAttributes;
 
     GameObjectsGroup * mGroup = nullptr;
 

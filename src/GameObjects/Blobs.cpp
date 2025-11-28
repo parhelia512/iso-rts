@@ -12,7 +12,8 @@ namespace game
 const int MIN_UNITS = 1;
 const int MAX_UNITS = 4;
 
-Blobs::Blobs() : Collectable(GameObject::TYPE_BLOBS, 1, 1)
+Blobs::Blobs(const ObjectData & data)
+    : Collectable(data)
 {
     sgl::utilities::UniformDistribution ran(MIN_UNITS, MAX_UNITS);
     mNum = ran.GetNextValue();

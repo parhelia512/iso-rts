@@ -8,8 +8,8 @@
 namespace game
 {
 
-SceneObject::SceneObject(GameObjectTypeId type, GameObjectVariantId part, int rows, int cols)
-    : GameObject(type, CAT_SCENE_OBJ, rows, cols)
+SceneObject::SceneObject(const ObjectData & data, GameObjectVariantId part)
+    : GameObject(data)
 {
     SetStatic(true);
 
@@ -18,7 +18,7 @@ SceneObject::SceneObject(GameObjectTypeId type, GameObjectVariantId part, int ro
     // set object health
     float health = 100.f;
 
-    if(TYPE_MOUNTAINS == type)
+    if(TYPE_MOUNTAINS == data.GetType())
         health = 4000.f;
 
     SetMaxHealth(health);

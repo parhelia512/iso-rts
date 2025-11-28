@@ -14,8 +14,8 @@
 namespace game
 {
 
-Base::Base()
-    : Structure(GameObject::TYPE_BASE, GameObject::CAT_GENERIC, 3, 3)
+Base::Base(const ObjectData & data)
+    : Structure(data)
     , mOutputEnergy(15)
     , mOutputMaterial(5)
 {

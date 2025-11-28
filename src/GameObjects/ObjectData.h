@@ -114,7 +114,8 @@ public:
     ObjectData(const std::unordered_map<ObjAttId, int> & atts,
                const std::array<int, NUM_OBJ_COSTS> & costs,
                const std::vector<unsigned int> & texIds,
-               const char * file, GameObjectTypeId type, ObjClass oClass,
+               const char * file, GameObjectTypeId type,
+               GameObjectCategoryId cat, ObjClass oClass,
                ObjFamily family,
                unsigned int rows, unsigned int cols);
 
@@ -126,6 +127,7 @@ public:
     const char * GetIconTexFile() const;
 
     GameObjectTypeId GetType() const;
+    GameObjectCategoryId GetCategory() const;
     ObjClass GetClass() const;
     ObjFamily GetFamily() const;
 
@@ -140,6 +142,7 @@ private:
     const char * mIconTexFile = nullptr;
 
     GameObjectTypeId mType;
+    GameObjectCategoryId mCategory;
     ObjClass mClass;
     ObjFamily mFamily;
 
@@ -150,13 +153,14 @@ private:
 inline ObjectData::ObjectData(const std::unordered_map<ObjAttId, int> & atts,
                               const std::array<int, NUM_OBJ_COSTS> & costs,
                               const std::vector<unsigned int> & texIds,
-                              const char * file, GameObjectTypeId type, ObjClass oClass,
-                              ObjFamily family, unsigned int rows, unsigned int cols)
+                              const char * file, GameObjectTypeId type, GameObjectCategoryId cat,
+                              ObjClass oClass, ObjFamily family, unsigned int rows, unsigned int cols)
     : mAttributes(atts)
     , mCosts(costs)
     , mIconTexIds(texIds)
     , mIconTexFile(file)
     , mType(type)
+    , mCategory(cat)
     , mClass(oClass)
     , mFamily(family)
     , mRows(rows)
@@ -184,6 +188,7 @@ inline const std::array<int, NUM_OBJ_COSTS> & ObjectData::GetCosts() const
 inline const char * ObjectData::GetIconTexFile() const { return mIconTexFile; }
 
 inline GameObjectTypeId ObjectData::GetType() const { return mType; }
+inline GameObjectCategoryId ObjectData::GetCategory() const { return mCategory; }
 inline ObjClass ObjectData::GetClass() const { return mClass; }
 inline ObjFamily ObjectData::GetFamily() const { return mFamily; }
 

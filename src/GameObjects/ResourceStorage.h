@@ -10,7 +10,7 @@ enum ResourceType : unsigned int;
 class ResourceStorage : public Structure
 {
 public:
-    ResourceStorage(GameObjectTypeId type, int rows, int cols);
+    ResourceStorage(const ObjectData & data);
 
     ResourceType GetResourceType() const;
 
