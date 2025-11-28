@@ -33,12 +33,15 @@ public:
 
     // build
     bool CanBuild() const;
+    float GetTimeBuildStructure() const;
     void ClearStructureToBuild();
     void SetStructureToBuild(GameObjectTypeId type);
     GameObjectTypeId GetStructureToBuild() const;
 
     // conquer
     bool CanConquer() const;
+    float GetTimeConquestCell() const;
+    float GetTimeConquestStructure() const;
 
     // spawning
     bool CanSpawn() const;
@@ -51,6 +54,8 @@ public:
 
 private:
     void UpdateGraphics() override;
+
+    float GetTime(float maxTime, float attribute) const;
 
     void SetImage();
 

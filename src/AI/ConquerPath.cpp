@@ -147,20 +147,9 @@ bool ConquerPath::InitNextConquest()
 
     mGameMap->StartConquerCell(nextCell, player);
 
-    // TODO get conquer time from unit
-    constexpr float TIME_CONQ_CELL = 1.f;
-
-#ifdef DEV_MODE
-    float timeConquest = Game::GOD_MODE ? 0.1f : TIME_CONQ_CELL;
-#else
-    float timeConquest = TIME_CONQ_CELL;
-#endif
-
-    if(!player->IsLocal() && !mGameMap->IsCellVisibleToLocalPlayer(nextInd))
-        timeConquest = TIME_AI_MIN;
-
     GameHUD * HUD = mScreen->GetHUD();
-    mProgressBar = HUD->CreateProgressBarInCell(nextCell, timeConquest, player->GetFaction());
+    mProgressBar = HUD->CreateProgressBarInCell(nextCell, mUnit->GetTimeConquestCell(),
+                                                player->GetFaction());
 
     mProgressBar->AddFunctionOnCompleted([this, nextCell, player, layerOverlay]
     {

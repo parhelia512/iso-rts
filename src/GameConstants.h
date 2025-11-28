@@ -9,6 +9,9 @@ constexpr int MAX_UNITS_LEVEL = 2;
 constexpr int COST_UNIT_UPGRADE[] = { 1, 2 };
 
 constexpr float TIME_AI_MIN = 0.2f;
+constexpr float TIME_GOD_MODE = 0.25f;
+
+constexpr float MAX_STAV_VAL = 10.f;
 
 constexpr unsigned int PLAYER_COLOR[] =
 {

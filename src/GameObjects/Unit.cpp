@@ -1,9 +1,11 @@
 #include "GameObjects/Unit.h"
 
+#include "Game.h"
 #include "GameConstants.h"
 #include "GameData.h"
 #include "GameMap.h"
 #include "IsoObject.h"
+#include "Player.h"
 #include "GameObjects/ObjectData.h"
 #include "Particles/DataParticleHealing.h"
 #include "Particles/DataParticleSingleLaser.h"
@@ -43,15 +45,13 @@ Unit::Unit(const ObjectData & data)
     // TODO translate stats into actual values, ex.: speed = 5 -> SetSpeed(2.f)
 
     // SET CONCRETE ATTRIBUTES
-    const float maxStatVal = 10.f;
-
     // set actual speed
     const float maxSpeed = 5.f;
-    const float speed = maxSpeed * static_cast<float>(mAttributes[OBJ_ATT_SPEED]) / maxStatVal;
+    const float speed = maxSpeed * static_cast<float>(mAttributes[OBJ_ATT_SPEED]) / MAX_STAV_VAL;
     SetSpeed(speed);
 
     // set regeneration power
-    const float regPower = mAttributes[OBJ_ATT_REGENERATION] / maxStatVal;
+    const float regPower = mAttributes[OBJ_ATT_REGENERATION] / MAX_STAV_VAL;
     SetRegPower(regPower);
 
     // set visibility
@@ -141,11 +141,29 @@ bool Unit::CanBuild() const
     return GetAttribute(OBJ_ATT_CONSTRUCTION) > 0;
 }
 
+float Unit::GetTimeBuildStructure() const
+{
+    const float maxTime = 6.f;
+    return GetTime(maxTime, GetAttribute(OBJ_ATT_CONSTRUCTION));
+}
+
 void Unit::ClearStructureToBuild() { mStructToBuild = GameObject::TYPE_NULL; }
 
 bool Unit::CanConquer() const
 {
     return GetAttribute(OBJ_ATT_CONQUEST) > 0;
+}
+
+float Unit::GetTimeConquestCell() const
+{
+    const float maxTime = 2.5f;
+    return GetTime(maxTime, GetAttribute(OBJ_ATT_CONQUEST));
+}
+
+float Unit::GetTimeConquestStructure() const
+{
+    const float maxTime = 5.f;
+    return GetTime(maxTime, GetAttribute(OBJ_ATT_CONQUEST));
 }
 
 bool Unit::CanSpawn() const
@@ -163,6 +181,20 @@ int Unit::GetAttribute(ObjAttId attID) const
 void Unit::UpdateGraphics()
 {
     SetImage();
+}
+
+float Unit::GetTime(float maxTime, float attribute) const
+{
+#ifdef DEV_MODE
+    if(Game::GOD_MODE)
+        return TIME_GOD_MODE;
+#endif
+
+    // special time for invisible AI
+    if(!GetOwner()->IsLocal() && !GetGameMap()->IsObjectVisibleToLocalPlayer(this))
+        return TIME_AI_MIN;
+
+    return maxTime * attribute / MAX_STAV_VAL;
 }
 
 void Unit::SetImage()

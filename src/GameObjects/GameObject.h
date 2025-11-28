@@ -223,6 +223,7 @@ protected:
 
     GameMap * GetGameMap() const;
     ScreenGame * GetScreen() const;
+    Player * GetOwner() const;
 
     void SetVisibilityLevel(int val);
     void SetStructure(bool val);
@@ -400,6 +401,7 @@ inline unsigned int GameObject::GetCols() const { return mCols; }
 
 inline GameMap * GameObject::GetGameMap() const { return mGameMap; }
 inline ScreenGame * GameObject::GetScreen() const { return mScreen; }
+inline Player * GameObject::GetOwner() const { return mOwner; }
 
 inline void GameObject::SetVisibilityLevel(int val) { mVisLevel = val; }
 inline void GameObject::SetStructure(bool val) { mStructure = val; }
