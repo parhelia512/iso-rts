@@ -761,25 +761,7 @@ void ScreenGame::CreateUI()
     {
         ClearCellOverlays();
 
-        GameObject * obj = mLocalPlayer->GetSelectedObject();
-
-        auto og = obj->GetGroup();
-
-        // in case object is part of a group -> destroy all members
-        if(og != nullptr)
-        {
-            og->DoForAll([](GameObject * o)
-            {
-                const float h = o->GetMaxHealth();
-                o->Hit(h, NO_FACTION);
-            });
-        }
-        // standard single object -> destroy
-        else
-        {
-            const float h = obj->GetMaxHealth();
-            obj->Hit(h, NO_FACTION);
-        }
+        mHUD->ShowDialogSelfDestruction();
     });
 
     // upgrade

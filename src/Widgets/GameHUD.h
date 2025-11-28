@@ -24,6 +24,7 @@ class DialogExploreTempleOutcome;
 class DialogMissionGoals;
 class DialogNewElement;
 class DialogObject;
+class DialogSelfDestruction;
 class DialogTrading;
 class GameMapProgressBar;
 class GameObject;
@@ -87,6 +88,9 @@ public:
     void ShowDialogTrading();
     void HideDialogTrading();
 
+    void ShowDialogSelfDestruction();
+    void HideDialogSelfDestruction();
+
     void SetLocalActionsEnabled(bool enabled);
 
     GameMapProgressBar * CreateProgressBarInCell(const Cell2D & cell, float time, PlayerFaction faction);
@@ -126,6 +130,7 @@ private:
     DialogMissionGoals * mDialogMissionGoals = nullptr;
     DialogNewElement * mDialogNewElement = nullptr;
     DialogObject * mDialogObj = nullptr;
+    DialogSelfDestruction * mDialogSelfDestruct = nullptr;
     DialogTrading * mDialogTrading = nullptr;
 
     PanelSelectedObject * mPanelSelObj = nullptr;

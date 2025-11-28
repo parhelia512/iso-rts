@@ -3,6 +3,7 @@
 #include "Cell2D.h"
 #include "ControlMap.h"
 #include "Game.h"
+#include "GameConstants.h"
 #include "GameMap.h"
 #include "GameUIData.h"
 #include "IsoMap.h"
@@ -24,6 +25,7 @@
 #include "Widgets/DialogMissionGoals.h"
 #include "Widgets/DialogNewElement.h"
 #include "Widgets/DialogObject.h"
+#include "Widgets/DialogSelfDestruction.h"
 #include "Widgets/DialogTrading.h"
 #include "Widgets/GameMapProgressBar.h"
 #include "Widgets/MiniMap.h"
@@ -669,6 +671,70 @@ void GameHUD::HideDialogTrading()
     // schedule dialog deletion
     mDialogTrading->DeleteLater();
     mDialogTrading = nullptr;
+
+    // un-pause game
+    mScreen->SetPause(false);
+}
+
+void GameHUD::ShowDialogSelfDestruction()
+{
+    if(mDialogSelfDestruct != nullptr)
+        return ;
+
+    mScreen->ShowScreenOverlay();
+
+    ++mVisibleDialogs;
+
+    mScreen->SetPause(true);
+
+    // CREATE DIALOG
+    mDialogSelfDestruct = new DialogSelfDestruction;
+    mDialogSelfDestruct->SetFocus();
+
+    // button Close
+    mDialogSelfDestruct->AddFunctionOnClose([this]
+    {
+        HideDialogSelfDestruction();
+    });
+
+    // button Destroy
+    mDialogSelfDestruct->AddFunctionOnDestroy([this]
+    {
+        auto obj = mScreen->mLocalPlayer->GetSelectedObject();
+
+        mScreen->mGameMap->RemoveAndDestroyObject(obj);
+
+        HideDialogSelfDestruction();
+    });
+
+    // button Blow Up
+    mDialogSelfDestruct->AddFunctionOnBlowup([this]
+    {
+        auto obj = mScreen->mLocalPlayer->GetSelectedObject();
+
+        const float h = obj->GetMaxHealth();
+        obj->Hit(h, NO_FACTION);
+
+        HideDialogSelfDestruction();
+    });
+
+    TemporaryClosePanels();
+
+    // position dialog
+    CenterWidget(mDialogSelfDestruct);
+}
+
+void GameHUD::HideDialogSelfDestruction()
+{
+    --mVisibleDialogs;
+
+    mScreen->HideScreenOverlay();
+
+    ReopenPanels();
+
+    // schedule dialog deletion
+    mDialogSelfDestruct->DeleteLater();
+    mDialogSelfDestruct = nullptr;
 
     // un-pause game
     mScreen->SetPause(false);

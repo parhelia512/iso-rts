@@ -333,6 +333,8 @@ add_executable(
     src/Widgets/DialogNewElement.cpp
     src/Widgets/DialogObject.h
     src/Widgets/DialogObject.cpp
+    src/Widgets/DialogSelfDestruction.h
+    src/Widgets/DialogSelfDestruction.cpp
     src/Widgets/DialogSettings.h
     src/Widgets/DialogSettings.cpp
     src/Widgets/DialogTrading.h
