@@ -241,7 +241,7 @@ void ObjectsDataRegistry::InitObjectData()
                   ObjectData({ {OBJ_ATT_ENERGY, 4}, {OBJ_ATT_VIEW_RANGE, 4}, {OBJ_ATT_FIRE_POWER, 1},
                                {OBJ_ATT_FIRE_ACCURACY, 2}, {OBJ_ATT_FIRE_RANGE, 2}, {OBJ_ATT_REGENERATION, 4},
                                {OBJ_ATT_RESISTANCE, 2}, {OBJ_ATT_SHIELD, 2}, {OBJ_ATT_SPEED, 5},
-                               {OBJ_ATT_CONSTRUCTION, 2}, {OBJ_ATT_CONQUEST, 3} },
+                               {OBJ_ATT_CONSTRUCTION, 2}, {OBJ_ATT_CONQUEST, 5} },
                              { 300, 300, 0, 0 },
                              { SPR_UNIT_04_F1, SPR_UNIT_04_F2, SPR_UNIT_04_F3}, SpriteFileUnits,
                              GameObject::TYPE_UNIT_SCOUT1, OCU_SOLDIER, OCAT_UNIT, 1, 1));
@@ -280,7 +280,7 @@ void ObjectsDataRegistry::InitObjectData()
                   ObjectData({ {OBJ_ATT_ENERGY, 6}, {OBJ_ATT_VIEW_RANGE, 6}, {OBJ_ATT_FIRE_POWER, 1},
                                {OBJ_ATT_FIRE_ACCURACY, 1}, {OBJ_ATT_FIRE_RANGE, 1}, {OBJ_ATT_REGENERATION, 4},
                                {OBJ_ATT_RESISTANCE, 3}, {OBJ_ATT_SHIELD, 2}, {OBJ_ATT_SPEED, 4},
-                               {OBJ_ATT_CONSTRUCTION, 5}, {OBJ_ATT_CONQUEST, 5} } ,
+                               {OBJ_ATT_CONSTRUCTION, 5}, {OBJ_ATT_CONQUEST, 3} } ,
                              { 150, 150, 0, 0 },
                              { SPR_UNIT_01_F1, SPR_UNIT_01_F2, SPR_UNIT_01_F3 }, SpriteFileUnits,
                              GameObject::TYPE_UNIT_WORKER1, OCU_WORKER, OCAT_UNIT, 1, 1));
