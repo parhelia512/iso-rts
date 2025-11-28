@@ -675,15 +675,15 @@ void ScreenGame::CreateUI()
     // spawn mini-units
     panelObjActions->AddButtonFunction(PanelObjectActions::BTN_SPAWN, [this]
     {
-        auto unit = static_cast<Unit *>(mLocalPlayer->GetSelectedObject());
-        unit->SetActiveAction(GameObjectActionType::SPAWN);
+        auto selObj = mLocalPlayer->GetSelectedObject();
+        selObj->SetActiveAction(GameObjectActionType::SPAWN);
 
         ClearCellOverlays();
 
         // TODO move this to HUD when dialog to control creation is done
-        auto og = mGameMap->CreateMiniUnitsGroup(unit->GetFaction());
+        auto og = mGameMap->CreateMiniUnitsGroup(selObj->GetFaction());
         const int numSquads = 1 + rand() % 5;
-        SetupNewMiniUnits(GameObject::TYPE_MINI_UNIT1, unit, og, mLocalPlayer, 3, numSquads);
+        SetupNewMiniUnits(GameObject::TYPE_MINI_UNIT1, selObj, og, mLocalPlayer, 3, numSquads);
     });
 
     // set target destination for mini units
