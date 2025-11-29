@@ -14,8 +14,6 @@ namespace game
 SpawningTower::SpawningTower(const ObjectData & data)
     : Structure(data)
 {
-    SetVisibilityLevel(4);
-
     SetImage();
 }
 

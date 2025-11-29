@@ -34,7 +34,7 @@ Trees::Trees(const ObjectData & data, GameObjectVariantId var)
 
     // randomize turns for change
     const int minTurns = 10;
-    const int maxTurns = 40;
+    const int maxTurns = 30;
     sgl::utilities::UniformDistribution dis(minTurns, maxTurns);
     mTurnsToChange = dis.GetNextValue();
 

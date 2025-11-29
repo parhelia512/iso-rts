@@ -19,10 +19,6 @@ Base::Base(const ObjectData & data)
     , mOutputEnergy(15)
     , mOutputMaterial(5)
 {
-    SetVisibilityLevel(6);
-    // base is linked to itself
-    SetLinked(true);
-
     // set object health
     const float health = 500.f;
 

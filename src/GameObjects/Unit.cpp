@@ -39,8 +39,6 @@ Unit::Unit(const ObjectData & data)
     const float HealPowers[maxHealVal] = { 0.f, 1.f, 2.f, 2.f, 3.f, 3.f, 4.f, 4.f, 5.f, 5.f, 6.f };
     mHealingPower = HealPowers[GetAttribute(OBJ_ATT_HEALING_POWER)];
 
-    // TODO translate stats into actual values, ex.: speed = 5 -> SetSpeed(2.f)
-
     // SET CONCRETE ATTRIBUTES
     // set actual speed
     const float maxSpeed = 5.f;
@@ -50,9 +48,6 @@ Unit::Unit(const ObjectData & data)
     // set regeneration power
     const float regPower = GetAttribute(OBJ_ATT_REGENERATION) / MAX_STAV_VAL;
     SetRegPower(regPower);
-
-    // set visibility
-    SetVisibilityLevel(4);
 }
 
 bool Unit::CanAttack() const

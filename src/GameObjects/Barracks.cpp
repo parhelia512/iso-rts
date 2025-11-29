@@ -12,8 +12,6 @@ namespace game
 Barracks::Barracks(const ObjectData & data)
     : Structure(data)
 {
-    SetVisibilityLevel(4);
-
     SetImage();
 }
 

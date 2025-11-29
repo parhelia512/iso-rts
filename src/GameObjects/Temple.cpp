@@ -22,8 +22,6 @@ Temple::Temple(const ObjectData & data)
 {
     SetCanBeConquered(true);
 
-    SetVisibilityLevel(4);
-
     DefineMaxValues();
 
     SetImage();

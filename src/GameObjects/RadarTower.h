@@ -13,8 +13,6 @@ public:
 protected:
     void UpdateGraphics() override;
 
-    void OnLinkedChanged() override;
-
 private:
     void SetImage();
 };

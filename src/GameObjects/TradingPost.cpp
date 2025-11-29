@@ -14,8 +14,6 @@ namespace game
 TradingPost::TradingPost(const ObjectData & data)
     : Structure(data)
 {
-    SetVisibilityLevel(4);
-
     SetImage();
 }
 

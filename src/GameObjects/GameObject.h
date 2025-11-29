@@ -229,7 +229,6 @@ protected:
     ScreenGame * GetScreen() const;
     Player * GetOwner() const;
 
-    void SetVisibilityLevel(int val);
     void SetStructure(bool val);
     void SetCanBeConquered(bool val);
     void SetStatic(bool val);
@@ -254,6 +253,8 @@ private:
     virtual float GetActionEnergyCost(GameObjectActionType action) const;
     // NOTE no boundary check, assuming valid action
     virtual float GetActionExperienceGain(GameObjectActionType action) const;
+
+    void UpdateVisibilityLevel();
 
     void RestoreTurnEnergy();
 
@@ -411,7 +412,6 @@ inline GameMap * GameObject::GetGameMap() const { return mGameMap; }
 inline ScreenGame * GameObject::GetScreen() const { return mScreen; }
 inline Player * GameObject::GetOwner() const { return mOwner; }
 
-inline void GameObject::SetVisibilityLevel(int val) { mVisLevel = val; }
 inline void GameObject::SetStructure(bool val) { mStructure = val; }
 inline void GameObject::SetCanBeConquered(bool val) { mCanBeConq = val; }
 inline void GameObject::SetStatic(bool val) { mStatic = val; }

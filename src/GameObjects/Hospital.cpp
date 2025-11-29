@@ -29,8 +29,6 @@ Hospital::Hospital(const ObjectData & data)
     // set healing power converting attribute
     mHealingPower = HealPowers[data.GetAttribute(OBJ_ATT_HEALING_POWER)];
 
-    SetVisibilityLevel(4);
-
     SetImage();
 }
 

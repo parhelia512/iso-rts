@@ -267,9 +267,16 @@ GameObject::GameObject(const ObjectData & data)
     , mRows(data.GetRows())
     , mCols(data.GetCols())
 {
+    // handle special case of Base which is always considered connected (to itself)
+    // this avoids to call SetLinked to avoid virtual methods
+    if(TYPE_BASE == mType)
+        mLinked = true;
+
     // default colors to mark objects that haven't set any
     mObjColors.push_back(0xFFFFFFFF);
     mObjColors.push_back(0xFF00FFFF);
+
+    UpdateVisibilityLevel();
 }
 
 GameObject::~GameObject()
@@ -666,7 +673,11 @@ void GameObject::OnNewTurn(PlayerFaction faction)
 void GameObject::Update(float) { }
 
 void GameObject::OnFactionChanged() { }
-void GameObject::OnLinkedChanged() { }
+
+void GameObject::OnLinkedChanged()
+{
+    UpdateVisibilityLevel();
+}
 
 void GameObject::NotifyValueChanged()
 {
@@ -729,6 +740,13 @@ float GameObject::GetActionExperienceGain(GameObjectActionType action) const
     };
 
     return ACTION_EXPERIENCE[action];
+}
+
+void GameObject::UpdateVisibilityLevel()
+{
+    const int maxVisibility = IsLinked() ? 20 : 10;
+
+    mVisLevel = std::roundf(maxVisibility * GetAttribute(OBJ_ATT_VIEW_RANGE) / MAX_STAV_VAL);
 }
 
 void GameObject::RestoreTurnEnergy()

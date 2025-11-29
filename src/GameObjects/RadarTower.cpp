@@ -15,21 +15,11 @@ RadarTower::RadarTower(const ObjectData & data)
     SetCanBeConquered(true);
 
     SetImage();
-
-    SetVisibilityLevel(1);
 }
 
 void RadarTower::UpdateGraphics()
 {
     SetImage();
-}
-
-void RadarTower::OnLinkedChanged()
-{
-    Structure::OnLinkedChanged();
-
-    const int maxVis = 9;
-    SetVisibilityLevel(maxVis * static_cast<int>(IsLinked()));
 }
 
 void RadarTower::SetImage()
