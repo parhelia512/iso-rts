@@ -50,7 +50,7 @@ void ObjectsDataRegistry::InitObjectData()
                              OCS_BASE, OCAT_GENERIC, 3, 3));
 
     mData.emplace(GameObject::TYPE_BLOBS,
-                  ObjectData({}, {}, { BLOBS_1 }, SpriteCollectiblesFile,
+                  ObjectData({ {OBJ_ATT_ENERGY, 1} }, {}, { BLOBS_1 }, SpriteCollectiblesFile,
                              GameObject::TYPE_BLOBS, GameObject::CAT_COLLECTABLE,
                              OCO_COLLECTABLE, OCAT_UNDEFINED, 1, 1));
 
@@ -75,12 +75,12 @@ void ObjectsDataRegistry::InitObjectData()
                              OCS_TOWER, OCAT_DEFENSE, 1, 1));
 
     mData.emplace(GameObject::TYPE_DIAMONDS,
-                  ObjectData({}, {}, { DIAMONDS_1 }, SpriteCollectiblesFile,
+                  ObjectData({ {OBJ_ATT_ENERGY, 1} }, {}, { DIAMONDS_1 }, SpriteCollectiblesFile,
                              GameObject::TYPE_DIAMONDS, GameObject::CAT_COLLECTABLE,
                              OCO_COLLECTABLE, OCAT_UNDEFINED, 1, 1));
 
     mData.emplace(GameObject::TYPE_HOSPITAL,
-                  ObjectData({ {OBJ_ATT_ENERGY, 6}, {OBJ_ATT_VIEW_RANGE, 4}, {OBJ_ATT_REGENERATION, 5},
+                  ObjectData({ {OBJ_ATT_ENERGY, 5}, {OBJ_ATT_VIEW_RANGE, 4}, {OBJ_ATT_REGENERATION, 5},
                                {OBJ_ATT_RESISTANCE, 3}, {OBJ_ATT_SHIELD, 2}, {OBJ_ATT_HEALING_RANGE, 5},
                                {OBJ_ATT_HEALING_POWER, 6}, {OBJ_ATT_CONSTRUCTION, 4} },
                              { 1000, 500, 0, 0 },
@@ -90,7 +90,7 @@ void ObjectsDataRegistry::InitObjectData()
                              OCS_HOSPITAL, OCAT_GENERIC, 2, 2));
 
     mData.emplace(GameObject::TYPE_LOOTBOX,
-                  ObjectData({}, {}, { IND_LOOTBOX }, SpriteCollectiblesFile,
+                  ObjectData({ {OBJ_ATT_ENERGY, 1} }, {}, { IND_LOOTBOX }, SpriteCollectiblesFile,
                              GameObject::TYPE_LOOTBOX, GameObject::CAT_COLLECTABLE,
                              OCO_COLLECTABLE, OCAT_UNDEFINED, 1, 1));
 
@@ -104,12 +104,12 @@ void ObjectsDataRegistry::InitObjectData()
                              OCMU_SOLDIER, OCAT_MINI_UNIT, 1, 1));
 
     mData.emplace(GameObject::TYPE_MOUNTAINS,
-                  ObjectData({}, {}, { ID_SCENE_MOUNTAIN_1 }, SpriteFileSceneElements,
+                  ObjectData({ {OBJ_ATT_ENERGY, 1} }, {}, { ID_SCENE_MOUNTAIN_1 }, SpriteFileSceneElements,
                              GameObject::TYPE_MOUNTAINS, GameObject::CAT_SCENE_OBJ,
                              OCO_SCENE, OCAT_UNDEFINED, 2, 2));
 
     mData.emplace(GameObject::TYPE_PRACTICE_TARGET,
-                  ObjectData({ {OBJ_ATT_ENERGY, 8}, {OBJ_ATT_VIEW_RANGE, 2}, {OBJ_ATT_REGENERATION, 5},
+                  ObjectData({ {OBJ_ATT_ENERGY, 1}, {OBJ_ATT_VIEW_RANGE, 2}, {OBJ_ATT_REGENERATION, 5},
                                {OBJ_ATT_RESISTANCE, 8}, {OBJ_ATT_SHIELD, 8} },
                              { 100, 250, 0, 0 },
                              { ID_PRACTICE_TARGET }, SpriteFileStructures,
@@ -117,7 +117,7 @@ void ObjectsDataRegistry::InitObjectData()
                              OCS_TARGET, OCAT_GENERIC, 1, 1));
 
     mData.emplace(GameObject::TYPE_RADAR_STATION,
-                  ObjectData({ {OBJ_ATT_ENERGY, 4}, {OBJ_ATT_VIEW_RANGE, 8}, {OBJ_ATT_REGENERATION, 4},
+                  ObjectData({ {OBJ_ATT_ENERGY, 5}, {OBJ_ATT_VIEW_RANGE, 8}, {OBJ_ATT_REGENERATION, 4},
                                {OBJ_ATT_RESISTANCE, 5}, {OBJ_ATT_SHIELD, 3} },
                              { 250, 150, 0, 0 },
                              { ID_STRUCT_RADAR_F1, ID_STRUCT_RADAR_F2, ID_STRUCT_RADAR_F3,
@@ -135,7 +135,7 @@ void ObjectsDataRegistry::InitObjectData()
                              OCS_RADAR, OCAT_TECHNOLOGY, 1, 1));
 
     mData.emplace(GameObject::TYPE_RESEARCH_CENTER,
-                  ObjectData({ {OBJ_ATT_ENERGY, 4}, {OBJ_ATT_VIEW_RANGE, 4}, {OBJ_ATT_REGENERATION, 4},
+                  ObjectData({ {OBJ_ATT_ENERGY, 5}, {OBJ_ATT_VIEW_RANGE, 4}, {OBJ_ATT_REGENERATION, 4},
                                {OBJ_ATT_RESISTANCE, 3}, {OBJ_ATT_SHIELD, 2} },
                              { 1000, 500, 100, 100 },
                              { ID_STRUCT_RESEARCH_CENTER_F1, ID_STRUCT_RESEARCH_CENTER_F2,
@@ -216,12 +216,12 @@ void ObjectsDataRegistry::InitObjectData()
                              OCS_STORAGE, OCAT_RESOURCES, 1, 1));
 
     mData.emplace(GameObject::TYPE_ROCKS,
-                  ObjectData({}, {}, { ROCKS_ROW_1 }, SpriteRocksFile,
+                  ObjectData({ {OBJ_ATT_ENERGY, 1} }, {}, { ROCKS_ROW_1 }, SpriteRocksFile,
                              GameObject::TYPE_ROCKS, GameObject::CAT_SCENE_OBJ,
                              OCO_SCENE, OCAT_UNDEFINED, 1, 1));
 
     mData.emplace(GameObject::TYPE_SPAWN_TOWER,
-                  ObjectData({ {OBJ_ATT_ENERGY, 8}, {OBJ_ATT_VIEW_RANGE, 4}, {OBJ_ATT_REGENERATION, 3},
+                  ObjectData({ {OBJ_ATT_ENERGY, 6}, {OBJ_ATT_VIEW_RANGE, 4}, {OBJ_ATT_REGENERATION, 3},
                               {OBJ_ATT_RESISTANCE, 4}, {OBJ_ATT_SHIELD, 5} },
                              { 750, 500, 50, 50 },
                              { ID_STRUCT_SPAWN_TOWER_F1, ID_STRUCT_SPAWN_TOWER_F2, ID_STRUCT_SPAWN_TOWER_F3,
@@ -230,7 +230,7 @@ void ObjectsDataRegistry::InitObjectData()
                              OCS_TOWER, OCAT_GENERIC, 2, 2));
 
     mData.emplace(GameObject::TYPE_TEMPLE,
-                  ObjectData({ {OBJ_ATT_ENERGY, 8}, {OBJ_ATT_VIEW_RANGE, 4}, {OBJ_ATT_REGENERATION, 1},
+                  ObjectData({ {OBJ_ATT_ENERGY, 4}, {OBJ_ATT_VIEW_RANGE, 4}, {OBJ_ATT_REGENERATION, 1},
                                {OBJ_ATT_RESISTANCE, 1}, {OBJ_ATT_SHIELD, 1} },
                              { 0, 0, 0, 0 },
                              { ID_STRUCT_TEMPLE_F1, ID_STRUCT_TEMPLE_F2, ID_STRUCT_TEMPLE_F3,
@@ -249,12 +249,12 @@ void ObjectsDataRegistry::InitObjectData()
                              OCS_TRADING, OCAT_GENERIC, 3, 3));
 
     mData.emplace(GameObject::TYPE_TREES,
-                  ObjectData({}, {}, { TREE1_1T_1 }, SpriteFileTrees,
+                  ObjectData({ {OBJ_ATT_ENERGY, 1} }, {}, { TREE1_1T_1 }, SpriteFileTrees,
                              GameObject::TYPE_TREES, GameObject::CAT_SCENE_OBJ,
                              OCO_SCENE, OCAT_UNDEFINED, 1, 1));
 
     mData.emplace(GameObject::TYPE_UNIT_MEDIC1,
-                  ObjectData({ {OBJ_ATT_ENERGY, 6}, {OBJ_ATT_VIEW_RANGE, 5}, {OBJ_ATT_REGENERATION, 6},
+                  ObjectData({ {OBJ_ATT_ENERGY, 5}, {OBJ_ATT_VIEW_RANGE, 5}, {OBJ_ATT_REGENERATION, 6},
                                {OBJ_ATT_RESISTANCE, 4}, {OBJ_ATT_SHIELD, 4},  {OBJ_ATT_SPEED, 2},
                                {OBJ_ATT_HEALING_RANGE, 3}, {OBJ_ATT_HEALING_POWER, 5} } ,
                              { 500, 500, 0, 0 },
@@ -263,7 +263,7 @@ void ObjectsDataRegistry::InitObjectData()
                              OCU_MEDIC, OCAT_UNIT, 1, 1));
 
     mData.emplace(GameObject::TYPE_UNIT_SCOUT1,
-                  ObjectData({ {OBJ_ATT_ENERGY, 4}, {OBJ_ATT_VIEW_RANGE, 4}, {OBJ_ATT_FIRE_POWER, 1},
+                  ObjectData({ {OBJ_ATT_ENERGY, 5}, {OBJ_ATT_VIEW_RANGE, 4}, {OBJ_ATT_FIRE_POWER, 1},
                                {OBJ_ATT_FIRE_ACCURACY, 2}, {OBJ_ATT_FIRE_RANGE, 2}, {OBJ_ATT_REGENERATION, 4},
                                {OBJ_ATT_RESISTANCE, 2}, {OBJ_ATT_SHIELD, 2}, {OBJ_ATT_SPEED, 5},
                                {OBJ_ATT_CONSTRUCTION, 2}, {OBJ_ATT_CONQUEST, 5} },
@@ -273,7 +273,7 @@ void ObjectsDataRegistry::InitObjectData()
                              OCU_SOLDIER, OCAT_UNIT, 1, 1));
 
     mData.emplace(GameObject::TYPE_UNIT_SOLDIER1,
-                  ObjectData({ {OBJ_ATT_ENERGY, 4}, {OBJ_ATT_VIEW_RANGE, 5}, {OBJ_ATT_FIRE_POWER, 4},
+                  ObjectData({ {OBJ_ATT_ENERGY, 3}, {OBJ_ATT_VIEW_RANGE, 5}, {OBJ_ATT_FIRE_POWER, 4},
                                {OBJ_ATT_FIRE_ACCURACY, 5}, {OBJ_ATT_FIRE_RANGE, 4}, {OBJ_ATT_REGENERATION, 3},
                                {OBJ_ATT_RESISTANCE, 3}, {OBJ_ATT_SHIELD, 2}, {OBJ_ATT_SPEED, 4}, {OBJ_ATT_CONQUEST, 3} },
                              { 200, 200, 0, 0 },
@@ -282,7 +282,7 @@ void ObjectsDataRegistry::InitObjectData()
                              OCU_SOLDIER, OCAT_UNIT, 1, 1));
 
     mData.emplace(GameObject::TYPE_UNIT_SOLDIER2,
-                  ObjectData({ {OBJ_ATT_ENERGY, 6}, {OBJ_ATT_VIEW_RANGE, 5}, {OBJ_ATT_FIRE_POWER, 5},
+                  ObjectData({ {OBJ_ATT_ENERGY, 4}, {OBJ_ATT_VIEW_RANGE, 5}, {OBJ_ATT_FIRE_POWER, 5},
                                {OBJ_ATT_FIRE_ACCURACY, 4}, {OBJ_ATT_FIRE_RANGE, 5}, {OBJ_ATT_REGENERATION, 4},
                                {OBJ_ATT_RESISTANCE, 5}, {OBJ_ATT_SHIELD, 6}, {OBJ_ATT_SPEED, 3}, {OBJ_ATT_CONQUEST, 2} },
                              { 400, 400, 0, 0 },
@@ -291,7 +291,7 @@ void ObjectsDataRegistry::InitObjectData()
                              OCU_SOLDIER, OCAT_UNIT, 1, 1));
 
     mData.emplace(GameObject::TYPE_UNIT_SPAWNER1,
-                  ObjectData({ {OBJ_ATT_ENERGY, 6}, {OBJ_ATT_VIEW_RANGE, 5}, {OBJ_ATT_REGENERATION, 4},
+                  ObjectData({ {OBJ_ATT_ENERGY, 5}, {OBJ_ATT_VIEW_RANGE, 5}, {OBJ_ATT_REGENERATION, 4},
                                {OBJ_ATT_RESISTANCE, 3}, {OBJ_ATT_SHIELD, 3},  {OBJ_ATT_SPEED, 4}, {OBJ_ATT_SPAWNING, 3} },
                              { 200, 200, 5, 5 },
                              { SPR_UNIT_06_F1, SPR_UNIT_06_F2, SPR_UNIT_06_F3 }, SpriteFileUnits,
@@ -299,7 +299,7 @@ void ObjectsDataRegistry::InitObjectData()
                              OCU_SPAWNER, OCAT_UNIT, 1, 1));
 
     mData.emplace(GameObject::TYPE_UNIT_SPAWNER2,
-                  ObjectData({ {OBJ_ATT_ENERGY, 7}, {OBJ_ATT_VIEW_RANGE, 6}, {OBJ_ATT_REGENERATION, 5},
+                  ObjectData({ {OBJ_ATT_ENERGY, 6}, {OBJ_ATT_VIEW_RANGE, 6}, {OBJ_ATT_REGENERATION, 5},
                               {OBJ_ATT_RESISTANCE, 4}, {OBJ_ATT_SHIELD, 4},  {OBJ_ATT_SPEED, 3}, {OBJ_ATT_SPAWNING, 5} },
                              { 300, 300, 25, 25 },
                              { SPR_UNIT_07_F1, SPR_UNIT_07_F2, SPR_UNIT_07_F3 }, SpriteFileUnits,
@@ -307,7 +307,7 @@ void ObjectsDataRegistry::InitObjectData()
                              OCU_SPAWNER, OCAT_UNIT, 1, 1));
 
     mData.emplace(GameObject::TYPE_UNIT_WORKER1,
-                  ObjectData({ {OBJ_ATT_ENERGY, 6}, {OBJ_ATT_VIEW_RANGE, 6}, {OBJ_ATT_FIRE_POWER, 1},
+                  ObjectData({ {OBJ_ATT_ENERGY, 4}, {OBJ_ATT_VIEW_RANGE, 6}, {OBJ_ATT_FIRE_POWER, 1},
                                {OBJ_ATT_FIRE_ACCURACY, 1}, {OBJ_ATT_FIRE_RANGE, 1}, {OBJ_ATT_REGENERATION, 4},
                                {OBJ_ATT_RESISTANCE, 3}, {OBJ_ATT_SHIELD, 2}, {OBJ_ATT_SPEED, 4},
                                {OBJ_ATT_CONSTRUCTION, 5}, {OBJ_ATT_CONQUEST, 3} } ,
@@ -317,7 +317,7 @@ void ObjectsDataRegistry::InitObjectData()
                              OCU_WORKER, OCAT_UNIT, 1, 1));
 
     mData.emplace(GameObject::TYPE_WALL,
-                  ObjectData({ {OBJ_ATT_ENERGY, 5}, {OBJ_ATT_VIEW_RANGE, 2}, {OBJ_ATT_REGENERATION, 5},
+                  ObjectData({ {OBJ_ATT_ENERGY, 1}, {OBJ_ATT_VIEW_RANGE, 2}, {OBJ_ATT_REGENERATION, 5},
                                {OBJ_ATT_RESISTANCE, 6}, {OBJ_ATT_SHIELD, 6} },
                              { 100, 100, 0, 0 },
                              { WALL_L1_F1_HORIZ, WALL_L1_F2_HORIZ, WALL_L1_F3_HORIZ },
@@ -325,7 +325,7 @@ void ObjectsDataRegistry::InitObjectData()
                              OCS_WALL, OCAT_DEFENSE, 1, 1));
 
     mData.emplace(GameObject::TYPE_WALL_GATE,
-                  ObjectData({ {OBJ_ATT_ENERGY, 5}, {OBJ_ATT_VIEW_RANGE, 2}, {OBJ_ATT_REGENERATION, 6},
+                  ObjectData({ {OBJ_ATT_ENERGY, 3}, {OBJ_ATT_VIEW_RANGE, 2}, {OBJ_ATT_REGENERATION, 6},
                                {OBJ_ATT_RESISTANCE, 5}, {OBJ_ATT_SHIELD, 5} },
                              { 100, 100, 0, 0 },
                              { WALL_GATE_L1_F1_HORIZ_CLOSED, WALL_GATE_L1_F2_HORIZ_CLOSED,

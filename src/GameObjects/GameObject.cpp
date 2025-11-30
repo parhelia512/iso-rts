@@ -19,6 +19,10 @@
 namespace
 {
 const float minDelta = 0.01f;
+
+const float defMaxEnergy = 250.f;
+const float defMaxVisibility = 10.f;
+const float defMaxVisibilityLinked = 20.f;
 }
 
 namespace game
@@ -276,7 +280,10 @@ GameObject::GameObject(const ObjectData & data)
     mObjColors.push_back(0xFFFFFFFF);
     mObjColors.push_back(0xFF00FFFF);
 
-    UpdateVisibilityLevel();
+    // update data based on attributes
+    UpdateMaxEnergy(defMaxEnergy);
+
+    UpdateVisibilityLevel(defMaxVisibility, defMaxVisibilityLinked);
 }
 
 GameObject::~GameObject()
@@ -676,7 +683,7 @@ void GameObject::OnFactionChanged() { }
 
 void GameObject::OnLinkedChanged()
 {
-    UpdateVisibilityLevel();
+    UpdateVisibilityLevel(defMaxVisibility, defMaxVisibilityLinked);
 }
 
 void GameObject::NotifyValueChanged()
@@ -684,7 +691,6 @@ void GameObject::NotifyValueChanged()
     for(const auto & it : mOnValueChanged)
         it.second();
 }
-
 
 float GameObject::GetTime(float maxTime, float attribute) const
 {
@@ -698,6 +704,22 @@ float GameObject::GetTime(float maxTime, float attribute) const
         return TIME_AI_MIN;
 
     return maxTime * attribute / MAX_STAV_VAL;
+}
+
+void GameObject::UpdateVisibilityLevel(float maxVal, float maxValLinked)
+{
+    const float maxVisibility = IsLinked() ? maxValLinked : maxVal;
+
+    mVisLevel = std::roundf(maxVisibility * GetAttribute(OBJ_ATT_VIEW_RANGE) / MAX_STAV_VAL);
+}
+
+void GameObject::UpdateMaxEnergy(float maxVal)
+{
+    const float maxEnergy = std::roundf(maxVal * GetAttribute(OBJ_ATT_ENERGY) / MAX_STAV_VAL);
+    const float diff = maxEnergy - mEnergy;
+
+    SetMaxEnergy(maxEnergy);
+    SumEnergy(diff);
 }
 
 float GameObject::GetActionEnergyCost(GameObjectActionType action) const
@@ -740,13 +762,6 @@ float GameObject::GetActionExperienceGain(GameObjectActionType action) const
     };
 
     return ACTION_EXPERIENCE[action];
-}
-
-void GameObject::UpdateVisibilityLevel()
-{
-    const int maxVisibility = IsLinked() ? 20 : 10;
-
-    mVisLevel = std::roundf(maxVisibility * GetAttribute(OBJ_ATT_VIEW_RANGE) / MAX_STAV_VAL);
 }
 
 void GameObject::RestoreTurnEnergy()

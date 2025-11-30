@@ -240,6 +240,9 @@ protected:
 
     float GetTime(float maxTime, float attribute) const;
 
+    void UpdateVisibilityLevel(float maxVal, float maxValLinked);
+    void UpdateMaxEnergy(float maxVal);
+
 protected:
     static const unsigned int COLOR_FOW;
     static const unsigned int COLOR_VIS;
@@ -253,8 +256,6 @@ private:
     virtual float GetActionEnergyCost(GameObjectActionType action) const;
     // NOTE no boundary check, assuming valid action
     virtual float GetActionExperienceGain(GameObjectActionType action) const;
-
-    void UpdateVisibilityLevel();
 
     void RestoreTurnEnergy();
 

@@ -10,7 +10,7 @@
 
 namespace
 {
-    constexpr float treeEnergy = 10.f;
+    constexpr float maxTreeEnergy = 100.f;
     constexpr float treeHealth = 40.f;
 }
 
@@ -29,8 +29,7 @@ Trees::Trees(const ObjectData & data, GameObjectVariantId var)
     SetHealth(treeHealth);
 
     // energy
-    SetMaxEnergy(treeEnergy);
-    SetEnergy(treeEnergy);
+    UpdateMaxEnergy(maxTreeEnergy);
 
     // randomize turns for change
     const int minTurns = 10;
@@ -77,9 +76,8 @@ void Trees::OnNewTurn(PlayerFaction faction)
         SetMaxHealth(GetMaxHealth() + treeHealth);
         SumHealth(treeHealth);
 
-        // increase energy
-        SetMaxEnergy(GetMaxEnergy() + treeEnergy);
-        SumEnergy(treeEnergy);
+        // increase total energy
+        UpdateMaxEnergy(maxTreeEnergy * mNumTrees);
     }
     // spawn tree
     else
