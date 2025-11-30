@@ -21,6 +21,7 @@ namespace
 const float minDelta = 0.01f;
 
 const float defMaxEnergy = 250.f;
+const float defMaxHealth = 1000.f;
 const float defMaxVisibility = 10.f;
 const float defMaxVisibilityLinked = 20.f;
 }
@@ -282,6 +283,8 @@ GameObject::GameObject(const ObjectData & data)
 
     // update data based on attributes
     UpdateMaxEnergy(defMaxEnergy);
+
+    UpdateMaxHealth(defMaxHealth);
 
     UpdateVisibilityLevel(defMaxVisibility, defMaxVisibilityLinked);
 }
@@ -720,6 +723,15 @@ void GameObject::UpdateMaxEnergy(float maxVal)
 
     SetMaxEnergy(maxEnergy);
     SumEnergy(diff);
+}
+
+void GameObject::UpdateMaxHealth(float maxVal)
+{
+    const float maxHealth = std::roundf(maxVal * GetAttribute(OBJ_ATT_HEALTH) / MAX_STAV_VAL);
+    const float diff = maxHealth - mHealth;
+
+    SetMaxHealth(maxHealth);
+    SumHealth(diff);
 }
 
 float GameObject::GetActionEnergyCost(GameObjectActionType action) const

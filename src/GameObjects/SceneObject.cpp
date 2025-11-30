@@ -16,13 +16,12 @@ SceneObject::SceneObject(const ObjectData & data, GameObjectVariantId part)
     mVariant = part;
 
     // set object health
-    float health = 100.f;
-
     if(TYPE_MOUNTAINS == data.GetType())
-        health = 4000.f;
-
-    SetMaxHealth(health);
-    SetHealth(health);
+    {
+        // health
+        const float maxHealthValue = 5000.f;
+        UpdateMaxHealth(maxHealthValue);
+    }
 
     SetImage();
 }

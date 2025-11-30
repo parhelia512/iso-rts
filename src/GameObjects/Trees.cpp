@@ -11,7 +11,7 @@
 namespace
 {
     constexpr float maxTreeEnergy = 100.f;
-    constexpr float treeHealth = 40.f;
+    constexpr float maxTreeHealth = 200.f;
 }
 
 namespace game
@@ -25,8 +25,7 @@ Trees::Trees(const ObjectData & data, GameObjectVariantId var)
     SetStatic(true);
 
     // health
-    SetMaxHealth(treeHealth);
-    SetHealth(treeHealth);
+    UpdateMaxHealth(maxTreeHealth);
 
     // energy
     UpdateMaxEnergy(maxTreeEnergy);
@@ -72,9 +71,8 @@ void Trees::OnNewTurn(PlayerFaction faction)
 
         SetImage();
 
-        // increase health
-        SetMaxHealth(GetMaxHealth() + treeHealth);
-        SumHealth(treeHealth);
+        // health
+        UpdateMaxHealth(maxTreeHealth * mNumTrees);
 
         // increase total energy
         UpdateMaxEnergy(maxTreeEnergy * mNumTrees);

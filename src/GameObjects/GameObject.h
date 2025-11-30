@@ -242,6 +242,7 @@ protected:
 
     void UpdateVisibilityLevel(float maxVal, float maxValLinked);
     void UpdateMaxEnergy(float maxVal);
+    void UpdateMaxHealth(float maxVal);
 
 protected:
     static const unsigned int COLOR_FOW;

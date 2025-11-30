@@ -48,6 +48,10 @@ Unit::Unit(const ObjectData & data)
     // set regeneration power
     const float regPower = GetAttribute(OBJ_ATT_REGENERATION) / MAX_STAV_VAL;
     SetRegPower(regPower);
+
+    // health
+    const float maxHealthValue = 250.f;
+    UpdateMaxHealth(maxHealthValue);
 }
 
 bool Unit::CanAttack() const

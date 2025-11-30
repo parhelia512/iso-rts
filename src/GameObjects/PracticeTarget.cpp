@@ -11,9 +11,9 @@ namespace game
 PracticeTarget::PracticeTarget(const ObjectData & data)
     : Structure(data)
 {
-    const float health = 1000.f;
-    SetMaxHealth(health);
-    SetHealth(health);
+    // health
+    const float maxHealthValue = 2500.f;
+    UpdateMaxHealth(maxHealthValue);
 
     SetImage();
 

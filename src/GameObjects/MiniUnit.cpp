@@ -7,6 +7,11 @@
 #include <sgl/graphic/Texture.h>
 #include <sgl/graphic/TextureManager.h>
 
+namespace
+{
+    const float maxSingleHealthValue = 50.f;
+}
+
 namespace game
 {
 
@@ -22,6 +27,10 @@ MiniUnit::MiniUnit(const ObjectData & data, int elements)
     const float maxSpeed = 10.f;
     const float speed = maxSpeed * static_cast<float>(mAttributes[OBJ_ATT_SPEED]) / maxStatVal;
     SetSpeed(speed);
+
+    // health
+    const float maxHealthValue = maxSingleHealthValue * mElements;
+    UpdateMaxHealth(maxHealthValue);
 
     // INIT GRAPHICS
     SetImage();
@@ -40,6 +49,10 @@ void MiniUnit::SetNumElements(int num)
         return ;
 
     mElements = num;
+
+    // health
+    const float maxHealthValue = maxSingleHealthValue * mElements;
+    UpdateMaxHealth(maxHealthValue);
 
     UpdateGraphics();
 }

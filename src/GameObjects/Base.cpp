@@ -19,11 +19,6 @@ Base::Base(const ObjectData & data)
     , mOutputEnergy(15)
     , mOutputMaterial(5)
 {
-    // set object health
-    const float health = 500.f;
-
-    SetMaxHealth(health);
-    SetHealth(health);
 }
 
 void Base::OnNewTurn(PlayerFaction faction)
