@@ -667,7 +667,9 @@ float GameObject::GetTime(float maxTime, float attribute) const
     if(mOwner != nullptr && !mOwner->IsLocal() && !GetGameMap()->IsObjectVisibleToLocalPlayer(this))
         return TIME_AI_MIN;
 
-    return maxTime * attribute / MAX_STAV_VAL;
+    const float baseTime = 0.25f;
+
+    return baseTime + maxTime - (maxTime * attribute / MAX_STAV_VAL);
 }
 
 void GameObject::UpdateVisibilityLevel(float maxVal, float maxValLinked)

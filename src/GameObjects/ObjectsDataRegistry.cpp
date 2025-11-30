@@ -228,7 +228,8 @@ void ObjectsDataRegistry::InitObjectData()
 
     mData.emplace(GameObject::TYPE_SPAWN_TOWER,
                   ObjectData({ {OBJ_ATT_ENERGY, 6}, {OBJ_ATT_VIEW_RANGE, 4}, {OBJ_ATT_REGENERATION, 3},
-                              {OBJ_ATT_RESISTANCE, 4}, {OBJ_ATT_SHIELD, 5}, {OBJ_ATT_HEALTH, 6} },
+                              {OBJ_ATT_RESISTANCE, 4}, {OBJ_ATT_SHIELD, 5}, {OBJ_ATT_HEALTH, 6},
+                              {OBJ_ATT_SPAWNING, 6} },
                              { 750, 500, 50, 50 },
                              { ID_STRUCT_SPAWN_TOWER_F1, ID_STRUCT_SPAWN_TOWER_F2, ID_STRUCT_SPAWN_TOWER_F3,
                               ID_STRUCT_SPAWN_TOWER }, SpriteFileStructures,
@@ -310,7 +311,7 @@ void ObjectsDataRegistry::InitObjectData()
     mData.emplace(GameObject::TYPE_UNIT_SPAWNER2,
                   ObjectData({ {OBJ_ATT_ENERGY, 6}, {OBJ_ATT_VIEW_RANGE, 6}, {OBJ_ATT_REGENERATION, 5},
                               {OBJ_ATT_RESISTANCE, 4}, {OBJ_ATT_SHIELD, 4},  {OBJ_ATT_SPEED, 3},
-                              {OBJ_ATT_SPAWNING, 5}, {OBJ_ATT_HEALTH, 6} },
+                              {OBJ_ATT_SPAWNING, 4}, {OBJ_ATT_HEALTH, 6} },
                              { 300, 300, 25, 25 },
                              { SPR_UNIT_07_F1, SPR_UNIT_07_F2, SPR_UNIT_07_F3 }, SpriteFileUnits,
                              GameObject::TYPE_UNIT_SPAWNER2, GameObject::CAT_UNIT,
