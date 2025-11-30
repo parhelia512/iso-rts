@@ -286,6 +286,8 @@ GameObject::GameObject(const ObjectData & data)
 
     UpdateMaxHealth(defMaxHealth);
 
+    UpdateRegenerationPower();
+
     UpdateVisibilityLevel(defMaxVisibility, defMaxVisibilityLinked);
 }
 
@@ -695,6 +697,12 @@ void GameObject::UpdateMaxHealth(float maxVal)
 
     SetMaxHealth(maxHealth);
     SumHealth(diff);
+}
+
+void GameObject::UpdateRegenerationPower()
+{
+    const float reg = GetAttribute(OBJ_ATT_REGENERATION) / MAX_STAV_VAL;
+    SetRegenerationPower(reg);
 }
 
 float GameObject::GetActionEnergyCost(GameObjectActionType action) const

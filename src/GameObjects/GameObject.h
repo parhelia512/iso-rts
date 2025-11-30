@@ -230,7 +230,6 @@ protected:
     void SetStatic(bool val);
 
     void SetSpeed(float speed);
-    void SetRegPower(float val);
 
     void NotifyValueChanged();
 
@@ -239,6 +238,7 @@ protected:
     void UpdateVisibilityLevel(float maxVal, float maxValLinked);
     void UpdateMaxEnergy(float maxVal);
     void UpdateMaxHealth(float maxVal);
+    void UpdateRegenerationPower();
 
 protected:
     static const unsigned int COLOR_FOW;
@@ -256,6 +256,7 @@ private:
 
     void SetEnergy(float val);
     void SetMaxEnergy(float val);
+    void SetRegenerationPower(float val);
 
     void SetMaxHealth(float max);
     void SetHealth(float val);
@@ -441,13 +442,6 @@ inline int GameObject::GetMaxExperienceLevel() const { return 10; }
 
 inline void GameObject::SetSpeed(float speed) { mSpeed = speed; }
 
-inline void GameObject::SetRegPower(float val)
-{
-    const float maxVal = 1.f;
-
-    mEnergyRegPower = val > maxVal ? maxVal : val;
-}
-
 inline GameObjectActionType GameObject::GetActiveAction() const { return mActiveAction; }
 inline void GameObject::SetActiveAction(GameObjectActionType action) { mActiveAction = action; }
 inline GameObjectActionType GameObject::GetCurrentAction() const { return mCurrAction; }
@@ -456,5 +450,12 @@ inline void GameObject::SetCurrentAction(GameObjectActionType action) { mCurrAct
 inline void GameObject::SetMaxEnergy(float val) { mMaxEnergy = val; }
 
 inline void GameObject::SetMaxHealth(float max) { mMaxHealth = max; }
+
+inline void GameObject::SetRegenerationPower(float val)
+{
+    const float maxVal = 1.f;
+
+    mEnergyRegPower = val > maxVal ? maxVal : val;
+}
 
 } // namespace game

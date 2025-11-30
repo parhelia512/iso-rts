@@ -45,10 +45,6 @@ Unit::Unit(const ObjectData & data)
     const float speed = maxSpeed * static_cast<float>(GetAttribute(OBJ_ATT_SPEED)) / MAX_STAV_VAL;
     SetSpeed(speed);
 
-    // set regeneration power
-    const float regPower = GetAttribute(OBJ_ATT_REGENERATION) / MAX_STAV_VAL;
-    SetRegPower(regPower);
-
     // health
     const float maxHealthValue = 250.f;
     UpdateMaxHealth(maxHealthValue);
