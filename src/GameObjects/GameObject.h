@@ -177,16 +177,12 @@ public:
     bool IsHealthMax() const;
     float GetHealth() const;
     float GetMaxHealth() const;
-    void SetMaxHealth(float max);
-    void SetHealth(float val);
     void SumHealth(float val);
 
     bool IsEnergyMax() const;
     float GetEnergy() const;
-    void SetEnergy(float val);
     void SumEnergy(float val);
     float GetMaxEnergy() const;
-    void SetMaxEnergy(float val);
 
     float GetEnergyForActionStep(GameObjectActionType action) const;
     bool HasEnergyForActionStep(GameObjectActionType action) const;
@@ -257,6 +253,12 @@ private:
     virtual float GetActionEnergyCost(GameObjectActionType action) const;
     // NOTE no boundary check, assuming valid action
     virtual float GetActionExperienceGain(GameObjectActionType action) const;
+
+    void SetEnergy(float val);
+    void SetMaxEnergy(float val);
+
+    void SetMaxHealth(float max);
+    void SetHealth(float val);
 
     void RestoreTurnEnergy();
 
@@ -420,11 +422,9 @@ inline void GameObject::SetStatic(bool val) { mStatic = val; }
 
 inline float GameObject::GetHealth() const { return mHealth; }
 inline float GameObject::GetMaxHealth() const { return mMaxHealth; }
-inline void GameObject::SetMaxHealth(float max) { mMaxHealth = max; }
 
 inline float GameObject::GetEnergy() const { return mEnergy; }
 inline float GameObject::GetMaxEnergy() const { return mMaxEnergy; }
-inline void GameObject::SetMaxEnergy(float val) { mMaxEnergy = val; }
 
 inline float GameObject::GetEnergyForActionStep(GameObjectActionType action) const
 {
@@ -452,5 +452,9 @@ inline GameObjectActionType GameObject::GetActiveAction() const { return mActive
 inline void GameObject::SetActiveAction(GameObjectActionType action) { mActiveAction = action; }
 inline GameObjectActionType GameObject::GetCurrentAction() const { return mCurrAction; }
 inline void GameObject::SetCurrentAction(GameObjectActionType action) { mCurrAction = action; }
+
+inline void GameObject::SetMaxEnergy(float val) { mMaxEnergy = val; }
+
+inline void GameObject::SetMaxHealth(float max) { mMaxHealth = max; }
 
 } // namespace game

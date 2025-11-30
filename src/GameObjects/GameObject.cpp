@@ -408,23 +408,6 @@ bool GameObject::IsHealthMax() const
     return  mHealth >= mMaxHealth || (mMaxHealth - mHealth) < minDelta;
 }
 
-void GameObject::SetHealth(float val)
-{
-    const float oldH = mHealth;
-
-    mHealth = val;
-
-    if(mHealth > mMaxHealth || (mMaxHealth - mHealth) < minDelta)
-        mHealth = mMaxHealth;
-    else if(mHealth < 0.f)
-        mHealth = 0.f;
-
-    const float diff = std::fabs(mHealth - oldH);
-
-    if(diff > minDelta)
-        NotifyValueChanged();
-}
-
 void GameObject::SumHealth(float val)
 {
     SetHealth(mHealth + val);
@@ -433,28 +416,6 @@ void GameObject::SumHealth(float val)
 bool GameObject::IsEnergyMax() const
 {
     return  mEnergy >= mMaxEnergy || (mMaxEnergy - mEnergy) < minDelta;
-}
-
-void GameObject::SetEnergy(float val)
-{
-    const float oldEn = mEnergy;
-
-    mEnergy = val;
-
-    if(mEnergy > mMaxEnergy || (mMaxEnergy - mEnergy) < minDelta)
-        mEnergy = mMaxEnergy;
-    else if(mEnergy < 0.f)
-        mEnergy = 0.f;
-
-#ifdef DEV_MODE
-    if(Game::GOD_MODE && IsFactionLocal())
-        mEnergy = val;
-#endif
-
-    const float diff = std::fabs(mEnergy - oldEn);
-
-    if(diff > minDelta)
-        NotifyValueChanged();
 }
 
 void GameObject::SumEnergy(float val)
@@ -774,6 +735,45 @@ float GameObject::GetActionExperienceGain(GameObjectActionType action) const
     };
 
     return ACTION_EXPERIENCE[action];
+}
+
+void GameObject::SetEnergy(float val)
+{
+    const float oldEn = mEnergy;
+
+    mEnergy = val;
+
+    if(mEnergy > mMaxEnergy || (mMaxEnergy - mEnergy) < minDelta)
+        mEnergy = mMaxEnergy;
+    else if(mEnergy < 0.f)
+        mEnergy = 0.f;
+
+#ifdef DEV_MODE
+    if(Game::GOD_MODE && IsFactionLocal())
+        mEnergy = val;
+#endif
+
+    const float diff = std::fabs(mEnergy - oldEn);
+
+    if(diff > minDelta)
+        NotifyValueChanged();
+}
+
+void GameObject::SetHealth(float val)
+{
+    const float oldH = mHealth;
+
+    mHealth = val;
+
+    if(mHealth > mMaxHealth || (mMaxHealth - mHealth) < minDelta)
+        mHealth = mMaxHealth;
+    else if(mHealth < 0.f)
+        mHealth = 0.f;
+
+    const float diff = std::fabs(mHealth - oldH);
+
+    if(diff > minDelta)
+        NotifyValueChanged();
 }
 
 void GameObject::RestoreTurnEnergy()
