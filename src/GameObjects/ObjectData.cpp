@@ -41,6 +41,7 @@ const char * ObjectData::STR_CLASS[NUM_OBJ_CLASSES] =
 const char * ObjectData::STR_ATTRIBUTES[NUM_OBJ_ATTRIBUTES] =
 {
     "ENERGY",
+    "HEALTH",
     "VIEW RANGE",
     "FIRE POWER",
     "FIRE ACCURACY",

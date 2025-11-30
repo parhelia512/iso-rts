@@ -59,6 +59,7 @@ enum ObjAttId : unsigned int
 {
     // GENERIC
     OBJ_ATT_ENERGY,
+    OBJ_ATT_HEALTH,
     OBJ_ATT_VIEW_RANGE,
     OBJ_ATT_FIRE_POWER,
     OBJ_ATT_FIRE_ACCURACY,
