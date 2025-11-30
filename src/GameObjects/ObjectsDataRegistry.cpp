@@ -183,7 +183,7 @@ void ObjectsDataRegistry::InitObjectData()
 
     mData.emplace(GameObject::TYPE_RES_STORAGE_BLOBS,
                   ObjectData({ {OBJ_ATT_ENERGY, 3}, {OBJ_ATT_VIEW_RANGE, 2}, {OBJ_ATT_REGENERATION, 2},
-                               {OBJ_ATT_RESISTANCE, 3}, {OBJ_ATT_SHIELD, 4}, {OBJ_ATT_STORAGE, 4},
+                               {OBJ_ATT_RESISTANCE, 3}, {OBJ_ATT_SHIELD, 4}, {OBJ_ATT_STORAGE, 3},
                                {OBJ_ATT_HEALTH, 4} },
                              { 100, 100, 0, 0 },
                              { ID_STRUCT_STORAGE_BLOBS_F1, ID_STRUCT_STORAGE_BLOBS_F2,
@@ -193,7 +193,7 @@ void ObjectsDataRegistry::InitObjectData()
 
     mData.emplace(GameObject::TYPE_RES_STORAGE_DIAMONDS,
                   ObjectData({ {OBJ_ATT_ENERGY, 3}, {OBJ_ATT_VIEW_RANGE, 2}, {OBJ_ATT_REGENERATION, 2},
-                               {OBJ_ATT_RESISTANCE, 3}, {OBJ_ATT_SHIELD, 4}, {OBJ_ATT_STORAGE, 4},
+                               {OBJ_ATT_RESISTANCE, 3}, {OBJ_ATT_SHIELD, 4}, {OBJ_ATT_STORAGE, 3},
                                {OBJ_ATT_HEALTH, 4} },
                              { 100, 100, 0, 0 },
                              { ID_STRUCT_STORAGE_DIAMONDS_F1, ID_STRUCT_STORAGE_DIAMONDS_F2,
@@ -203,7 +203,7 @@ void ObjectsDataRegistry::InitObjectData()
 
     mData.emplace(GameObject::TYPE_RES_STORAGE_ENERGY,
                   ObjectData({ {OBJ_ATT_ENERGY, 3}, {OBJ_ATT_VIEW_RANGE, 2}, {OBJ_ATT_REGENERATION, 2},
-                               {OBJ_ATT_RESISTANCE, 3}, {OBJ_ATT_SHIELD, 4}, {OBJ_ATT_STORAGE, 6},
+                               {OBJ_ATT_RESISTANCE, 3}, {OBJ_ATT_SHIELD, 4}, {OBJ_ATT_STORAGE, 7},
                                {OBJ_ATT_HEALTH, 5} },
                              { 100, 100, 0, 0 },
                              { ID_STRUCT_STORAGE_ENERGY_F1, ID_STRUCT_STORAGE_ENERGY_F2,
@@ -213,7 +213,7 @@ void ObjectsDataRegistry::InitObjectData()
 
     mData.emplace(GameObject::TYPE_RES_STORAGE_MATERIAL,
                   ObjectData({ {OBJ_ATT_ENERGY, 3}, {OBJ_ATT_VIEW_RANGE, 2}, {OBJ_ATT_REGENERATION, 2},
-                               {OBJ_ATT_RESISTANCE, 3}, {OBJ_ATT_SHIELD, 4}, {OBJ_ATT_STORAGE, 5},
+                               {OBJ_ATT_RESISTANCE, 3}, {OBJ_ATT_SHIELD, 4}, {OBJ_ATT_STORAGE, 6},
                                {OBJ_ATT_HEALTH, 4} },
                              { 100, 100, 0, 0 },
                              { ID_STRUCT_STORAGE_MATERIAL_F1, ID_STRUCT_STORAGE_MATERIAL_F2,

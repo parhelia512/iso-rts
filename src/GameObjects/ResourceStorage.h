@@ -14,12 +14,13 @@ public:
 
     ResourceType GetResourceType() const;
 
-protected:
+private:
     void UpdateGraphics() override;
 
     void OnLinkedChanged() override;
 
-private:
+    void UpdateCapacity();
+
     void SetImage();
 
 private:

@@ -9,6 +9,8 @@
 
 #include <sgl/graphic/TextureManager.h>
 
+#include <cmath>
+
 namespace game
 {
 
@@ -31,9 +33,7 @@ ResourceStorage::ResourceStorage(const ObjectData & data)
 
     SetCanBeConquered(true);
 
-    // set capacity based on resource
-    const int capacities[NUM_RESOURCES] = { 500, 250, 150, 100 };
-    mCapacity = capacities[mResource];
+    UpdateCapacity();
 
     SetImage();
 }
@@ -62,6 +62,14 @@ void ResourceStorage::OnLinkedChanged()
 
     Player * p = GetScreen()->GetGame()->GetPlayerByFaction(GetFaction());
     p->SumResourceMax(statIds[mResource], diff);
+}
+
+void ResourceStorage::UpdateCapacity()
+{
+    const bool mainRes = RES_ENERGY == mResource || RES_MATERIAL1 == mResource;
+    const float maxCapacity = mainRes ? 2000.f : 1000.f;
+
+    mCapacity = std::roundf(maxCapacity * GetAttribute(OBJ_ATT_STORAGE) / MAX_STAV_VAL);
 }
 
 void ResourceStorage::SetImage()
