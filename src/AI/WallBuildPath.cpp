@@ -138,7 +138,7 @@ bool WallBuildPath::InitNextMove()
     const GameMapCell & nextCell = mGameMap->GetCell(mTargetRow, mTargetCol);
 
     // next cell not walkable -> FAIL
-    if(!nextCell.walkable || nextCell.walkTarget)
+    if(!nextCell.walkable)
         return Fail();
 
     const IsoObject * isoObj = mUnit->GetIsoObject();
@@ -153,8 +153,6 @@ bool WallBuildPath::InitNextMove()
 
     mVelX = (mTargetX - mObjX) * mUnit->GetSpeed();
     mVelY = (mTargetY - mObjY) * mUnit->GetSpeed();
-
-    mGameMap->SetCellWalkTarget(nextInd, true);
 
     mState = MOVING;
 

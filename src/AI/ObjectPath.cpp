@@ -34,7 +34,7 @@ bool ObjectPath::InitNextMove()
     const unsigned int nextCol = nextInd % mIsoMap->GetNumCols();
     const GameMapCell & nextCell = mGameMap->GetCell(nextRow, nextCol);
 
-    if(!nextCell.walkable || nextCell.walkTarget)
+    if(!nextCell.walkable)
         return Fail();
 
     // set target for movement
@@ -64,9 +64,6 @@ bool ObjectPath::InitNextMove()
         mVelY = (mTargetY - mObjY) * mObj->GetSpeed();
     }
 
-    // mark next cell in game map
-    mGameMap->SetCellWalkTarget(nextInd, true);
-
     mState = MOVING;
 
     return true;
@@ -86,12 +83,6 @@ bool ObjectPath::Start()
 void ObjectPath::InstantAbort()
 {
     mState = ABORTED;
-
-    if(mNextCell < mCells.size())
-    {
-        const unsigned int nextInd = mCells[mNextCell];
-        mGameMap->SetCellWalkTarget(nextInd, false);
-    }
 }
 
 void ObjectPath::Update(float delta)

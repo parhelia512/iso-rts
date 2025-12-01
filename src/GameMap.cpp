@@ -3085,7 +3085,6 @@ bool GameMap::MoveObjToCell(GameObject * obj, int row, int col)
 
     mCells[ind1].objTop = obj;
     mCells[ind1].walkable = false;
-    mCells[ind1].walkTarget = false;
 
     return true;
 }

@@ -66,7 +66,6 @@ public:
 
     void SetCellWalkable(unsigned int cellInd, bool val);
     void SetCellWalkable(unsigned int r, unsigned int c, bool val);
-    void SetCellWalkTarget(unsigned int cellInd, bool val);
     void SetCellType(unsigned int r, unsigned int c, CellTypes type);
     void SetCellType(unsigned int ind, CellTypes type);
     void UpdateCellType(unsigned int ind, const GameMapCell & cell);
@@ -345,11 +344,6 @@ inline void GameMap::SetCellWalkable(unsigned int r, unsigned int c, bool val)
     const unsigned int ind = r * mCols + c;
 
     SetCellWalkable(ind, val);
-}
-
-inline void GameMap::SetCellWalkTarget(unsigned int cellInd, bool val)
-{
-    mCells[cellInd].walkTarget = val;
 }
 
 inline void GameMap::SetCellType(unsigned int r, unsigned int c, CellTypes type)
