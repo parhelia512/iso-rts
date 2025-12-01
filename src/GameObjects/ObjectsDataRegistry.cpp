@@ -106,9 +106,9 @@ void ObjectsDataRegistry::InitObjectData()
                              OCMU_SOLDIER, OCAT_MINI_UNIT, 1, 1));
 
     mData.emplace(GameObject::TYPE_MOUNTAINS,
-                  ObjectData({ {OBJ_ATT_ENERGY, 1}, {OBJ_ATT_HEALTH, 9} }, {}, { ID_SCENE_MOUNTAIN_1 },
-                             SpriteFileSceneElements, GameObject::TYPE_MOUNTAINS, GameObject::CAT_SCENE_OBJ,
-                             OCO_SCENE, OCAT_UNDEFINED, 2, 2));
+                  ObjectData({ {OBJ_ATT_ENERGY, 1}, {OBJ_ATT_HEALTH, 9}, {OBJ_ATT_RESISTANCE, 7} }, {},
+                             { ID_SCENE_MOUNTAIN_1 }, SpriteFileSceneElements, GameObject::TYPE_MOUNTAINS,
+                             GameObject::CAT_SCENE_OBJ, OCO_SCENE, OCAT_UNDEFINED, 2, 2));
 
     mData.emplace(GameObject::TYPE_PRACTICE_TARGET,
                   ObjectData({ {OBJ_ATT_ENERGY, 1}, {OBJ_ATT_VIEW_RANGE, 2}, {OBJ_ATT_REGENERATION, 5},
@@ -222,8 +222,8 @@ void ObjectsDataRegistry::InitObjectData()
                              OCS_STORAGE, OCAT_RESOURCES, 1, 1));
 
     mData.emplace(GameObject::TYPE_ROCKS,
-                  ObjectData({ {OBJ_ATT_ENERGY, 1}, {OBJ_ATT_HEALTH, 6} }, {}, { ROCKS_ROW_1 }, SpriteRocksFile,
-                             GameObject::TYPE_ROCKS, GameObject::CAT_SCENE_OBJ,
+                  ObjectData({ {OBJ_ATT_ENERGY, 1}, {OBJ_ATT_HEALTH, 6}, {OBJ_ATT_RESISTANCE, 6} }, {},
+                             { ROCKS_ROW_1 }, SpriteRocksFile, GameObject::TYPE_ROCKS, GameObject::CAT_SCENE_OBJ,
                              OCO_SCENE, OCAT_UNDEFINED, 1, 1));
 
     mData.emplace(GameObject::TYPE_SPAWN_TOWER,
@@ -256,8 +256,8 @@ void ObjectsDataRegistry::InitObjectData()
                              OCS_TRADING, OCAT_GENERIC, 3, 3));
 
     mData.emplace(GameObject::TYPE_TREES,
-                  ObjectData({ {OBJ_ATT_ENERGY, 1}, {OBJ_ATT_HEALTH, 1} }, {}, { TREE1_1T_1 }, SpriteFileTrees,
-                             GameObject::TYPE_TREES, GameObject::CAT_SCENE_OBJ,
+                  ObjectData({ {OBJ_ATT_ENERGY, 1}, {OBJ_ATT_HEALTH, 1}, {OBJ_ATT_RESISTANCE, 1} }, {},
+                             { TREE1_1T_1 }, SpriteFileTrees, GameObject::TYPE_TREES, GameObject::CAT_SCENE_OBJ,
                              OCO_SCENE, OCAT_UNDEFINED, 1, 1));
 
     mData.emplace(GameObject::TYPE_UNIT_MEDIC1,
