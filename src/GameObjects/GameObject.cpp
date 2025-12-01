@@ -269,6 +269,7 @@ GameObject::GameObject(const ObjectData & data)
     , mObjId(++counter)
     , mType(data.GetType())
     , mCategory(data.GetCategory())
+    , mFaction(NO_FACTION)
     , mRows(data.GetRows())
     , mCols(data.GetCols())
 {
@@ -329,11 +330,9 @@ void GameObject::SetOwner(Player * p)
 
     mOwner = p;
 
-    SetDefaultColors();
+    mFaction = mOwner->GetFaction();
 
     OnFactionChanged();
-
-    UpdateGraphics();
 }
 
 void GameObject::OnPositionChanged() { }
@@ -379,12 +378,23 @@ int GameObject::GetCol0() const { return mCell->col; }
 int GameObject::GetRow1() const { return 1 + mCell->row - mRows; }
 int GameObject::GetCol1() const { return 1 + mCell->col - mCols; }
 
-PlayerFaction GameObject::GetFaction() const
+// NOTE this should only be used in the Map Editor
+// for the game use SetOwner
+bool GameObject::SetFaction(PlayerFaction f)
 {
+    // can't set the faction if an owner is already set
     if(mOwner != nullptr)
-        return mOwner->GetFaction();
-    else
-        return NO_FACTION;
+        return false;
+
+    // nothing to do
+    if(mFaction == f)
+        return true;
+
+    mFaction = f;
+
+    OnFactionChanged();
+
+    return true;
 }
 
 bool GameObject::IsFactionLocal() const
@@ -651,7 +661,11 @@ void GameObject::OnNewTurn(PlayerFaction faction)
 
 void GameObject::Update(float) { }
 
-void GameObject::OnFactionChanged() { }
+void GameObject::OnFactionChanged()
+{
+    SetDefaultColors();
+    UpdateGraphics();
+}
 
 void GameObject::OnLinkedChanged()
 {

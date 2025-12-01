@@ -166,6 +166,7 @@ public:
     unsigned int GetCols() const;
 
     PlayerFaction GetFaction() const;
+    bool SetFaction(PlayerFaction f);
     bool IsFactionLocal() const;
 
     GameObjectTypeId GetObjectType() const;
@@ -331,6 +332,8 @@ private:
     GameObjectActionType mActiveAction = IDLE;
     GameObjectActionType mCurrAction = IDLE;
 
+    PlayerFaction mFaction;
+
     unsigned int mRows = 1;
     unsigned int mCols = 1;
 
@@ -412,6 +415,8 @@ inline GameObjectVariantId GameObject::GetObjectVariant() const { return mVarian
 
 inline unsigned int GameObject::GetRows() const { return mRows; }
 inline unsigned int GameObject::GetCols() const { return mCols; }
+
+inline PlayerFaction GameObject::GetFaction() const { return mFaction; }
 
 inline GameMap * GameObject::GetGameMap() const { return mGameMap; }
 inline ScreenGame * GameObject::GetScreen() const { return mScreen; }
