@@ -317,6 +317,8 @@ void ScreenMainMenu::CreateChangelog()
                          "- Added SHIFT + SPACE shortcut to end turn.\n"
                          "- Mini units move automatically at the beginning of each turn when they"
                          " have a target set.\n"
+                         "- All game objects use their attributes to define their properties"
+                         " (i.e.: energy, attack, speed, etc...).\n"
                          );
     textNewFeat->SetPosition(contX, contY);
     textNewFeat->SetColor(colorContent);
