@@ -193,6 +193,9 @@ private:
 
     // TURN
     void EndTurn();
+    void InitLocalTurn();
+
+    void ReselectLastSelected();
 
     // SFX
     void PlayLocalActionErrorSFX(const Player * player);
@@ -244,6 +247,8 @@ private:
 
     // TURN MANAGEMENT
     Player * mLocalPlayer = nullptr;
+
+    GameObject * mLastSelected = nullptr;
 
     int mActivePlayerIdx = 0;
 

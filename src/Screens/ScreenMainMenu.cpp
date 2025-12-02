@@ -329,6 +329,7 @@ void ScreenMainMenu::CreateChangelog()
     auto textChange = new sgui::TextArea(contentW, minBlockH, font, true, content);
     textChange->SetText("CHANGES\n"
                         "- New icon for \"end turn\" button.\n"
+                        "- Objects selected when a turn ends are re-selected when a new turn begins.\n"
                         );
     textChange->SetPosition(contX, contY);
     textChange->SetColor(colorContent);

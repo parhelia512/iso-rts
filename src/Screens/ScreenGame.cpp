@@ -998,10 +998,7 @@ void ScreenGame::OnWindowMouseLeft(sgl::graphic::WindowEvent & event)
 void ScreenGame::OnMiniUnitsGroupsMoveFinished()
 {
     if(IsCurrentTurnLocal())
-    {
-        mHUD->ShowTurnControlPanel();
-        mHUD->SetLocalActionsEnabled(true);
-    }
+        InitLocalTurn();
 }
 
 void ScreenGame::UpdateAI(float delta)
@@ -3593,7 +3590,12 @@ void ScreenGame::EndTurn()
 
     // current active player is local player
     if(IsCurrentTurnLocal())
+    {
+        // store last local object selected before the turn ends
+        mLastSelected = mLocalPlayer->GetSelectedObject();
+
         ClearSelection(mLocalPlayer);
+    }
 
     // START NEW TURN
     const int players = game->GetNumPlayers();
@@ -3617,13 +3619,7 @@ void ScreenGame::EndTurn()
         if(mGameMap->AreMiniUnitsMoving())
             mHUD->ShowTurnControlText(TEXT_MOVING_MU);
         else
-        {
-            mHUD->SetLocalActionsEnabled(true);
-            mHUD->ShowTurnControlPanel();
-
-            // reset focus to Stage
-            sgl::sgui::Stage::Instance()->SetFocus();
-        }
+            InitLocalTurn();
     }
     // new active player is AI
     else
@@ -3631,6 +3627,29 @@ void ScreenGame::EndTurn()
         mHUD->SetLocalActionsEnabled(false);
         mHUD->ShowTurnControlText(TEXT_ENEMY_TURN);
     }
+}
+
+void ScreenGame::InitLocalTurn()
+{
+    mHUD->SetLocalActionsEnabled(true);
+    mHUD->ShowTurnControlPanel();
+
+    ReselectLastSelected();
+
+    // reset focus to Stage
+    sgl::sgui::Stage::Instance()->SetFocus();
+}
+
+void ScreenGame::ReselectLastSelected()
+{
+    if(mLastSelected == nullptr)
+        return ;
+
+    // make sure object is still valid
+    if(mGameMap->HasObject(mLastSelected))
+        SelectObject(mLastSelected, mLocalPlayer);
+
+    mLastSelected = nullptr;
 }
 
 void ScreenGame::PlayLocalActionErrorSFX(const Player * player)
