@@ -318,8 +318,7 @@ void ObjectsDataRegistry::InitObjectData()
                              OCU_SPAWNER, OCAT_UNIT, 1, 1));
 
     mData.emplace(GameObject::TYPE_UNIT_WORKER1,
-                  ObjectData({ {OBJ_ATT_ENERGY, 4}, {OBJ_ATT_VIEW_RANGE, 6}, {OBJ_ATT_FIRE_POWER, 1},
-                               {OBJ_ATT_FIRE_ACCURACY, 1}, {OBJ_ATT_FIRE_RANGE, 1}, {OBJ_ATT_REGENERATION, 4},
+                  ObjectData({ {OBJ_ATT_ENERGY, 4}, {OBJ_ATT_VIEW_RANGE, 6}, {OBJ_ATT_REGENERATION, 4},
                                {OBJ_ATT_RESISTANCE, 3}, {OBJ_ATT_SHIELD, 2}, {OBJ_ATT_SPEED, 4},
                                {OBJ_ATT_CONSTRUCTION, 5}, {OBJ_ATT_CONQUEST, 3}, {OBJ_ATT_HEALTH, 5} } ,
                              { 150, 150, 0, 0 },
