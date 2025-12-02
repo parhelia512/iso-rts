@@ -122,8 +122,10 @@ void ParticleSingleLaser::OnDone()
     if(!mGameMap->HasObject(mTarget))
         return ;
 
-    // TODO check hit box
-    mTarget->Hit(mDamage, mShooter);
+    // TODO check hit box and decide fatal
+    const bool fatal = false;
+
+    mTarget->Hit(mDamage, mShooter, fatal);
 }
 
 } // namespace game

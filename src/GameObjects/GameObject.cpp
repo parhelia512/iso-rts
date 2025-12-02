@@ -522,7 +522,7 @@ float GameObject::GetSpeed() const
     return mSpeed;
 }
 
-void GameObject::Hit(float damage, PlayerFaction attacker)
+void GameObject::Hit(float damage, PlayerFaction attacker, bool fatal)
 {
     using namespace sgl::graphic;
 
@@ -530,12 +530,20 @@ void GameObject::Hit(float damage, PlayerFaction attacker)
     if(IsDestroyed())
         return ;
 
-    // damage is influnced by object's resistance
-    const float fixedW = 0.5f;
-    const float variableW = 1.f - fixedW;
-    const float variableDamage = 1.f - (GetAttribute(OBJ_ATT_RESISTANCE) / MAX_STAV_VAL);
+    // fatal hit
+    if(fatal)
+        damage = GetMaxHealth();
+    // standard hit
+    else
+    {
+        // damage is influnced by object's resistance
+        const float fixedW = 0.5f;
+        const float variableW = 1.f - fixedW;
+        const float variableDamage = 1.f - (GetAttribute(OBJ_ATT_RESISTANCE) / MAX_STAV_VAL);
 
-    damage = damage * fixedW + (damage * variableW * variableDamage);
+        damage = damage * fixedW + (damage * variableW * variableDamage);
+    }
+
     SumHealth(-damage);
 
     const int numPart0 = 40 * mRows * mCols;

@@ -716,8 +716,10 @@ void GameHUD::ShowDialogSelfDestruction()
     {
         auto obj = mScreen->mLocalPlayer->GetSelectedObject();
 
-        const float h = obj->GetMaxHealth();
-        obj->Hit(h, NO_FACTION);
+        // fatal hit -> damage value doesn't matter
+        const float damage = 0.f;
+        const bool fatal = true;
+        obj->Hit(damage, NO_FACTION, fatal);
 
         HideDialogSelfDestruction();
     });
