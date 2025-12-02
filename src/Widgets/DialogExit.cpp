@@ -288,7 +288,7 @@ DialogExit::DialogExit(DialogButtons buttons, Game * game, Screen * screen)
         btnY += btn->GetHeight() + marginBtnV;
     }
 
-    // BUTTON MAIN MENU
+    // BUTTON PLANET MAP
     if(buttons & BTN_PLANET_MAP)
     {
         btn = new ButtonDialogExit(this);
@@ -299,6 +299,7 @@ DialogExit::DialogExit(DialogButtons buttons, Game * game, Screen * screen)
 
         btn->AddOnClickFunction([game]
         {
+            game->GetTutorialManager()->AbortTutorial();
             game->RequestNextActiveState(StateId::PLANET_MAP);
         });
 
@@ -316,6 +317,7 @@ DialogExit::DialogExit(DialogButtons buttons, Game * game, Screen * screen)
 
         btn->AddOnClickFunction([game]
         {
+            game->GetTutorialManager()->AbortTutorial();
             game->RequestNextActiveState(StateId::MAIN_MENU);
         });
 

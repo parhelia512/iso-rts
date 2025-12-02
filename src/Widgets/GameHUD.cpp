@@ -345,13 +345,17 @@ void GameHUD::ShowDialogExit()
 
     auto tutMan = mScreen->GetGame()->GetTutorialManager();
 
+    auto buttons = DialogExit::BUTTONS_EXIT;
+
     if(tutMan->HasActiveTutorial())
     {
         tutMan->SetTutorialPause(true);
-        mDialogExit = new DialogExit(DialogExit::BUTTONS_TUTORIAL, mScreen->GetGame(), mScreen);
+
+        buttons = static_cast<DialogExit::DialogButtons>(DialogExit::BTN_MAIN_MENU |
+                                                         DialogExit::BUTTONS_TUTORIAL);
     }
-    else
-        mDialogExit = new DialogExit(DialogExit::BUTTONS_EXIT, mScreen->GetGame(), mScreen);
+
+    mDialogExit = new DialogExit(buttons, mScreen->GetGame(), mScreen);
 
     mDialogExit->SetFocus();
 
