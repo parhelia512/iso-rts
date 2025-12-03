@@ -1,6 +1,7 @@
 #include "Widgets/DialogSelfDestruction.h"
 
 #include "Screens/Screen.h"
+#include "Widgets/ButtonDialogClose.h"
 #include "Widgets/GameButton.h"
 #include "Widgets/GameSimpleTooltip.h"
 #include "Widgets/GameUIData.h"
@@ -70,36 +71,6 @@ public:
     }
 };
 
-// ===== BUTTON CLOSE DIALOG =====
-class ButtonClose : public sgl::sgui::ImageButton
-{
-public:
-    ButtonClose(sgl::sgui::Widget * parent)
-        : sgl::sgui::ImageButton({ ID_DLG_DESTR_BTN_CLOSE_NORMAL, ID_DLG_DESTR_BTN_CLOSE_DISABLED,
-                                   ID_DLG_DESTR_BTN_CLOSE_OVER, ID_DLG_DESTR_BTN_CLOSE_PUSHED,
-                                   ID_DLG_DESTR_BTN_CLOSE_PUSHED }, SpriteFileDialogDestruction, parent)
-    {
-        SetShortcutKey(sgl::core::KeyboardEvent::KEY_ESCAPE);
-    }
-
-private:
-    void HandleMouseOver() override
-    {
-        sgl::sgui::AbstractButton::HandleMouseOver();
-
-        auto player = sgl::media::AudioManager::Instance()->GetPlayer();
-        player->PlaySound("UI/button_over-02.ogg");
-    }
-
-    void HandleButtonDown() override
-    {
-        sgl::sgui::AbstractButton::HandleButtonDown();
-
-        auto player = sgl::media::AudioManager::Instance()->GetPlayer();
-        player->PlaySound("UI/button_click-02.ogg");
-    }
-};
-
 } // namespace
 
 namespace game
@@ -126,7 +97,7 @@ DialogSelfDestruction::DialogSelfDestruction()
     SetSize(w, h);
 
     // BUTTON CLOSE
-    mBtnClose = new ButtonClose(this);
+    mBtnClose = new ButtonDialogClose(this);
     mBtnClose->SetX(GetWidth() - mBtnClose->GetWidth());
 
     // TITLE
