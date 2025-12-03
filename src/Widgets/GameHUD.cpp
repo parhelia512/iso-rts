@@ -24,6 +24,7 @@
 #include "Widgets/DialogExploreTemple.h"
 #include "Widgets/DialogMissionGoals.h"
 #include "Widgets/DialogNewElement.h"
+#include "Widgets/DialogNewMiniUnitsSquad.h"
 #include "Widgets/DialogObject.h"
 #include "Widgets/DialogSelfDestruction.h"
 #include "Widgets/DialogTrading.h"
@@ -636,6 +637,48 @@ void GameHUD::ShowTurnControlPanel()
 void GameHUD::ShowTurnControlText(const char * text)
 {
     mPanelTurnCtrl->ShowText(text);
+}
+
+void GameHUD::ShowDialogNewMiniUnitsSquad()
+{
+    if(mDialogNewMiniUnits != nullptr)
+        return ;
+
+    mScreen->ShowScreenOverlay();
+
+    ++mVisibleDialogs;
+
+    mScreen->SetPause(true);
+
+    Game * game = mScreen->GetGame();
+    mDialogNewMiniUnits = new DialogNewMiniUnitsSquad;
+    mDialogNewMiniUnits->SetFocus();
+
+    mDialogNewMiniUnits->AddFunctionOnClose([this]
+    {
+        HideDialogNewMiniUnitsSquad();
+    });
+
+    TemporaryClosePanels();
+
+    // position dialog
+    CenterWidget(mDialogNewMiniUnits);
+}
+
+void GameHUD::HideDialogNewMiniUnitsSquad()
+{
+    --mVisibleDialogs;
+
+    mScreen->HideScreenOverlay();
+
+    ReopenPanels();
+
+    // schedule dialog deletion
+    mDialogNewMiniUnits->DeleteLater();
+    mDialogNewMiniUnits = nullptr;
+
+    // un-pause game
+    mScreen->SetPause(false);
 }
 
 void GameHUD::ShowDialogTrading()

@@ -23,6 +23,7 @@ class DialogExploreTemple;
 class DialogExploreTempleOutcome;
 class DialogMissionGoals;
 class DialogNewElement;
+class DialogNewMiniUnitsSquad;
 class DialogObject;
 class DialogSelfDestruction;
 class DialogTrading;
@@ -85,6 +86,9 @@ public:
     void ShowTurnControlText(const char * text);
     const PanelTurnControl * GetPanelTurnControl() const;
 
+    void ShowDialogNewMiniUnitsSquad();
+    void HideDialogNewMiniUnitsSquad();
+
     void ShowDialogTrading();
     void HideDialogTrading();
 
@@ -129,6 +133,7 @@ private:
     DialogExploreTempleOutcome * mDialogExploreTempleOutcome = nullptr;
     DialogMissionGoals * mDialogMissionGoals = nullptr;
     DialogNewElement * mDialogNewElement = nullptr;
+    DialogNewMiniUnitsSquad * mDialogNewMiniUnits = nullptr;
     DialogObject * mDialogObj = nullptr;
     DialogSelfDestruction * mDialogSelfDestruct = nullptr;
     DialogTrading * mDialogTrading = nullptr;

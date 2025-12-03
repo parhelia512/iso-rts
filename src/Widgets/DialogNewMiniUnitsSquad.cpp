@@ -27,7 +27,7 @@ DialogNewMiniUnitsSquad::DialogNewMiniUnitsSquad()
     const int marginT = 8;
 
     // BACKGROUND
-    graphic::Texture * tex = tm->GetSprite(SpriteFileDialogDestruction, ID_DLG_DESTR_BG);
+    graphic::Texture * tex = tm->GetTexture(SpriteFileDialogNewMiniUnits);
     mBg = new graphic::Image(tex);
     RegisterRenderable(mBg);
 
@@ -41,7 +41,7 @@ DialogNewMiniUnitsSquad::DialogNewMiniUnitsSquad()
 
     // TITLE
     auto font = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 28, graphic::Font::NORMAL);
-    mTitle = new graphic::Text("SELF DESTRUCTION", font);
+    mTitle = new graphic::Text("CREATE MINI UNITS SQUADS", font);
     mTitle->SetColor(WidgetsConstants::colorDialogTitle);
     RegisterRenderable(mTitle);
 
@@ -63,6 +63,12 @@ void DialogNewMiniUnitsSquad::SetPositions()
     const int y0 = GetScreenY();
 
     mBg->SetPosition(x0, y0);
+
+    const int marginL = 40;
+    const int marginT = 7;
+    int x = x0 + marginL;
+    int y = y0 + marginT;
+    mTitle->SetPosition(x, y);
 }
 
 } // namespace game

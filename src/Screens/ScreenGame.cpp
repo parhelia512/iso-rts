@@ -676,9 +676,10 @@ void ScreenGame::CreateUI()
         ClearCellOverlays();
 
         // TODO move this to HUD when dialog to control creation is done
-        auto og = mGameMap->CreateMiniUnitsGroup(selObj->GetFaction());
-        const int numSquads = 1 + rand() % 5;
-        SetupNewMiniUnits(GameObject::TYPE_MINI_UNIT1, selObj, og, mLocalPlayer, 3, numSquads);
+        // auto og = mGameMap->CreateMiniUnitsGroup(selObj->GetFaction());
+        // const int numSquads = 1 + rand() % 5;
+        // SetupNewMiniUnits(GameObject::TYPE_MINI_UNIT1, selObj, og, mLocalPlayer, 3, numSquads);
+        mHUD->ShowDialogNewMiniUnitsSquad();
     });
 
     // set target destination for mini units
