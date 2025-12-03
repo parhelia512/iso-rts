@@ -293,6 +293,8 @@ add_executable(
     src/Widgets/BlinkingIconEnergy.cpp
     src/Widgets/ButtonDialogBack.h
     src/Widgets/ButtonDialogBack.cpp
+    src/Widgets/ButtonDialogClose.h
+    src/Widgets/ButtonDialogClose.cpp
     src/Widgets/ButtonDialogContinue.h
     src/Widgets/ButtonDialogContinue.cpp
     src/Widgets/ButtonDialogSelect.h
@@ -331,6 +333,8 @@ add_executable(
     src/Widgets/DialogMissionGoals.cpp
     src/Widgets/DialogNewElement.h
     src/Widgets/DialogNewElement.cpp
+    src/Widgets/DialogNewMiniUnitsSquad.h
+    src/Widgets/DialogNewMiniUnitsSquad.cpp
     src/Widgets/DialogObject.h
     src/Widgets/DialogObject.cpp
     src/Widgets/DialogSelfDestruction.h

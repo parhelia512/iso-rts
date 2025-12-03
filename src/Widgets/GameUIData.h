@@ -216,6 +216,9 @@ enum SpriteIdDialogNewElementExp : unsigned int
     IND_DLG_NEWE_BG_BTM,
 };
 
+// NEW MINI UNITS SQUAD DIALOG
+extern const char SpriteFileDialogNewMiniUnits[];
+
 // DIALOG OBJECT
 extern const char SpriteFileDialogObject[];
 

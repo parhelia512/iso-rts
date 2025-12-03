@@ -1630,6 +1630,12 @@ void ScreenInit::SetupTextures()
         tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_UI_GAME], SpriteFileDialogNewElementExp, rectsExp);
     });
 
+    // NEW MINI UNITS SQUAD DIALOG
+    mJobs.emplace_back([this, tm]
+    {
+        tm->RegisterTexture(*mTexPackages[PACKAGE_IMGS_UI_GAME], SpriteFileDialogNewMiniUnits);
+    });
+
     // OBJECT ACTION BUTTON
     mJobs.emplace_back([this, tm]
     {
