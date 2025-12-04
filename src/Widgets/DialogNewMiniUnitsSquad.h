@@ -4,6 +4,8 @@
 
 #include <sgl/sgui/Widget.h>
 
+#include <vector>
+
 namespace sgl
 {
     namespace graphic { class Image; }
@@ -13,6 +15,7 @@ namespace sgl
         class AbstractButton;
         class Label;
         class Slider;
+        class TextArea;
     }
 }
 
@@ -20,6 +23,7 @@ namespace game
 {
 
 class ObjectsDataRegistry;
+class ObjectVisualAttribute;
 class Player;
 
 class DialogNewMiniUnitsSquad : public sgl::sgui::Widget
@@ -30,24 +34,35 @@ public:
     void AddFunctionOnClose(const std::function<void()> & f);
 
 private:
+    void CreatePanelPreview();
+    void CreatePanelDescription();
+    void CreatePanelAttributes();
     void CreatePanelConfig();
 
-    void UpdateCosts();
+    void UpdateTotalCosts();
+    void UpdateData();
 
     void HandlePositionChanged() override;
 
     void SetPositions();
 
 private:
+    std::vector<ObjectVisualAttribute *> mAttributes;
+
     sgl::graphic::Image * mBg = nullptr;
 
     sgl::sgui::AbstractButton * mBtnClose = nullptr;
-    sgl::sgui::Slider * mSliderElements = nullptr;
-    sgl::sgui::Slider * mSliderSquads = nullptr;
     sgl::sgui::Label * mLabelCostEnergy = nullptr;
     sgl::sgui::Label * mLabelCostMaterial = nullptr;
     sgl::sgui::Label * mLabelCostDiamonds = nullptr;
-    sgl::sgui::Label * mLabelCostBlobs= nullptr;
+    sgl::sgui::Label * mLabelCostBlobs = nullptr;
+    sgl::sgui::Label * mLabelTotCostEnergy = nullptr;
+    sgl::sgui::Label * mLabelTotCostMaterial = nullptr;
+    sgl::sgui::Label * mLabelTotCostDiamonds = nullptr;
+    sgl::sgui::Label * mLabelTotCostBlobs = nullptr;
+    sgl::sgui::Slider * mSliderElements = nullptr;
+    sgl::sgui::Slider * mSliderSquads = nullptr;
+    sgl::sgui::TextArea * mDescription = nullptr;
 
     Player * mPlayer = nullptr;
 
