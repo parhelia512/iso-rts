@@ -20,6 +20,10 @@
 
 namespace
 {
+constexpr int panelPreviewW = 240;
+constexpr int panelPreviewH = 200;
+
+constexpr int topPanelX0 = 40;
 constexpr int topPanelY0 = 67;
 }
 
@@ -78,8 +82,11 @@ void DialogNewMiniUnitsSquad::CreatePanelPreview()
 {
     using namespace sgl;
 
-    const int panelX0 = 40;
+    int x;
+    int y;
 
+    // PREVIEW IMAGE
+    mImgPreview = new sgui::Image(this);
 }
 
 void DialogNewMiniUnitsSquad::CreatePanelDescription()
@@ -191,13 +198,12 @@ void DialogNewMiniUnitsSquad::CreatePanelAttributes()
 {
     using namespace sgl;
 
-    const int panelX0 = 40;
     const int panelY0 = topPanelY0 + 200;
 
     const int rows = 6;
     const int cols = 2;
 
-    int x = panelX0;
+    int x = topPanelX0;
     int y = panelY0;
 
     for(int r = 0; r < rows; ++r)
@@ -212,7 +218,7 @@ void DialogNewMiniUnitsSquad::CreatePanelAttributes()
             x += panel->GetWidth();
         }
 
-        x = panelX0;
+        x = topPanelX0;
         y += mAttributes[0]->GetHeight();
     }
 }
@@ -424,13 +430,26 @@ void DialogNewMiniUnitsSquad::UpdateTotalCosts()
 
 void DialogNewMiniUnitsSquad::UpdateData()
 {
+    using namespace sgl;
+
+    const ObjectData & data = mDataReg->GetObjectData(mTypeToBuild);
+
+    auto tm = graphic::TextureManager::Instance();
+
+    // PREVIEW
+    auto tex = tm->GetSprite(data.GetIconTexFile(), data.GetIconTexId(mPlayer->GetFaction()));
+    mImgPreview->SetTexture(tex);
+
+    const int previewX = topPanelX0 + (panelPreviewW - mImgPreview->GetWidth()) / 2;
+    const int previewY = topPanelY0 + (panelPreviewH - mImgPreview->GetHeight()) / 2;
+    mImgPreview->SetPosition(previewX, previewY);
+
     // DESCRIPTION
     mDescription->SetText(GameObject::DESCRIPTIONS.at(mTypeToBuild).c_str());
 
-    const ObjectData & data = mDataReg->GetObjectData(mTypeToBuild);
+    // COSTS
     const std::array<int, NUM_OBJ_COSTS> & costs = data.GetCosts();
 
-    // COSTS
     mLabelCostEnergy->SetText(std::to_string(costs[OBJ_COST_ENERGY]).c_str());
     mLabelCostMaterial->SetText(std::to_string(costs[OBJ_COST_MATERIAL]).c_str());
     mLabelCostDiamonds->SetText(std::to_string(costs[OBJ_COST_DIAMONDS]).c_str());

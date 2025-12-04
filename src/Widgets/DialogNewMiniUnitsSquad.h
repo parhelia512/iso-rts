@@ -13,6 +13,7 @@ namespace sgl
     namespace sgui
     {
         class AbstractButton;
+        class Image;
         class Label;
         class Slider;
         class TextArea;
@@ -52,6 +53,7 @@ private:
     sgl::graphic::Image * mBg = nullptr;
 
     sgl::sgui::AbstractButton * mBtnClose = nullptr;
+    sgl::sgui::Image * mImgPreview = nullptr;
     sgl::sgui::Label * mLabelCostEnergy = nullptr;
     sgl::sgui::Label * mLabelCostMaterial = nullptr;
     sgl::sgui::Label * mLabelCostDiamonds = nullptr;
