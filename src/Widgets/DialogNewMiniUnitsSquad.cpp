@@ -1,8 +1,10 @@
 #include "Widgets/DialogNewMiniUnitsSquad.h"
 
+#include "Player.h"
+#include "GameObjects/GameObject.h"
+#include "GameObjects/ObjectsDataRegistry.h"
 #include "Widgets/ButtonDialogClose.h"
 #include "Widgets/GameButton.h"
-#include "Widgets/GameSimpleTooltip.h"
 #include "Widgets/GameSliderH.h"
 #include "Widgets/GameUIData.h"
 #include "Widgets/WidgetsConstants.h"
@@ -10,15 +12,18 @@
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
 #include <sgl/graphic/Image.h>
-#include <sgl/graphic/Text.h>
 #include <sgl/graphic/TextureManager.h>
+#include <sgl/sgui/Image.h>
 #include <sgl/sgui/Label.h>
 
 namespace game
 {
 
 // ===== DIALOG =====
-DialogNewMiniUnitsSquad::DialogNewMiniUnitsSquad()
+DialogNewMiniUnitsSquad::DialogNewMiniUnitsSquad(Player * player, const ObjectsDataRegistry * dataReg)
+    : mPlayer(player)
+    , mDataReg(dataReg)
+    , mTypeToBuild(GameObject::TYPE_MINI_UNIT1)
 {
     using namespace sgl;
 
@@ -50,6 +55,8 @@ DialogNewMiniUnitsSquad::DialogNewMiniUnitsSquad()
 
     // PANELS
     CreatePanelConfig();
+
+    UpdateCosts();
 }
 
 void DialogNewMiniUnitsSquad::AddFunctionOnClose(const std::function<void()> & f)
@@ -98,26 +105,26 @@ void DialogNewMiniUnitsSquad::CreatePanelConfig()
     const int marginSliderR = 20;
     const int marginSliderB = 60;
 
-    auto slider = new GameSliderH(texSliderBg, texSliderBar, texSliderBtn, this);
-    slider->SetMinMax(minElements, maxElements);
-    slider->SetValue(defElements);
-    slider->SetPosition(x, y);
+    mSliderElements = new GameSliderH(texSliderBg, texSliderBar, texSliderBtn, this);
+    mSliderElements->SetMinMax(minElements, maxElements);
+    mSliderElements->SetValue(defElements);
+    mSliderElements->SetPosition(x, y);
 
-    x += slider->GetWidth() + marginSliderR;
+    x += mSliderElements->GetWidth() + marginSliderR;
 
     auto label = new sgui::Label(std::to_string(defElements).c_str(), fontText, this);
     label->SetColor(WidgetsConstants::colorDialogText);
     label->SetPosition(x, y);
 
-    slider->SetOnValueChanged([this, label](int val)
+    mSliderElements->SetOnValueChanged([this, label](int val)
     {
         label->SetText(std::to_string(val).c_str());
 
-        OnNumElementsChanged(val);
+        UpdateCosts();
     });
 
     x = x0;
-    y += slider->GetHeight() + marginBlockB;
+    y += mSliderElements->GetHeight() + marginBlockB;
 
     // -- SQUADS --
     // HEADER SQUADS
@@ -127,49 +134,143 @@ void DialogNewMiniUnitsSquad::CreatePanelConfig()
 
     y += header->GetHeight() + marginTitleB;
 
-    // SLIDER ELEMENTS
+    // SLIDER SQUADS
     const int minSquads = 1;
     const int maxSquads = 12;
     const int defSquads = 4;
 
-    slider = new GameSliderH(texSliderBg, texSliderBar, texSliderBtn, this);
-    slider->SetMinMax(minSquads, maxSquads);
-    slider->SetValue(defSquads);
-    slider->SetPosition(x, y);
+    mSliderSquads = new GameSliderH(texSliderBg, texSliderBar, texSliderBtn, this);
+    mSliderSquads->SetMinMax(minSquads, maxSquads);
+    mSliderSquads->SetValue(defSquads);
+    mSliderSquads->SetPosition(x, y);
 
-    x += slider->GetWidth() + marginSliderR;
+    x += mSliderSquads->GetWidth() + marginSliderR;
 
     label = new sgui::Label(std::to_string(defSquads).c_str(), fontText, this);
     label->SetColor(WidgetsConstants::colorDialogText);
     label->SetPosition(x, y);
 
-    slider->SetOnValueChanged([this, label](int val)
+    mSliderSquads->SetOnValueChanged([this, label](int val)
     {
         label->SetText(std::to_string(val).c_str());
 
-        OnNumSquadsChanged(val);
+        UpdateCosts();
     });
 
     x = x0;
-    y += slider->GetHeight() + marginBlockB;
+    y += mSliderSquads->GetHeight() + marginBlockB;
 
     // -- TOTAL COST --
+    const int marginIconR = 10;
+    const int marginIconB = 50;
+    const int marginIconToNextR = 150;
     // HEADER TOTAL COST
     header = new sgui::Label("TOTAL COST", fontHeader, this);
     header->SetColor(WidgetsConstants::colorPanelHeader);
     header->SetPosition(x, y);
 
     y += header->GetHeight() + marginTitleB;
+
+    // ENERGY
+    auto tex = tm->GetSprite(SpriteFileGameUIShared, ID_UIS_ICON_W_RES_ENERGY);
+    auto icon = new sgui::Image(tex, this);
+    icon->SetColor(WidgetsConstants::colorDialogIcon);
+    icon->SetPosition(x, y);
+
+    x += icon->GetWidth() + marginIconR;
+
+    mLabelCostEnergy = new sgui::Label(fontText, this);
+    mLabelCostEnergy->SetColor(WidgetsConstants::colorDialogText);
+    mLabelCostEnergy->SetPosition(x, y);
+
+    x = icon->GetX() + marginIconToNextR;
+
+    // MATERIAL
+    tex = tm->GetSprite(SpriteFileGameUIShared, ID_UIS_ICON_W_RES_MATERIAL);
+    icon = new sgui::Image(tex, this);
+    icon->SetColor(WidgetsConstants::colorDialogIcon);
+    icon->SetPosition(x, y);
+
+    x += icon->GetWidth() + marginIconR;
+
+    mLabelCostMaterial = new sgui::Label(fontText, this);
+    mLabelCostMaterial->SetColor(WidgetsConstants::colorDialogText);
+    mLabelCostMaterial->SetPosition(x, y);
+
+    x = x0;
+    y += marginIconB;
+
+    // DIAMONDS
+    tex = tm->GetSprite(SpriteFileGameUIShared, ID_UIS_ICON_W_RES_DIAMONDS);
+    icon = new sgui::Image(tex, this);
+    icon->SetColor(WidgetsConstants::colorDialogIcon);
+    icon->SetPosition(x, y);
+
+    x += icon->GetWidth() + marginIconR;
+
+    mLabelCostDiamonds = new sgui::Label(fontText, this);
+    mLabelCostDiamonds->SetColor(WidgetsConstants::colorDialogText);
+    mLabelCostDiamonds->SetPosition(x, y);
+
+    x = icon->GetX() + marginIconToNextR;
+
+    // BLOBS
+    tex = tm->GetSprite(SpriteFileGameUIShared, ID_UIS_ICON_W_RES_BLOBS);
+    icon = new sgui::Image(tex, this);
+    icon->SetColor(WidgetsConstants::colorDialogIcon);
+    icon->SetPosition(x, y);
+
+    x += icon->GetWidth() + marginIconR;
+
+    mLabelCostBlobs = new sgui::Label(fontText, this);
+    mLabelCostBlobs->SetColor(WidgetsConstants::colorDialogText);
+    mLabelCostBlobs->SetPosition(x, y);
 }
 
-void DialogNewMiniUnitsSquad::OnNumElementsChanged(int num)
+void DialogNewMiniUnitsSquad::UpdateCosts()
 {
+    const ObjectData & data = mDataReg->GetObjectData(mTypeToBuild);
+    const std::array<int, NUM_OBJ_COSTS> & costs = data.GetCosts();
 
-}
+    const int totElements = mSliderElements->GetValue() * mSliderSquads->GetValue();
 
-void DialogNewMiniUnitsSquad::OnNumSquadsChanged(int num)
-{
+    const int totCost[NUM_OBJ_COSTS] =
+    {
+        costs[OBJ_COST_ENERGY] * totElements,
+        costs[OBJ_COST_MATERIAL] * totElements,
+        costs[OBJ_COST_DIAMONDS] * totElements,
+        costs[OBJ_COST_BLOBS] * totElements
+    };
 
+    const bool canSpend[NUM_OBJ_COSTS] =
+    {
+        mPlayer->HasEnough(Player::ENERGY,  totCost[OBJ_COST_ENERGY]),
+        mPlayer->HasEnough(Player::MATERIAL, totCost[OBJ_COST_MATERIAL]),
+        mPlayer->HasEnough(Player::DIAMONDS, totCost[OBJ_COST_DIAMONDS]),
+        mPlayer->HasEnough(Player::BLOBS, totCost[OBJ_COST_BLOBS])
+    };
+
+    const unsigned int colors[] =
+    {
+        WidgetsConstants::colorDialogBad,
+        WidgetsConstants::colorDialogGood
+    };
+
+    // ENERGY
+    mLabelCostEnergy->SetText(std::to_string(totCost[OBJ_COST_ENERGY]).c_str());
+    mLabelCostEnergy->SetColor(colors[canSpend[OBJ_COST_ENERGY]]);
+
+    // MATERIAL
+    mLabelCostMaterial->SetText(std::to_string(totCost[OBJ_COST_MATERIAL]).c_str());
+    mLabelCostMaterial->SetColor(colors[canSpend[OBJ_COST_MATERIAL]]);
+
+    // DIAMONDS
+    mLabelCostDiamonds->SetText(std::to_string(totCost[OBJ_COST_DIAMONDS]).c_str());
+    mLabelCostDiamonds->SetColor(colors[canSpend[OBJ_COST_DIAMONDS]]);
+
+    // BLOBS
+    mLabelCostBlobs->SetText(std::to_string(totCost[OBJ_COST_BLOBS]).c_str());
+    mLabelCostBlobs->SetColor(colors[canSpend[OBJ_COST_BLOBS]]);
 }
 
 void DialogNewMiniUnitsSquad::HandlePositionChanged()

@@ -651,7 +651,8 @@ void GameHUD::ShowDialogNewMiniUnitsSquad()
     mScreen->SetPause(true);
 
     Game * game = mScreen->GetGame();
-    mDialogNewMiniUnits = new DialogNewMiniUnitsSquad;
+    mDialogNewMiniUnits = new DialogNewMiniUnitsSquad(game->GetLocalPlayer(),
+                                                      game->GetObjectsRegistry());
     mDialogNewMiniUnits->SetFocus();
 
     mDialogNewMiniUnits->AddFunctionOnClose([this]

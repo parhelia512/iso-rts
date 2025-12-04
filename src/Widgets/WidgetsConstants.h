@@ -11,6 +11,9 @@ public:
     static const unsigned int colorPlanetMapLackRes;
     static const unsigned int colorDialogHeader1;
     static const unsigned int colorDialogHeader2;
+    static const unsigned int colorDialogBad;
+    static const unsigned int colorDialogGood;
+    static const unsigned int colorDialogIcon;
     static const unsigned int colorDialogText;
     static const unsigned int colorDialogTitle;
     static const unsigned int colorPanelHeader;
