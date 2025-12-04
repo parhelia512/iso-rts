@@ -14,6 +14,8 @@ StateNewGame::StateNewGame(Game * game)
 
 void StateNewGame::OnActive()
 {
+    mGame->InitGameData();
+
     mScreen = new ScreenNewGame(mGame);
 }
 

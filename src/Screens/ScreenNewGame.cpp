@@ -138,6 +138,14 @@ ScreenNewGame::ScreenNewGame(Game * game)
     // set game difficulty
     game->SetDifficulty(mDiff);
 
+#ifdef DEV_MODE
+    if(Game::QUICK_START)
+    {
+        game->RequestNextActiveState(StateId::GAME);
+        return ;
+    }
+#endif
+
     // move to game
     game->RequestNextActiveState(StateId::PLANET_MAP);
 }

@@ -59,8 +59,6 @@ ScreenMainMenu::ScreenMainMenu(Game * game)
 
     button->AddOnClickFunction([game]
     {
-        game->InitGameData();
-
         // TODO REMOVE WHEN PLANET SELECTION IS DONE
         game->SetCurrentPlanet(PLANET_1);
         game->RequestNextActiveState(StateId::FACTION_SEL);
@@ -226,12 +224,26 @@ ScreenMainMenu::~ScreenMainMenu()
 
 void ScreenMainMenu::OnKeyUp(sgl::core::KeyboardEvent & event)
 {
+#ifdef DEV_MODE
+    using namespace sgl;
+
     const int key = event.GetKey();
 
-#ifdef DEV_MODE
     // CTRL-T -> open test screen
-    if(key == sgl::core::KeyboardEvent::KEY_T && event.IsModCtrlDown())
+    if(key == core::KeyboardEvent::KEY_T && event.IsModCtrlDown())
         GetGame()->RequestNextActiveState(StateId::TEST);
+    // CTRL-M -> Go straight to mission
+    else if(key == core::KeyboardEvent::KEY_M && event.IsModCtrlDown())
+    {
+        Game * game = GetGame();
+
+        Game::QUICK_START = true;
+
+        game->SetLocalPlayerFaction(static_cast<PlayerFaction>(rand() % NUM_FACTIONS));
+        game->SetCurrentPlanet(PLANET_1);
+        game->SetCurrentTerritory(0);
+        game->RequestNextActiveState(StateId::NEW_GAME);
+    }
 #endif
 }
 
