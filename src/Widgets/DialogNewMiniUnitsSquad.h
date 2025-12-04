@@ -6,11 +6,7 @@
 
 namespace sgl
 {
-    namespace graphic
-    {
-        class Image;
-        class Text;
-    }
+    namespace graphic { class Image; }
     namespace sgui { class AbstractButton; }
 }
 
@@ -24,15 +20,18 @@ public:
 
     void AddFunctionOnClose(const std::function<void()> & f);
 
-protected:
+private:
+    void CreatePanelConfig();
+
+    void OnNumElementsChanged(int num);
+    void OnNumSquadsChanged(int num);
+
     void HandlePositionChanged() override;
 
-private:
     void SetPositions();
 
 private:
     sgl::graphic::Image * mBg = nullptr;
-    sgl::graphic::Text * mTitle = nullptr;
 
     sgl::sgui::AbstractButton * mBtnClose = nullptr;
 };

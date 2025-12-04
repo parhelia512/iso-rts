@@ -679,6 +679,7 @@ void ScreenGame::CreateUI()
         // auto og = mGameMap->CreateMiniUnitsGroup(selObj->GetFaction());
         // const int numSquads = 1 + rand() % 5;
         // SetupNewMiniUnits(GameObject::TYPE_MINI_UNIT1, selObj, og, mLocalPlayer, 3, numSquads);
+
         mHUD->ShowDialogNewMiniUnitsSquad();
     });
 
@@ -935,6 +936,8 @@ void ScreenGame::OnKeyUp(sgl::core::KeyboardEvent & event)
     // DEBUG: show dialog trading
     else if(event.IsModShiftDown() && key == KeyboardEvent::KEY_T)
         mHUD->ShowDialogTrading();
+    else if(key == KeyboardEvent::KEY_Z)
+        mHUD->ShowDialogNewMiniUnitsSquad();
 #endif
 }
 
