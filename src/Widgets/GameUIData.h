@@ -327,6 +327,19 @@ enum SpriteIdGameUIExp : unsigned int
     ID_SCREEN_OVERLAY_BG
 };
 
+// SHARED GAME UI GRAPHICS
+extern const char SpriteFileGameUIShared[];
+
+enum SpriteIdGameUIShared : unsigned int
+{
+    // ICONS WHITE RESOURCES
+    ID_UIS_ICON_W_RES_MONEY,
+    ID_UIS_ICON_W_RES_ENERGY,
+    ID_UIS_ICON_W_RES_MATERIAL,
+    ID_UIS_ICON_W_RES_DIAMONDS,
+    ID_UIS_ICON_W_RES_BLOBS,
+};
+
 // FACTION SELECTION DIALOG
 extern const char SpriteFileFactionSelection[];
 

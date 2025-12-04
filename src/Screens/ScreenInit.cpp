@@ -539,6 +539,22 @@ void ScreenInit::SetupTextures()
         tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_UI_GAME], SpriteFileGameUIExp, rectsExp);
     });
 
+    // GAME UI SHARED GRAPHICS
+    mJobs.emplace_back([this, tm]
+    {
+        std::vector<sgl::core::Rectd> rects
+        {
+            // ICONS WHITE RESOURCES
+            { 0, 0, 24, 24 },
+            { 25, 0, 24, 24 },
+            { 50, 0, 24, 24 },
+            { 75, 0, 24, 24 },
+            { 100, 0, 24, 24 },
+        };
+
+        tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_UI_GAME], SpriteFileGameUIShared, rects);
+    });
+
     // MAIN MENU
     mJobs.emplace_back([this, tm]
     {

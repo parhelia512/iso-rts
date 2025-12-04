@@ -17,6 +17,7 @@ const char SpriteFileDialogTrading[] = "UI/dialog_trading.png";
 const char SpriteFileFactionSelection[] = "UI/faction_selection.png";
 const char SpriteFileGameUI[] = "UI/game_UI.png";
 const char SpriteFileGameUIExp[] = "UI/game_UI-exp.png";
+const char SpriteFileGameUIShared[] = "UI/game_UI-shared.png";
 const char SpriteFileMainMenu[] = "UI/main_menu.png";
 const char SpriteFileMainMenuButtons[] = "UI/main_menu_buttons.png";
 const char SpriteFileMapUI[] = "UI/map_ui.png";
