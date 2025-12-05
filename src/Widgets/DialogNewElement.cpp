@@ -5,6 +5,7 @@
 #include "GameObjects/GameObject.h"
 #include "GameObjects/ObjectData.h"
 #include "GameObjects/ObjectsDataRegistry.h"
+#include "Widgets/ButtonDialogArrows.h"
 #include "Widgets/ButtonPanelTab.h"
 #include "Widgets/GameUIData.h"
 #include "Widgets/ObjectVisualAttribute.h"
@@ -36,70 +37,6 @@ namespace
 using namespace game;
 
 constexpr int NUM_SLOTS = 6;
-
-// ===== BUTTON LEFT =====
-class ButtonLeft : public sgl::sgui::ImageButton
-{
-public:
-    ButtonLeft(sgl::sgui::Widget * parent)
-        : ImageButton({ IND_DLG_NEWE_LEFT_NORMAL,
-                        IND_DLG_NEWE_LEFT_DISABLED,
-                        IND_DLG_NEWE_LEFT_OVER,
-                        IND_DLG_NEWE_LEFT_PUSHED,
-                        IND_DLG_NEWE_LEFT_NORMAL },
-                        SpriteFileDialogNewElement, parent)
-    {
-    }
-
-private:
-    void HandleMouseOver() override
-    {
-        sgl::sgui::AbstractButton::HandleMouseOver();
-
-        auto player = sgl::media::AudioManager::Instance()->GetPlayer();
-        player->PlaySound("UI/button_over-03.ogg");
-    }
-
-    void HandleButtonDown() override
-    {
-        sgl::sgui::AbstractButton::HandleButtonDown();
-
-        auto player = sgl::media::AudioManager::Instance()->GetPlayer();
-        player->PlaySound("UI/button_click-03.ogg");
-    }
-};
-
-// ===== BUTTON RIGHT =====
-class ButtonRight : public sgl::sgui::ImageButton
-{
-public:
-    ButtonRight(sgl::sgui::Widget * parent)
-        : ImageButton({ IND_DLG_NEWE_RIGHT_NORMAL,
-                        IND_DLG_NEWE_RIGHT_DISABLED,
-                        IND_DLG_NEWE_RIGHT_OVER,
-                        IND_DLG_NEWE_RIGHT_PUSHED,
-                        IND_DLG_NEWE_RIGHT_NORMAL },
-                        SpriteFileDialogNewElement, parent)
-    {
-    }
-
-private:
-    void HandleMouseOver() override
-    {
-        sgl::sgui::AbstractButton::HandleMouseOver();
-
-        auto player = sgl::media::AudioManager::Instance()->GetPlayer();
-        player->PlaySound("UI/button_over-03.ogg");
-    }
-
-    void HandleButtonDown() override
-    {
-        sgl::sgui::AbstractButton::HandleButtonDown();
-
-        auto player = sgl::media::AudioManager::Instance()->GetPlayer();
-        player->PlaySound("UI/button_click-03.ogg");
-    }
-};
 
 // ===== BUTTON CLOSE =====
 
@@ -627,7 +564,7 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
 
     const int numData = mTypes.size();
 
-    mBtnLeft = new ButtonLeft(this);
+    mBtnLeft = new ButtonDialogArrowLeft(this);
     const int posLX = mSlots->GetX() - mBtnLeft->GetWidth() - marginButtonsLR;
     const int posLY = mSlots->GetY() + (mSlots->GetHeight() - mBtnLeft->GetHeight()) * 0.5f;
     mBtnLeft->SetPosition(posLX, posLY);
@@ -642,7 +579,7 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
        mBtnRight->SetEnabled(true);
     });
 
-    mBtnRight = new ButtonRight(this);
+    mBtnRight = new ButtonDialogArrowRight(this);
     const int posRX = mSlots->GetX() + mSlots->GetWidth() + marginButtonsLR;
     const int posRY = mSlots->GetY() + (mSlots->GetHeight() - mBtnRight->GetHeight()) * 0.5f;
     mBtnRight->SetPosition(posRX, posRY);
