@@ -79,7 +79,7 @@ DialogNewMiniUnitsSquad::DialogNewMiniUnitsSquad(GameObject * spawner, Player * 
     // BUTTON BUILD
     const int btnX = 940;
     const int btnY = 510;
-    mBtnBuild = new ButtonDialogAction("BUILD", "B", core::KeyboardEvent::KEY_B, this);
+    mBtnBuild = new ButtonDialogAction("SPAWN", "S", core::KeyboardEvent::KEY_S, this);
     mBtnBuild->SetPosition(btnX, btnY);
 
     mBtnBuild->AddOnClickFunction([this]
