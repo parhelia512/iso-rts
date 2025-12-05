@@ -16,6 +16,8 @@ const unsigned int WidgetsConstants::colorDialogTitle = 0xe6f9ffff;
 const unsigned int WidgetsConstants::colorPanelHeader = 0xd1ecfaff;
 const unsigned int WidgetsConstants::colorPanelText = 0x87b0c5ff;
 const unsigned int WidgetsConstants::colorPanelTitle = 0xe6f9ffff;
+const unsigned int WidgetsConstants::colorShortcut = 0xd5daddff;
+const unsigned int WidgetsConstants::colorShortcutDisabled = 0xd5dadd80;
 const unsigned int WidgetsConstants::colorTooltipTitle = 0xe6f9ffff;
 
 // FONT FILES

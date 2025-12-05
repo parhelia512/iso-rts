@@ -639,7 +639,7 @@ void GameHUD::ShowTurnControlText(const char * text)
     mPanelTurnCtrl->ShowText(text);
 }
 
-void GameHUD::ShowDialogNewMiniUnitsSquad()
+void GameHUD::ShowDialogNewMiniUnitsSquad(GameObject * spawner)
 {
     if(mDialogNewMiniUnits != nullptr)
         return ;
@@ -651,9 +651,18 @@ void GameHUD::ShowDialogNewMiniUnitsSquad()
     mScreen->SetPause(true);
 
     Game * game = mScreen->GetGame();
-    mDialogNewMiniUnits = new DialogNewMiniUnitsSquad(game->GetLocalPlayer(),
+    mDialogNewMiniUnits = new DialogNewMiniUnitsSquad(spawner, game->GetLocalPlayer(),
                                                       game->GetObjectsRegistry());
     mDialogNewMiniUnits->SetFocus();
+
+    mDialogNewMiniUnits->AddFunctionOnBuild([this, spawner, game]
+    {
+        mScreen->SetupNewMiniUnits(mDialogNewMiniUnits->GetTypeToBuild(), spawner, nullptr,
+                                   game->GetLocalPlayer(), mDialogNewMiniUnits->GetNumSquads(),
+                                   mDialogNewMiniUnits->GetNumElements());
+
+        HideDialogNewMiniUnitsSquad();
+    });
 
     mDialogNewMiniUnits->AddFunctionOnClose([this]
     {

@@ -19,6 +19,8 @@ public:
     static const unsigned int colorPanelHeader;
     static const unsigned int colorPanelText;
     static const unsigned int colorPanelTitle;
+    static const unsigned int colorShortcut;
+    static const unsigned int colorShortcutDisabled;
     static const unsigned int colorTooltipTitle;
 
     // FONT FILES

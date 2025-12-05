@@ -86,7 +86,7 @@ public:
     void ShowTurnControlText(const char * text);
     const PanelTurnControl * GetPanelTurnControl() const;
 
-    void ShowDialogNewMiniUnitsSquad();
+    void ShowDialogNewMiniUnitsSquad(GameObject * spawner);
     void HideDialogNewMiniUnitsSquad();
 
     void ShowDialogTrading();

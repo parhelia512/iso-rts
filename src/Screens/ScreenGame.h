@@ -141,7 +141,7 @@ private:
     int CellToIndex(const Cell2D & cell) const;
 
     bool SetupNewMiniUnits(GameObjectTypeId type, GameObject * gen, GameObjectsGroup * group, Player * player,
-                           int num, int elements, const std::function<void(bool)> & onDone = [](bool){});
+                           int squads, int elements, const std::function<void(bool)> & onDone = [](bool){});
     bool SetupNewUnit(GameObjectTypeId type, GameObject * gen, Player * player,
                       const std::function<void(bool)> & onDone = [](bool){});
     bool SetupStructureConquest(Unit * unit, const Cell2D & start, const Cell2D & end, Player * player,

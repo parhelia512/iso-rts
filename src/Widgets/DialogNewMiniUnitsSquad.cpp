@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "GameObjects/GameObject.h"
 #include "GameObjects/ObjectsDataRegistry.h"
+#include "Widgets/ButtonDialogAction.h"
 #include "Widgets/ButtonDialogArrows.h"
 #include "Widgets/ButtonDialogClose.h"
 #include "Widgets/GameButton.h"
@@ -11,6 +12,7 @@
 #include "Widgets/ObjectVisualAttribute.h"
 #include "Widgets/WidgetsConstants.h"
 
+#include <sgl/core/event/KeyboardEvent.h>
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
 #include <sgl/graphic/Image.h>
@@ -34,8 +36,10 @@ namespace game
 {
 
 // ===== DIALOG =====
-DialogNewMiniUnitsSquad::DialogNewMiniUnitsSquad(Player * player, const ObjectsDataRegistry * dataReg)
-    : mPlayer(player)
+DialogNewMiniUnitsSquad::DialogNewMiniUnitsSquad(GameObject * spawner, Player * player,
+                                                 const ObjectsDataRegistry * dataReg)
+    : mSpawner(spawner)
+    , mPlayer(player)
     , mDataReg(dataReg)
 {
     using namespace sgl;
@@ -72,7 +76,39 @@ DialogNewMiniUnitsSquad::DialogNewMiniUnitsSquad(Player * player, const ObjectsD
     CreatePanelAttributes();
     CreatePanelConfig();
 
+    // BUTTON BUILD
+    const int btnX = 940;
+    const int btnY = 510;
+    mBtnBuild = new ButtonDialogAction("BUILD", "B", core::KeyboardEvent::KEY_B, this);
+    mBtnBuild->SetPosition(btnX, btnY);
+
+    mBtnBuild->AddOnClickFunction([this]
+    {
+
+    });
+
     UpdateData();
+}
+
+GameObjectTypeId DialogNewMiniUnitsSquad::GetTypeToBuild() const
+{
+    const std::vector<GameObjectTypeId> & mu = mPlayer->GetAvailableMiniUnits();
+    return mu[mCurrentIndex];
+}
+
+int DialogNewMiniUnitsSquad::GetNumElements() const
+{
+    return mSliderElements->GetValue();
+}
+
+int DialogNewMiniUnitsSquad::GetNumSquads() const
+{
+    return mSliderSquads->GetValue();
+}
+
+void DialogNewMiniUnitsSquad::AddFunctionOnBuild(const std::function<void()> & f)
+{
+    mBtnBuild->AddOnClickFunction(f);
 }
 
 void DialogNewMiniUnitsSquad::AddFunctionOnClose(const std::function<void()> & f)
@@ -328,9 +364,12 @@ void DialogNewMiniUnitsSquad::CreatePanelConfig()
     y += header->GetHeight() + marginHeaderB;
 
     // SLIDER SQUADS
+    const int squadLimits[ObjectData::MAX_STAT_VAL + 1] = { 0, 3, 4, 5, 6, 7, 8, 10, 11, 12 };
+    const int attSpawning = mSpawner->GetAttribute(OBJ_ATT_SPAWNING);
+
     const int minSquads = 1;
-    const int maxSquads = 12;
-    const int defSquads = 4;
+    const int maxSquads = squadLimits[attSpawning];
+    const int defSquads = 2;
 
     mSliderSquads = new GameSliderH(texSliderBg, texSliderBar, texSliderBtn, this);
     mSliderSquads->SetMinMax(minSquads, maxSquads);
@@ -443,8 +482,7 @@ void DialogNewMiniUnitsSquad::ChangeIndex(int delta)
 
 void DialogNewMiniUnitsSquad::UpdateTotalCosts()
 {
-    const std::vector<GameObjectTypeId> & mu = mPlayer->GetAvailableMiniUnits();
-    const GameObjectTypeId typeToBuild = mu[mCurrentIndex];
+    const GameObjectTypeId typeToBuild = GetTypeToBuild();
     const ObjectData & data = mDataReg->GetObjectData(typeToBuild);
     const std::array<int, NUM_OBJ_COSTS> & costs = data.GetCosts();
 
@@ -487,14 +525,17 @@ void DialogNewMiniUnitsSquad::UpdateTotalCosts()
     // BLOBS
     mLabelTotCostBlobs->SetText(std::to_string(totCost[OBJ_COST_BLOBS]).c_str());
     mLabelTotCostBlobs->SetColor(colors[canSpend[OBJ_COST_BLOBS]]);
+
+    // BUTTON BUILD
+    mBtnBuild->SetEnabled(canSpend[OBJ_COST_ENERGY] && canSpend[OBJ_COST_MATERIAL] &&
+                          canSpend[OBJ_COST_DIAMONDS] && canSpend[OBJ_COST_BLOBS]);
 }
 
 void DialogNewMiniUnitsSquad::UpdateData()
 {
     using namespace sgl;
 
-    const std::vector<GameObjectTypeId> & mu = mPlayer->GetAvailableMiniUnits();
-    const GameObjectTypeId typeToBuild = mu[mCurrentIndex];
+    const GameObjectTypeId typeToBuild = GetTypeToBuild();
     const ObjectData & data = mDataReg->GetObjectData(typeToBuild);
 
     auto tm = graphic::TextureManager::Instance();

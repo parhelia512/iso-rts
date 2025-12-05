@@ -675,12 +675,7 @@ void ScreenGame::CreateUI()
 
         ClearCellOverlays();
 
-        // TODO move this to HUD when dialog to control creation is done
-        // auto og = mGameMap->CreateMiniUnitsGroup(selObj->GetFaction());
-        // const int numSquads = 1 + rand() % 5;
-        // SetupNewMiniUnits(GameObject::TYPE_MINI_UNIT1, selObj, og, mLocalPlayer, 3, numSquads);
-
-        mHUD->ShowDialogNewMiniUnitsSquad();
+        mHUD->ShowDialogNewMiniUnitsSquad(selObj);
     });
 
     // set target destination for mini units
@@ -936,8 +931,6 @@ void ScreenGame::OnKeyUp(sgl::core::KeyboardEvent & event)
     // DEBUG: show dialog trading
     else if(event.IsModShiftDown() && key == KeyboardEvent::KEY_T)
         mHUD->ShowDialogTrading();
-    else if(key == KeyboardEvent::KEY_Z)
-        mHUD->ShowDialogNewMiniUnitsSquad();
 #endif
 }
 
@@ -1817,7 +1810,7 @@ int ScreenGame::CellToIndex(const Cell2D & cell) const
 }
 
 bool ScreenGame::SetupNewMiniUnits(GameObjectTypeId type, GameObject * gen, GameObjectsGroup * group,
-                                   Player * player, int num, int elements,
+                                   Player * player, int squads, int elements,
                                    const std::function<void(bool)> & onDone)
 {
     // check if create is possible
@@ -1842,9 +1835,13 @@ bool ScreenGame::SetupNewMiniUnits(GameObjectTypeId type, GameObject * gen, Game
     else if(gen->GetObjectType() == GameObject::TYPE_SPAWN_TOWER)
         timeSpawn = static_cast<SpawningTower *>(gen)->GetTimeSpawnMiniUnit();
 
+    // no group set yet -> create one
+    if(nullptr == group)
+        group = mGameMap->CreateMiniUnitsGroup(gen->GetFaction());
+
     GameMapProgressBar * pb = mHUD->CreateProgressBarInCell(cell, timeSpawn, player->GetFaction());
 
-    pb->AddFunctionOnCompleted([this, cell, player, gen, type, elements, num, group]
+    pb->AddFunctionOnCompleted([this, cell, player, gen, type, elements, squads, group]
     {
         gen->ActionStepCompleted(SPAWN);
         gen->SetCurrentAction(GameObjectActionType::IDLE);
@@ -1861,8 +1858,9 @@ bool ScreenGame::SetupNewMiniUnits(GameObjectTypeId type, GameObject * gen, Game
 
         SetObjectActionCompleted(gen);
 
-        if(num > 1)
-            SetupNewMiniUnits(GameObject::TYPE_MINI_UNIT1, gen, group, mLocalPlayer, num - 1, elements);
+        if(squads > 1)
+            SetupNewMiniUnits(GameObject::TYPE_MINI_UNIT1, gen, group, mLocalPlayer,
+                              squads - 1, elements);
     });
 
     // store active action

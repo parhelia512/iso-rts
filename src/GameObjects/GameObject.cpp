@@ -216,7 +216,8 @@ const std::unordered_map<GameObjectTypeId, std::string> GameObject::DESCRIPTIONS
     { GameObject::TYPE_DEFENSIVE_TOWER, "A basic defensive tower."},
     { GameObject::TYPE_HOSPITAL, "A structure that creates medics and that can heal units."},
     { GameObject::TYPE_LOOTBOX, "A loot box that can be collected by a unit to obtain various resources."},
-    { GameObject::TYPE_MINI_UNIT1, "Standard mini unit that will attack a target automatically."},
+    { GameObject::TYPE_MINI_UNIT1, "Basic mini units that explode when they reach their target and"
+                                   " there's an enemy nearby."},
     { GameObject::TYPE_MOUNTAINS, "Some mountains"},
     { GameObject::TYPE_PRACTICE_TARGET, "A practice target.\nIt can be used to train your units "
                                         "and to improve their attack skills."},
@@ -241,7 +242,7 @@ const std::unordered_map<GameObjectTypeId, std::string> GameObject::DESCRIPTIONS
     { GameObject::TYPE_UNIT_SCOUT1, "A light and fast unit ideal for exploring, but not for fighting."},
     { GameObject::TYPE_UNIT_SOLDIER1, "A basic soldier unit.\nUseful for defense and exploration."},
     { GameObject::TYPE_UNIT_SOLDIER2, "A slow, but versatile unit."},
-    { GameObject::TYPE_UNIT_SPAWNER1, "A smaller spawner unit that can generate up to 5 squads of automated mini units."},
+    { GameObject::TYPE_UNIT_SPAWNER1, "A smaller spawner unit that can generate up to 6 squads of automated mini units."},
     { GameObject::TYPE_UNIT_SPAWNER2, "A spawner unit that can generate up to 8 squads of automated mini units."},
     { GameObject::TYPE_UNIT_WORKER1, "A basic worker unit.\nIt is specialized in construction and conquest."},
     { GameObject::TYPE_WALL, "A defensive wall."},
