@@ -660,6 +660,8 @@ void GameObject::Hit(float damage, PlayerFaction attacker, bool fatal)
     }
 }
 
+void GameObject::SelfDestroy() { Hit(0.f, NO_FACTION, true); }
+
 void GameObject::SetActiveActionToDefault() { mActiveAction = IDLE; }
 
 void GameObject::OnNewTurn(PlayerFaction faction)

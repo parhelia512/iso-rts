@@ -205,6 +205,7 @@ public:
     float GetSpeed() const;
 
     void Hit(float damage, PlayerFaction attacker, bool fatal);
+    void SelfDestroy();
 
     GameObjectActionType GetActiveAction() const;
     void SetActiveAction(GameObjectActionType action);

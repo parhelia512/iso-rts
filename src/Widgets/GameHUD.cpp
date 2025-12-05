@@ -768,11 +768,7 @@ void GameHUD::ShowDialogSelfDestruction()
     mDialogSelfDestruct->AddFunctionOnBlowup([this]
     {
         auto obj = mScreen->mLocalPlayer->GetSelectedObject();
-
-        // fatal hit -> damage value doesn't matter
-        const float damage = 0.f;
-        const bool fatal = true;
-        obj->Hit(damage, NO_FACTION, fatal);
+        obj->SelfDestroy();
 
         HideDialogSelfDestruction();
     });
