@@ -291,6 +291,8 @@ add_executable(
     src/Tutorial/TutorialStep.cpp
     src/Widgets/BlinkingIconEnergy.h
     src/Widgets/BlinkingIconEnergy.cpp
+    src/Widgets/ButtonDialogAction.h
+    src/Widgets/ButtonDialogAction.cpp
     src/Widgets/ButtonDialogArrows.h
     src/Widgets/ButtonDialogArrows.cpp
     src/Widgets/ButtonDialogBack.h

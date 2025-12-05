@@ -5,6 +5,7 @@
 #include "GameObjects/GameObject.h"
 #include "GameObjects/ObjectData.h"
 #include "GameObjects/ObjectsDataRegistry.h"
+#include "Widgets/ButtonDialogAction.h"
 #include "Widgets/ButtonDialogArrows.h"
 #include "Widgets/ButtonPanelTab.h"
 #include "Widgets/GameUIData.h"
@@ -98,122 +99,6 @@ private:
 
 private:
     sgl::graphic::Image * mBody = nullptr;
-};
-
-// ===== BUTTON BUILD =====
-
-class ButtonBuild : public sgl::sgui::AbstractButton
-{
-public:
-    ButtonBuild(sgl::sgui::Widget * parent)
-        : sgl::sgui::AbstractButton(parent)
-        , mBody(new sgl::graphic::Image)
-    {
-        using namespace sgl::graphic;
-
-        SetShortcutKey(sgl::core::KeyboardEvent::KEY_B);
-
-        auto fm = FontManager::Instance();
-        auto font = fm->GetFont(WidgetsConstants::FontFileShortcut, 11, Font::NORMAL);
-        mShortcut = new Text("B", font, true);
-        mShortcut->SetColor(0xd5daddff);
-
-        // register graphic elements
-        RegisterRenderable(mBody);
-        RegisterRenderable(mShortcut);
-
-        // LABEL
-        font = fm->GetFont(WidgetsConstants::FontFileButton, 19, Font::NORMAL);
-        mLabel = new Text("BUILD", font);
-        RegisterRenderable(mLabel);
-
-        // set initial visual state
-        SetState(NORMAL);
-    }
-
-private:
-    void HandleMouseOver() override
-    {
-        sgl::sgui::AbstractButton::HandleMouseOver();
-
-        auto player = sgl::media::AudioManager::Instance()->GetPlayer();
-        player->PlaySound("UI/button_over-01.ogg");
-    }
-
-    void HandleButtonDown() override
-    {
-        sgl::sgui::AbstractButton::HandleButtonDown();
-
-        auto player = sgl::media::AudioManager::Instance()->GetPlayer();
-        player->PlaySound("UI/button_click_long-02.ogg");
-    }
-
-    void OnStateChanged(sgl::sgui::AbstractButton::VisualState state) override
-    {
-        // BACKGROUND
-        const unsigned int texIds[NUM_VISUAL_STATES] =
-        {
-            IND_DLG_NEWE_BUILD_NORMAL,
-            IND_DLG_NEWE_BUILD_DISABLED,
-            IND_DLG_NEWE_BUILD_OVER,
-            IND_DLG_NEWE_BUILD_PUSHED,
-            IND_DLG_NEWE_BUILD_PUSHED,
-        };
-
-        auto tm = sgl::graphic::TextureManager::Instance();
-        sgl::graphic::Texture * tex = tm->GetSprite(SpriteFileDialogNewElement, texIds[state]);
-        mBody->SetTexture(tex);
-
-        SetSize(mBody->GetWidth(), mBody->GetHeight());
-
-        // LABEL
-        const unsigned int colorLabel[NUM_VISUAL_STATES] =
-        {
-            0xe3e6e8ff,
-            0x454f54ff,
-            0xf1f2f4ff,
-            0xabb4baff,
-            0xc2c2a3ff
-        };
-
-        mLabel->SetColor(colorLabel[state]);
-
-        // update shortcut label alpha
-        const unsigned char alphaEn = 255;
-        const unsigned char alphaDis = 128;
-        const unsigned char alphaLabel = DISABLED == state ? alphaDis : alphaEn;
-        mShortcut->SetAlpha(alphaLabel);
-    }
-
-    void HandlePositionChanged() override
-    {
-        const int x0 = GetScreenX();
-        const int y0 = GetScreenY();
-
-        // position BG
-        mBody->SetPosition(x0, y0);
-
-        // SHORTCUT
-        const int shortBgX0 = 182;
-        const int shortBgY0 = 22;
-        const int shortBgSize = 14;
-
-        const int shortcutX = x0 + shortBgX0 + (shortBgSize - mShortcut->GetWidth()) * 0.5f;
-        const int shortcutY = y0 + shortBgY0 + (shortBgSize - mShortcut->GetHeight()) * 0.5f;
-
-        mShortcut->SetPosition(shortcutX, shortcutY);
-
-        // LABEL
-        const int labelX = x0 + (GetWidth() - mLabel->GetWidth()) * 0.5f;
-        const int labelY = y0 + (GetHeight() - mLabel->GetHeight()) * 0.5f;
-
-        mLabel->SetPosition(labelX, labelY);
-    }
-
-private:
-    sgl::graphic::Image * mBody = nullptr;
-    sgl::graphic::Text * mLabel = nullptr;
-    sgl::graphic::Text * mShortcut = nullptr;
 };
 
 // ===== BUTTON SLOT =====
@@ -737,7 +622,7 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
     }
 
     // BUTTON BUILD
-    mBtnBuild = new ButtonBuild(this);
+    mBtnBuild = new ButtonDialogAction("BUILD", "B", core::KeyboardEvent::KEY_B, this);
     const ObjectVisualAttribute * lastPanel = mVisAtt[NUM_VIS_ATT - 1];
     const int btnX = lastPanel->GetX() + lastPanel->GetWidth() - mBtnBuild->GetWidth();
     const int marginBtnTop = 15;
