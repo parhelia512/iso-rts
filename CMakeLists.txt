@@ -151,12 +151,15 @@ add_executable(
     src/Indicators/WallIndicator.cpp
     src/Particles/DataParticleDamage.h
     src/Particles/DataParticleHealing.h
+    src/Particles/DataParticleHitPoints.h
     src/Particles/DataParticleLootboxPrize.h
     src/Particles/DataParticleSingleLaser.h
     src/Particles/ParticleDamage.h
     src/Particles/ParticleDamage.cpp
     src/Particles/ParticleHealing.h
     src/Particles/ParticleHealing.cpp
+    src/Particles/ParticleHitPoints.h
+    src/Particles/ParticleHitPoints.cpp
     src/Particles/ParticleLootboxPrize.h
     src/Particles/ParticleLootboxPrize.cpp
     src/Particles/ParticleSingleLaser.h
@@ -165,6 +168,8 @@ add_executable(
     src/Particles/UpdaterDamage.cpp
     src/Particles/UpdaterHealing.h
     src/Particles/UpdaterHealing.cpp
+    src/Particles/UpdaterHitPoints.h
+    src/Particles/UpdaterHitPoints.cpp
     src/Particles/UpdaterLootboxPrize.h
     src/Particles/UpdaterLootboxPrize.cpp
     src/Particles/UpdaterSingleLaser.h

@@ -9,7 +9,9 @@
 #include "Player.h"
 #include "GameObjects/GameObjectsGroup.h"
 #include "Particles/DataParticleDamage.h"
+#include "Particles/DataParticleHitPoints.h"
 #include "Particles/UpdaterDamage.h"
+#include "Particles/UpdaterHitPoints.h"
 #include "Screens/ScreenGame.h"
 
 #include <sgl/core/Math.h>
@@ -545,6 +547,8 @@ void GameObject::Hit(float damage, PlayerFaction attacker, bool fatal)
         damage = damage * fixedW + (damage * variableW * variableDamage);
     }
 
+    damage = std::roundf(damage);
+
     SumHealth(-damage);
 
     const int numPart0 = 40 * mRows * mCols;
@@ -585,11 +589,13 @@ void GameObject::Hit(float damage, PlayerFaction attacker, bool fatal)
         }
     }
 
+    auto screen = GetScreen();
+
     float ang1 = ang0 + angInc;
 
     const int numPartQuad = numPart / numQuad;
 
-    auto pu = static_cast<UpdaterDamage *>(GetScreen()->GetParticleUpdater(PU_DAMAGE));
+    auto pu = static_cast<UpdaterDamage *>(screen->GetParticleUpdater(PU_DAMAGE));
 
     const unsigned int texInd = SpriteIdParticles::ID_PART_RECT_4x4;
     Texture * tex = TextureManager::Instance()->GetSprite(SpriteFileParticles, texInd);
@@ -611,7 +617,6 @@ void GameObject::Hit(float damage, PlayerFaction attacker, bool fatal)
     // random generator for speed
     const int minSpeed = 100;
     const int maxSpeed = 300;
-
     sgl::utilities::UniformDistribution genSpeed(minSpeed, maxSpeed);
 
     // random generator for decay speed
@@ -658,6 +663,22 @@ void GameObject::Hit(float damage, PlayerFaction attacker, bool fatal)
 
         genVel.SetParameters(static_cast<int>(ang0), static_cast<int>(ang1));
     }
+
+    // -- HIT POINTS --
+    // random generator for X position
+    const int minXDelta = 0;
+    const int maxXDelta = isoObj->GetWidth();
+
+    sgl::utilities::UniformDistribution genPosHP(minXDelta, maxXDelta);
+
+    const float posXHP = isoObj->GetX() + genPosHP.GetNextValue();
+
+    const float speedHP = 75.f;
+    const float decaySpeedHP = 175.f;
+    auto puHP = static_cast<UpdaterHitPoints *>(screen->GetParticleUpdater(PU_HIT_POINTS));
+
+    DataParticleHitPoints dataHP(damage, posXHP, isoObj->GetY(), speedHP, decaySpeedHP, fatal);
+    puHP->AddParticle(dataHP);
 }
 
 void GameObject::SelfDestroy() { Hit(0.f, NO_FACTION, true); }

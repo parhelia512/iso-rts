@@ -33,6 +33,7 @@
 #include "Indicators/WallIndicator.h"
 #include "Particles/UpdaterDamage.h"
 #include "Particles/UpdaterHealing.h"
+#include "Particles/UpdaterHitPoints.h"
 #include "Particles/UpdaterLootboxPrize.h"
 #include "Particles/UpdaterSingleLaser.h"
 #include "States/StatesIds.h"
@@ -513,6 +514,10 @@ void ScreenGame::InitParticlesSystem()
     // HEALING
     updater = new UpdaterHealing;
     mPartMan->RegisterUpdater(PU_HEALING, updater);
+
+    // HIT POINTS
+    updater = new UpdaterHitPoints;
+    mPartMan->RegisterUpdater(PU_HIT_POINTS, updater);
 
     // LOOTBOX PRIZE
     updater = new UpdaterLootboxPrize;
