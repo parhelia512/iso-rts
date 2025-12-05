@@ -40,6 +40,8 @@ private:
     void CreatePanelAttributes();
     void CreatePanelConfig();
 
+    void ChangeIndex(int delta);
+
     void UpdateTotalCosts();
     void UpdateData();
 
@@ -53,6 +55,8 @@ private:
     sgl::graphic::Image * mBg = nullptr;
 
     sgl::sgui::AbstractButton * mBtnClose = nullptr;
+    sgl::sgui::AbstractButton * mBtnLeft = nullptr;
+    sgl::sgui::AbstractButton * mBtnRight = nullptr;
     sgl::sgui::Image * mImgPreview = nullptr;
     sgl::sgui::Label * mLabelCostEnergy = nullptr;
     sgl::sgui::Label * mLabelCostMaterial = nullptr;
@@ -70,6 +74,7 @@ private:
 
     const ObjectsDataRegistry * mDataReg = nullptr;
 
+    unsigned int mCurrentIndex = 0;
     GameObjectTypeId mTypeToBuild;
 };
 

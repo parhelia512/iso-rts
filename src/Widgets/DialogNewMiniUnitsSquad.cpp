@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "GameObjects/GameObject.h"
 #include "GameObjects/ObjectsDataRegistry.h"
+#include "Widgets/ButtonDialogArrows.h"
 #include "Widgets/ButtonDialogClose.h"
 #include "Widgets/GameButton.h"
 #include "Widgets/GameSliderH.h"
@@ -82,8 +83,34 @@ void DialogNewMiniUnitsSquad::CreatePanelPreview()
 {
     using namespace sgl;
 
-    int x;
+    // ARROWS
+    const int marginButtonLR = 10;
+
+    int x = topPanelX0 + marginButtonLR;
     int y;
+
+    // ARROW LEFT
+    mBtnLeft = new ButtonDialogArrowLeft(this);
+    mBtnLeft->SetEnabled(false);
+
+    y = topPanelY0 + (panelPreviewH - mBtnLeft->GetHeight()) / 2;
+    mBtnLeft->SetPosition(x, y);
+
+    mBtnLeft->AddOnClickFunction([this]
+    {
+        ChangeIndex(-1);
+    });
+
+    // ARROW RIGHT
+    mBtnRight = new ButtonDialogArrowRight(this);
+
+    x = topPanelX0 + panelPreviewW - marginButtonLR - mBtnRight->GetWidth();
+    mBtnRight->SetPosition(x, y);
+
+    mBtnRight->AddOnClickFunction([this]
+    {
+        ChangeIndex(1);
+    });
 
     // PREVIEW IMAGE
     mImgPreview = new sgui::Image(this);
@@ -380,6 +407,11 @@ void DialogNewMiniUnitsSquad::CreatePanelConfig()
 
     mLabelTotCostBlobs = new sgui::Label(fontText, this);
     mLabelTotCostBlobs->SetPosition(x, y);
+}
+
+void DialogNewMiniUnitsSquad::ChangeIndex(int delta)
+{
+    // TODO
 }
 
 void DialogNewMiniUnitsSquad::UpdateTotalCosts()
