@@ -57,10 +57,12 @@ ScreenNewGame::ScreenNewGame(Game * game)
     p->AddAvailableUnit(GameObject::TYPE_UNIT_SOLDIER1);
     p->AddAvailableUnit(GameObject::TYPE_UNIT_SPAWNER1);
     p->AddAvailableUnit(GameObject::TYPE_UNIT_SPAWNER2);
-    // TODO temporary for testing. In the future start only with 2 types
     p->AddAvailableUnit(GameObject::TYPE_UNIT_SCOUT1);
     p->AddAvailableUnit(GameObject::TYPE_UNIT_SOLDIER2);
     p->AddAvailableUnit(GameObject::TYPE_UNIT_MEDIC1);
+
+    // assign initial available mini units
+    p->AddAvailableMiniUnit(GameObject::TYPE_MINI_UNIT1);
 
     // assign initial resources
     p->SetResource(Player::Stat::BLOBS, startBlobs);
@@ -117,7 +119,6 @@ ScreenNewGame::ScreenNewGame(Game * game)
         // assign initial available units
         p->AddAvailableUnit(GameObject::TYPE_UNIT_WORKER1);
         p->AddAvailableUnit(GameObject::TYPE_UNIT_SOLDIER1);
-        // TODO temporary for testing. In the future start only with 2 types
         p->AddAvailableUnit(GameObject::TYPE_UNIT_SCOUT1);
         p->AddAvailableUnit(GameObject::TYPE_UNIT_SOLDIER2);
         p->AddAvailableUnit(GameObject::TYPE_UNIT_MEDIC1);

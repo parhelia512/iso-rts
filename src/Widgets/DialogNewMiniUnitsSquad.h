@@ -75,7 +75,6 @@ private:
     const ObjectsDataRegistry * mDataReg = nullptr;
 
     unsigned int mCurrentIndex = 0;
-    GameObjectTypeId mTypeToBuild;
 };
 
 } // namespace game

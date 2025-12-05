@@ -19,6 +19,8 @@
 #include <sgl/sgui/Label.h>
 #include <sgl/sgui/TextArea.h>
 
+#include <cassert>
+
 namespace
 {
 constexpr int panelPreviewW = 240;
@@ -35,7 +37,6 @@ namespace game
 DialogNewMiniUnitsSquad::DialogNewMiniUnitsSquad(Player * player, const ObjectsDataRegistry * dataReg)
     : mPlayer(player)
     , mDataReg(dataReg)
-    , mTypeToBuild(GameObject::TYPE_MINI_UNIT1)
 {
     using namespace sgl;
 
@@ -91,6 +92,7 @@ void DialogNewMiniUnitsSquad::CreatePanelPreview()
 
     // ARROW LEFT
     mBtnLeft = new ButtonDialogArrowLeft(this);
+    // LEFT always disabled when starting as initial index is 0
     mBtnLeft->SetEnabled(false);
 
     y = topPanelY0 + (panelPreviewH - mBtnLeft->GetHeight()) / 2;
@@ -111,6 +113,12 @@ void DialogNewMiniUnitsSquad::CreatePanelPreview()
     {
         ChangeIndex(1);
     });
+
+    const std::vector<GameObjectTypeId> & mu = mPlayer->GetAvailableMiniUnits();
+
+    assert(!mu.empty());
+
+    mBtnRight->SetEnabled(mu.size() > 1);
 
     // PREVIEW IMAGE
     mImgPreview = new sgui::Image(this);
@@ -411,12 +419,33 @@ void DialogNewMiniUnitsSquad::CreatePanelConfig()
 
 void DialogNewMiniUnitsSquad::ChangeIndex(int delta)
 {
-    // TODO
+    // can't go further left
+    if(delta < 0 && 0 == mCurrentIndex)
+        return;
+
+    const std::vector<GameObjectTypeId> & mu = mPlayer->GetAvailableMiniUnits();
+    const int unsigned numMiniUnits = mu.size();
+
+    // can't go further right
+    if((mCurrentIndex + 1) == numMiniUnits)
+        return ;
+
+    // update index
+    mCurrentIndex += delta;
+
+    // update arrows
+    mBtnLeft->SetEnabled(mCurrentIndex > 0);
+    mBtnRight->SetEnabled((mCurrentIndex + 1) < numMiniUnits);
+
+    // finalize update
+    UpdateData();
 }
 
 void DialogNewMiniUnitsSquad::UpdateTotalCosts()
 {
-    const ObjectData & data = mDataReg->GetObjectData(mTypeToBuild);
+    const std::vector<GameObjectTypeId> & mu = mPlayer->GetAvailableMiniUnits();
+    const GameObjectTypeId typeToBuild = mu[mCurrentIndex];
+    const ObjectData & data = mDataReg->GetObjectData(typeToBuild);
     const std::array<int, NUM_OBJ_COSTS> & costs = data.GetCosts();
 
     const int totElements = mSliderElements->GetValue() * mSliderSquads->GetValue();
@@ -464,7 +493,9 @@ void DialogNewMiniUnitsSquad::UpdateData()
 {
     using namespace sgl;
 
-    const ObjectData & data = mDataReg->GetObjectData(mTypeToBuild);
+    const std::vector<GameObjectTypeId> & mu = mPlayer->GetAvailableMiniUnits();
+    const GameObjectTypeId typeToBuild = mu[mCurrentIndex];
+    const ObjectData & data = mDataReg->GetObjectData(typeToBuild);
 
     auto tm = graphic::TextureManager::Instance();
 
@@ -477,7 +508,7 @@ void DialogNewMiniUnitsSquad::UpdateData()
     mImgPreview->SetPosition(previewX, previewY);
 
     // DESCRIPTION
-    mDescription->SetText(GameObject::DESCRIPTIONS.at(mTypeToBuild).c_str());
+    mDescription->SetText(GameObject::DESCRIPTIONS.at(typeToBuild).c_str());
 
     // COSTS
     const std::array<int, NUM_OBJ_COSTS> & costs = data.GetCosts();

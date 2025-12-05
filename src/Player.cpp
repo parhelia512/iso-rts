@@ -495,6 +495,22 @@ bool Player::IsUnitAvailable(GameObjectTypeId type) const
     return false;
 }
 
+void Player::AddAvailableMiniUnit(GameObjectTypeId type)
+{
+    mAvailableMiniUnits.emplace_back(type);
+}
+
+bool Player::IsMiniUnitAvailable(GameObjectTypeId type) const
+{
+    for(const GameObjectTypeId t : mAvailableMiniUnits)
+    {
+        if(t == type)
+            return true;
+    }
+
+    return false;
+}
+
 void Player::ClearSelectedObject()
 {
     if(nullptr == mSelObj)
