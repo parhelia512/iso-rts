@@ -551,7 +551,7 @@ void GameObject::Hit(float damage, PlayerFaction attacker, bool fatal)
 
     SumHealth(-damage);
 
-    const int numPart0 = 40 * mRows * mCols;
+    const int numPart0 = 30 * mRows * mCols;
     int numPart = numPart0;
 
     const int maxQuad = 4;
@@ -666,18 +666,20 @@ void GameObject::Hit(float damage, PlayerFaction attacker, bool fatal)
 
     // -- HIT POINTS --
     // random generator for X position
-    const int minXDelta = 0;
-    const int maxXDelta = isoObj->GetWidth();
+    const int maxXDelta = isoObj->GetWidth() * 0.25;
+    const int minXDelta = -maxXDelta;
 
     sgl::utilities::UniformDistribution genPosHP(minXDelta, maxXDelta);
 
-    const float posXHP = isoObj->GetX() + genPosHP.GetNextValue();
+    const float posXHP = objXC + genPosHP.GetNextValue();
+    const float posYHP = objYC - (isoObj->GetHeight() * 0.25f);
 
     const float speedHP = 75.f;
-    const float decaySpeedHP = 175.f;
+    const float decaySpeedHP = 100.f;
+    const float maxDistHP = isoObj->GetHeight() * 0.4f;
     auto puHP = static_cast<UpdaterHitPoints *>(screen->GetParticleUpdater(PU_HIT_POINTS));
 
-    DataParticleHitPoints dataHP(damage, posXHP, isoObj->GetY(), speedHP, decaySpeedHP, fatal);
+    DataParticleHitPoints dataHP(damage, posXHP, posYHP, speedHP, decaySpeedHP, maxDistHP, fatal);
     puHP->AddParticle(dataHP);
 }
 

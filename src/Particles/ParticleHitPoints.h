@@ -35,10 +35,12 @@ private:
 
     float mPosXf = 0.f;
     float mPosYf = 0.f;
+    float mPosY0f = 0.f;
 
     float mSpeed = 0.f;
     float mAlpha = 255.f;
     float mDecaySpeed = 1.f;
+    float mMaxDistance = 10.f;
 };
 
 inline float ParticleHitPoints::GetSpeed() const { return mSpeed; }

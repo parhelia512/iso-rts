@@ -24,6 +24,7 @@ void ParticleHitPoints::SetData(const DataParticleHitPoints & data)
     // init data
     mSpeed = -data.speed;
     mDecaySpeed = data.decaySpeed;
+    mMaxDistance = data.maxDistance;
 
     const float maxAlpha = 255.f;
     mAlpha = maxAlpha;
@@ -47,6 +48,7 @@ void ParticleHitPoints::SetStart(int x0, int y0)
 {
     mPosXf = x0;
     mPosYf = y0;
+    mPosY0f = y0;
 
     const int halfW = mTxt->GetWidth() / 2;
 
@@ -67,17 +69,21 @@ void ParticleHitPoints::Update(float delta)
 
     mTxt->SetY(posY);
 
+    const float dist = mPosY0f - mPosYf;
+
+    if(dist > mMaxDistance)
+        SetDone();
+
     // update alpha
-    const int minAlpha = 1.f;
+    const float minAlpha = 1.f;
 
     mAlpha -= alphaDecay;
     const int alpha = static_cast<unsigned char>(mAlpha);
 
     mTxt->SetAlpha(alpha);
 
-    // DONE!
     if(mAlpha < minAlpha)
-         SetDone();
+        SetDone();
 }
 
 void ParticleHitPoints::Render()
