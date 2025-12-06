@@ -331,6 +331,7 @@ void ScreenMainMenu::CreateChangelog()
                          " have a target set.\n"
                          "- All game objects use their attributes to define their properties"
                          " (i.e.: energy, attack, speed, etc...).\n"
+                         "- Added hit points when an object is damaged.\n"
                          );
     textNewFeat->SetPosition(contX, contY);
     textNewFeat->SetColor(colorContent);
