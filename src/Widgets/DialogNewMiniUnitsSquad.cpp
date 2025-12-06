@@ -466,7 +466,7 @@ void DialogNewMiniUnitsSquad::ChangeIndex(int delta)
     const int unsigned numMiniUnits = mu.size();
 
     // can't go further right
-    if((mCurrentIndex + 1) == numMiniUnits)
+    if(delta > 0 && (mCurrentIndex + 1) == numMiniUnits)
         return ;
 
     // update index

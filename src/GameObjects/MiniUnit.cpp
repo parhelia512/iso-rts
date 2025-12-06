@@ -86,7 +86,12 @@ void MiniUnit::SetImage()
     if(NO_FACTION == faction)
         return ;
 
-    const unsigned int texInd = SID_MUNIT_01_1X_F1 +
+    unsigned int texInd0 = SID_MUNIT_01_1X_F1;
+
+    if(GetObjectType() == TYPE_MINI_UNIT2)
+        texInd0 = SID_MUNIT_02_1X_F1;
+
+    const unsigned int texInd = texInd0 +
                                 (NUM_MUNIT_SPRITES_PER_FACTION * faction) +
                                 (NUM_MUNIT_SPRITES_PER_SQUAD * (mElements - 1)) +
                                 static_cast<unsigned int>(IsSelected());

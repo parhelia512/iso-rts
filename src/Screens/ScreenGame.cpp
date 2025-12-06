@@ -1869,8 +1869,7 @@ bool ScreenGame::SetupNewMiniUnits(GameObjectTypeId type, GameObject * gen, Game
         SetObjectActionCompleted(gen);
 
         if(squads > 1)
-            SetupNewMiniUnits(GameObject::TYPE_MINI_UNIT1, gen, group, mLocalPlayer,
-                              squads - 1, elements);
+            SetupNewMiniUnits(type, gen, group, mLocalPlayer, squads - 1, elements);
     });
 
     // store active action
