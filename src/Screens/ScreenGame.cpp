@@ -28,6 +28,7 @@
 #include "Indicators/ConquestIndicator.h"
 #include "Indicators/HealingRangeIndicator.h"
 #include "Indicators/MoveIndicator.h"
+#include "Indicators/PathIndicator.h"
 #include "Indicators/PathOverlay.h"
 #include "Indicators/StructureIndicator.h"
 #include "Indicators/WallIndicator.h"
@@ -177,8 +178,10 @@ ScreenGame::ScreenGame(Game * game)
     CreateUI();
 
     // OVERLAYS
-    mPathOverlay = new PathOverlay(mIsoMap->GetLayer(MapLayers::CELL_OVERLAYS3),
+    mPathOverlay = new PathOverlay(mIsoMap->GetLayer(MapLayers::CELL_OVERLAYS2),
                                    mIsoMap->GetNumRows(), mIsoMap->GetNumCols());
+
+    mMiniUnitTargetIndicator = new PathIndicator(mLocalPlayer->GetFaction(), true);
 
     // set initial camera position
     CenterCameraOverPlayerBase();
@@ -221,6 +224,8 @@ ScreenGame::~ScreenGame()
     delete mPartMan;
 
     delete mPathOverlay;
+
+    delete mMiniUnitTargetIndicator;
 
     for(auto ind : mAttIndicators)
         delete ind;
@@ -361,7 +366,7 @@ void ScreenGame::SelectObject(GameObject * obj, Player * player)
         mHUD->SetQuickUnitButtonChecked(obj);
 
         // show current indicator
-        ShowActiveIndicators(static_cast<Unit *>(obj), mCurrCell);
+        ShowActiveUnitIndicators(static_cast<Unit *>(obj), mCurrCell);
     }
     // not a unit
     else
@@ -695,7 +700,7 @@ void ScreenGame::CreateUI()
             obj->SetActiveAction(GameObjectActionType::SET_TARGET);
         });
 
-        // TODO show an indicator that highlights the target point
+        ShowActiveMiniUnitIndicators(static_cast<MiniUnit *>(mu), mCurrCell);
     });
 
     // WALL GATE
@@ -795,7 +800,7 @@ void ScreenGame::CreateUI()
             selObj->SetActiveActionToDefault();
 
             // show current indicator
-            ShowActiveIndicators(static_cast<Unit *>(selObj), mCurrCell);
+            ShowActiveUnitIndicators(static_cast<Unit *>(selObj), mCurrCell);
 
             return ;
         }
@@ -1496,7 +1501,7 @@ void ScreenGame::CancelObjectAction(GameObject * obj)
 
                 // show current indicator for units
                 if(obj->GetObjectCategory() == GameObject::CAT_UNIT)
-                    ShowActiveIndicators(static_cast<Unit *>(act.obj), mCurrCell);
+                    ShowActiveUnitIndicators(static_cast<Unit *>(act.obj), mCurrCell);
             }
 
             break;
@@ -2682,6 +2687,10 @@ void ScreenGame::HandleMiniUnitSetTargetOnMouseUp(GameObject * obj, const Cell2D
 
     group->SetPath(std::move(path));
     group->SetTarget(clickCell);
+
+    // clear target indicator
+    auto layerInd = mIsoMap->GetLayer(MapLayers::CELL_OVERLAYS3);
+    layerInd->ClearObject(mMiniUnitTargetIndicator);
 }
 
 void ScreenGame::HandleSelectionClick(sgl::core::MouseButtonEvent & event)
@@ -2894,7 +2903,7 @@ bool ScreenGame::StartUnitBuildWall(Unit * unit)
     }
 }
 
-void ScreenGame::ShowActiveIndicators(Unit * unit, const Cell2D & cell)
+void ScreenGame::ShowActiveUnitIndicators(Unit * unit, const Cell2D & cell)
 {
     const GameObjectActionType action = unit->GetActiveAction();
 
@@ -2906,6 +2915,41 @@ void ScreenGame::ShowActiveIndicators(Unit * unit, const Cell2D & cell)
         ShowBuildWallIndicator(unit, cell);
     else if(action == GameObjectActionType::BUILD_STRUCTURE)
         ShowBuildStructureIndicator(unit, cell);
+}
+
+void ScreenGame::ShowActiveMiniUnitIndicators(MiniUnit * mu, const Cell2D & cell)
+{
+    const GameObjectActionType action = mu->GetActiveAction();
+
+    // only indicator is for SET TARGET
+    if(action != SET_TARGET)
+        return ;
+
+    auto layer = mIsoMap->GetLayer(MapLayers::CELL_OVERLAYS3);
+
+    // check if need to show indicator
+    const int destInd = cell.row * mGameMap->GetNumCols() + cell.col;
+
+    const bool showIndicator = mIsoMap->IsCellInside(cell) &&
+                               mLocalPlayer->IsCellVisible(destInd) &&
+                               mGameMap->IsCellWalkable(destInd);
+
+    if(!showIndicator)
+    {
+        // hide the indicator, if any
+        layer->SetObjectVisible(mMiniUnitTargetIndicator, false);
+        return ;
+    }
+
+    // indicator already visible
+    if(layer->HasObject(mMiniUnitTargetIndicator))
+    {
+        layer->MoveObject(mMiniUnitTargetIndicator, cell.row, cell.col);
+        layer->SetObjectVisible(mMiniUnitTargetIndicator, true);
+    }
+    // indicator not visible yet
+    else
+        layer->AddObject(mMiniUnitTargetIndicator, cell.row, cell.col);
 }
 
 void ScreenGame::ShowAttackIndicators(const GameObject * obj, int range)
@@ -3408,8 +3452,13 @@ void ScreenGame::UpdateCurrentCell()
     // react to change of cell like if mouse was moved
     GameObject * sel = mLocalPlayer->GetSelectedObject();
 
-    if(sel != nullptr && sel->GetObjectCategory() == GameObject::CAT_UNIT)
-        ShowActiveIndicators(static_cast<Unit *>(sel), cell);
+    if(sel != nullptr)
+    {
+        if(sel->GetObjectCategory() == GameObject::CAT_UNIT)
+            ShowActiveUnitIndicators(static_cast<Unit *>(sel), cell);
+        else if(sel->GetObjectCategory() == GameObject::CAT_MINI_UNIT)
+            ShowActiveMiniUnitIndicators(static_cast<MiniUnit *>(sel), cell);
+    }
 }
 
 void ScreenGame::AddObjectToMinimap(const Cell2D & cell, GameObjectTypeId type, PlayerFaction f)

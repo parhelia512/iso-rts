@@ -37,7 +37,9 @@ class Hospital;
 class IsoLayer;
 class IsoMap;
 class MiniMap;
+class MiniUnit;
 class MoveIndicator;
+class PathIndicator;
 class PathOverlay;
 class Player;
 class PlayerAI;
@@ -171,7 +173,8 @@ private:
 
     bool StartUnitBuildWall(Unit * unit);
 
-    void ShowActiveIndicators(Unit * unit, const Cell2D & cell);
+    void ShowActiveUnitIndicators(Unit * unit, const Cell2D & cell);
+    void ShowActiveMiniUnitIndicators(MiniUnit * mu, const Cell2D & cell);
     void ShowAttackIndicators(const GameObject * obj, int range);
     void ShowBuildStructureIndicator(Unit * unit, const Cell2D & currCell);
     void ShowBuildWallIndicator(Unit * unit, const Cell2D & dest);
@@ -245,6 +248,8 @@ private:
 
     // MAP OVERLAYS
     PathOverlay * mPathOverlay = nullptr;
+
+    PathIndicator * mMiniUnitTargetIndicator = nullptr;
 
     // TURN MANAGEMENT
     Player * mLocalPlayer = nullptr;
