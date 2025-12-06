@@ -15,7 +15,7 @@ ButtonDialogArrowLeft::ButtonDialogArrowLeft(sgl::sgui::Widget * parent)
                                IND_DLG_NEWE_LEFT_OVER, IND_DLG_NEWE_LEFT_PUSHED,
                                IND_DLG_NEWE_LEFT_NORMAL }, SpriteFileDialogNewElement, parent)
 {
-    SetShortcutKey(sgl::core::KeyboardEvent::KEY_ESCAPE);
+    SetShortcutKey(sgl::core::KeyboardEvent::KEY_LEFT);
 }
 
 void ButtonDialogArrowLeft::HandleMouseOver()
@@ -40,7 +40,7 @@ ButtonDialogArrowRight::ButtonDialogArrowRight(sgl::sgui::Widget * parent)
                                IND_DLG_NEWE_RIGHT_OVER, IND_DLG_NEWE_RIGHT_PUSHED,
                                IND_DLG_NEWE_RIGHT_NORMAL }, SpriteFileDialogNewElement, parent)
 {
-    SetShortcutKey(sgl::core::KeyboardEvent::KEY_ESCAPE);
+    SetShortcutKey(sgl::core::KeyboardEvent::KEY_RIGHT);
 }
 
 void ButtonDialogArrowRight::HandleMouseOver()
