@@ -281,9 +281,8 @@ GameObject::GameObject(const ObjectData & data)
     if(TYPE_BASE == mType)
         mLinked = true;
 
-    // default colors to mark objects that haven't set any
-    mObjColors.push_back(0xFFFFFFFF);
-    mObjColors.push_back(0xFF00FFFF);
+    // init colors for NO FACTION
+    SetDefaultColors();
 
     // update data based on attributes
     UpdateMaxEnergy(defMaxEnergy);
