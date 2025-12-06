@@ -105,6 +105,16 @@ void ObjectsDataRegistry::InitObjectData()
                              GameObject::TYPE_MINI_UNIT1, GameObject::CAT_MINI_UNIT,
                              OCMU_SOLDIER, OCAT_MINI_UNIT, 1, 1));
 
+    mData.emplace(GameObject::TYPE_MINI_UNIT2,
+                  ObjectData({ {OBJ_ATT_ENERGY, 2}, {OBJ_ATT_VIEW_RANGE, 6}, {OBJ_ATT_FIRE_POWER, 3},
+                              {OBJ_ATT_FIRE_ACCURACY, 4}, {OBJ_ATT_FIRE_RANGE, 3}, {OBJ_ATT_REGENERATION, 4},
+                              {OBJ_ATT_RESISTANCE, 2}, {OBJ_ATT_SHIELD, 2},  {OBJ_ATT_SPEED, 9},
+                              {OBJ_ATT_HEALTH, 4} },
+                             { 15, 15, 0, 0 },
+                             { SID_MUNIT_02_5X_F1, SID_MUNIT_02_5X_F2, SID_MUNIT_02_5X_F3 }, SpriteFileMiniUnits,
+                             GameObject::TYPE_MINI_UNIT2, GameObject::CAT_MINI_UNIT,
+                             OCMU_SOLDIER, OCAT_MINI_UNIT, 1, 1));
+
     mData.emplace(GameObject::TYPE_MOUNTAINS,
                   ObjectData({ {OBJ_ATT_ENERGY, 1}, {OBJ_ATT_HEALTH, 9}, {OBJ_ATT_RESISTANCE, 7} }, {},
                              { ID_SCENE_MOUNTAIN_1 }, SpriteFileSceneElements, GameObject::TYPE_MOUNTAINS,

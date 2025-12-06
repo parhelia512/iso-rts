@@ -63,6 +63,7 @@ ScreenNewGame::ScreenNewGame(Game * game)
 
     // assign initial available mini units
     p->AddAvailableMiniUnit(GameObject::TYPE_MINI_UNIT1);
+    p->AddAvailableMiniUnit(GameObject::TYPE_MINI_UNIT2);
 
     // assign initial resources
     p->SetResource(Player::Stat::BLOBS, startBlobs);

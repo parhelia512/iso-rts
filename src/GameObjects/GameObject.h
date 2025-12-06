@@ -63,6 +63,7 @@ public:
     static const GameObjectTypeId TYPE_HOSPITAL;
     static const GameObjectTypeId TYPE_LOOTBOX;
     static const GameObjectTypeId TYPE_MINI_UNIT1;
+    static const GameObjectTypeId TYPE_MINI_UNIT2;
     static const GameObjectTypeId TYPE_MOUNTAINS;
     static const GameObjectTypeId TYPE_PRACTICE_TARGET;
     static const GameObjectTypeId TYPE_RADAR_STATION;
@@ -280,6 +281,7 @@ private:
     static const std::string TYPE_STR_HOSPITAL;
     static const std::string TYPE_STR_LOOTBOX;
     static const std::string TYPE_STR_MINI_UNIT1;
+    static const std::string TYPE_STR_MINI_UNIT2;
     static const std::string TYPE_STR_MOUNTAINS;
     static const std::string TYPE_STR_PRACTICE_TARGET;
     static const std::string TYPE_STR_RADAR_STATION;
