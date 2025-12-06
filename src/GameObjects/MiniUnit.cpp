@@ -2,6 +2,7 @@
 
 #include "GameConstants.h"
 #include "GameData.h"
+#include "GameMap.h"
 #include "IsoObject.h"
 
 #include <sgl/graphic/Texture.h>
@@ -57,6 +58,21 @@ void MiniUnit::SetNumElements(int num)
     UpdateGraphics();
 }
 
+void MiniUnit::Update(float delta)
+{
+    // nothing to do until a target is reached
+    if(!mTargetReached)
+        return ;
+
+    const GameObjectTypeId type = GetObjectType();
+
+    if(type == TYPE_MINI_UNIT1)
+        ExplodeNearEnemy();
+
+    // reset flag
+    mTargetReached = false;
+}
+
 void MiniUnit::UpdateGraphics()
 {
     SetImage();
@@ -79,6 +95,48 @@ void MiniUnit::SetImage()
     sgl::graphic::Texture * tex =tm->GetSprite(SpriteFileMiniUnits, texInd);
 
     GetIsoObject()->SetTexture(tex);
+}
+
+void MiniUnit::ExplodeNearEnemy()
+{
+    auto gm = GetGameMap();
+
+    const int mapRows = gm->GetNumRows();
+    const int mapCols = gm->GetNumCols();
+
+    const std::vector<GameMapCell> & cells = gm->GetCells();
+
+    const int cr = GetRow0();
+    const int cc = GetCol0();
+
+    const int rad = 1;
+    const int r0 = cr >= rad ? cr - rad : 0;
+    const int r1 = cr + rad < mapRows ? cr + rad + 1 : mapRows;
+    const int c0 = cc >= rad ? cc - rad : 0;
+    const int c1 = cc + rad < mapCols ? cc + rad + 1 : mapCols;
+
+    const PlayerFaction ownFaction = GetFaction();
+
+    for(int r = r0; r < r1; ++r)
+    {
+        const int ind0 = r * mapCols;
+
+        for(int c = c0; c < c1; ++c)
+        {
+            const int ind = ind0 + c;
+            const GameMapCell & cell = cells[ind];
+
+            // enemy found -> boom!
+            if((cell.objTop != nullptr && cell.objTop->GetFaction() != ownFaction &&
+                 cell.objTop->GetFaction() != NO_FACTION) ||
+                (cell.objBottom != nullptr && cell.objBottom->GetFaction() != ownFaction &&
+                 cell.objBottom->GetFaction() != NO_FACTION))
+            {
+                SelfDestroy();
+                return ;
+            }
+        }
+    }
 }
 
 } // namespace game

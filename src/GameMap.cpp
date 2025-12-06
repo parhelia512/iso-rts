@@ -3837,7 +3837,7 @@ void GameMap::ContinueMiniUnitGroupMove(const ObjectPath * prevOP)
         return ;
     }
 
-    auto prevMU = prevOP->GetObject();
+    auto prevMU = static_cast<MiniUnit *>(prevOP->GetObject());
     auto group = mMiniUnitsGroupsToMove.back();
 
     // mark mini unit moved for this turn
@@ -3850,7 +3850,8 @@ void GameMap::ContinueMiniUnitGroupMove(const ObjectPath * prevOP)
     if(prevMU->GetRow0() == group->GetPathTarget().row && prevMU->GetCol0() == group->GetPathTarget().col)
     {
         // mark mini unit done
-        static_cast<MiniUnit *>(prevMU)->SetMoving(false);
+        prevMU->SetMoving(false);
+        prevMU->setTargetReached();
 
         // move group target back to path[n-1] and clear if this fails (it shouldn't)
         if(!group->PopPathTargetBack(mCols))
