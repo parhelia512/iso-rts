@@ -34,7 +34,7 @@ void ParticleHitPoints::SetData(const DataParticleHitPoints & data)
 
     // TEXT
     const unsigned int colors[] = { 0xeff0f5ff, 0xff8a80ff };
-    const int fontSize = 22;
+    const int fontSize = 24;
     auto fm = graphic::FontManager::Instance();
     graphic::Font * font = fm->GetFont("Lato-Bold.ttf", fontSize, graphic::Font::NORMAL);
 

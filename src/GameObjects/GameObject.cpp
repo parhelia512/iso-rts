@@ -680,7 +680,7 @@ void GameObject::Hit(float damage, PlayerFaction attacker, bool fatal)
 
     const float speedHP = 75.f;
     const float decaySpeedHP = 50.f;
-    const float maxDistHP = isoObj->GetHeight() * 0.5f;
+    const float maxDistHP = 50.f;
     auto puHP = static_cast<UpdaterHitPoints *>(screen->GetParticleUpdater(PU_HIT_POINTS));
 
     DataParticleHitPoints dataHP(damage, posXHP, posYHP, speedHP, decaySpeedHP, maxDistHP, fatal);
