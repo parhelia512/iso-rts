@@ -15,6 +15,7 @@
 #include "Screens/ScreenGame.h"
 
 #include <sgl/core/Math.h>
+#include <sgl/graphic/ParticlesManager.h>
 #include <sgl/graphic/TextureManager.h>
 #include <sgl/utilities/UniformDistribution.h>
 
@@ -460,20 +461,20 @@ bool GameObject::HasEnergyForActionStep(GameObjectActionType action) const
 
 void GameObject::ActionStepCompleted(GameObjectActionType action)
 {
-    if(action < NUM_OBJ_ACTIONS)
-    {
-        // ENERGY
-        const float costEnergy = -GetActionEnergyCost(action);
+    if(action >= NUM_OBJ_ACTIONS)
+        return ;
 
-        SumEnergy(costEnergy);
+    // ENERGY
+    const float costEnergy = -GetActionEnergyCost(action);
 
-        // do not consider turn energy for mini units
-        if(mOwner != nullptr && mCategory != CAT_MINI_UNIT)
-            mOwner->SumTurnEnergy(costEnergy);
+    SumEnergy(costEnergy);
 
-        // EXPERIENCE
-        SumExperience(GetActionExperienceGain(action));
-    }
+    // do not consider turn energy for mini units
+    if(mOwner != nullptr && mCategory != CAT_MINI_UNIT)
+        mOwner->SumTurnEnergy(costEnergy);
+
+    // EXPERIENCE
+    SumExperience(GetActionExperienceGain(action));
 }
 
 void GameObject::SetExperience(int val)
@@ -599,7 +600,8 @@ void GameObject::Hit(float damage, PlayerFaction attacker, bool fatal)
 
     const int numPartQuad = numPart / numQuad;
 
-    auto pu = static_cast<UpdaterDamage *>(screen->GetParticleUpdater(PU_DAMAGE));
+    auto partMan = GetScreen()->GetParticlesManager();
+    auto pu = static_cast<UpdaterDamage *>(partMan->GetUpdater(PU_DAMAGE));
 
     const unsigned int texInd = SpriteIdParticles::ID_PART_RECT_4x4;
     Texture * tex = TextureManager::Instance()->GetSprite(SpriteFileParticles, texInd);
@@ -681,7 +683,8 @@ void GameObject::Hit(float damage, PlayerFaction attacker, bool fatal)
     const float speedHP = 75.f;
     const float decaySpeedHP = 50.f;
     const float maxDistHP = 50.f;
-    auto puHP = static_cast<UpdaterHitPoints *>(screen->GetParticleUpdater(PU_HIT_POINTS));
+
+    auto puHP = static_cast<UpdaterHitPoints *>(partMan->GetUpdater(PU_HIT_POINTS));
 
     DataParticleHitPoints dataHP(damage, posXHP, posYHP, speedHP, decaySpeedHP, maxDistHP, fatal);
     puHP->AddParticle(dataHP);

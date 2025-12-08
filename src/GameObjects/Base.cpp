@@ -9,6 +9,7 @@
 #include "Particles/UpdaterLootboxPrize.h"
 #include "Screens/ScreenGame.h"
 
+#include <sgl/graphic/ParticlesManager.h>
 #include <sgl/graphic/TextureManager.h>
 
 namespace game
@@ -36,7 +37,8 @@ void Base::OnNewTurn(PlayerFaction faction)
         return ;
 
     // emit notification
-    auto pu = static_cast<UpdaterLootboxPrize *>(GetScreen()->GetParticleUpdater(PU_LOOTBOX_PRIZE));
+    auto partMan = GetScreen()->GetParticlesManager();
+    auto pu = static_cast<UpdaterLootboxPrize *>(partMan->GetUpdater(PU_LOOTBOX_PRIZE));
 
     IsoObject * isoObj = GetIsoObject();
 

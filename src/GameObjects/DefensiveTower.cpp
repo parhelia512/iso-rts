@@ -144,6 +144,7 @@ void DefensiveTower::CheckForEnemies()
 
 void DefensiveTower::Shoot()
 {
+    /*
     using namespace sgl::graphic;
     // TODO calculate chance of hitting based on attack and defense attributes
     // for now assuming it's always hit
@@ -217,6 +218,7 @@ void DefensiveTower::Shoot()
     };
 
     pu->AddParticle(pd);
+*/
 }
 
 } // namespace game

@@ -15,11 +15,7 @@
 namespace sgl
 {
     namespace ai { class Pathfinder; }
-    namespace graphic
-    {
-        class ParticlesManager;
-        class ParticlesUpdater;
-    }
+    namespace graphic { class ParticlesManager; }
 }
 
 namespace game
@@ -85,7 +81,7 @@ public:
     void SetObjectActionCompleted(GameObject * obj);
     void SetObjectActionFailed(GameObject * obj);
 
-    sgl::graphic::ParticlesUpdater * GetParticleUpdater(ParticlesUpdaterId updaterId);
+    const sgl::graphic::ParticlesManager * GetParticlesManager() const;
 
     void ClearSelection(Player * player);
     void SelectObject(GameObject * obj, Player * player);
@@ -273,6 +269,11 @@ inline void ScreenGame::SetObjectActionCompleted(GameObject * obj)
 inline void ScreenGame::SetObjectActionFailed(GameObject * obj)
 {
     SetObjectActionDone(obj, false);
+}
+
+inline const sgl::graphic::ParticlesManager * ScreenGame::GetParticlesManager() const
+{
+    return mPartMan;
 }
 
 inline GameHUD * ScreenGame::GetHUD() const { return mHUD; }

@@ -12,6 +12,7 @@
 #include "Screens/ScreenGame.h"
 
 #include <sgl/core/Math.h>
+#include <sgl/graphic/ParticlesManager.h>
 #include <sgl/graphic/Texture.h>
 #include <sgl/graphic/TextureManager.h>
 
@@ -281,6 +282,7 @@ void Unit::UpdateHealing(float delta)
 
 void Unit::Shoot()
 {
+    /*
     using namespace sgl::graphic;
     // TODO calculate chance of hitting based on attack and defense attributes
     // for now assuming it's always hit
@@ -352,6 +354,7 @@ void Unit::Shoot()
     };
 
     pu->AddParticle(pd);
+*/
 }
 
 void Unit::Heal()
@@ -367,7 +370,8 @@ void Unit::Heal()
     // consume energy
     ActionStepCompleted(HEAL);
 
-    auto pu = static_cast<UpdaterHealing *>(GetScreen()->GetParticleUpdater(PU_HEALING));
+    auto partMan = GetScreen()->GetParticlesManager();
+    auto pu = static_cast<UpdaterHealing *>(partMan->GetUpdater(PU_HEALING));
 
     const unsigned int texInd = SpriteIdUnitsParticles::IND_UPAR_HEAL_F1 + faction;
     Texture * tex = TextureManager::Instance()->GetSprite(SpriteFileUnitsParticles, texInd);

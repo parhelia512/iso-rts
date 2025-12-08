@@ -333,11 +333,6 @@ void ScreenGame::OnObjectDestroyed(GameObject * obj)
     mHUD->GetMinimap()->RemoveElement(obj->GetRow0(), obj->GetCol0());
 }
 
-sgl::graphic::ParticlesUpdater * ScreenGame::GetParticleUpdater(ParticlesUpdaterId updaterId)
-{
-    return mPartMan->GetUpdater(updaterId);
-}
-
 void ScreenGame::ClearSelection(Player * player)
 {
     GameObject * selObj = player->GetSelectedObject();
