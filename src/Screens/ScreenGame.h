@@ -45,15 +45,6 @@ class WallIndicator;
 
 enum PlayerFaction : unsigned int;
 
-enum ParticlesUpdaterId : unsigned int
-{
-    PU_DAMAGE,
-    PU_HEALING,
-    PU_HIT_POINTS,
-    PU_LOOTBOX_PRIZE,
-    PU_SINGLE_LASER
-};
-
 class ScreenGame : public Screen
 {
 public:

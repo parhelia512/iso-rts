@@ -5,7 +5,6 @@
 #include "GameData.h"
 #include "IsoObject.h"
 #include "Player.h"
-#include "Screens/ScreenGame.h"
 
 #include <sgl/graphic/TextureManager.h>
 
@@ -60,7 +59,7 @@ void ResourceStorage::OnLinkedChanged()
         Player::Stat::BLOBS
     };
 
-    Player * p = GetScreen()->GetGame()->GetPlayerByFaction(GetFaction());
+    Player * p = GetOwner();
     p->SumResourceMax(statIds[mResource], diff);
 }
 

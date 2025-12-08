@@ -594,13 +594,11 @@ void GameObject::Hit(float damage, PlayerFaction attacker, bool fatal)
         }
     }
 
-    auto screen = GetScreen();
-
     float ang1 = ang0 + angInc;
 
     const int numPartQuad = numPart / numQuad;
 
-    auto partMan = GetScreen()->GetParticlesManager();
+    auto partMan = GetParticlesManager();
     auto pu = static_cast<UpdaterDamage *>(partMan->GetUpdater(PU_DAMAGE));
 
     const unsigned int texInd = SpriteIdParticles::ID_PART_RECT_4x4;

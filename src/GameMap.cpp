@@ -454,6 +454,8 @@ GameObject * GameMap::CreateObject(unsigned int layerId, GameObjectTypeId type,
     if(gcell.objTop)
         return nullptr;
 
+    auto pm = mScreenGame->GetParticlesManager();
+
     // create game object
     o2a.obj = nullptr;
     o2a.owner = mGame->GetPlayerByFaction(faction);
@@ -545,6 +547,7 @@ GameObject * GameMap::CreateObject(unsigned int layerId, GameObjectTypeId type,
 
     // links to other objects
     o2a.obj->SetGameMap(this);
+    o2a.obj->SetParticlesManager(pm);
     o2a.obj->SetScreen(mScreenGame);
 
     // assign owner
@@ -1628,7 +1631,10 @@ void GameMap::CreateUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & d
     unit->SetCell(&mCells[ind]);
 
     // links to other objects
+    auto pm = mScreenGame->GetParticlesManager();
+
     unit->SetGameMap(this);
+    unit->SetParticlesManager(pm);
     unit->SetScreen(mScreenGame);
 
     // update cell
@@ -1693,7 +1699,10 @@ GameObject * GameMap::CreateMiniUnit(GameObjectTypeId ut, GameObject * gen, cons
     mu->SetCell(&mCells[ind]);
 
     // links to other objects
+    auto pm = mScreenGame->GetParticlesManager();
+
     mu->SetGameMap(this);
+    mu->SetParticlesManager(pm);
     mu->SetScreen(mScreenGame);
 
     // update cell

@@ -1,11 +1,11 @@
 #include "GameObjects/LootBox.h"
 
+#include "GameConstants.h"
 #include "GameData.h"
 #include "IsoObject.h"
 #include "Player.h"
 #include "Particles/DataParticleLootboxPrize.h"
 #include "Particles/UpdaterLootboxPrize.h"
-#include "Screens/ScreenGame.h"
 
 #include <sgl/graphic/ParticlesManager.h>
 #include <sgl/graphic/TextureManager.h>
@@ -65,7 +65,7 @@ void LootBox::Collected(Player * collector)
         return ;
 
     // emit notification
-    auto partMan = GetScreen()->GetParticlesManager();
+    auto partMan = GetParticlesManager();
     auto pu = static_cast<UpdaterLootboxPrize *>(partMan->GetUpdater(PU_LOOTBOX_PRIZE));
 
     IsoObject * isoObj = GetIsoObject();

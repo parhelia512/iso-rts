@@ -9,6 +9,11 @@
 #include <unordered_map>
 #include <vector>
 
+namespace sgl
+{
+    namespace graphic { class ParticlesManager; }
+}
+
 namespace game
 {
 
@@ -122,6 +127,7 @@ public:
     void ClearGroup();
 
     void SetGameMap(GameMap * map);
+    void SetParticlesManager(const sgl::graphic::ParticlesManager * partMan);
     void SetScreen(ScreenGame * screen);
     void SetOwner(Player * p);
 
@@ -225,6 +231,7 @@ protected:
     virtual void OnLinkedChanged();
 
     GameMap * GetGameMap() const;
+    const sgl::graphic::ParticlesManager * GetParticlesManager() const;
     ScreenGame * GetScreen() const;
     Player * GetOwner() const;
 
@@ -324,6 +331,7 @@ private:
     unsigned int mObjId;
 
     GameMap * mGameMap = nullptr;
+    const sgl::graphic::ParticlesManager * mPartMan = nullptr;
     ScreenGame * mScreen = nullptr;
     Player * mOwner = nullptr;
 
@@ -370,6 +378,7 @@ inline bool GameObject::IsInGroup() const { return mGroup != nullptr; }
 inline GameObjectsGroup * GameObject::GetGroup() const { return mGroup; }
 
 inline void GameObject::SetGameMap(GameMap * map) { mGameMap = map; }
+inline void GameObject::SetParticlesManager(const sgl::graphic::ParticlesManager * pm) { mPartMan = pm; }
 inline void GameObject::SetScreen(ScreenGame * screen) { mScreen = screen; }
 
 inline unsigned int GameObject::GetObjectId() const { return mObjId; }
@@ -422,6 +431,7 @@ inline unsigned int GameObject::GetCols() const { return mCols; }
 inline PlayerFaction GameObject::GetFaction() const { return mFaction; }
 
 inline GameMap * GameObject::GetGameMap() const { return mGameMap; }
+inline const sgl::graphic::ParticlesManager * GameObject::GetParticlesManager() const { return mPartMan; }
 inline ScreenGame * GameObject::GetScreen() const { return mScreen; }
 inline Player * GameObject::GetOwner() const { return mOwner; }
 

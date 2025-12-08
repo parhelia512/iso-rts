@@ -370,7 +370,7 @@ void Unit::Heal()
     // consume energy
     ActionStepCompleted(HEAL);
 
-    auto partMan = GetScreen()->GetParticlesManager();
+    auto partMan = GetParticlesManager();
     auto pu = static_cast<UpdaterHealing *>(partMan->GetUpdater(PU_HEALING));
 
     const unsigned int texInd = SpriteIdUnitsParticles::IND_UPAR_HEAL_F1 + faction;
