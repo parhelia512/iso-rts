@@ -133,6 +133,10 @@ add_executable(
     src/GameObjects/Wall.cpp
     src/GameObjects/WallGate.h
     src/GameObjects/WallGate.cpp
+    src/GameObjectTools/Laser.h
+    src/GameObjectTools/Laser.cpp
+    src/GameObjectTools/Weapon.h
+    src/GameObjectTools/Weapon.cpp
     src/Indicators/AttackRangeIndicator.h
     src/Indicators/AttackRangeIndicator.cpp
     src/Indicators/ConquestIndicator.h

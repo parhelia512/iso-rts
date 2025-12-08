@@ -6,6 +6,8 @@
 namespace game
 {
 
+class Weapon;
+
 class Unit : public GameObject
 {
 public:
@@ -46,6 +48,9 @@ public:
     bool CanSpawn() const;
     float GetTimeSpawnMiniUnit() const;
 
+    // weapon
+    void SetWeapon(Weapon * w);
+
 public:
     static unsigned int TypeToIndex(GameObjectTypeId type);
     static GameObjectTypeId IndexToType(unsigned int ind);
@@ -65,9 +70,9 @@ private:
     // weapon
     float mTimeAttack = 0.25f;
     float mTimerAttack = 0.f;
-    float mWeaponDamage = 10.f;
     int mRangeAttack = 1;
 
+    Weapon * mWeapon = nullptr;
     GameObject * mTargetAttack = nullptr;
 
     // healing
@@ -88,6 +93,8 @@ inline void Unit::ClearTargetHealing() { mTargetHealing = nullptr; }
 
 inline void Unit::SetStructureToBuild(GameObjectTypeId type) { mStructToBuild = type; }
 inline GameObjectTypeId Unit::GetStructureToBuild() const { return mStructToBuild; }
+
+inline void Unit::SetWeapon(Weapon * w) { mWeapon = w; }
 
 } // namespace game
 

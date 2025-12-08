@@ -12,6 +12,7 @@
 #include "AI/ObjectPath.h"
 #include "AI/PlayerAI.h"
 #include "AI/WallBuildPath.h"
+#include "GameObjectTools/Laser.h"
 #include "GameObjects/Barracks.h"
 #include "GameObjects/Base.h"
 #include "GameObjects/Blobs.h"
@@ -490,9 +491,19 @@ GameObject * GameMap::CreateObject(unsigned int layerId, GameObjectTypeId type,
     else if(GameObject::TYPE_HOSPITAL == type)
         o2a.obj = new Hospital(data);
     else if(GameObject::TYPE_DEFENSIVE_TOWER == type)
+    {
         o2a.obj = new DefensiveTower(data);
+
+        auto weapon = new Laser(o2a.obj, this, pm);
+        static_cast<DefensiveTower *>(o2a.obj)->SetWeapon(weapon);
+    }
     else if(GameObject::TYPE_BUNKER == type)
+    {
         o2a.obj = new Bunker(data);
+
+        auto weapon = new Laser(o2a.obj, this, pm);
+        static_cast<Bunker *>(o2a.obj)->SetWeapon(weapon);
+    }
     else if(GameObject::TYPE_SPAWN_TOWER == type)
         o2a.obj = new SpawningTower(data);
     else if(GameObject::TYPE_TRADING_POST == type)
@@ -1636,6 +1647,13 @@ void GameMap::CreateUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & d
     unit->SetGameMap(this);
     unit->SetParticlesManager(pm);
     unit->SetScreen(mScreenGame);
+
+    // add weapon to soldiers
+    if(data.GetClass() == OCU_SOLDIER)
+    {
+        auto weapon = new Laser(unit, this, pm);
+        unit->SetWeapon(weapon);
+    }
 
     // update cell
     gcell.objTop = unit;

@@ -5,13 +5,11 @@
 #include "GameMap.h"
 #include "IsoObject.h"
 #include "GameObjects/ObjectData.h"
+#include "GameObjectTools/Weapon.h"
 #include "Particles/DataParticleHealing.h"
-#include "Particles/DataParticleSingleLaser.h"
 #include "Particles/UpdaterHealing.h"
-#include "Particles/UpdaterSingleLaser.h"
 #include "Screens/ScreenGame.h"
 
-#include <sgl/core/Math.h>
 #include <sgl/graphic/ParticlesManager.h>
 #include <sgl/graphic/Texture.h>
 #include <sgl/graphic/TextureManager.h>
@@ -282,79 +280,12 @@ void Unit::UpdateHealing(float delta)
 
 void Unit::Shoot()
 {
-    /*
-    using namespace sgl::graphic;
-    // TODO calculate chance of hitting based on attack and defense attributes
-    // for now assuming it's always hit
-
-    const PlayerFaction faction = GetFaction();
-
-    // avoid to set an image when there's no owner set
-    if(NO_FACTION == faction)
-        return ;
-
-    // consume energy
-    ActionStepCompleted(ATTACK);
-
-    auto pu = static_cast<UpdaterSingleLaser *>(GetScreen()->GetParticleUpdater(PU_SINGLE_LASER));
-
-    const unsigned int texInd = SpriteIdUnitsParticles::IND_UPAR_LASER_F1 + faction;
-    Texture * tex = TextureManager::Instance()->GetSprite(SpriteFileUnitsParticles, texInd);
-
-    IsoObject * isoObj = GetIsoObject();
-    IsoObject * isoTarget = mTargetAttack->GetIsoObject();
+    const IsoObject * isoObj = GetIsoObject();
 
     const float x0 = isoObj->GetX() + isoObj->GetWidth() * 0.5f;
     const float y0 = isoObj->GetY();
-    const float tX = isoTarget->GetX() + (isoTarget->GetWidth() - tex->GetWidth()) * 0.5f;
-    const float tY = isoTarget->GetY() + (isoTarget->GetHeight() - tex->GetHeight()) * 0.5f;
-    const float speed = 400.f;
 
-    const float rad2deg = 180.f / sgl::core::Math::PIf;
-    const float dy0 = tY - y0;
-    const float dx1 = tX - x0;
-    const float dy1 = dy0;
-    const float s = dy0 / sqrtf(dx1 * dx1 + dy1 * dy1);
-    const float as = asinf(s);
-    const double angleDeg = as * rad2deg;
-    double angle;
-
-    if(dx1 < 0.f)
-    {
-        // bottom left
-        if(dy1 > 0.f)
-            angle = 180.f - angleDeg;
-        // top left
-        else
-            angle = 180.f - angleDeg;
-    }
-    else
-    {
-        // bottom right
-        if(dy1 > 0.f)
-            angle = angleDeg;
-        // top right
-        else
-            angle = 360.f + angleDeg;
-    }
-
-    const DataParticleSingleLaser pd =
-    {
-        tex,
-        GetGameMap(),
-        mTargetAttack,
-        angle,
-        x0,
-        y0,
-        tX,
-        tY,
-        speed,
-        mWeaponDamage,
-        GetFaction()
-    };
-
-    pu->AddParticle(pd);
-*/
+    mWeapon->Shoot(x0, y0, mTargetAttack);
 }
 
 void Unit::Heal()
