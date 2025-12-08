@@ -34,7 +34,7 @@ private:
     void SetSpeed(float vel);
 
 private:
-    GameMap * mGameMap = nullptr;
+    const GameMap * mGameMap = nullptr;
     GameObject * mTarget = nullptr;
 
     PlayerFaction mShooter;
