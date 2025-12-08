@@ -3,8 +3,6 @@
 #include "GameObject.h"
 #include "ObjectData.h"
 
-#include <unordered_map>
-
 namespace game
 {
 
@@ -30,9 +28,6 @@ private:
     void ExplodeNearEnemy();
 
 private:
-    // attributes
-    std::unordered_map<ObjAttId, int> mAttributes;
-
     int mElements;
 
     bool mMoving = false;

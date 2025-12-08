@@ -18,15 +18,11 @@ namespace game
 
 MiniUnit::MiniUnit(const ObjectData & data, int elements)
     : GameObject(data)
-    , mAttributes(data.GetAttributes())
     , mElements(elements)
 {
-    // SET CONCRETE ATTRIBUTES
-    const float maxStatVal = 10.f;
-
     // set actual speed
     const float maxSpeed = 10.f;
-    const float speed = maxSpeed * static_cast<float>(mAttributes[OBJ_ATT_SPEED]) / maxStatVal;
+    const float speed = maxSpeed * GetAttribute(OBJ_ATT_SPEED) / MAX_STAV_VAL;
     SetSpeed(speed);
 
     // health
