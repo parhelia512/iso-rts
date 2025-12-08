@@ -495,14 +495,14 @@ GameObject * GameMap::CreateObject(unsigned int layerId, GameObjectTypeId type,
         o2a.obj = new DefensiveTower(data);
 
         auto weapon = new Laser(o2a.obj, this, pm);
-        static_cast<DefensiveTower *>(o2a.obj)->SetWeapon(weapon);
+        o2a.obj->SetWeapon(weapon);
     }
     else if(GameObject::TYPE_BUNKER == type)
     {
         o2a.obj = new Bunker(data);
 
         auto weapon = new Laser(o2a.obj, this, pm);
-        static_cast<Bunker *>(o2a.obj)->SetWeapon(weapon);
+        o2a.obj->SetWeapon(weapon);
     }
     else if(GameObject::TYPE_SPAWN_TOWER == type)
         o2a.obj = new SpawningTower(data);

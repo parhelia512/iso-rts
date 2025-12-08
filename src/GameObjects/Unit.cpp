@@ -285,7 +285,7 @@ void Unit::Shoot()
     const float x0 = isoObj->GetX() + isoObj->GetWidth() * 0.5f;
     const float y0 = isoObj->GetY();
 
-    mWeapon->Shoot(x0, y0, mTargetAttack);
+    GetWeapon()->Shoot(x0, y0, mTargetAttack);
 }
 
 void Unit::Heal()

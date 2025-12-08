@@ -149,7 +149,7 @@ void Bunker::Shoot()
     const float x0 = isoTargetX < isoX ? isoXC - 20.f : isoXC + 20.f;
     const float y0 = isoTargetY < isoY ? isoY + 4 : isoY + 30;
 
-    mWeapon->Shoot(x0, y0, mTarget);
+    GetWeapon()->Shoot(x0, y0, mTarget);
 }
 
 } // namespace game

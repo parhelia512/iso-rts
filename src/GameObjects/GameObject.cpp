@@ -530,6 +530,11 @@ float GameObject::GetSpeed() const
     return mSpeed;
 }
 
+void GameObject::SetWeapon(Weapon * w)
+{
+    mWeapon = w;
+}
+
 void GameObject::Hit(float damage, PlayerFaction attacker, bool fatal)
 {
     using namespace sgl::graphic;

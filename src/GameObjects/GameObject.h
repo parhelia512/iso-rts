@@ -48,6 +48,7 @@ class GameObjectsGroup;
 class IsoObject;
 class Player;
 class ScreenGame;
+class Weapon;
 struct GameMapCell;
 
 enum PlayerFaction : unsigned int;
@@ -211,6 +212,8 @@ public:
 
     float GetSpeed() const;
 
+    void SetWeapon(Weapon * w);
+
     void Hit(float damage, PlayerFaction attacker, bool fatal);
     void SelfDestroy();
 
@@ -234,6 +237,8 @@ protected:
     const sgl::graphic::ParticlesManager * GetParticlesManager() const;
     ScreenGame * GetScreen() const;
     Player * GetOwner() const;
+
+    Weapon * GetWeapon() const;
 
     void SetStructure(bool val);
     void SetCanBeConquered(bool val);
@@ -335,6 +340,8 @@ private:
     ScreenGame * mScreen = nullptr;
     Player * mOwner = nullptr;
 
+    Weapon * mWeapon = nullptr;
+
     const GameMapCell * mCell = nullptr;
 
     GameObjectTypeId mType = TYPE_NULL;
@@ -434,6 +441,8 @@ inline GameMap * GameObject::GetGameMap() const { return mGameMap; }
 inline const sgl::graphic::ParticlesManager * GameObject::GetParticlesManager() const { return mPartMan; }
 inline ScreenGame * GameObject::GetScreen() const { return mScreen; }
 inline Player * GameObject::GetOwner() const { return mOwner; }
+
+inline Weapon * GameObject::GetWeapon() const { return mWeapon; }
 
 inline void GameObject::SetStructure(bool val) { mStructure = val; }
 inline void GameObject::SetCanBeConquered(bool val) { mCanBeConq = val; }
