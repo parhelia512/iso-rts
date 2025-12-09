@@ -322,6 +322,8 @@ add_executable(
     src/Widgets/ButtonMainMenuWishlist.cpp
     src/Widgets/ButtonMinimap.h
     src/Widgets/ButtonMinimap.cpp
+    src/Widgets/ButtonObjectActionOption.h
+    src/Widgets/ButtonObjectActionOption.cpp
     src/Widgets/ButtonPanelSelectedObject.h
     src/Widgets/ButtonPanelSelectedObject.cpp
     src/Widgets/ButtonPlanetMap.h

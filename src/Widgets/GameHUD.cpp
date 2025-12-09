@@ -738,21 +738,9 @@ void GameHUD::ShowDialogSelfDestruction()
     if(mDialogSelfDestruct != nullptr)
         return ;
 
-    mScreen->ShowScreenOverlay();
-
-    ++mVisibleDialogs;
-
-    mScreen->SetPause(true);
-
     // CREATE DIALOG
     mDialogSelfDestruct = new DialogSelfDestruction;
     mDialogSelfDestruct->SetFocus();
-
-    // button Close
-    mDialogSelfDestruct->AddFunctionOnClose([this]
-    {
-        HideDialogSelfDestruction();
-    });
 
     // button Destroy
     mDialogSelfDestruct->AddFunctionOnDestroy([this]
@@ -773,20 +761,19 @@ void GameHUD::ShowDialogSelfDestruction()
         HideDialogSelfDestruction();
     });
 
-    TemporaryClosePanels();
-
     // position dialog
-    CenterWidget(mDialogSelfDestruct);
+    const int marginB = 15;
+
+    auto btnAction = mPanelObjActions->GetButton(PanelObjectActions::BTN_SELF_DESTROY);
+
+    const int panelX = btnAction->GetScreenX() +
+                       (btnAction->GetWidth() - mDialogSelfDestruct->GetWidth()) / 2;
+    const int panelY = btnAction->GetScreenY() - mDialogSelfDestruct->GetHeight() - marginB;
+    mDialogSelfDestruct->SetPosition(panelX, panelY);
 }
 
 void GameHUD::HideDialogSelfDestruction()
 {
-    --mVisibleDialogs;
-
-    mScreen->HideScreenOverlay();
-
-    ReopenPanels();
-
     // schedule dialog deletion
     mDialogSelfDestruct->DeleteLater();
     mDialogSelfDestruct = nullptr;
