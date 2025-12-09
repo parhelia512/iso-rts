@@ -17,6 +17,7 @@ public:
     static const WeaponType TYPE_LASER2;
     static const WeaponType TYPE_LASER3;
     static const WeaponType TYPE_LASER4;
+    static const WeaponType TYPE_LASER5;
 
     static const WeaponType TYPE_NULL;
     static const WeaponData NullObj;
@@ -35,6 +36,7 @@ private:
     static const std::string STR_LASER2;
     static const std::string STR_LASER3;
     static const std::string STR_LASER4;
+    static const std::string STR_LASER5;
 
 private:
     std::unordered_map<ObjAttId, int> mAttributes;
