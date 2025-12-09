@@ -1,5 +1,6 @@
 #pragma once
 
+#include "GameConstants.h"
 #include "GameObjectTypes.h"
 
 #include <array>
@@ -53,33 +54,6 @@ enum ObjCost : unsigned int
     OBJ_COST_DIAMONDS,
 
     NUM_OBJ_COSTS
-};
-
-enum ObjAttId : unsigned int
-{
-    // GENERIC
-    OBJ_ATT_ENERGY,
-    OBJ_ATT_HEALTH,
-    OBJ_ATT_VIEW_RANGE,
-    OBJ_ATT_FIRE_POWER,
-    OBJ_ATT_FIRE_ACCURACY,
-    OBJ_ATT_FIRE_RANGE,
-    OBJ_ATT_REGENERATION,
-    OBJ_ATT_RESISTANCE,
-    OBJ_ATT_SHIELD,
-
-    // UNIT ONLY
-    OBJ_ATT_SPEED,
-    OBJ_ATT_CONSTRUCTION,
-    OBJ_ATT_CONQUEST,
-    OBJ_ATT_HEALING_RANGE,
-    OBJ_ATT_HEALING_POWER,
-    OBJ_ATT_SPAWNING,
-
-    // STORAGE
-    OBJ_ATT_STORAGE,
-
-    NUM_OBJ_ATTRIBUTES,
 };
 
 enum ObjFamily : unsigned int

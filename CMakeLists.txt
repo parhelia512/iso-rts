@@ -137,6 +137,8 @@ add_executable(
     src/GameObjectTools/Laser.cpp
     src/GameObjectTools/Weapon.h
     src/GameObjectTools/Weapon.cpp
+    src/GameObjectTools/WeaponData.h
+    src/GameObjectTools/WeaponData.cpp
     src/Indicators/AttackRangeIndicator.h
     src/Indicators/AttackRangeIndicator.cpp
     src/Indicators/ConquestIndicator.h
