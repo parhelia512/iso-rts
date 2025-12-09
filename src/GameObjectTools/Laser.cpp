@@ -17,8 +17,9 @@
 namespace game
 {
 
-Laser::Laser(GameObject * owner, GameMap * gm, const sgl::graphic::ParticlesManager *partMan)
-    : Weapon(owner, gm, partMan)
+Laser::Laser(const WeaponData & data, GameObject * owner, GameMap * gm,
+             const sgl::graphic::ParticlesManager *partMan)
+    : Weapon(data, owner, gm, partMan)
     , mPartUpdater(static_cast<UpdaterSingleLaser *>(partMan->GetUpdater(PU_SINGLE_LASER)))
 {
     using namespace sgl;
@@ -49,7 +50,7 @@ void Laser::Shoot(float x0, float y0, GameObject * target)
     double angle;
 
     const float maxDamage = 20.f;
-    const float damage = maxDamage * owner->GetAttribute(OBJ_ATT_FIRE_POWER) / MAX_STAV_VAL;
+    const float damage = maxDamage * owner->GetAttribute(OBJ_ATT_ATTACK_POWER) / MAX_STAV_VAL;
 
     if(dx1 < 0.f)
     {

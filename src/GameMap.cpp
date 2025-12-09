@@ -13,6 +13,7 @@
 #include "AI/PlayerAI.h"
 #include "AI/WallBuildPath.h"
 #include "GameObjectTools/Laser.h"
+#include "GameObjectTools/WeaponData.h"
 #include "GameObjects/Barracks.h"
 #include "GameObjects/Base.h"
 #include "GameObjects/Blobs.h"
@@ -494,14 +495,16 @@ GameObject * GameMap::CreateObject(unsigned int layerId, GameObjectTypeId type,
     {
         o2a.obj = new DefensiveTower(data);
 
-        auto weapon = new Laser(o2a.obj, this, pm);
+        const WeaponData & wData = GetWeaponData(WeaponData::TYPE_LASER5);
+        auto weapon = new Laser(wData, o2a.obj, this, pm);
         o2a.obj->SetWeapon(weapon);
     }
     else if(GameObject::TYPE_BUNKER == type)
     {
         o2a.obj = new Bunker(data);
 
-        auto weapon = new Laser(o2a.obj, this, pm);
+        const WeaponData & wData = GetWeaponData(WeaponData::TYPE_LASER4);
+        auto weapon = new Laser(wData, o2a.obj, this, pm);
         o2a.obj->SetWeapon(weapon);
     }
     else if(GameObject::TYPE_SPAWN_TOWER == type)
@@ -1651,7 +1654,15 @@ void GameMap::CreateUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & d
     // add weapon to soldiers
     if(data.GetClass() == OCU_SOLDIER)
     {
-        auto weapon = new Laser(unit, this, pm);
+        WeaponType wt = WeaponData::TYPE_LASER1;
+
+        if(ut == GameObject::TYPE_UNIT_SOLDIER1)
+            wt = WeaponData::TYPE_LASER2;
+        else if(ut == GameObject::TYPE_UNIT_SOLDIER2)
+            wt = WeaponData::TYPE_LASER3;
+
+        const WeaponData & wData = GetWeaponData(wt);
+        auto weapon = new Laser(wData, unit, this, pm);
         unit->SetWeapon(weapon);
     }
 
@@ -2116,7 +2127,7 @@ Cell2D GameMap::GetOrthoAdjacentMoveTarget(const Cell2D & start, const Cell2D & 
 
 bool GameMap::FindAttackPosition(const Unit * u, const GameObject * target, Cell2D & pos)
 {
-    const int dist = ceilf(u->GetRangeAttack() * 0.5f);
+    const int dist = ceilf(u->GetWeapon()->GetRange() * 0.5f);
 
     if(FindAttackPosition(u, target, dist, pos))
         return true;
@@ -3762,6 +3773,12 @@ const ObjectData & GameMap::GetObjectData(GameObjectTypeId t) const
 {
     const ObjectsDataRegistry * objReg = mGame->GetObjectsRegistry();
     return objReg->GetObjectData(t);
+}
+
+const WeaponData & GameMap::GetWeaponData(WeaponType t) const
+{
+    const ObjectsDataRegistry * objReg = mGame->GetObjectsRegistry();
+    return objReg->GetWeaponData(t);
 }
 
 void GameMap::DeleteEmptyMiniUnitsGroups()

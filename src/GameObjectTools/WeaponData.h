@@ -23,7 +23,7 @@ public:
     static const WeaponData NullObj;
 
 public:
-    WeaponData(WeaponType t, const std::unordered_map<ObjAttId, int> & atts, float ta);
+    WeaponData(WeaponType t, const std::unordered_map<ObjAttId, int> & atts);
 
     WeaponType GetType() const;
 
@@ -42,13 +42,11 @@ private:
     std::unordered_map<ObjAttId, int> mAttributes;
 
     WeaponType mType;
-    float mTimeAttack = 0.5f;
 };
 
-inline WeaponData::WeaponData(WeaponType t, const std::unordered_map<ObjAttId, int> & atts, float ta)
+inline WeaponData::WeaponData(WeaponType t, const std::unordered_map<ObjAttId, int> & atts)
     : mAttributes(atts)
     , mType(t)
-    , mTimeAttack(ta)
 {
 }
 
@@ -57,11 +55,6 @@ inline WeaponType WeaponData::GetType() const { return mType; }
 inline const std::unordered_map<ObjAttId, int> & WeaponData::GetAttributes() const
 {
     return mAttributes;
-}
-
-inline float WeaponData::GetTimeAttack() const
-{
-    return mTimeAttack;
 }
 
 } // namespace game

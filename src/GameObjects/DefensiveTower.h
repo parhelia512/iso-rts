@@ -12,8 +12,6 @@ class DefensiveTower : public Structure
 public:
     DefensiveTower(const ObjectData & data);
 
-    int GetAttackRange() const;
-
     void Update(float delta) override;
 
 protected:
@@ -24,16 +22,13 @@ private:
 
     void CheckForEnemies();
 
-    void Shoot();
+    void PrepareShoot();
 
 private:
     GameObject * mTarget = nullptr;
 
     float mTimeAttack = 0.25f;
     float mTimerAttack = 0.f;
-    int mAttackRange = 1;
 };
-
-inline int DefensiveTower::GetAttackRange() const { return mAttackRange; }
 
 } // namespace game

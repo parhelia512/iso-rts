@@ -13,7 +13,6 @@ public:
 
     // attack
     bool CanAttack() const;
-    int GetRangeAttack() const;
     void ClearTargetAttack();
     bool IsTargetAttackInRange(const GameObject * obj) const;
     bool SetTargetAttack(GameObject * obj);
@@ -58,14 +57,13 @@ private:
     void UpdateAttack(float delta);
     void UpdateHealing(float delta);
 
-    void Shoot();
+    void PrepareShoot();
     void Heal();
 
 private:
     // weapon
     float mTimeAttack = 0.25f;
     float mTimerAttack = 0.f;
-    int mRangeAttack = 1;
 
     GameObject * mTargetAttack = nullptr;
 
@@ -79,7 +77,6 @@ private:
     GameObjectTypeId mStructToBuild;
 };
 
-inline int Unit::GetRangeAttack() const { return mRangeAttack; }
 inline void Unit::ClearTargetAttack() { mTargetAttack = nullptr; }
 
 inline int Unit::GetRangeHealing() const { return mRangeHealing; }

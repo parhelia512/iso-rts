@@ -24,6 +24,7 @@
 #include "GameObjects/Temple.h"
 #include "GameObjects/Unit.h"
 #include "GameObjects/WallGate.h"
+#include "GameObjectTools/Weapon.h"
 #include "Indicators/AttackRangeIndicator.h"
 #include "Indicators/ConquestIndicator.h"
 #include "Indicators/HealingRangeIndicator.h"
@@ -372,7 +373,7 @@ void ScreenGame::SelectObject(GameObject * obj, Player * player)
         if(GameObject::TYPE_DEFENSIVE_TOWER == obj->GetObjectType())
         {
             auto tower = static_cast<DefensiveTower *>(obj);
-            const int range = tower->GetAttackRange();
+            const int range = tower->GetWeapon()->GetRange();
             ShowAttackIndicators(tower, range);
         }
 
@@ -619,7 +620,7 @@ void ScreenGame::CreateUI()
         ClearCellOverlays();
 
         // show attack range overlay
-        const int range = unit->GetRangeAttack();
+        const int range = unit->GetWeapon()->GetRange();
         ShowAttackIndicators(unit, range);
     });
 

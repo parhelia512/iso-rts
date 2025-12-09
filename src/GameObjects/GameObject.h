@@ -212,6 +212,8 @@ public:
 
     float GetSpeed() const;
 
+    // WEAPON
+    const Weapon * GetWeapon() const;
     void SetWeapon(Weapon * w);
 
     void Hit(float damage, PlayerFaction attacker, bool fatal);
@@ -238,8 +240,6 @@ protected:
     ScreenGame * GetScreen() const;
     Player * GetOwner() const;
 
-    Weapon * GetWeapon() const;
-
     void SetStructure(bool val);
     void SetCanBeConquered(bool val);
     void SetStatic(bool val);
@@ -254,6 +254,8 @@ protected:
     void UpdateMaxEnergy(float maxVal);
     void UpdateMaxHealth(float maxVal);
     void UpdateRegenerationPower();
+
+    void Shoot(float x0, float y0, GameObject * target);
 
 protected:
     static const unsigned int COLOR_FOW;
@@ -442,8 +444,6 @@ inline const sgl::graphic::ParticlesManager * GameObject::GetParticlesManager() 
 inline ScreenGame * GameObject::GetScreen() const { return mScreen; }
 inline Player * GameObject::GetOwner() const { return mOwner; }
 
-inline Weapon * GameObject::GetWeapon() const { return mWeapon; }
-
 inline void GameObject::SetStructure(bool val) { mStructure = val; }
 inline void GameObject::SetCanBeConquered(bool val) { mCanBeConq = val; }
 inline void GameObject::SetStatic(bool val) { mStatic = val; }
@@ -468,6 +468,8 @@ inline int GameObject::GetExperienceLevel() const { return mExpLevel; }
 inline int GameObject::GetMaxExperienceLevel() const { return 10; }
 
 inline void GameObject::SetSpeed(float speed) { mSpeed = speed; }
+
+inline const Weapon * GameObject::GetWeapon() const { return mWeapon; }
 
 inline GameObjectActionType GameObject::GetActiveAction() const { return mActiveAction; }
 inline void GameObject::SetActiveAction(GameObjectActionType action) { mActiveAction = action; }

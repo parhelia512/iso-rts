@@ -362,32 +362,27 @@ void ObjectsDataRegistry::InitWeaponData()
     mDataWeapons.emplace(
         WeaponData::TYPE_LASER1,
         WeaponData(WeaponData::TYPE_LASER1,
-                   { {OBJ_ATT_FIRE_POWER, 1}, {OBJ_ATT_FIRE_ACCURACY, 6}, {OBJ_ATT_FIRE_RANGE, 5} },
-                   0.4f));
+                   { {OBJ_ATT_ATTACK_ACCURACY, 6}, {OBJ_ATT_ATTACK_POWER, 1}, {OBJ_ATT_ATTACK_RANGE, 5} }));
 
     mDataWeapons.emplace(
         WeaponData::TYPE_LASER2,
         WeaponData(WeaponData::TYPE_LASER2,
-                   { {OBJ_ATT_FIRE_POWER, 2}, {OBJ_ATT_FIRE_ACCURACY, 4}, {OBJ_ATT_FIRE_RANGE, 4} },
-                   0.4f));
+                   { {OBJ_ATT_ATTACK_ACCURACY, 4}, {OBJ_ATT_ATTACK_POWER, 2}, {OBJ_ATT_ATTACK_RANGE, 4} }));
 
     mDataWeapons.emplace(
         WeaponData::TYPE_LASER3,
         WeaponData(WeaponData::TYPE_LASER3,
-                   { {OBJ_ATT_FIRE_POWER, 3}, {OBJ_ATT_FIRE_ACCURACY, 5}, {OBJ_ATT_FIRE_RANGE, 3} },
-                   0.35f));
+                   { {OBJ_ATT_ATTACK_ACCURACY, 5}, {OBJ_ATT_ATTACK_POWER, 3}, {OBJ_ATT_ATTACK_RANGE, 3} }));
 
     mDataWeapons.emplace(
         WeaponData::TYPE_LASER4,
         WeaponData(WeaponData::TYPE_LASER4,
-                   { {OBJ_ATT_FIRE_POWER, 4}, {OBJ_ATT_FIRE_ACCURACY, 5}, {OBJ_ATT_FIRE_RANGE, 4} },
-                   0.35f));
+                   { {OBJ_ATT_ATTACK_ACCURACY, 5}, {OBJ_ATT_ATTACK_POWER, 4}, {OBJ_ATT_ATTACK_RANGE, 4} }));
 
     mDataWeapons.emplace(
         WeaponData::TYPE_LASER5,
         WeaponData(WeaponData::TYPE_LASER5,
-                   { {OBJ_ATT_FIRE_POWER, 5}, {OBJ_ATT_FIRE_ACCURACY, 5}, {OBJ_ATT_FIRE_RANGE, 5} },
-                   0.3f));
+                   { {OBJ_ATT_ATTACK_ACCURACY, 5}, {OBJ_ATT_ATTACK_POWER, 5}, {OBJ_ATT_ATTACK_RANGE, 5} }));
 }
 
 } // namespace game

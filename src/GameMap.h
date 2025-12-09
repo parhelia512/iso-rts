@@ -33,6 +33,7 @@ class ScreenGame;
 class Temple;
 class Unit;
 class WallBuildPath;
+class WeaponData;
 
 struct Cell2D;
 struct GameMapCell;
@@ -240,6 +241,7 @@ private:
     void UpdateWall(const Cell2D & cell);
 
     const ObjectData & GetObjectData(GameObjectTypeId t) const;
+    const WeaponData & GetWeaponData(WeaponType t) const;
 
     // mini units
     void DeleteEmptyMiniUnitsGroups();

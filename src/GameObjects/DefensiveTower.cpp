@@ -20,9 +20,6 @@ const int attRanges[maxAttVal] = { 0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 14 };
 DefensiveTower::DefensiveTower(const ObjectData & data)
     : Structure(data)
 {
-    // set attack range converting attribute
-    mAttackRange = attRanges[data.GetAttribute(OBJ_ATT_FIRE_RANGE)];
-
     SetImage();
 }
 
@@ -48,7 +45,7 @@ void DefensiveTower::Update(float delta)
         {
             // target still alive -> shoot
             if(GetGameMap()->HasObject(mTarget))
-                Shoot();
+                PrepareShoot();
             // target destroyed -> clear pointer
             else
                 mTarget = nullptr;
@@ -103,7 +100,9 @@ void DefensiveTower::CheckForEnemies()
     std::vector<GameObject *> objs;
 
     // find all enemies in range
-    for(int i = 1; i <= mAttackRange; ++i)
+    const int range = GetWeapon()->GetRange();
+
+    for(int i = 1; i <= range; ++i)
     {
         const int rTL = (row - i) > 0 ? (row - i) : 0;
         const int rBR = (row + i) < mapRows ? (row + i) : (mapRows - 1);
@@ -138,7 +137,7 @@ void DefensiveTower::CheckForEnemies()
     mTarget = objs.front();
 }
 
-void DefensiveTower::Shoot()
+void DefensiveTower::PrepareShoot()
 {
     IsoObject * isoObj = GetIsoObject();
     IsoObject * isoTarget = mTarget->GetIsoObject();
@@ -151,7 +150,7 @@ void DefensiveTower::Shoot()
     const float x0 = isoTargetX < isoX ? isoXC - 20.f : isoXC + 20.f;
     const float y0 = isoTargetY < isoY ? isoY + 4 : isoY + 30;
 
-    GetWeapon()->Shoot(x0, y0, mTarget);
+    Shoot(x0, y0, mTarget);
 }
 
 } // namespace game

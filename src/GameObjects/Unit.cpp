@@ -24,11 +24,6 @@ Unit::Unit(const ObjectData & data)
     : GameObject(data)
     , mStructToBuild(GameObject::TYPE_NULL)
 {
-    // set attack range converting attribute
-    const int maxAttVal = 11;
-    const int attRanges[maxAttVal] = { 0, 2, 3, 4, 5, 6, 8, 9, 10, 11, 13 };
-    mRangeAttack = attRanges[GetAttribute(OBJ_ATT_FIRE_RANGE)];
-
     // set healing range converting attribute
     const int maxHealVal = 11;
     const int HealRanges[maxHealVal] = { 0, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4 };
@@ -51,18 +46,20 @@ Unit::Unit(const ObjectData & data)
 
 bool Unit::CanAttack() const
 {
-    return GetAttribute(OBJ_ATT_FIRE_ACCURACY) > 0 &&
-           GetAttribute(OBJ_ATT_FIRE_POWER) > 0 &&
-           GetAttribute(OBJ_ATT_FIRE_RANGE) > 0;
+    return GetAttribute(OBJ_ATT_ATTACK_ACCURACY) > 0 &&
+           GetAttribute(OBJ_ATT_ATTACK_POWER) > 0 &&
+           GetAttribute(OBJ_ATT_ATTACK_RANGE) > 0;
 }
 
 bool Unit::IsTargetAttackInRange(const GameObject * obj) const
 {
+    const int range = GetWeapon()->GetRange();
+
     for(int r = obj->GetRow1(); r <= obj->GetRow0(); ++r)
     {
         for(int c = obj->GetCol1(); c <= obj->GetCol0(); ++c)
         {
-            if(std::abs(GetRow0() - r) <= mRangeAttack && std::abs(GetCol0() - c) <= mRangeAttack)
+            if(std::abs(GetRow0() - r) <= range && std::abs(GetCol0() - c) <= range)
                 return true;
         }
     }
@@ -211,7 +208,7 @@ void Unit::UpdateAttack(float delta)
     if(GetGameMap()->HasObject(mTargetAttack))
     {
         if(IsTargetAttackInRange(mTargetAttack) && HasEnergyForActionStep(ATTACK))
-            Shoot();
+            PrepareShoot();
         else
         {
             mTargetAttack = nullptr;
@@ -278,14 +275,14 @@ void Unit::UpdateHealing(float delta)
     mTimerHealing = mTimeHealing;
 }
 
-void Unit::Shoot()
+void Unit::PrepareShoot()
 {
     const IsoObject * isoObj = GetIsoObject();
 
     const float x0 = isoObj->GetX() + isoObj->GetWidth() * 0.5f;
     const float y0 = isoObj->GetY();
 
-    GetWeapon()->Shoot(x0, y0, mTargetAttack);
+    Shoot(x0, y0, mTargetAttack);
 }
 
 void Unit::Heal()

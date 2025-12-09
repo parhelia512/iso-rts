@@ -8,6 +8,8 @@
 #include "IsoObject.h"
 #include "Player.h"
 #include "GameObjects/GameObjectsGroup.h"
+#include "GameObjectTools/Weapon.h"
+#include "GameObjectTools/WeaponData.h"
 #include "Particles/DataParticleDamage.h"
 #include "Particles/DataParticleHitPoints.h"
 #include "Particles/UpdaterDamage.h"
@@ -533,6 +535,21 @@ float GameObject::GetSpeed() const
 void GameObject::SetWeapon(Weapon * w)
 {
     mWeapon = w;
+
+    // copy attributes from weapon to object
+    const std::unordered_map<ObjAttId, int> & wAtt = w->GetAttributes();
+
+    for(auto wIt = wAtt.begin(); wIt != wAtt.end(); ++wIt)
+    {
+        auto objIt = mAttributes.find(wIt->first);
+
+        // attribute alredy set -> update it
+        if(objIt != mAttributes.end())
+            objIt->second = wIt->second;
+        // attribute not set yet -> create it
+        else
+            mAttributes.emplace(wIt->first, wIt->second);
+    }
 }
 
 void GameObject::Hit(float damage, PlayerFaction attacker, bool fatal)
@@ -767,6 +784,12 @@ void GameObject::UpdateRegenerationPower()
 {
     const float reg = GetAttribute(OBJ_ATT_REGENERATION) / MAX_STAV_VAL;
     SetRegenerationPower(reg);
+}
+
+void GameObject::Shoot(float x0, float y0, GameObject * target)
+{
+    if(mWeapon != nullptr)
+        mWeapon->Shoot(x0, y0, target);
 }
 
 float GameObject::GetActionEnergyCost(GameObjectActionType action) const

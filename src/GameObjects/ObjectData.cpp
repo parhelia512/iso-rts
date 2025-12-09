@@ -38,23 +38,28 @@ const char * ObjectData::STR_CLASS[NUM_OBJ_CLASSES] =
     "SCENE"
 };
 
+// WEAPON
 const char * ObjectData::STR_ATTRIBUTES[NUM_OBJ_ATTRIBUTES] =
 {
+    // GENERIC
     "ENERGY",
     "HEALTH",
     "VIEW RANGE",
-    "FIRE POWER",
-    "FIRE ACCURACY",
-    "FIRE RANGE",
     "REGENERATION",
     "RESISTANCE",
     "SHIELD",
+    // WEAPON
+    "ATTACK ACCURACY",
+    "ATTACK POWER",
+    "ATTACK RANGE",
+    // UNIT
     "SPEED",
     "CONSTRUCTION",
     "CONQUEST",
     "HEALING RANGE",
     "HEALING POWER",
     "SPAWNING",
+    // RESOURCE STORAGE
     "STORAGE"
 };
 
