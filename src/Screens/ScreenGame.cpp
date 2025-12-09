@@ -2069,9 +2069,13 @@ bool ScreenGame::SetupUnitAttack(Unit * unit, GameObject * target, Player * play
     unit->SetActiveAction(GameObjectActionType::IDLE);
     unit->SetCurrentAction(GameObjectActionType::ATTACK);
 
-    // disable actions panel (if action is done by local player)
+    // disable actions panel and clear overlays (if action is done by local player)
     if(player->IsLocal())
+    {
         mHUD->SetLocalActionsEnabled(false);
+
+        ClearCellOverlays();
+    }
 
     mObjActionsToDo.emplace_back(unit, GameObjectActionType::ATTACK, onDone);
 
