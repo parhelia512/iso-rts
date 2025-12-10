@@ -5,12 +5,13 @@
 namespace sgl
 {
     namespace graphic { class Text; }
+    namespace sgui { class PushButton; }
 }
 
 namespace game
 {
 
-class ButtonObjectActionOption : public GameButton
+class ButtonObjectActionOption : public sgl::sgui::PushButton
 {
 public:
     ButtonObjectActionOption(const char * text, const char * shortcut,
@@ -26,8 +27,11 @@ private:
     void SetPositions();
 
     void OnStateChanged(sgl::sgui::AbstractButton::VisualState state) override;
+    void SetGraphics();
 
 private:
+    sgl::graphic::Image * mBody = nullptr;
+    sgl::graphic::Text * mLabel = nullptr;
     sgl::graphic::Text * mShortcut = nullptr;
 };
 

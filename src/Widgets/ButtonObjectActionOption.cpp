@@ -6,7 +6,9 @@
 
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
+#include <sgl/graphic/Image.h>
 #include <sgl/graphic/Text.h>
+#include <sgl/graphic/TextureManager.h>
 #include <sgl/media/AudioManager.h>
 #include <sgl/media/AudioPlayer.h>
 
@@ -15,19 +17,20 @@ namespace game
 
 ButtonObjectActionOption::ButtonObjectActionOption(const char * text, const char * shortcut,
                                        int shortcutKey, sgl::sgui::Widget * parent)
-    : GameButton(SpriteFileObjActionButton,
-                 { ID_BTN_ACT_OPT_NORMAL, ID_BTN_ACT_OPT_DISABLED, ID_BTN_ACT_OPT_MOUSE_OVER,
-                   ID_BTN_ACT_OPT_PUSHED, ID_BTN_ACT_OPT_CHECKED },
-                 { 0xe3e6e8ff, 0x454f54ff, 0xf1f2f4ff, 0xabb4baff, 0xc2c2a3ff}, parent)
+    : sgl::sgui::PushButton(parent)
 {
     using namespace sgl;
 
     auto fm = graphic::FontManager::Instance();
 
+    // BODY
+    mBody = new sgl::graphic::Image;
+    RegisterRenderable(mBody);
+
     // LABEL
     auto font = fm->GetFont(WidgetsConstants::FontFileButton, 16, graphic::Font::NORMAL);
-    SetLabelFont(font);
-    SetLabel(text);
+    mLabel = new graphic::Text(text, font);
+    RegisterRenderable(mLabel);
 
     // SHORTCUT
     font = fm->GetFont(WidgetsConstants::FontFileShortcut, 12, graphic::Font::NORMAL);
@@ -38,6 +41,10 @@ ButtonObjectActionOption::ButtonObjectActionOption(const char * text, const char
 
     SetShortcutKey(shortcutKey);
 
+    // INIT
+    InitState(sgui::AbstractButton::NORMAL);
+
+    SetGraphics();
     SetPositions();
 }
 
@@ -51,7 +58,7 @@ void ButtonObjectActionOption::SetTooltipText(const char * text, int timeShowing
 
 void ButtonObjectActionOption::HandleMouseOver()
 {
-    GameButton::HandleMouseOver();
+    sgl::sgui::PushButton::HandleMouseOver();
 
     auto player = sgl::media::AudioManager::Instance()->GetPlayer();
     player->PlaySound("UI/button_over-01.ogg");
@@ -59,7 +66,7 @@ void ButtonObjectActionOption::HandleMouseOver()
 
 void ButtonObjectActionOption::HandleButtonDown()
 {
-    GameButton::HandleButtonDown();
+    sgl::sgui::PushButton::HandleButtonDown();
 
     auto player = sgl::media::AudioManager::Instance()->GetPlayer();
     player->PlaySound("UI/button_click_long-02.ogg");
@@ -67,7 +74,7 @@ void ButtonObjectActionOption::HandleButtonDown()
 
 void ButtonObjectActionOption::HandlePositionChanged()
 {
-    GameButton::HandlePositionChanged();
+    sgl::sgui::PushButton::HandlePositionChanged();
 
     SetPositions();
 }
@@ -77,9 +84,20 @@ void ButtonObjectActionOption::SetPositions()
     const int x0 = GetScreenX();
     const int y0 = GetScreenY();
 
+    // BODY
+    mBody->SetPosition(x0, y0);
+
+    // LABEL
+    const int bodyW = 250;
+    const int bodyH = 32;
+    const int labelX = x0 + (bodyW - mLabel->GetWidth()) / 2;
+    const int labelY = y0 + (bodyH - mLabel->GetHeight()) / 2;
+
+    mLabel->SetPosition(labelX, labelY);
+
     // SHORTCUT
-    const int shortBgX0 = 241;
-    const int shortBgY0 = 23;
+    const int shortBgX0 = 240;
+    const int shortBgY0 = 22;
     const int shortBgSize = 18;
 
     const int shortcutX = x0 + shortBgX0 + (shortBgSize - mShortcut->GetWidth()) / 2;
@@ -90,9 +108,36 @@ void ButtonObjectActionOption::SetPositions()
 
 void ButtonObjectActionOption::OnStateChanged(sgl::sgui::AbstractButton::VisualState state)
 {
-    GameButton::OnStateChanged(state);
+    sgl::sgui::PushButton::OnStateChanged(state);
 
-    // update shortcut label
+    SetGraphics();
+}
+
+void ButtonObjectActionOption::SetGraphics()
+{
+    using namespace sgl;
+
+    const sgui::AbstractButton::VisualState state = GetState();
+
+    auto tm = graphic::TextureManager::Instance();
+
+    // BODY
+    const unsigned int bgTexIds[] =
+    {
+        ID_BTN_ACT_OPT_NORMAL, ID_BTN_ACT_OPT_DISABLED, ID_BTN_ACT_OPT_MOUSE_OVER,
+        ID_BTN_ACT_OPT_PUSHED, ID_BTN_ACT_OPT_CHECKED
+    };
+
+    auto tex = tm->GetSprite(SpriteFileObjActionButton, bgTexIds[state]);
+    mBody->SetTexture(tex);
+
+    SetSize(mBody->GetWidth(), mBody->GetHeight());
+
+    // LABEL
+    const unsigned int colorLabel[] = { 0xe3e6e8ff, 0x4c5e67ff, 0xf1f3f4ff, 0xc7ced1ff, 0xc2c2a3ff };
+    mLabel->SetColor(colorLabel[state]);
+
+    // SHORTCUT
     if(DISABLED == state)
         mShortcut->SetColor(WidgetsConstants::colorShortcutDisabled);
     else
