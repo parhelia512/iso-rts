@@ -1706,6 +1706,9 @@ GameObject * GameMap::CreateMiniUnit(GameObjectTypeId ut, GameObject * gen, cons
     mu->SetOwner(player);
     mu->SetCell(&mCells[ind]);
 
+    // weapon
+    AssignWeaponToObject(data.GetWeapon(), mu);
+
     // links to other objects
     auto pm = mScreenGame->GetParticlesManager();
 
