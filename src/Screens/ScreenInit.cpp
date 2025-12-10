@@ -294,6 +294,8 @@ void ScreenInit::SetupSFX()
         am->CreateSound(packageSoundsUI, "UI/dialog_open-01.ogg");
         am->CreateSound(packageSoundsUI, "UI/dialog_open-02.ogg");
         am->CreateSound(packageSoundsUI, "UI/goal_completed.ogg");
+        am->CreateSound(packageSoundsUI, "UI/panel-close-01.ogg");
+        am->CreateSound(packageSoundsUI, "UI/panel-open-01.ogg");
     });
 }
 

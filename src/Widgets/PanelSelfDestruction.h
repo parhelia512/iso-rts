@@ -16,6 +16,7 @@ class PanelSelfDestruction : public sgl::sgui::Widget
 {
 public:
     PanelSelfDestruction();
+    ~PanelSelfDestruction();
 
     void AddFunctionOnDestroy(const std::function<void()> & f);
     void AddFunctionOnBlowup(const std::function<void()> & f);

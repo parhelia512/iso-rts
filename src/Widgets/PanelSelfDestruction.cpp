@@ -6,6 +6,8 @@
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
 #include <sgl/graphic/TextureManager.h>
+#include <sgl/media/AudioManager.h>
+#include <sgl/media/AudioPlayer.h>
 
 namespace game
 {
@@ -35,6 +37,17 @@ PanelSelfDestruction::PanelSelfDestruction()
     mBtnBlowup = btn;
 
     btn->SetY(mBtnDestroy->GetHeight() + marginB);
+
+    // play sound
+    auto ap = media::AudioManager::Instance()->GetPlayer();
+    ap->PlaySound("UI/panel-open-01.ogg");
+}
+
+PanelSelfDestruction::~PanelSelfDestruction()
+{
+    // play sound
+    auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+    ap->PlaySound("UI/panel-close-01.ogg");
 }
 
 void PanelSelfDestruction::AddFunctionOnDestroy(const std::function<void()> & f)
