@@ -350,6 +350,7 @@ void ScreenGame::ClearSelection(Player * player)
     player->ClearSelectedObject();
 
     ClearCellOverlays();
+    HideOptionPanels();
 }
 
 void ScreenGame::SelectObject(GameObject * obj, Player * player)
@@ -596,6 +597,7 @@ void ScreenGame::CreateUI()
         mHUD->ShowDialogNewElement(DialogNewElement::ETYPE_STRUCTURES);
 
         ClearCellOverlays();
+        HideOptionPanels();
     });
 
     // build wall
@@ -605,6 +607,7 @@ void ScreenGame::CreateUI()
         unit->SetActiveAction(GameObjectActionType::BUILD_WALL);
 
         ClearCellOverlays();
+        HideOptionPanels();
 
         mWallPath.clear();
 
@@ -618,6 +621,7 @@ void ScreenGame::CreateUI()
         unit->SetActiveAction(GameObjectActionType::ATTACK);
 
         ClearCellOverlays();
+        HideOptionPanels();
 
         // show attack range overlay
         const int range = unit->GetWeapon()->GetRange();
@@ -631,6 +635,7 @@ void ScreenGame::CreateUI()
         hospital->SetActiveAction(GameObjectActionType::HEAL);
 
         ClearCellOverlays();
+        HideOptionPanels();
 
         // show healing range overlay
         const int range = hospital->GetRangeHealing();
@@ -643,6 +648,7 @@ void ScreenGame::CreateUI()
         unit->SetActiveAction(GameObjectActionType::HEAL);
 
         ClearCellOverlays();
+        HideOptionPanels();
 
         // show healing range overlay
         const int range = unit->GetRangeHealing();
@@ -656,6 +662,7 @@ void ScreenGame::CreateUI()
         unit->SetActiveAction(GameObjectActionType::CONQUER_CELL);
 
         ClearCellOverlays();
+        HideOptionPanels();
 
         mConquestPath.clear();
 
@@ -669,6 +676,7 @@ void ScreenGame::CreateUI()
         unit->SetActiveAction(GameObjectActionType::MOVE);
 
         ClearCellOverlays();
+        HideOptionPanels();
 
         ShowMoveIndicator(unit, mCurrCell);
     });
@@ -680,6 +688,7 @@ void ScreenGame::CreateUI()
         selObj->SetActiveAction(GameObjectActionType::SPAWN);
 
         ClearCellOverlays();
+        HideOptionPanels();
 
         mHUD->ShowDialogNewMiniUnitsSquad(selObj);
     });
@@ -768,8 +777,6 @@ void ScreenGame::CreateUI()
     panelObjActions->AddButtonFunction(PanelObjectActions::BTN_UPGRADE, [this]
     {
         // TODO
-
-        ClearCellOverlays();
     });
 
     // cancel
@@ -781,6 +788,7 @@ void ScreenGame::CreateUI()
         if(nullptr == selObj)
             return ;
 
+        // always hide option panels
         HideOptionPanels();
 
         const GameObjectActionType action = selObj->GetActiveAction();
