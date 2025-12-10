@@ -492,21 +492,9 @@ GameObject * GameMap::CreateObject(unsigned int layerId, GameObjectTypeId type,
     else if(GameObject::TYPE_HOSPITAL == type)
         o2a.obj = new Hospital(data);
     else if(GameObject::TYPE_DEFENSIVE_TOWER == type)
-    {
         o2a.obj = new DefensiveTower(data);
-
-        const WeaponData & wData = GetWeaponData(WeaponData::TYPE_LASER5);
-        auto weapon = new Laser(wData, o2a.obj, this, pm);
-        o2a.obj->SetWeapon(weapon);
-    }
     else if(GameObject::TYPE_BUNKER == type)
-    {
         o2a.obj = new Bunker(data);
-
-        const WeaponData & wData = GetWeaponData(WeaponData::TYPE_LASER4);
-        auto weapon = new Laser(wData, o2a.obj, this, pm);
-        o2a.obj->SetWeapon(weapon);
-    }
     else if(GameObject::TYPE_SPAWN_TOWER == type)
         o2a.obj = new SpawningTower(data);
     else if(GameObject::TYPE_TRADING_POST == type)
@@ -558,6 +546,9 @@ GameObject * GameMap::CreateObject(unsigned int layerId, GameObjectTypeId type,
         std::cerr << "[ERR] GameMap::CreateObject - unknown obj type: " << type << std::endl;
         return nullptr;
     }
+
+    // weapon
+    AssignWeaponToObject(data.GetWeapon(), o2a.obj);
 
     // links to other objects
     o2a.obj->SetGameMap(this);
@@ -1651,20 +1642,8 @@ void GameMap::CreateUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & d
     unit->SetParticlesManager(pm);
     unit->SetScreen(mScreenGame);
 
-    // add weapon to soldiers
-    if(data.GetClass() == OCU_SOLDIER)
-    {
-        WeaponType wt = WeaponData::TYPE_LASER1;
-
-        if(ut == GameObject::TYPE_UNIT_SOLDIER1)
-            wt = WeaponData::TYPE_LASER2;
-        else if(ut == GameObject::TYPE_UNIT_SOLDIER2)
-            wt = WeaponData::TYPE_LASER3;
-
-        const WeaponData & wData = GetWeaponData(wt);
-        auto weapon = new Laser(wData, unit, this, pm);
-        unit->SetWeapon(weapon);
-    }
+    // weapon
+    AssignWeaponToObject(data.GetWeapon(), unit);
 
     // update cell
     gcell.objTop = unit;
@@ -3779,6 +3758,22 @@ const WeaponData & GameMap::GetWeaponData(WeaponType t) const
 {
     const ObjectsDataRegistry * objReg = mGame->GetObjectsRegistry();
     return objReg->GetWeaponData(t);
+}
+
+void GameMap::AssignWeaponToObject(WeaponType wt, GameObject * obj)
+{
+    if(wt == WeaponData::TYPE_NULL)
+        return ;
+
+    auto pm = mScreenGame->GetParticlesManager();
+
+    const WeaponData & wData = GetWeaponData(wt);
+    Weapon * weapon = nullptr;
+
+    if(wData.GetClass() == WEAPONC_LASER)
+        weapon = new Laser(wData, obj, this, pm);
+
+    obj->SetWeapon(weapon);
 }
 
 void GameMap::DeleteEmptyMiniUnitsGroups()

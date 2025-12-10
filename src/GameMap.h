@@ -243,6 +243,8 @@ private:
     const ObjectData & GetObjectData(GameObjectTypeId t) const;
     const WeaponData & GetWeaponData(WeaponType t) const;
 
+    void AssignWeaponToObject(WeaponType wt, GameObject * obj);
+
     // mini units
     void DeleteEmptyMiniUnitsGroups();
     void InitMiniUnitsGroupsToMove(PlayerFaction faction);

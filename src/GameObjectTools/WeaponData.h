@@ -8,6 +8,15 @@
 namespace game
 {
 
+enum WeaponClass : unsigned int
+{
+    WEAPONC_LASER,
+
+    NUM_WEAPON_CLASSES,
+
+    WEAPONC_NULL
+};
+
 enum ObjAttId : unsigned int;
 
 class WeaponData
@@ -23,9 +32,10 @@ public:
     static const WeaponData NullObj;
 
 public:
-    WeaponData(WeaponType t, const std::unordered_map<ObjAttId, int> & atts);
+    WeaponData(WeaponType wt, WeaponClass wc, const std::unordered_map<ObjAttId, int> & atts);
 
     WeaponType GetType() const;
+    WeaponClass GetClass() const;
 
     const std::unordered_map<ObjAttId, int> & GetAttributes() const;
 
@@ -42,15 +52,19 @@ private:
     std::unordered_map<ObjAttId, int> mAttributes;
 
     WeaponType mType;
+    WeaponClass mClass;
 };
 
-inline WeaponData::WeaponData(WeaponType t, const std::unordered_map<ObjAttId, int> & atts)
+inline WeaponData::WeaponData(WeaponType wt, WeaponClass wc,
+                              const std::unordered_map<ObjAttId, int> & atts)
     : mAttributes(atts)
-    , mType(t)
+    , mType(wt)
+    , mClass(wc)
 {
 }
 
 inline WeaponType WeaponData::GetType() const { return mType; }
+inline WeaponClass WeaponData::GetClass() const { return mClass; }
 
 inline const std::unordered_map<ObjAttId, int> & WeaponData::GetAttributes() const
 {

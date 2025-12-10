@@ -91,7 +91,7 @@ public:
                const std::vector<unsigned int> & texIds,
                const char * file, GameObjectTypeId type,
                GameObjectCategoryId cat, ObjClass oClass,
-               ObjFamily family,
+               ObjFamily family, WeaponType weapon,
                unsigned int rows, unsigned int cols);
 
     const std::unordered_map<ObjAttId, int> & GetAttributes() const;
@@ -105,6 +105,8 @@ public:
     GameObjectCategoryId GetCategory() const;
     ObjClass GetClass() const;
     ObjFamily GetFamily() const;
+
+    WeaponType GetWeapon() const;
 
     int GetRows() const;
     int GetCols() const;
@@ -121,6 +123,8 @@ private:
     ObjClass mClass;
     ObjFamily mFamily;
 
+    WeaponType mWeapon;
+
     unsigned int mRows;
     unsigned int mCols;
 };
@@ -129,7 +133,8 @@ inline ObjectData::ObjectData(const std::unordered_map<ObjAttId, int> & atts,
                               const std::array<int, NUM_OBJ_COSTS> & costs,
                               const std::vector<unsigned int> & texIds,
                               const char * file, GameObjectTypeId type, GameObjectCategoryId cat,
-                              ObjClass oClass, ObjFamily family, unsigned int rows, unsigned int cols)
+                              ObjClass oClass, ObjFamily family, WeaponType weapon,
+                              unsigned int rows, unsigned int cols)
     : mAttributes(atts)
     , mCosts(costs)
     , mIconTexIds(texIds)
@@ -138,6 +143,7 @@ inline ObjectData::ObjectData(const std::unordered_map<ObjAttId, int> & atts,
     , mCategory(cat)
     , mClass(oClass)
     , mFamily(family)
+    , mWeapon(weapon)
     , mRows(rows)
     , mCols(cols)
 {
@@ -166,6 +172,8 @@ inline GameObjectTypeId ObjectData::GetType() const { return mType; }
 inline GameObjectCategoryId ObjectData::GetCategory() const { return mCategory; }
 inline ObjClass ObjectData::GetClass() const { return mClass; }
 inline ObjFamily ObjectData::GetFamily() const { return mFamily; }
+
+inline WeaponType ObjectData::GetWeapon() const { return mWeapon; }
 
 inline int ObjectData::GetRows() const { return mRows; }
 inline int ObjectData::GetCols() const { return mCols; }

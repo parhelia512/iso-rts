@@ -2,6 +2,7 @@
 
 #include "GameConstants.h"
 #include "GameObjects/GameObject.h"
+#include "GameObjectTools/WeaponData.h"
 
 namespace game
 {
@@ -64,7 +65,7 @@ const char * ObjectData::STR_ATTRIBUTES[NUM_OBJ_ATTRIBUTES] =
 };
 
 const ObjectData ObjectData::NullObj({}, {}, {}, nullptr, GameObject::TYPE_NULL, GameObject::CAT_NULL,
-                                     OC_NULL, OCAT_UNDEFINED, 0, 0);
+                                     OC_NULL, OCAT_UNDEFINED, WeaponData::TYPE_NULL, 0, 0);
 
 unsigned int ObjectData::GetIconTexId(PlayerFaction f) const
 {
