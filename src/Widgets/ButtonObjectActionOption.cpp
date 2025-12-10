@@ -28,7 +28,7 @@ ButtonObjectActionOption::ButtonObjectActionOption(const char * text, const char
     RegisterRenderable(mBody);
 
     // LABEL
-    auto font = fm->GetFont(WidgetsConstants::FontFileButton, 16, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileButton, 17, graphic::Font::NORMAL);
     mLabel = new graphic::Text(text, font);
     RegisterRenderable(mLabel);
 

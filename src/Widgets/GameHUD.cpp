@@ -26,7 +26,7 @@
 #include "Widgets/DialogNewElement.h"
 #include "Widgets/DialogNewMiniUnitsSquad.h"
 #include "Widgets/DialogObject.h"
-#include "Widgets/DialogSelfDestruction.h"
+#include "Widgets/PanelSelfDestruction.h"
 #include "Widgets/DialogTrading.h"
 #include "Widgets/GameMapProgressBar.h"
 #include "Widgets/MiniMap.h"
@@ -739,7 +739,7 @@ void GameHUD::ShowPanelSelfDestruction()
         return ;
 
     // CREATE DIALOG
-    mPanelSelfDestruct = new DialogSelfDestruction;
+    mPanelSelfDestruct = new PanelSelfDestruction;
 
     sgl::sgui::Stage::Instance()->SetFocus();
 

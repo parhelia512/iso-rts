@@ -354,8 +354,6 @@ add_executable(
     src/Widgets/DialogNewMiniUnitsSquad.cpp
     src/Widgets/DialogObject.h
     src/Widgets/DialogObject.cpp
-    src/Widgets/DialogSelfDestruction.h
-    src/Widgets/DialogSelfDestruction.cpp
     src/Widgets/DialogSettings.h
     src/Widgets/DialogSettings.cpp
     src/Widgets/DialogTrading.h
@@ -400,6 +398,8 @@ add_executable(
     src/Widgets/PanelResources.cpp
     src/Widgets/PanelSelectedObject.h
     src/Widgets/PanelSelectedObject.cpp
+    src/Widgets/PanelSelfDestruction.h
+    src/Widgets/PanelSelfDestruction.cpp
     src/Widgets/PanelTurnControl.h
     src/Widgets/PanelTurnControl.cpp
     src/Widgets/PlanetMap.h

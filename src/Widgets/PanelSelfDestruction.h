@@ -12,10 +12,10 @@ namespace sgl
 namespace game
 {
 
-class DialogSelfDestruction : public sgl::sgui::Widget
+class PanelSelfDestruction : public sgl::sgui::Widget
 {
 public:
-    DialogSelfDestruction();
+    PanelSelfDestruction();
 
     void AddFunctionOnDestroy(const std::function<void()> & f);
     void AddFunctionOnBlowup(const std::function<void()> & f);

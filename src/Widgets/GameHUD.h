@@ -25,7 +25,7 @@ class DialogMissionGoals;
 class DialogNewElement;
 class DialogNewMiniUnitsSquad;
 class DialogObject;
-class DialogSelfDestruction;
+class PanelSelfDestruction;
 class DialogTrading;
 class GameMapProgressBar;
 class GameObject;
@@ -121,7 +121,7 @@ private:
 
 private:
     PanelResources * mPanelRes = nullptr;
-    DialogSelfDestruction * mPanelSelfDestruct = nullptr;
+    PanelSelfDestruction * mPanelSelfDestruct = nullptr;
     PanelTurnControl * mPanelTurnCtrl = nullptr;
     ButtonMinimap * mButtonMinimap = nullptr;
     MiniMap * mMiniMap = nullptr;

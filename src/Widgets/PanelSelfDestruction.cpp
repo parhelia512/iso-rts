@@ -1,4 +1,4 @@
-#include "Widgets/DialogSelfDestruction.h"
+#include "Widgets/PanelSelfDestruction.h"
 
 #include "Widgets/ButtonObjectActionOption.h"
 
@@ -11,7 +11,7 @@ namespace game
 {
 
 // ===== DIALOG =====
-DialogSelfDestruction::DialogSelfDestruction()
+PanelSelfDestruction::PanelSelfDestruction()
 {
     using namespace sgl;
 
@@ -37,12 +37,12 @@ DialogSelfDestruction::DialogSelfDestruction()
     btn->SetY(mBtnDestroy->GetHeight() + marginB);
 }
 
-void DialogSelfDestruction::AddFunctionOnDestroy(const std::function<void()> & f)
+void PanelSelfDestruction::AddFunctionOnDestroy(const std::function<void()> & f)
 {
     mBtnDestroy->AddOnClickFunction(f);
 }
 
-void DialogSelfDestruction::AddFunctionOnBlowup(const std::function<void()> & f)
+void PanelSelfDestruction::AddFunctionOnBlowup(const std::function<void()> & f)
 {
     mBtnBlowup->AddOnClickFunction(f);
 }
