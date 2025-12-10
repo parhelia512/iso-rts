@@ -807,12 +807,27 @@ void DialogNewElement::ShowData(int ind)
         const int val = data.GetAttribute(static_cast<ObjAttId>(i));
 
         if(val > 0)
+            mVisAtt[attsAdded++]->SetData(ObjectData::STR_ATTRIBUTES[i], val);
+    }
+
+    // WEAPON ATTRIBUTES
+    const WeaponType wt = data.GetWeapon();
+
+    if(wt != WeaponData::TYPE_NULL)
+    {
+        const WeaponData & wData = mDataReg->GetWeaponData(wt);
+        const std::unordered_map<ObjAttId, int> &  wAttributes = wData.GetAttributes();
+
+        for(unsigned int i = 0; i < NUM_WEAPON_ATTRIBUTES; ++i)
         {
-            mVisAtt[attsAdded]->SetData(ObjectData::STR_ATTRIBUTES[i], val);
-            ++attsAdded;
+            const auto attId = static_cast<ObjAttId>(FIRST_WEAPON_ATTRIBUTE + i);
+
+            const int val = wAttributes.at(attId);
+            mVisAtt[attsAdded++]->SetData(ObjectData::STR_ATTRIBUTES[attId], val);
         }
     }
 
+    // clear remaining slots
     for(int i = attsAdded; i < NUM_VIS_ATT; ++i)
         mVisAtt[i]->ClearData();
 }

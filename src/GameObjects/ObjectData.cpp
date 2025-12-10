@@ -49,10 +49,6 @@ const char * ObjectData::STR_ATTRIBUTES[NUM_OBJ_ATTRIBUTES] =
     "REGENERATION",
     "RESISTANCE",
     "SHIELD",
-    // WEAPON
-    "ATTACK ACCURACY",
-    "ATTACK POWER",
-    "ATTACK RANGE",
     // UNIT
     "SPEED",
     "CONSTRUCTION",
@@ -61,7 +57,11 @@ const char * ObjectData::STR_ATTRIBUTES[NUM_OBJ_ATTRIBUTES] =
     "HEALING POWER",
     "SPAWNING",
     // RESOURCE STORAGE
-    "STORAGE"
+    "STORAGE",
+    // WEAPON
+    "ATTACK ACCURACY",
+    "ATTACK POWER",
+    "ATTACK RANGE",
 };
 
 const ObjectData ObjectData::NullObj({}, {}, {}, nullptr, GameObject::TYPE_NULL, GameObject::CAT_NULL,

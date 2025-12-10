@@ -355,7 +355,7 @@ void DialogObject::SetObject(GameObject * obj)
 
     for(unsigned int i = 0; i < NUM_OBJ_ATTRIBUTES; ++i)
     {
-        const int val = data.GetAttribute(static_cast<ObjAttId>(i));
+        const int val = obj->GetAttribute(static_cast<ObjAttId>(i));
 
         if(val > 0)
         {
