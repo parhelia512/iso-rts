@@ -40,6 +40,9 @@ enum GameObjectActionType : unsigned int
     // WALL GATE
     TOGGLE_GATE,
 
+    // GENERIC
+    SELF_DESTRUCTION,
+
     NUM_OBJ_ACTIONS
 };
 

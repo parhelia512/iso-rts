@@ -807,7 +807,8 @@ float GameObject::GetActionEnergyCost(GameObjectActionType action) const
         10.f,       // BUILD_WALL
         5.f,        // HEAL
         4.f,        // SPAWN
-        1.f         // TOGGLE_GATE
+        1.f,        // TOGGLE_GATE
+        0.f,        // SELF_DESTRUCTION
     };
 
     return ACTION_COSTS[action];
@@ -829,6 +830,7 @@ float GameObject::GetActionExperienceGain(GameObjectActionType action) const
         2,      // HEAL
         5,      // SPAWN
         1,      // TOGGLE_GATE
+        0,      // SELF_DESTRUCTION
     };
 
     return ACTION_EXPERIENCE[action];

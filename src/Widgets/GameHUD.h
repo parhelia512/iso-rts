@@ -92,8 +92,8 @@ public:
     void ShowDialogTrading();
     void HideDialogTrading();
 
-    void ShowDialogSelfDestruction();
-    void HideDialogSelfDestruction();
+    void ShowPanelSelfDestruction();
+    void HidePanelSelfDestruction();
 
     void SetLocalActionsEnabled(bool enabled);
 
@@ -121,6 +121,7 @@ private:
 
 private:
     PanelResources * mPanelRes = nullptr;
+    DialogSelfDestruction * mPanelSelfDestruct = nullptr;
     PanelTurnControl * mPanelTurnCtrl = nullptr;
     ButtonMinimap * mButtonMinimap = nullptr;
     MiniMap * mMiniMap = nullptr;
@@ -135,7 +136,6 @@ private:
     DialogNewElement * mDialogNewElement = nullptr;
     DialogNewMiniUnitsSquad * mDialogNewMiniUnits = nullptr;
     DialogObject * mDialogObj = nullptr;
-    DialogSelfDestruction * mDialogSelfDestruct = nullptr;
     DialogTrading * mDialogTrading = nullptr;
 
     PanelSelectedObject * mPanelSelObj = nullptr;

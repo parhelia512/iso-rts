@@ -756,9 +756,12 @@ void ScreenGame::CreateUI()
     // self destruction
     panelObjActions->AddButtonFunction(PanelObjectActions::BTN_SELF_DESTROY, [this]
     {
+        GameObject * selObj = mLocalPlayer->GetSelectedObject();
+        selObj->SetActiveAction(SELF_DESTRUCTION);
+
         ClearCellOverlays();
 
-        mHUD->ShowDialogSelfDestruction();
+        mHUD->ShowPanelSelfDestruction();
     });
 
     // upgrade
@@ -777,6 +780,8 @@ void ScreenGame::CreateUI()
 
         if(nullptr == selObj)
             return ;
+
+        HideOptionPanels();
 
         const GameObjectActionType action = selObj->GetActiveAction();
 
@@ -800,6 +805,8 @@ void ScreenGame::CreateUI()
 
             return ;
         }
+        else if(action == SELF_DESTRUCTION)
+            selObj->SetActiveActionToDefault();
 
         CancelObjectAction(selObj);
     });
@@ -816,6 +823,11 @@ void ScreenGame::CreateUI()
 
     // set initial focus to Stage
     sgl::sgui::Stage::Instance()->SetFocus();
+}
+
+void ScreenGame::HideOptionPanels()
+{
+    mHUD->HidePanelSelfDestruction();
 }
 
 void ScreenGame::LoadMapFile()

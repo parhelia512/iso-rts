@@ -733,32 +733,33 @@ void GameHUD::HideDialogTrading()
     mScreen->SetPause(false);
 }
 
-void GameHUD::ShowDialogSelfDestruction()
+void GameHUD::ShowPanelSelfDestruction()
 {
-    if(mDialogSelfDestruct != nullptr)
+    if(mPanelSelfDestruct != nullptr)
         return ;
 
     // CREATE DIALOG
-    mDialogSelfDestruct = new DialogSelfDestruction;
-    mDialogSelfDestruct->SetFocus();
+    mPanelSelfDestruct = new DialogSelfDestruction;
+
+    sgl::sgui::Stage::Instance()->SetFocus();
 
     // button Destroy
-    mDialogSelfDestruct->AddFunctionOnDestroy([this]
+    mPanelSelfDestruct->AddFunctionOnDestroy([this]
     {
         auto obj = mScreen->mLocalPlayer->GetSelectedObject();
 
         mScreen->mGameMap->RemoveAndDestroyObject(obj);
 
-        HideDialogSelfDestruction();
+        HidePanelSelfDestruction();
     });
 
     // button Blow Up
-    mDialogSelfDestruct->AddFunctionOnBlowup([this]
+    mPanelSelfDestruct->AddFunctionOnBlowup([this]
     {
         auto obj = mScreen->mLocalPlayer->GetSelectedObject();
         obj->SelfDestroy();
 
-        HideDialogSelfDestruction();
+        HidePanelSelfDestruction();
     });
 
     // position dialog
@@ -767,19 +768,19 @@ void GameHUD::ShowDialogSelfDestruction()
     auto btnAction = mPanelObjActions->GetButton(PanelObjectActions::BTN_SELF_DESTROY);
 
     const int panelX = btnAction->GetScreenX() +
-                       (btnAction->GetWidth() - mDialogSelfDestruct->GetWidth()) / 2;
-    const int panelY = btnAction->GetScreenY() - mDialogSelfDestruct->GetHeight() - marginB;
-    mDialogSelfDestruct->SetPosition(panelX, panelY);
+                       (btnAction->GetWidth() - mPanelSelfDestruct->GetWidth()) / 2;
+    const int panelY = btnAction->GetScreenY() - mPanelSelfDestruct->GetHeight() - marginB;
+    mPanelSelfDestruct->SetPosition(panelX, panelY);
 }
 
-void GameHUD::HideDialogSelfDestruction()
+void GameHUD::HidePanelSelfDestruction()
 {
-    // schedule dialog deletion
-    mDialogSelfDestruct->DeleteLater();
-    mDialogSelfDestruct = nullptr;
+    if(mPanelSelfDestruct == nullptr)
+        return ;
 
-    // un-pause game
-    mScreen->SetPause(false);
+    // schedule dialog deletion
+    mPanelSelfDestruct->DeleteLater();
+    mPanelSelfDestruct = nullptr;
 }
 
 void GameHUD::SetLocalActionsEnabled(bool enabled)

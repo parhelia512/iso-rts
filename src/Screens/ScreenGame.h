@@ -107,6 +107,7 @@ private:
     void CreateLayers();
 
     void CreateUI();
+    void HideOptionPanels();
 
     void LoadMapFile();
 
