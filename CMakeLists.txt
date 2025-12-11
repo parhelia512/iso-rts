@@ -400,6 +400,8 @@ add_executable(
     src/Widgets/PanelSelectedObject.cpp
     src/Widgets/PanelSelfDestruction.h
     src/Widgets/PanelSelfDestruction.cpp
+    src/Widgets/PanelShotType.h
+    src/Widgets/PanelShotType.cpp
     src/Widgets/PanelTurnControl.h
     src/Widgets/PanelTurnControl.cpp
     src/Widgets/PlanetMap.h

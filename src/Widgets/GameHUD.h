@@ -34,6 +34,7 @@ class MissionGoal;
 class PanelObjectActions;
 class PanelResources;
 class PanelSelectedObject;
+class PanelShotType;
 class PanelTurnControl;
 class Player;
 class ScreenGame;
@@ -52,9 +53,14 @@ public:
     void SetMiniMapEnabled(bool val);
     MiniMap * GetMinimap() const;
 
+    // OBJECT ACTIONS
     PanelObjectActions * GetPanelObjectActions() const;
     void HidePanelObjectActions();
     void ShowPanelObjectActions(GameObject * obj);
+    void HidePanelSelfDestruction();
+    void ShowPanelSelfDestruction();
+    void HidePanelShotType();
+    void ShowPanelShotType();
 
     const sgl::sgui::ButtonsGroup * GetQuickUnitButtonsGroup() const;
     void SetQuickUnitButtonChecked(GameObject * obj);
@@ -92,9 +98,6 @@ public:
     void ShowDialogTrading();
     void HideDialogTrading();
 
-    void ShowPanelSelfDestruction();
-    void HidePanelSelfDestruction();
-
     void SetLocalActionsEnabled(bool enabled);
 
     GameMapProgressBar * CreateProgressBarInCell(const Cell2D & cell, float time, PlayerFaction faction);
@@ -113,6 +116,8 @@ private:
     void TemporaryClosePanels();
     void ReopenPanels();
 
+    void PositionOptionsPanelOverObjectActions(sgl::sgui::Widget * panel, unsigned int button);
+
     void ResumeGameFromExit();
 
     GameMapProgressBar * CreateProgressBar(float time, PlayerFaction faction);
@@ -122,6 +127,7 @@ private:
 private:
     PanelResources * mPanelRes = nullptr;
     PanelSelfDestruction * mPanelSelfDestruct = nullptr;
+    PanelShotType * mPanelShotType = nullptr;
     PanelTurnControl * mPanelTurnCtrl = nullptr;
     ButtonMinimap * mButtonMinimap = nullptr;
     MiniMap * mMiniMap = nullptr;

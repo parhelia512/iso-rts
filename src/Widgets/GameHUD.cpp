@@ -26,13 +26,14 @@
 #include "Widgets/DialogNewElement.h"
 #include "Widgets/DialogNewMiniUnitsSquad.h"
 #include "Widgets/DialogObject.h"
-#include "Widgets/PanelSelfDestruction.h"
 #include "Widgets/DialogTrading.h"
 #include "Widgets/GameMapProgressBar.h"
 #include "Widgets/MiniMap.h"
 #include "Widgets/PanelObjectActions.h"
 #include "Widgets/PanelResources.h"
 #include "Widgets/PanelSelectedObject.h"
+#include "Widgets/PanelSelfDestruction.h"
+#include "Widgets/PanelShotType.h"
 #include "Widgets/PanelTurnControl.h"
 
 #include <sgl/graphic/Camera.h>
@@ -210,6 +211,79 @@ void GameHUD::ShowPanelObjectActions(GameObject * obj)
     mPanelObjActions->SetObject(obj);
     mPanelObjActions->SetVisible(true);
     mPanelObjActions->SetActionsEnabled(obj->GetCurrentAction() == IDLE);
+}
+
+void GameHUD::HidePanelSelfDestruction()
+{
+    if(mPanelSelfDestruct == nullptr)
+        return ;
+
+    // schedule dialog deletion
+    mPanelSelfDestruct->DeleteLater();
+    mPanelSelfDestruct = nullptr;
+}
+
+void GameHUD::ShowPanelSelfDestruction()
+{
+    if(mPanelSelfDestruct != nullptr)
+        return ;
+
+    // CREATE DIALOG
+    mPanelSelfDestruct = new PanelSelfDestruction;
+
+    sgl::sgui::Stage::Instance()->SetFocus();
+
+    // button Destroy
+    mPanelSelfDestruct->AddFunctionOnDestroy([this]
+                                             {
+                                                 auto obj = mScreen->mLocalPlayer->GetSelectedObject();
+
+                                                 mScreen->mGameMap->RemoveAndDestroyObject(obj);
+
+                                                 HidePanelSelfDestruction();
+                                             });
+
+    // button Blow Up
+    mPanelSelfDestruct->AddFunctionOnBlowup([this]
+                                            {
+                                                auto obj = mScreen->mLocalPlayer->GetSelectedObject();
+                                                obj->SelfDestroy();
+
+                                                HidePanelSelfDestruction();
+                                            });
+
+    // position dialog
+    PositionOptionsPanelOverObjectActions(mPanelSelfDestruct, PanelObjectActions::BTN_SELF_DESTROY);
+}
+
+void GameHUD::HidePanelShotType()
+{
+    if(mPanelShotType == nullptr)
+        return ;
+
+    // schedule dialog deletion
+    mPanelShotType->DeleteLater();
+    mPanelShotType = nullptr;
+}
+
+void GameHUD::ShowPanelShotType()
+{
+    if(mPanelShotType != nullptr)
+        return ;
+
+    // CREATE DIALOG
+    mPanelShotType = new PanelShotType;
+
+    sgl::sgui::Stage::Instance()->SetFocus();
+
+    // button QUICK SHOT
+    mPanelShotType->SetFunctionOnToggle([this](unsigned int ind, bool checked)
+    {
+
+    });
+
+    // position dialog
+    PositionOptionsPanelOverObjectActions(mPanelShotType, PanelObjectActions::BTN_ATTACK);
 }
 
 void GameHUD::SetQuickUnitButtonChecked(GameObject * obj)
@@ -733,56 +807,6 @@ void GameHUD::HideDialogTrading()
     mScreen->SetPause(false);
 }
 
-void GameHUD::ShowPanelSelfDestruction()
-{
-    if(mPanelSelfDestruct != nullptr)
-        return ;
-
-    // CREATE DIALOG
-    mPanelSelfDestruct = new PanelSelfDestruction;
-
-    sgl::sgui::Stage::Instance()->SetFocus();
-
-    // button Destroy
-    mPanelSelfDestruct->AddFunctionOnDestroy([this]
-    {
-        auto obj = mScreen->mLocalPlayer->GetSelectedObject();
-
-        mScreen->mGameMap->RemoveAndDestroyObject(obj);
-
-        HidePanelSelfDestruction();
-    });
-
-    // button Blow Up
-    mPanelSelfDestruct->AddFunctionOnBlowup([this]
-    {
-        auto obj = mScreen->mLocalPlayer->GetSelectedObject();
-        obj->SelfDestroy();
-
-        HidePanelSelfDestruction();
-    });
-
-    // position dialog
-    const int marginB = 15;
-
-    auto btnAction = mPanelObjActions->GetButton(PanelObjectActions::BTN_SELF_DESTROY);
-
-    const int panelX = btnAction->GetScreenX() +
-                       (btnAction->GetWidth() - mPanelSelfDestruct->GetWidth()) / 2;
-    const int panelY = btnAction->GetScreenY() - mPanelSelfDestruct->GetHeight() - marginB;
-    mPanelSelfDestruct->SetPosition(panelX, panelY);
-}
-
-void GameHUD::HidePanelSelfDestruction()
-{
-    if(mPanelSelfDestruct == nullptr)
-        return ;
-
-    // schedule dialog deletion
-    mPanelSelfDestruct->DeleteLater();
-    mPanelSelfDestruct = nullptr;
-}
-
 void GameHUD::SetLocalActionsEnabled(bool enabled)
 {
     // PANEL OBJECT ACTIONS
@@ -960,6 +984,17 @@ void GameHUD::ReopenPanels()
 
     if(mPanelObjActions->HasObjectSet())
         mPanelObjActions->SetVisible(true);
+}
+
+void GameHUD::PositionOptionsPanelOverObjectActions(sgl::sgui::Widget * panel, unsigned int button)
+{
+    const int marginB = 15;
+
+    const auto btn = mPanelObjActions->GetButton(static_cast<PanelObjectActions::Button>(button));
+
+    const int panelX = btn->GetScreenX() + (btn->GetWidth() - panel->GetWidth()) / 2;
+    const int panelY = btn->GetScreenY() - panel->GetHeight() - marginB;
+    panel->SetPosition(panelX, panelY);
 }
 
 void GameHUD::ResumeGameFromExit()

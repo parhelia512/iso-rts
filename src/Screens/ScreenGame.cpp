@@ -623,6 +623,8 @@ void ScreenGame::CreateUI()
         ClearCellOverlays();
         HideOptionPanels();
 
+        mHUD->ShowPanelShotType();
+
         // show attack range overlay
         const int range = unit->GetWeapon()->GetRange();
         ShowAttackIndicators(unit, range);
@@ -769,6 +771,7 @@ void ScreenGame::CreateUI()
         selObj->SetActiveAction(SELF_DESTRUCTION);
 
         ClearCellOverlays();
+        HideOptionPanels();
 
         mHUD->ShowPanelSelfDestruction();
     });
@@ -836,6 +839,7 @@ void ScreenGame::CreateUI()
 void ScreenGame::HideOptionPanels()
 {
     mHUD->HidePanelSelfDestruction();
+    mHUD->HidePanelShotType();
 }
 
 void ScreenGame::LoadMapFile()

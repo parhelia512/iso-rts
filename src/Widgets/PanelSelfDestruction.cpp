@@ -3,9 +3,6 @@
 #include "Widgets/ButtonObjectActionOption.h"
 
 #include <sgl/core/event/KeyboardEvent.h>
-#include <sgl/graphic/Font.h>
-#include <sgl/graphic/FontManager.h>
-#include <sgl/graphic/TextureManager.h>
 #include <sgl/media/AudioManager.h>
 #include <sgl/media/AudioPlayer.h>
 
@@ -18,9 +15,6 @@ PanelSelfDestruction::PanelSelfDestruction()
     using namespace sgl;
 
     SetResizePolicy(sgui::Widget::GROW_ONLY);
-
-    auto fm = graphic::FontManager::Instance();
-    auto tm = graphic::TextureManager::Instance();
 
     const int marginB = 10;
 
