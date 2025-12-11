@@ -2100,6 +2100,7 @@ bool ScreenGame::SetupUnitAttack(Unit * unit, GameObject * target, Player * play
         mHUD->SetLocalActionsEnabled(false);
 
         ClearCellOverlays();
+        HideOptionPanels();
     }
 
     mObjActionsToDo.emplace_back(unit, GameObjectActionType::ATTACK, onDone);

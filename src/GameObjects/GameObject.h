@@ -219,6 +219,8 @@ public:
     const Weapon * GetWeapon() const;
     void SetWeapon(Weapon * w);
 
+    void SetAttackMode(AttackMode am);
+
     void Hit(float damage, PlayerFaction attacker, bool fatal);
     void SelfDestroy();
 
@@ -258,8 +260,6 @@ protected:
     void UpdateMaxHealth(float maxVal);
     void UpdateRegenerationPower();
 
-    void Shoot(float x0, float y0, GameObject * target);
-
 protected:
     static const unsigned int COLOR_FOW;
     static const unsigned int COLOR_VIS;
@@ -267,6 +267,8 @@ protected:
     std::vector<unsigned int> mObjColors;
 
     GameObjectVariantId mVariant = VAR_0;
+
+    Weapon * mWeapon = nullptr;
 
 private:
     // NOTE no boundary check, assuming valid action
@@ -344,8 +346,6 @@ private:
     const sgl::graphic::ParticlesManager * mPartMan = nullptr;
     ScreenGame * mScreen = nullptr;
     Player * mOwner = nullptr;
-
-    Weapon * mWeapon = nullptr;
 
     const GameMapCell * mCell = nullptr;
 

@@ -54,19 +54,12 @@ private:
 
     void SetImage();
 
-    void UpdateAttack(float delta);
     void UpdateHealing(float delta);
 
     void PrepareShoot();
     void Heal();
 
 private:
-    // weapon
-    float mTimeAttack = 0.25f;
-    float mTimerAttack = 0.f;
-
-    GameObject * mTargetAttack = nullptr;
-
     // healing
     float mTimeHealing = 0.5f;
     float mTimerHealing = 0.f;
@@ -76,8 +69,6 @@ private:
 
     GameObjectTypeId mStructToBuild;
 };
-
-inline void Unit::ClearTargetAttack() { mTargetAttack = nullptr; }
 
 inline int Unit::GetRangeHealing() const { return mRangeHealing; }
 inline void Unit::ClearTargetHealing() { mTargetHealing = nullptr; }

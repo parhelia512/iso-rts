@@ -552,6 +552,12 @@ void GameObject::SetWeapon(Weapon * w)
     }
 }
 
+void GameObject::SetAttackMode(AttackMode am)
+{
+    if(mWeapon != nullptr)
+        mWeapon->SetAttackMode(am);
+}
+
 void GameObject::Hit(float damage, PlayerFaction attacker, bool fatal)
 {
     using namespace sgl::graphic;
@@ -784,12 +790,6 @@ void GameObject::UpdateRegenerationPower()
 {
     const float reg = GetAttribute(OBJ_ATT_REGENERATION) / MAX_STAV_VAL;
     SetRegenerationPower(reg);
-}
-
-void GameObject::Shoot(float x0, float y0, GameObject * target)
-{
-    if(mWeapon != nullptr)
-        mWeapon->Shoot(x0, y0, target);
 }
 
 float GameObject::GetActionEnergyCost(GameObjectActionType action) const

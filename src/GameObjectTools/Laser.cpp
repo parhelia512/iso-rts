@@ -31,9 +31,10 @@ Laser::Laser(const WeaponData & data, GameObject * owner, GameMap * gm,
     mTex = tm->GetSprite(SpriteFileUnitsParticles, texInd);
 }
 
-void Laser::Shoot(float x0, float y0, GameObject * target)
+void Laser::OnShoot(float x0, float y0)
 {
     GameObject * owner = GetOwner();
+    GameObject * target = GetTarget();
 
     const IsoObject * isoTarget = target->GetIsoObject();
     const float tX = isoTarget->GetX() + (isoTarget->GetWidth() - mTex->GetWidth()) * 0.5f;

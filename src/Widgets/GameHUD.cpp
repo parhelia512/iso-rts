@@ -13,6 +13,7 @@
 #include "GameObjects/Structure.h"
 #include "GameObjects/Temple.h"
 #include "GameObjects/Unit.h"
+#include "GameObjectTools/Weapon.h"
 #include "Screens/ScreenGame.h"
 #include "Tutorial/TutorialManager.h"
 #include "Widgets/ButtonMinimap.h"
@@ -272,14 +273,19 @@ void GameHUD::ShowPanelShotType()
         return ;
 
     // CREATE DIALOG
+    auto selObj = mScreen->mLocalPlayer->GetSelectedObject();
+    const unsigned int am = selObj->GetWeapon()->GetAttackMode();
+
     mPanelShotType = new PanelShotType;
+    mPanelShotType->SetButtonChecked(am, true);
 
     sgl::sgui::Stage::Instance()->SetFocus();
 
-    // button QUICK SHOT
-    mPanelShotType->SetFunctionOnToggle([this](unsigned int ind, bool checked)
+    // change Attack Mode
+    mPanelShotType->SetFunctionOnToggle([selObj](unsigned int ind, bool checked)
     {
-
+        if(checked)
+            selObj->SetAttackMode(static_cast<AttackMode>(ind));
     });
 
     // position dialog

@@ -46,37 +46,29 @@ Unit::Unit(const ObjectData & data)
 
 bool Unit::CanAttack() const
 {
-    return GetAttribute(OBJ_ATT_ATTACK_ACCURACY) > 0 &&
-           GetAttribute(OBJ_ATT_ATTACK_POWER) > 0 &&
-           GetAttribute(OBJ_ATT_ATTACK_RANGE) > 0;
+    return mWeapon != nullptr;
+}
+
+void Unit::ClearTargetAttack()
+{
+    if(mWeapon != nullptr)
+        mWeapon->ClearTarget();
 }
 
 bool Unit::IsTargetAttackInRange(const GameObject * obj) const
 {
-    const int range = GetWeapon()->GetRange();
-
-    for(int r = obj->GetRow1(); r <= obj->GetRow0(); ++r)
-    {
-        for(int c = obj->GetCol1(); c <= obj->GetCol0(); ++c)
-        {
-            if(std::abs(GetRow0() - r) <= range && std::abs(GetCol0() - c) <= range)
-                return true;
-        }
-    }
-
-    return false;
+    if(mWeapon != nullptr)
+        return mWeapon->IsTargetInRange(obj);
+    else
+        return false;
 }
 
 bool Unit::SetTargetAttack(GameObject * obj)
 {
-    if(nullptr == obj || !IsTargetAttackInRange(obj) || !obj->IsVisible()
-        || !HasEnergyForActionStep(ATTACK) || obj == this)
-       return false;
-
-    mTargetAttack = obj;
-    mTimerAttack = 0.f;
-
-    return true;
+    if(mWeapon != nullptr)
+        return mWeapon->SetTarget(obj);
+    else
+        return false;
 }
 
 bool Unit::CanHeal() const
@@ -117,8 +109,12 @@ void Unit::SetActiveActionToDefault() { SetActiveAction(MOVE); }
 void Unit::Update(float delta)
 {
     // ATTACKING OTHER OBJECTS
-    if(mTargetAttack)
-        UpdateAttack(delta);
+    if(mWeapon != nullptr)
+    {
+        // shoot when update returns TRUE
+        if(mWeapon->Update(delta))
+            PrepareShoot();
+    }
     // HEALING OTHER OBJECTS
     else if(mTargetHealing)
         UpdateHealing(delta);
@@ -196,39 +192,6 @@ void Unit::SetImage()
     GetIsoObject()->SetTexture(tex);
 }
 
-void Unit::UpdateAttack(float delta)
-{
-    mTimerAttack -= delta;
-
-    // not shoot yet...
-    if(mTimerAttack > 0.f)
-        return ;
-
-    // target still alive -> try to shoot
-    if(GetGameMap()->HasObject(mTargetAttack))
-    {
-        if(IsTargetAttackInRange(mTargetAttack) && HasEnergyForActionStep(ATTACK))
-            PrepareShoot();
-        else
-        {
-            mTargetAttack = nullptr;
-
-            // mark attack action as failed
-            GetScreen()->SetObjectActionFailed(this);
-        }
-    }
-    // target destroyed -> stop
-    else
-    {
-        mTargetAttack = nullptr;
-
-        // mark attack action as completed
-        GetScreen()->SetObjectActionCompleted(this);
-    }
-
-    mTimerAttack = mTimeAttack;
-}
-
 void Unit::UpdateHealing(float delta)
 {
     mTimerHealing -= delta;
@@ -282,7 +245,7 @@ void Unit::PrepareShoot()
     const float x0 = isoObj->GetX() + isoObj->GetWidth() * 0.5f;
     const float y0 = isoObj->GetY();
 
-    Shoot(x0, y0, mTargetAttack);
+    mWeapon->Shoot(x0, y0);
 }
 
 void Unit::Heal()

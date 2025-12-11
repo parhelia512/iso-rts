@@ -23,6 +23,15 @@ constexpr unsigned int PLAYER_COLOR[] =
     0xdb57dbff
 };
 
+enum AttackMode : unsigned int
+{
+    ATT_QUICK_SHOT,
+    ATT_AIMED_SHOT,
+    ATT_BURST_SHOT,
+
+    NUM_ATTACK_MODES
+};
+
 enum GameCursorId : unsigned int
 {
     CURSOR_DEFAULT,

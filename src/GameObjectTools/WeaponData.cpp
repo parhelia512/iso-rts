@@ -22,6 +22,6 @@ const WeaponType WeaponData::TYPE_LASER5 = h{}(STR_LASER5);
 const WeaponType WeaponData::TYPE_NULL = 0;
 
 // NULL OBJECT
-const WeaponData WeaponData::NullObj(TYPE_NULL, WEAPONC_NULL, {});
+const WeaponData WeaponData::NullObj(TYPE_NULL, WEAPONC_NULL, 0, 0.f, {});
 
 } // namespace game

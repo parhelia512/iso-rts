@@ -32,14 +32,16 @@ public:
     static const WeaponData NullObj;
 
 public:
-    WeaponData(WeaponType wt, WeaponClass wc, const std::unordered_map<ObjAttId, int> & atts);
+    WeaponData(WeaponType wt, WeaponClass wc, unsigned int bs, float bd,
+               const std::unordered_map<ObjAttId, int> & atts);
 
     WeaponType GetType() const;
     WeaponClass GetClass() const;
 
     const std::unordered_map<ObjAttId, int> & GetAttributes() const;
 
-    float GetTimeAttack() const;
+    unsigned int GetBurstShots() const;
+    float GetBurstDelay() const;
 
 private:
     static const std::string STR_LASER1;
@@ -53,13 +55,18 @@ private:
 
     WeaponType mType;
     WeaponClass mClass;
+
+    int mBurstShots;
+    float mBurstDelay;
 };
 
-inline WeaponData::WeaponData(WeaponType wt, WeaponClass wc,
+inline WeaponData::WeaponData(WeaponType wt, WeaponClass wc, unsigned int bs, float bd,
                               const std::unordered_map<ObjAttId, int> & atts)
     : mAttributes(atts)
     , mType(wt)
     , mClass(wc)
+    , mBurstShots(bs)
+    , mBurstDelay(bd)
 {
 }
 
@@ -70,5 +77,8 @@ inline const std::unordered_map<ObjAttId, int> & WeaponData::GetAttributes() con
 {
     return mAttributes;
 }
+
+inline unsigned int WeaponData::GetBurstShots() const { return mBurstShots; }
+inline float WeaponData::GetBurstDelay() const { return mBurstDelay; }
 
 } // namespace game
