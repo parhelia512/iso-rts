@@ -59,6 +59,28 @@ bool Weapon::IsTargetInRange(const GameObject * obj) const
     return false;
 }
 
+float Weapon::GetHitProbability(const GameObject * target) const
+{
+    // TODO
+    const int ownerRowBR = mOwner->GetRow0();
+    const int ownerColBR = mOwner->GetCol0();
+    const int ownerRowTL = mOwner->GetRow1();
+    const int ownerColTL = mOwner->GetCol1();
+
+    const int targetRowBR = target->GetRow0();
+    const int targetColBR = target->GetCol0();
+    const int targetRowTL = target->GetRow1();
+    const int targetColTL = target->GetCol1();
+
+    return 0.5f;
+}
+
+float Weapon::GetFatalHitProbability(const GameObject * target) const
+{
+    // TODO
+    return 0.01f;
+}
+
 void Weapon::Shoot(float x0, float y0)
 {
     OnShoot(x0, y0);

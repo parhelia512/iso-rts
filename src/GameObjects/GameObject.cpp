@@ -558,9 +558,9 @@ void GameObject::SetAttackMode(AttackMode am)
         mWeapon->SetAttackMode(am);
 }
 
-void GameObject::Hit(float damage, PlayerFaction attacker, bool fatal)
+void GameObject::Hit(float damage, GameObject * attacker, bool fatal)
 {
-    using namespace sgl::graphic;
+    using namespace sgl;
 
     // already destroyed -> do nothing
     if(IsDestroyed())
@@ -597,7 +597,7 @@ void GameObject::Hit(float damage, PlayerFaction attacker, bool fatal)
     if(mHealth > 0.f)
     {
         const int quad0 = 0;
-        sgl::utilities::UniformDistribution genQuad(quad0, maxQuad - 1);
+        utilities::UniformDistribution genQuad(quad0, maxQuad - 1);
 
         ang0 += angInc * genQuad.GetNextValue();
 
@@ -616,7 +616,8 @@ void GameObject::Hit(float damage, PlayerFaction attacker, bool fatal)
         // NOTE register kills only when destroying enemies
         if(mOwner != nullptr)
         {
-            mGameMap->RegisterEnemyKill(attacker);
+            if(attacker != nullptr)
+                mGameMap->RegisterEnemyKill(attacker);
 
             mGameMap->RegisterCasualty(GetFaction());
         }
@@ -630,7 +631,7 @@ void GameObject::Hit(float damage, PlayerFaction attacker, bool fatal)
     auto pu = static_cast<UpdaterDamage *>(partMan->GetUpdater(PU_DAMAGE));
 
     const unsigned int texInd = SpriteIdParticles::ID_PART_RECT_4x4;
-    Texture * tex = TextureManager::Instance()->GetSprite(SpriteFileParticles, texInd);
+    auto tex = graphic::TextureManager::Instance()->GetSprite(SpriteFileParticles, texInd);
 
     IsoObject * isoObj = GetIsoObject();
     const float objXC = isoObj->GetX() + isoObj->GetWidth() * 0.5f;
@@ -639,33 +640,33 @@ void GameObject::Hit(float damage, PlayerFaction attacker, bool fatal)
     // random generator of rotation angle
     const int minRot = 0;
     const int maxRot = 360;
-    sgl::utilities::UniformDistribution genRot(minRot, maxRot);
+    utilities::UniformDistribution genRot(minRot, maxRot);
 
     // random generator for velocity direction
-    sgl::utilities::UniformDistribution genVel(static_cast<int>(ang0), static_cast<int>(ang1));
+    utilities::UniformDistribution genVel(static_cast<int>(ang0), static_cast<int>(ang1));
 
     const float deg2rad = sgl::core::Math::PIf / 180.f;
 
     // random generator for speed
     const int minSpeed = 100;
     const int maxSpeed = 300;
-    sgl::utilities::UniformDistribution genSpeed(minSpeed, maxSpeed);
+    utilities::UniformDistribution genSpeed(minSpeed, maxSpeed);
 
     // random generator for decay speed
     const int minDecSpeed = 200;
     const int maxDecSpeed = 400;
-    sgl::utilities::UniformDistribution genDecSpeed(minDecSpeed, maxDecSpeed);
+    utilities::UniformDistribution genDecSpeed(minDecSpeed, maxDecSpeed);
 
     // random generator for scale
     const int minScale = 1;
     const int maxScale = 2;
-    sgl::utilities::UniformDistribution genScale(minScale, maxScale);
+    utilities::UniformDistribution genScale(minScale, maxScale);
 
     // random generator for color
     const int color0 = 0;
     const int colorN = mObjColors.size() - 1;
 
-    sgl::utilities::UniformDistribution genColor(color0, colorN);
+    utilities::UniformDistribution genColor(color0, colorN);
 
     for(int q = 0; q < numQuad; ++q)
     {
@@ -701,7 +702,7 @@ void GameObject::Hit(float damage, PlayerFaction attacker, bool fatal)
     const int maxXDeltaHP = isoObj->GetWidth() * 0.25;
     const int minXDeltaHP = -maxXDeltaHP;
 
-    sgl::utilities::UniformDistribution genPosHP(minXDeltaHP, maxXDeltaHP);
+    utilities::UniformDistribution genPosHP(minXDeltaHP, maxXDeltaHP);
 
     const float posXHP = objXC + genPosHP.GetNextValue();
     const float posYHP = objYC - (isoObj->GetHeight() * 0.25f);
@@ -716,7 +717,26 @@ void GameObject::Hit(float damage, PlayerFaction attacker, bool fatal)
     puHP->AddParticle(dataHP);
 }
 
-void GameObject::SelfDestroy() { Hit(0.f, NO_FACTION, true); }
+void GameObject::MissHit()
+{
+    auto partMan = GetParticlesManager();
+    auto pu = static_cast<UpdaterDamage *>(partMan->GetUpdater(PU_DAMAGE));
+
+    IsoObject * isoObj = GetIsoObject();
+    const float posX = isoObj->GetX() + isoObj->GetWidth() * 0.5f;
+    const float posY = isoObj->GetY();
+
+    const float speedHP = 75.f;
+    const float decaySpeedHP = 50.f;
+    const float maxDistHP = 50.f;
+
+    auto puHP = static_cast<UpdaterHitPoints *>(partMan->GetUpdater(PU_HIT_POINTS));
+
+    DataParticleHitPoints dataHP(posX, posY, speedHP, decaySpeedHP, maxDistHP);
+    puHP->AddParticle(dataHP);
+}
+
+void GameObject::SelfDestroy() { Hit(0.f, nullptr, true); }
 
 void GameObject::SetActiveActionToDefault() { mActiveAction = IDLE; }
 

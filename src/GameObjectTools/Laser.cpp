@@ -11,6 +11,7 @@
 #include <sgl/graphic/ParticlesManager.h>
 #include <sgl/graphic/Texture.h>
 #include <sgl/graphic/TextureManager.h>
+#include <sgl/utilities/UniformRealDistribution.h>
 
 #include <cmath>
 
@@ -50,9 +51,6 @@ void Laser::OnShoot(float x0, float y0)
     const double angleDeg = as * rad2deg;
     double angle;
 
-    const float maxDamage = 20.f;
-    const float damage = maxDamage * owner->GetAttribute(OBJ_ATT_ATTACK_POWER) / MAX_STAV_VAL;
-
     if(dx1 < 0.f)
     {
         // bottom left
@@ -72,6 +70,29 @@ void Laser::OnShoot(float x0, float y0)
             angle = 360.f + angleDeg;
     }
 
+    // decide if hit or miss
+    const float probHit = GetHitProbability(target);
+
+    auto dist = sgl::utilities::UniformRealDistribution(0.f, 1.f);
+    const float valHit = dist.GetNextValue();
+
+    // 0 damage is miss
+    float damage = 0.f;
+    bool fatal = false;
+
+    // hit
+    if(valHit < probHit)
+    {
+        const float maxDamage = 20.f;
+        damage = maxDamage * owner->GetAttribute(OBJ_ATT_ATTACK_POWER) / MAX_STAV_VAL;
+
+        // check for fatal hit
+        const float probFatal = GetFatalHitProbability(target);
+        const float valFatal = dist.GetNextValue();
+
+        fatal = valFatal < probFatal;
+    }
+
     const DataParticleSingleLaser pd =
     {
         mTex,
@@ -84,7 +105,8 @@ void Laser::OnShoot(float x0, float y0)
         tY,
         speed,
         damage,
-        owner->GetFaction()
+        owner,
+        fatal
     };
 
     mPartUpdater->AddParticle(pd);

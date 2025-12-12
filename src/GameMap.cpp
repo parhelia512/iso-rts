@@ -587,6 +587,15 @@ bool GameMap::RemoveAndDestroyObject(GameObject * obj)
     return true;
 }
 
+void GameMap::RegisterEnemyKill(GameObject * killer)
+{
+    // TODO assign experience points based on kill maybe
+    const int experienceKill = 100;
+    killer->SumExperience(experienceKill);
+
+    ++mEnemiesKilled[killer->GetFaction()];
+}
+
 bool GameMap::AreObjectsAdjacent(const GameObject * obj1, const GameObject * obj2) const
 {
     // expand obj1 area by 1
@@ -1797,10 +1806,10 @@ void GameMap::DamageArea(const Cell2D & srcBR, const Cell2D & srcTL, int radius,
                 const int ind = ind0 + c;
 
                 if(mCells[ind].objTop != nullptr && !mCells[ind].objTop->IsDestroyed())
-                    mCells[ind].objTop->Hit(damage, NO_FACTION, fatal);
+                    mCells[ind].objTop->Hit(damage, nullptr, fatal);
 
                 if(mCells[ind].objBottom != nullptr && !mCells[ind].objBottom->IsDestroyed())
-                    mCells[ind].objBottom->Hit(damage, NO_FACTION, fatal);
+                    mCells[ind].objBottom->Hit(damage, nullptr, fatal);
             }
         }
 
@@ -1816,10 +1825,10 @@ void GameMap::DamageArea(const Cell2D & srcBR, const Cell2D & srcTL, int radius,
                 const int ind = ind0 + c;
 
                 if(mCells[ind].objTop != nullptr && !mCells[ind].objTop->IsDestroyed())
-                    mCells[ind].objTop->Hit(damage, NO_FACTION, fatal);
+                    mCells[ind].objTop->Hit(damage, nullptr, fatal);
 
                 if(mCells[ind].objBottom != nullptr && !mCells[ind].objBottom->IsDestroyed())
-                    mCells[ind].objBottom->Hit(damage, NO_FACTION, fatal);
+                    mCells[ind].objBottom->Hit(damage, nullptr, fatal);
             }
         }
 
@@ -1839,10 +1848,10 @@ void GameMap::DamageArea(const Cell2D & srcBR, const Cell2D & srcTL, int radius,
                 const int ind = r * mCols + lCol;
 
                 if(mCells[ind].objTop != nullptr && !mCells[ind].objTop->IsDestroyed())
-                    mCells[ind].objTop->Hit(damage, NO_FACTION, fatal);
+                    mCells[ind].objTop->Hit(damage, nullptr, fatal);
 
                 if(mCells[ind].objBottom != nullptr && !mCells[ind].objBottom->IsDestroyed())
-                    mCells[ind].objBottom->Hit(damage, NO_FACTION, fatal);
+                    mCells[ind].objBottom->Hit(damage, nullptr, fatal);
             }
         }
 
@@ -1856,10 +1865,10 @@ void GameMap::DamageArea(const Cell2D & srcBR, const Cell2D & srcTL, int radius,
                 const int ind = r * mCols + rCol;
 
                 if(mCells[ind].objTop != nullptr && !mCells[ind].objTop->IsDestroyed())
-                    mCells[ind].objTop->Hit(damage, NO_FACTION, fatal);
+                    mCells[ind].objTop->Hit(damage, nullptr, fatal);
 
                 if(mCells[ind].objBottom != nullptr && !mCells[ind].objBottom->IsDestroyed())
-                    mCells[ind].objBottom->Hit(damage, NO_FACTION, fatal);
+                    mCells[ind].objBottom->Hit(damage, nullptr, fatal);
             }
         }
     }

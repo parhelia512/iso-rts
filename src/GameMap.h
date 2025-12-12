@@ -102,7 +102,7 @@ public:
     bool RemoveAndDestroyObject(GameObject * obj);
 
     // player stats
-    void RegisterEnemyKill(PlayerFaction killer);
+    void RegisterEnemyKill(GameObject * killer);
     void RegisterCasualty(PlayerFaction killed);
     unsigned int GetEnemiesKilled(PlayerFaction killer) const;
     unsigned int GetCasualties(PlayerFaction faction) const;
@@ -397,7 +397,6 @@ inline void GameMap::SetCellChanging(unsigned int r, unsigned int c, bool changi
         mCells[r * mCols + c].changing = changing;
 }
 
-inline void GameMap::RegisterEnemyKill(PlayerFaction killer) { ++mEnemiesKilled[killer]; }
 inline void GameMap::RegisterCasualty(PlayerFaction killed) { ++mCasualties[killed]; }
 inline unsigned int GameMap::GetEnemiesKilled(PlayerFaction killer) const { return mEnemiesKilled.at(killer); }
 inline unsigned int GameMap::GetCasualties(PlayerFaction faction) const { return mCasualties.at(faction); }

@@ -221,7 +221,8 @@ public:
 
     void SetAttackMode(AttackMode am);
 
-    void Hit(float damage, PlayerFaction attacker, bool fatal);
+    void Hit(float damage, GameObject * attacker, bool fatal);
+    void MissHit();
     void SelfDestroy();
 
     GameObjectActionType GetActiveAction() const;

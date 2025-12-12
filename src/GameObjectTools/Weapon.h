@@ -32,6 +32,9 @@ public:
     bool SetTarget(GameObject * obj);
     bool IsTargetInRange(const GameObject * obj) const;
 
+    float GetHitProbability(const GameObject * target) const;
+    float GetFatalHitProbability(const GameObject * target) const;
+
     unsigned int GetBurstShots() const;
     unsigned int GetBurstToShoot() const;
     float GetBurstDelay() const;

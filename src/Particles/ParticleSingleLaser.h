@@ -36,8 +36,7 @@ private:
 private:
     const GameMap * mGameMap = nullptr;
     GameObject * mTarget = nullptr;
-
-    PlayerFaction mShooter;
+    GameObject * mShooter = nullptr;
 
     float mPosXf = 0.f;
     float mPosYf = 0.f;
@@ -53,6 +52,8 @@ private:
 
     bool mDoneX = false;
     bool mDoneY = false;
+
+    bool mFatal = false;
 };
 
 inline float ParticleSingleLaser::GetXf() const { return mPosXf; }

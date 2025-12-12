@@ -33,13 +33,24 @@ void ParticleHitPoints::SetData(const DataParticleHitPoints & data)
     delete mTxt;
 
     // TEXT
-    const unsigned int colors[] = { 0xeff0f5ff, 0xff8a80ff };
     const int fontSize = 24;
     auto fm = graphic::FontManager::Instance();
     graphic::Font * font = fm->GetFont("Lato-Bold.ttf", fontSize, graphic::Font::NORMAL);
 
-    mTxt = new graphic::Text(std::to_string(data.value).c_str(), font);
-    mTxt->SetColor(colors[data.fatal]);
+    // miss
+    if(data.miss)
+    {
+        mTxt = new graphic::Text("MISS", font);
+        mTxt->SetColor(0xefef90ff);
+    }
+    // hit
+    else
+    {
+        const unsigned int colors[] = { 0xeff0f5ff, 0xff8a80ff };
+
+        mTxt = new graphic::Text(std::to_string(data.value).c_str(), font);
+        mTxt->SetColor(colors[data.fatal]);
+    }
 
     SetStart(data.x0, data.y0);
 }
