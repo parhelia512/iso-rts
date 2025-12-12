@@ -1,5 +1,6 @@
 #include "Widgets/DialogNewMiniUnitsSquad.h"
 
+#include "GameData.h"
 #include "Player.h"
 #include "GameObjects/GameObject.h"
 #include "GameObjects/ObjectsDataRegistry.h"
@@ -81,11 +82,6 @@ DialogNewMiniUnitsSquad::DialogNewMiniUnitsSquad(GameObject * spawner, Player * 
     const int btnY = 510;
     mBtnBuild = new ButtonDialogAction("SPAWN", "S", core::KeyboardEvent::KEY_S, this);
     mBtnBuild->SetPosition(btnX, btnY);
-
-    mBtnBuild->AddOnClickFunction([this]
-    {
-
-    });
 
     UpdateData();
 }
@@ -350,6 +346,8 @@ void DialogNewMiniUnitsSquad::CreatePanelConfig()
         label->SetText(std::to_string(val).c_str());
 
         UpdateTotalCosts();
+
+        UpdatePreview();
     });
 
     x = x0;
@@ -531,7 +529,7 @@ void DialogNewMiniUnitsSquad::UpdateTotalCosts()
                           canSpend[OBJ_COST_DIAMONDS] && canSpend[OBJ_COST_BLOBS]);
 }
 
-void DialogNewMiniUnitsSquad::UpdateData()
+void DialogNewMiniUnitsSquad::UpdatePreview()
 {
     using namespace sgl;
 
@@ -540,13 +538,25 @@ void DialogNewMiniUnitsSquad::UpdateData()
 
     auto tm = graphic::TextureManager::Instance();
 
-    // PREVIEW
-    auto tex = tm->GetSprite(data.GetIconTexFile(), data.GetIconTexId(mPlayer->GetFaction()));
+    const PlayerFaction faction = mPlayer->GetFaction();
+    const unsigned int texInd0 = data.GetIconTexId(faction);
+    const unsigned int texInd = texInd0 + NUM_MUNIT_SPRITES_PER_SQUAD * (GetNumElements() - 1);
+
+    auto tex = tm->GetSprite(data.GetIconTexFile(), texInd);
     mImgPreview->SetTexture(tex);
 
     const int previewX = topPanelX0 + (panelPreviewW - mImgPreview->GetWidth()) / 2;
     const int previewY = topPanelY0 + (panelPreviewH - mImgPreview->GetHeight()) / 2;
     mImgPreview->SetPosition(previewX, previewY);
+}
+
+void DialogNewMiniUnitsSquad::UpdateData()
+{
+    const GameObjectTypeId typeToBuild = GetTypeToBuild();
+    const ObjectData & data = mDataReg->GetObjectData(typeToBuild);
+
+    // PREVIEW
+    UpdatePreview();
 
     // DESCRIPTION
     mDescription->SetText(GameObject::DESCRIPTIONS.at(typeToBuild).c_str());

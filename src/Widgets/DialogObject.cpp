@@ -1,7 +1,8 @@
 #include "Widgets/DialogObject.h"
 
 #include "Game.h"
-#include "GameObjects/GameObject.h"
+#include "GameData.h"
+#include "GameObjects/MiniUnit.h"
 #include "GameObjects/ObjectsDataRegistry.h"
 #include "Widgets/GameUIData.h"
 #include "Widgets/ObjectVisualAttribute.h"
@@ -328,7 +329,18 @@ void DialogObject::SetObject(GameObject * obj)
 
     // IMAGE
     const ObjectData & data = mObjDataReg->GetObjectData(type);
-    tex = tm->GetSprite(data.GetIconTexFile(), data.GetIconTexId(faction));
+
+    // MiniUnits are a special case as preview is based on num of elements
+    if(data.GetCategory() == GameObject::CAT_MINI_UNIT)
+    {
+        const auto mu = static_cast<MiniUnit *>(obj);
+        const unsigned int texInd0 = data.GetIconTexId(faction);
+        const unsigned int texInd = texInd0 + NUM_MUNIT_SPRITES_PER_SQUAD * (mu->GetNumElements() - 1);
+
+        tex = tm->GetSprite(data.GetIconTexFile(), texInd);
+    }
+    else
+        tex = tm->GetSprite(data.GetIconTexFile(), data.GetIconTexId(faction));
 
     mImg->SetTexture(tex);
 

@@ -104,7 +104,7 @@ void ObjectsDataRegistry::InitObjectData()
         ObjectData({ {OBJ_ATT_ENERGY, 4}, {OBJ_ATT_VIEW_RANGE, 5}, {OBJ_ATT_REGENERATION, 3},
                      {OBJ_ATT_RESISTANCE, 3}, {OBJ_ATT_SHIELD, 2}, {OBJ_ATT_SPEED, 8},
                      {OBJ_ATT_HEALTH, 5} }, { 20, 20, 0, 0 },
-                   { SID_MUNIT_01_5X_F1, SID_MUNIT_01_5X_F2, SID_MUNIT_01_5X_F3 }, SpriteFileMiniUnits,
+                   { SID_MUNIT_01_1X_F1, SID_MUNIT_01_1X_F2, SID_MUNIT_01_1X_F3 }, SpriteFileMiniUnits,
                    GameObject::TYPE_MINI_UNIT1, GameObject::CAT_MINI_UNIT,
                    OCMU_SOLDIER, OCAT_MINI_UNIT, WeaponData::TYPE_NULL, 1, 1));
 
@@ -112,7 +112,7 @@ void ObjectsDataRegistry::InitObjectData()
         ObjectData({ {OBJ_ATT_ENERGY, 2}, {OBJ_ATT_VIEW_RANGE, 6}, {OBJ_ATT_REGENERATION, 4},
                      {OBJ_ATT_RESISTANCE, 2}, {OBJ_ATT_SHIELD, 2},  {OBJ_ATT_SPEED, 9},
                      {OBJ_ATT_HEALTH, 4} }, { 15, 15, 0, 0 },
-                   { SID_MUNIT_02_5X_F1, SID_MUNIT_02_5X_F2, SID_MUNIT_02_5X_F3 }, SpriteFileMiniUnits,
+                   { SID_MUNIT_02_1X_F1, SID_MUNIT_02_1X_F2, SID_MUNIT_02_1X_F3 }, SpriteFileMiniUnits,
                    GameObject::TYPE_MINI_UNIT2, GameObject::CAT_MINI_UNIT,
                    OCMU_SOLDIER, OCAT_MINI_UNIT, WeaponData::TYPE_LASER2, 1, 1));
 

@@ -51,6 +51,7 @@ private:
     void ChangeIndex(int delta);
 
     void UpdateTotalCosts();
+    void UpdatePreview();
     void UpdateData();
 
     void HandlePositionChanged() override;
