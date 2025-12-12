@@ -26,6 +26,9 @@ private:
     void SetImage();
 
     void ExplodeNearEnemy();
+    void FindTarget();
+
+    void PrepareShoot();
 
 private:
     int mElements;

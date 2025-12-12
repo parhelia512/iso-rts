@@ -4,13 +4,19 @@
 #include "GameData.h"
 #include "GameMap.h"
 #include "IsoObject.h"
+#include "GameObjectTools/Weapon.h"
 
+#include <sgl/core/Point.h>
 #include <sgl/graphic/Texture.h>
 #include <sgl/graphic/TextureManager.h>
+#include <sgl/utilities/UniformDistribution.h>
 
 namespace
 {
     const float maxSingleHealthValue = 50.f;
+    const float maxSingleEnergyValue = 200.f;
+
+    const int MAX_ELEMENTS = 5;
 }
 
 namespace game
@@ -29,14 +35,16 @@ MiniUnit::MiniUnit(const ObjectData & data, int elements)
     const float maxHealthValue = maxSingleHealthValue * mElements;
     UpdateMaxHealth(maxHealthValue);
 
+    // energy
+    const float maxEnergy = maxSingleEnergyValue * mElements;
+    UpdateMaxEnergy(maxEnergy);
+
     // INIT GRAPHICS
     SetImage();
 }
 
 void MiniUnit::SetNumElements(int num)
 {
-    const int MAX_ELEMENTS = 5;
-
     // cap elements
     if(num > MAX_ELEMENTS)
         num = MAX_ELEMENTS;
@@ -51,22 +59,40 @@ void MiniUnit::SetNumElements(int num)
     const float maxHealthValue = maxSingleHealthValue * mElements;
     UpdateMaxHealth(maxHealthValue);
 
+    // energy
+    const float maxEnergy = maxSingleEnergyValue * mElements;
+    UpdateMaxEnergy(maxEnergy);
+
     UpdateGraphics();
 }
 
 void MiniUnit::Update(float delta)
 {
-    // nothing to do until a target is reached
-    if(!mTargetReached)
-        return ;
+    if(mTargetReached)
+    {
+        const GameObjectTypeId type = GetObjectType();
 
-    const GameObjectTypeId type = GetObjectType();
+        if(type == TYPE_MINI_UNIT1)
+            ExplodeNearEnemy();
+        else if(mWeapon != nullptr)
+            FindTarget();
 
-    if(type == TYPE_MINI_UNIT1)
-        ExplodeNearEnemy();
+        // reset flag
+        mTargetReached = false;
+    }
 
-    // reset flag
-    mTargetReached = false;
+    // ATTACKING OTHER OBJECTS
+    if(mWeapon != nullptr)
+    {
+        if(mWeapon->HasTarget())
+        {
+            if(!mWeapon->Update(delta))
+                return ;
+
+            if(mWeapon->IsReadyToShoot())
+                PrepareShoot();
+        }
+    }
 }
 
 void MiniUnit::UpdateGraphics()
@@ -138,6 +164,110 @@ void MiniUnit::ExplodeNearEnemy()
             }
         }
     }
+}
+
+void MiniUnit::FindTarget()
+{
+    auto gm = GetGameMap();
+
+    const int mapRows = gm->GetNumRows();
+    const int mapCols = gm->GetNumCols();
+
+    const std::vector<GameMapCell> & cells = gm->GetCells();
+
+    const int cr = GetRow0();
+    const int cc = GetCol0();
+
+    const int rad = mWeapon->GetRange();
+    const int r0 = cr >= rad ? cr - rad : 0;
+    const int r1 = cr + rad < mapRows ? cr + rad + 1 : mapRows;
+    const int c0 = cc >= rad ? cc - rad : 0;
+    const int c1 = cc + rad < mapCols ? cc + rad + 1 : mapCols;
+
+    const PlayerFaction ownFaction = GetFaction();
+
+    GameObject * target = nullptr;
+    int minDist = mapRows + mapCols;
+
+    for(int r = r0; r < r1; ++r)
+    {
+        const int ind0 = r * mapCols;
+
+        for(int c = c0; c < c1; ++c)
+        {
+            const int ind = ind0 + c;
+            const GameMapCell & cell = cells[ind];
+
+            // enemy found -> boom!
+            if((cell.objTop != nullptr && cell.objTop->GetFaction() != ownFaction &&
+                 cell.objTop->GetFaction() != NO_FACTION) ||
+                (cell.objBottom != nullptr && cell.objBottom->GetFaction() != ownFaction &&
+                 cell.objBottom->GetFaction() != NO_FACTION))
+            {
+                const int dist = std::abs(cr - r) + std::abs(cc - c);
+
+                if(dist < minDist)
+                {
+                    minDist = dist;
+                    target = cell.objTop != nullptr ? cell.objTop : cell.objBottom;
+                }
+            }
+        }
+    }
+
+    if(target != nullptr)
+        mWeapon->SetTarget(target);
+}
+
+void MiniUnit::PrepareShoot()
+{
+    using namespace sgl;
+
+    const IsoObject * isoObj = GetIsoObject();
+
+    core::Pointd2D delta;
+
+    if(1 == mElements)
+        delta = {48, 9};
+    else
+    {
+        std::vector<core::Pointd2D> deltas;
+
+        if(2 == mElements)
+        {
+            deltas.emplace_back(24, 9);
+            deltas.emplace_back(72, 9);
+        }
+        else if(3 == mElements)
+        {
+            deltas.emplace_back(16, 15);
+            deltas.emplace_back(48, 15);
+            deltas.emplace_back(80, 15);
+        }
+        else if(4 == mElements)
+        {
+            deltas.emplace_back(48, 0);
+            deltas.emplace_back(16, 15);
+            deltas.emplace_back(80, 15);
+            deltas.emplace_back(48, 30);
+        }
+        else
+        {
+            deltas.emplace_back(48, 0);
+            deltas.emplace_back(16, 15);
+            deltas.emplace_back(48, 15);
+            deltas.emplace_back(80, 15);
+            deltas.emplace_back(48, 30);
+        }
+
+        utilities::UniformDistribution ud(0, deltas.size() - 1);
+        delta = deltas[ud.GetNextValue()];
+    }
+
+    const float x0 = isoObj->GetX() + delta.x;
+    const float y0 = isoObj->GetY() + delta.y;
+
+    mWeapon->Shoot(x0, y0);
 }
 
 } // namespace game
