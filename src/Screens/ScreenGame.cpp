@@ -1010,7 +1010,10 @@ void ScreenGame::OnWindowExposed(sgl::graphic::WindowEvent &)
 
 void ScreenGame::OnWindowHidden(sgl::graphic::WindowEvent &)
 {
-    mHUD->ShowDialogExit();
+    mCamController->HandleMouseLeftWindow();
+
+    if(!mHUD->IsShowingDialog())
+        mHUD->ShowDialogExit();
 }
 
 void ScreenGame::OnWindowMouseEntered(sgl::graphic::WindowEvent & event)
@@ -1020,6 +1023,9 @@ void ScreenGame::OnWindowMouseEntered(sgl::graphic::WindowEvent & event)
 void ScreenGame::OnWindowMouseLeft(sgl::graphic::WindowEvent & event)
 {
     mCamController->HandleMouseLeftWindow();
+
+    if(!mHUD->IsShowingDialog())
+        mHUD->ShowDialogExit();
 }
 
 void ScreenGame::OnMiniUnitsGroupsMoveFinished()

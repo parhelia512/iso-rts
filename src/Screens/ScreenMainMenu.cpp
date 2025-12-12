@@ -355,6 +355,8 @@ void ScreenMainMenu::CreateChangelog()
                      "- Fixed crash when selecting object after another selected one was destroyed.\n"
                      "- Fixed crash in Settings when no video mode is found.\n"
                      "- Fixed selecting unit with quick selection buttons while AI is playing.\n"
+                     "- Fixed exit dialog over other dialogs when leaving window.\n "
+                     "- Fixed exit dialog not showing when leaving window.\n"
                      );
     textFix->SetPosition(contX, contY);
     textFix->SetColor(colorContent);

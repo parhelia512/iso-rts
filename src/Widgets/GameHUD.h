@@ -50,6 +50,8 @@ public:
     GameHUD(ScreenGame * screen);
     ~GameHUD();
 
+    bool IsShowingDialog() const;
+
     void SetMiniMapEnabled(bool val);
     MiniMap * GetMinimap() const;
 
@@ -153,6 +155,8 @@ private:
 
     int mVisibleDialogs = 0;
 };
+
+inline bool GameHUD::IsShowingDialog() const { return mVisibleDialogs > 0; }
 
 inline MiniMap * GameHUD::GetMinimap() const { return mMiniMap; }
 
