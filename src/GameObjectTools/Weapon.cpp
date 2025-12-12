@@ -35,6 +35,8 @@ bool Weapon::SetTarget(GameObject * obj)
     mTarget = obj;
     mTimerBurst = 0.f;
 
+    mReadyToShoot = false;
+
     InitBurstShoot();
 
     return true;
@@ -73,15 +75,13 @@ void Weapon::Shoot(float x0, float y0)
     // single shot
     else
         mTarget = nullptr;
+
+    mReadyToShoot = false;
 }
 
 // returns TRUE when owner needs to shoot
 bool Weapon::Update(float delta)
 {
-    // no target
-    if(mTarget == nullptr)
-        return false;
-
     // target already destroyed
     if(!mGameMap->HasObject(mTarget))
     {
@@ -94,15 +94,15 @@ bool Weapon::Update(float delta)
         mTimerBurst -= delta;
 
         if(mTimerBurst > 0.f)
-            return false;
+            return true;
 
-        return true;
+        mReadyToShoot = true;
     }
     // single shot
     else
-        return true;
+        mReadyToShoot = true;
 
-    return false;
+    return true;
 }
 
 } // namespace game

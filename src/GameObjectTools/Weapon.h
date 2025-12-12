@@ -28,6 +28,7 @@ public:
     void SetAttackMode(AttackMode am);
 
     void ClearTarget();
+    bool HasTarget() const;
     bool SetTarget(GameObject * obj);
     bool IsTargetInRange(const GameObject * obj) const;
 
@@ -40,6 +41,7 @@ public:
 
     const std::unordered_map<ObjAttId, int> & GetAttributes() const;
 
+    bool IsReadyToShoot() const;
     void Shoot(float x0, float y0);
 
     bool Update(float delta);
@@ -72,12 +74,15 @@ private:
     int mBurstShots = 0;
     int mBurstToShoot = 0;
     float mBurstDelay = 0.f;
+
+    bool mReadyToShoot = false;
 };
 
 inline AttackMode Weapon::GetAttackMode() const { return mAttackMode; }
 inline void Weapon::SetAttackMode(AttackMode am) { mAttackMode = am; }
 
 inline void Weapon::ClearTarget() { mTarget = nullptr; }
+inline bool Weapon::HasTarget() const { return mTarget != nullptr; }
 
 inline unsigned int Weapon::GetBurstShots() const { return mBurstShots; }
 inline unsigned int Weapon::GetBurstToShoot() const { return mBurstToShoot; }
@@ -89,6 +94,8 @@ inline void Weapon::DecreaseBurstShots()
 }
 
 inline int Weapon::GetRange() const { return mRange; }
+
+inline bool Weapon::IsReadyToShoot() const { return mReadyToShoot; }
 
 inline const std::unordered_map<ObjAttId, int> & Weapon::GetAttributes() const { return mAttributes; }
 
