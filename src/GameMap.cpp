@@ -2302,6 +2302,65 @@ int GameMap::ApproxDistance(const GameObject * obj1, const GameObject * obj2) co
     return std::abs(R2 - R1) + std::abs(C2 - C1);
 }
 
+int GameMap::Distance(const GameObject * obj1, const GameObject * obj2) const
+{
+    int distR = mRows;
+    int distC = mCols;
+
+    const int obj1RowBR = obj1->GetRow0();
+    const int obj1ColBR = obj1->GetCol0();
+    const int obj1RowTL = obj1->GetRow1();
+    const int obj1ColTL = obj1->GetCol1();
+
+    const int obj2RowBR = obj2->GetRow0();
+    const int obj2ColBR = obj2->GetCol0();
+    const int obj2RowTL = obj2->GetRow1();
+    const int obj2ColTL = obj2->GetCol1();
+
+    // BR -> BR
+    const int distR1 = std::abs(obj1RowBR - obj2RowBR);
+    const int distC1 = std::abs(obj1ColBR - obj2ColBR);
+
+    if(distR1 < distR)
+        distR = distR1;
+
+    if(distC1 < distC)
+        distC = distC1;
+
+
+    // BR -> TL
+    const int distR2 = std::abs(obj1RowBR - obj2RowTL);
+    const int distC2 = std::abs(obj1ColBR - obj2ColTL);
+
+    if(distR2 < distR)
+        distR = distR2;
+
+    if(distC2 < distC)
+        distC = distC2;
+
+    // TL -> BR
+    const int distR3 = std::abs(obj1RowTL - obj2RowBR);
+    const int distC3 = std::abs(obj1ColTL - obj2ColBR);
+
+    if(distR3 < distR)
+        distR = distR3;
+
+    if(distC3 < distC)
+        distC = distC3;
+
+    // TL -> TL
+    const int distR4 = std::abs(obj1RowTL - obj2RowTL);
+    const int distC4 = std::abs(obj1ColTL - obj2ColTL);
+
+    if(distR4 < distR)
+        distR = distR4;
+
+    if(distC4 < distC)
+        distC = distC4;
+
+    return distR + distC;
+}
+
 bool GameMap::FindClosestCellConnectedToObject(const GameObject * obj, const Cell2D start, Cell2D & end)
 {
     end.row = -1;
