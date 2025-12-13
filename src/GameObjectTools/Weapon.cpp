@@ -61,22 +61,46 @@ bool Weapon::IsTargetInRange(const GameObject * obj) const
 
 float Weapon::GetHitProbability(const GameObject * target) const
 {
-    // TODO
-    const int ownerRowBR = mOwner->GetRow0();
-    const int ownerColBR = mOwner->GetCol0();
-    const int ownerRowTL = mOwner->GetRow1();
-    const int ownerColTL = mOwner->GetCol1();
+    const int maxDist = mRange * 2;
+    const int dist = mGameMap->Distance(mOwner, target);
+    const int targetSize = target->GetRows() * target->GetCols();
 
-    const int targetRowBR = target->GetRow0();
-    const int targetColBR = target->GetCol0();
-    const int targetRowTL = target->GetRow1();
-    const int targetColTL = target->GetCol1();
+    const float maxProb = 100.f;
+    // base probability is higher when closer to target up to 100% if next to it
+    const float baseProb = (maxDist - dist + 1) * maxProb / static_cast<float>(maxDist);
+    // fixed probability is part of base that's at least 50% and higher as target gets bigger
+    const float fixedW = 0.5f + (0.5f - (0.5f / static_cast<float>(targetSize)));
+    const float fixedProb = baseProb * fixedW;
 
-    return 0.5f;
+    const float variableProb = (baseProb - fixedProb) * mAttributes.at(OBJ_ATT_ATTACK_ACCURACY) / MAX_STAV_VAL;
+    const float finalProb = fixedProb + variableProb;
+
+    // bonus/malus based on attack mode
+    float bonusProb = 0.f;
+
+    if(mAttackMode == ATT_BURST_SHOT)
+    {
+        const float bonus = -0.1;
+        bonusProb = finalProb * bonus;
+    }
+    else if(mAttackMode == ATT_AIMED_SHOT)
+    {
+        const float missProb = maxProb - finalProb;
+        const float bonus = 0.2;
+        bonusProb = missProb * bonus;
+    }
+    else
+    {
+        const float bonus = -0.05;
+        bonusProb = finalProb * bonus;
+    }
+
+    return finalProb + bonusProb;
 }
 
 float Weapon::GetFatalHitProbability(const GameObject * target) const
 {
+
     // TODO
     return 0.01f;
 }

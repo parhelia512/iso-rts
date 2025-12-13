@@ -71,9 +71,10 @@ void Laser::OnShoot(float x0, float y0)
     }
 
     // decide if hit or miss
+    const float maxProb = 100.f;
     const float probHit = GetHitProbability(target);
 
-    auto dist = sgl::utilities::UniformRealDistribution(0.f, 1.f);
+    auto dist = sgl::utilities::UniformRealDistribution(0.f, maxProb);
     const float valHit = dist.GetNextValue();
 
     // 0 damage is miss
