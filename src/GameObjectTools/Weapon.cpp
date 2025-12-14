@@ -76,33 +76,40 @@ float Weapon::GetHitProbability(const GameObject * target) const
     const float finalProb = fixedProb + variableProb;
 
     // bonus/malus based on attack mode
-    float bonusProb = 0.f;
-
-    if(mAttackMode == ATT_BURST_SHOT)
-    {
-        const float bonus = -0.1;
-        bonusProb = finalProb * bonus;
-    }
-    else if(mAttackMode == ATT_AIMED_SHOT)
-    {
-        const float missProb = maxProb - finalProb;
-        const float bonus = 0.2;
-        bonusProb = missProb * bonus;
-    }
-    else
-    {
-        const float bonus = -0.05;
-        bonusProb = finalProb * bonus;
-    }
+    float bonusProb = GetBonusOnAttackMode(finalProb);
 
     return finalProb + bonusProb;
 }
 
 float Weapon::GetFatalHitProbability(const GameObject * target) const
 {
+    const float maxMult = 1.f;
 
-    // TODO
-    return 0.01f;
+    // distance (higher -> lower chance)
+    const float weightDistance = 0.33f;
+    const int maxDist = mRange * 2;
+    const int dist = mGameMap->Distance(mOwner, target);
+    const float distMult = maxMult - (dist / static_cast<float>(maxDist));
+
+    // target's health (higher -> lower chance)
+    const float weightHealth = 0.33f;
+    const float healthMult = maxMult - (target->GetHealth() / target->GetMaxHealth());
+
+    // accuracy (higher -> higher chance)
+    const float weightAccuracy = 0.34f;
+    const float accuracyMult = mAttributes.at(OBJ_ATT_ATTACK_ACCURACY) / MAX_STAV_VAL;
+
+    // probability
+    const float maxProb = 3.f;
+
+    const float finalProb = (maxProb * weightDistance * distMult) +
+                            (maxProb * weightHealth * healthMult) +
+                            (maxProb * weightAccuracy * accuracyMult);
+
+    // bonus/malus based on attack mode
+    float bonusProb = GetBonusOnAttackMode(finalProb);
+
+    return finalProb + bonusProb;
 }
 
 void Weapon::Shoot(float x0, float y0)
@@ -149,6 +156,29 @@ bool Weapon::Update(float delta)
         mReadyToShoot = true;
 
     return true;
+}
+
+float Weapon::GetBonusOnAttackMode(float prob) const
+{
+    if(mAttackMode == ATT_QUICK_SHOT)
+    {
+        const float bonus = -0.05;
+        return prob * bonus;
+    }
+    else if(mAttackMode == ATT_BURST_SHOT)
+    {
+        const float bonus = -0.1;
+        return prob * bonus;
+    }
+    else if(mAttackMode == ATT_AIMED_SHOT)
+    {
+        const float maxProb = 100.f;
+        const float missProb = maxProb - prob;
+        const float bonus = 0.2;
+        return missProb * bonus;
+    }
+    else
+        return 0.f;
 }
 
 } // namespace game

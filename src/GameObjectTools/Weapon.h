@@ -58,6 +58,8 @@ protected:
 private:
     void InitBurstShoot();
 
+    float GetBonusOnAttackMode(float prob) const;
+
     virtual void OnShoot(float x0, float y0) = 0;
 
 private:
