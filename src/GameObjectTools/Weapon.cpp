@@ -59,7 +59,7 @@ bool Weapon::IsTargetInRange(const GameObject * obj) const
     return false;
 }
 
-float Weapon::GetHitProbability(const GameObject * target) const
+float Weapon::GetProbabilityHit(const GameObject * target) const
 {
     const int maxDist = mRange * 2;
     const int dist = mGameMap->Distance(mOwner, target);
@@ -81,7 +81,7 @@ float Weapon::GetHitProbability(const GameObject * target) const
     return finalProb + bonusProb;
 }
 
-float Weapon::GetFatalHitProbability(const GameObject * target) const
+float Weapon::GetProbabilityFatalHit(const GameObject * target) const
 {
     const float maxMult = 1.f;
 
@@ -89,25 +89,23 @@ float Weapon::GetFatalHitProbability(const GameObject * target) const
     const float weightDistance = 0.33f;
     const int maxDist = mRange * 2;
     const int dist = mGameMap->Distance(mOwner, target);
-    const float distMult = maxMult - (dist / static_cast<float>(maxDist));
+    const float multDist = maxMult - (dist / static_cast<float>(maxDist));
 
     // target's health (higher -> lower chance)
     const float weightHealth = 0.33f;
-    const float healthMult = maxMult - (target->GetHealth() / target->GetMaxHealth());
+    const float multHealth = maxMult - (target->GetHealth() / target->GetMaxHealth());
 
     // accuracy (higher -> higher chance)
     const float weightAccuracy = 0.34f;
-    const float accuracyMult = mAttributes.at(OBJ_ATT_ATTACK_ACCURACY) / MAX_STAV_VAL;
+    const float multAccuracy = mAttributes.at(OBJ_ATT_ATTACK_ACCURACY) / MAX_STAV_VAL;
 
     // probability
-    const float maxProb = 3.f;
-
-    const float finalProb = (maxProb * weightDistance * distMult) +
-                            (maxProb * weightHealth * healthMult) +
-                            (maxProb * weightAccuracy * accuracyMult);
+    const float finalProb = (mMaxProbabilityFatal * weightDistance * multDist) +
+                            (mMaxProbabilityFatal * weightHealth * multHealth) +
+                            (mMaxProbabilityFatal * weightAccuracy * multAccuracy);
 
     // bonus/malus based on attack mode
-    float bonusProb = GetBonusOnAttackMode(finalProb);
+    const float bonusProb = GetBonusOnAttackMode(finalProb);
 
     return finalProb + bonusProb;
 }

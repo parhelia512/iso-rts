@@ -32,8 +32,10 @@ public:
     bool SetTarget(GameObject * obj);
     bool IsTargetInRange(const GameObject * obj) const;
 
-    float GetHitProbability(const GameObject * target) const;
-    float GetFatalHitProbability(const GameObject * target) const;
+    float GetProbabilityHit(const GameObject * target) const;
+    float GetProbabilityFatalHit(const GameObject * target) const;
+    float GetMaxProbabilityFatalHit() const;
+    void SetMaxProbabilityFatalHit(float val);
 
     unsigned int GetBurstShots() const;
     unsigned int GetBurstToShoot() const;
@@ -79,6 +81,7 @@ private:
     int mBurstShots = 0;
     int mBurstToShoot = 0;
     float mBurstDelay = 0.f;
+    float mMaxProbabilityFatal = 3.f;
 
     bool mReadyToShoot = false;
 };
@@ -88,6 +91,9 @@ inline void Weapon::SetAttackMode(AttackMode am) { mAttackMode = am; }
 
 inline void Weapon::ClearTarget() { mTarget = nullptr; }
 inline bool Weapon::HasTarget() const { return mTarget != nullptr; }
+
+inline float Weapon::GetMaxProbabilityFatalHit() const { return mMaxProbabilityFatal; }
+inline void Weapon::SetMaxProbabilityFatalHit(float val) { mMaxProbabilityFatal = val; }
 
 inline unsigned int Weapon::GetBurstShots() const { return mBurstShots; }
 inline unsigned int Weapon::GetBurstToShoot() const { return mBurstToShoot; }

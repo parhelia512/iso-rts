@@ -15,6 +15,8 @@
 
 #include <cmath>
 
+#include <iostream>
+
 namespace game
 {
 
@@ -72,7 +74,7 @@ void Laser::OnShoot(float x0, float y0)
 
     // decide if hit or miss
     const float maxProb = 100.f;
-    const float probHit = GetHitProbability(target);
+    const float probHit = GetProbabilityHit(target);
 
     auto dist = sgl::utilities::UniformRealDistribution(0.f, maxProb);
     const float valHit = dist.GetNextValue();
@@ -81,6 +83,8 @@ void Laser::OnShoot(float x0, float y0)
     float damage = 0.f;
     bool fatal = false;
 
+    std::cout << "Laser::OnShoot - valHit: " << valHit << " / probHit: " << probHit << std::endl;
+
     // hit
     if(valHit < probHit)
     {
@@ -88,10 +92,12 @@ void Laser::OnShoot(float x0, float y0)
         damage = maxDamage * owner->GetAttribute(OBJ_ATT_ATTACK_POWER) / MAX_STAV_VAL;
 
         // check for fatal hit
-        const float probFatal = GetFatalHitProbability(target);
+        const float probFatal = GetProbabilityFatalHit(target);
         const float valFatal = dist.GetNextValue();
 
         fatal = valFatal < probFatal;
+
+        std::cout << "Laser::OnShoot - valFatal: " << valFatal << " / probFatal: " << probFatal << std::endl;
     }
 
     const DataParticleSingleLaser pd =
