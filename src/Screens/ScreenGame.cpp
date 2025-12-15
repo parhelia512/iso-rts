@@ -3482,13 +3482,27 @@ void ScreenGame::UpdateCurrentCell()
     // react to change of cell like if mouse was moved
     GameObject * sel = mLocalPlayer->GetSelectedObject();
 
-    if(sel != nullptr)
+    if(sel == nullptr)
+        return;
+
+    if(sel->GetObjectCategory() == GameObject::CAT_UNIT)
     {
-        if(sel->GetObjectCategory() == GameObject::CAT_UNIT)
-            ShowActiveUnitIndicators(static_cast<Unit *>(sel), cell);
-        else if(sel->GetObjectCategory() == GameObject::CAT_MINI_UNIT)
-            ShowActiveMiniUnitIndicators(static_cast<MiniUnit *>(sel), cell);
+        ShowActiveUnitIndicators(static_cast<Unit *>(sel), cell);
+
+        if(sel->GetActiveAction() == ATTACK)
+        {
+            const GameMapCell & gmCell = mGameMap->GetCell(cell.row, cell.col);
+            const GameObject * objTarget = gmCell.objTop != nullptr ? gmCell.objTop :
+                                           gmCell.objBottom;
+
+            if(objTarget != nullptr && objTarget->GetFaction() != sel->GetFaction())
+                mHUD->ShowPanelHit(sel, objTarget);
+            else
+                mHUD->HidePanelHit();
+        }
     }
+    else if(sel->GetObjectCategory() == GameObject::CAT_MINI_UNIT)
+        ShowActiveMiniUnitIndicators(static_cast<MiniUnit *>(sel), cell);
 }
 
 void ScreenGame::AddObjectToMinimap(const Cell2D & cell, GameObjectTypeId type, PlayerFaction f)

@@ -30,6 +30,7 @@
 #include "Widgets/DialogTrading.h"
 #include "Widgets/GameMapProgressBar.h"
 #include "Widgets/MiniMap.h"
+#include "Widgets/PanelHit.h"
 #include "Widgets/PanelObjectActions.h"
 #include "Widgets/PanelResources.h"
 #include "Widgets/PanelSelectedObject.h"
@@ -179,6 +180,10 @@ GameHUD::GameHUD(ScreenGame * screen)
     {
         HideDialogObject();
     });
+
+    // PANEL HIT
+    mPanelHit = new PanelHit;
+    mPanelHit->SetVisible(false);
 }
 
 GameHUD::~GameHUD()
@@ -290,6 +295,43 @@ void GameHUD::ShowPanelShotType()
 
     // position dialog
     PositionOptionsPanelOverObjectActions(mPanelShotType, PanelObjectActions::BTN_ATTACK);
+}
+
+void GameHUD::ShowPanelHit(const GameObject * attacker, const GameObject * target)
+{
+    using namespace sgl;
+
+    mPanelHit->SetVisible(true);
+    mPanelHit->ShowAttackerData(attacker, target);
+
+    // POSITION PANEL
+    const int rendW = graphic::Renderer::Instance()->GetWidth();
+    const int rendH = graphic::Renderer::Instance()->GetHeight();
+
+    auto camera = graphic::Camera::GetDefaultCamera();
+
+    const int panelW = mPanelHit->GetWidth();
+    const int panelH = mPanelHit->GetHeight();
+
+    const IsoObject * isoTarget = target->GetIsoObject();
+    const int isoX = isoTarget->GetX() - camera->GetX();
+    const int isoY = isoTarget->GetY() - camera->GetY();
+
+    int posX = isoX + isoTarget->GetWidth();
+    int posY = isoY + (isoTarget->GetHeight() - panelH) / 2;
+
+    if((posX + panelW) > rendW)
+        posX = isoX - panelW;
+
+    if(posY < 0)
+        posY = 0;
+
+    mPanelHit->SetPosition(posX, posY);
+}
+
+void GameHUD::HidePanelHit()
+{
+    mPanelHit->SetVisible(false);
 }
 
 void GameHUD::SetQuickUnitButtonChecked(GameObject * obj)

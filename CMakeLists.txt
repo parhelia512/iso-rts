@@ -380,14 +380,16 @@ add_executable(
     src/Widgets/ObjectActionButton.cpp
     src/Widgets/ObjectVisualAttribute.h
     src/Widgets/ObjectVisualAttribute.cpp
+    src/Widgets/PanelHit.h
+    src/Widgets/PanelHit.cpp
+    src/Widgets/PanelObjectActions.h
+    src/Widgets/PanelObjectActions.cpp
     src/Widgets/PanelPlanetActionConquer.h
     src/Widgets/PanelPlanetActionConquer.cpp
     src/Widgets/PanelPlanetActionConquerAI.h
     src/Widgets/PanelPlanetActionConquerAI.cpp
     src/Widgets/PanelPlanetActionExplore.h
     src/Widgets/PanelPlanetActionExplore.cpp
-    src/Widgets/PanelObjectActions.h
-    src/Widgets/PanelObjectActions.cpp
     src/Widgets/PanelPlanetActions.h
     src/Widgets/PanelPlanetActions.cpp
     src/Widgets/PanelPlanetInfo.h

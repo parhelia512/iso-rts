@@ -688,7 +688,7 @@ void ScreenInit::SetupTextures()
     // PANEL HIT
     mJobs.emplace_back([this, tm]
     {
-        tm->RegisterTexture(*mTexPackages[PACKAGE_IMGS_GAME], SpriteFilePanelHit);
+        tm->RegisterTexture(*mTexPackages[PACKAGE_IMGS_UI_GAME], SpriteFilePanelHit);
     });
 
     // MAP UI

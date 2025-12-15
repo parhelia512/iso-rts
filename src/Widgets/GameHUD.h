@@ -25,20 +25,22 @@ class DialogMissionGoals;
 class DialogNewElement;
 class DialogNewMiniUnitsSquad;
 class DialogObject;
-class PanelSelfDestruction;
 class DialogTrading;
 class GameMapProgressBar;
 class GameObject;
 class MiniMap;
 class MissionGoal;
+class PanelHit;
 class PanelObjectActions;
 class PanelResources;
 class PanelSelectedObject;
+class PanelSelfDestruction;
 class PanelShotType;
 class PanelTurnControl;
 class Player;
 class ScreenGame;
 class Temple;
+
 struct Cell2D;
 
 enum PlayerFaction : unsigned int;
@@ -63,6 +65,9 @@ public:
     void ShowPanelSelfDestruction();
     void HidePanelShotType();
     void ShowPanelShotType();
+
+    void ShowPanelHit(const GameObject * attacker, const GameObject * target);
+    void HidePanelHit();
 
     const sgl::sgui::ButtonsGroup * GetQuickUnitButtonsGroup() const;
     void SetQuickUnitButtonChecked(GameObject * obj);
@@ -127,6 +132,7 @@ private:
     void CenterWidget(sgl::sgui::Widget * w);
 
 private:
+    PanelHit * mPanelHit = nullptr;
     PanelResources * mPanelRes = nullptr;
     PanelSelfDestruction * mPanelSelfDestruct = nullptr;
     PanelShotType * mPanelShotType = nullptr;
