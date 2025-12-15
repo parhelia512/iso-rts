@@ -287,10 +287,16 @@ void GameHUD::ShowPanelShotType()
     sgl::sgui::Stage::Instance()->SetFocus();
 
     // change Attack Mode
-    mPanelShotType->SetFunctionOnToggle([selObj](unsigned int ind, bool checked)
+    mPanelShotType->SetFunctionOnToggle([this, selObj](unsigned int ind, bool checked)
     {
-        if(checked)
-            selObj->SetAttackMode(static_cast<AttackMode>(ind));
+        if(!checked)
+            return ;
+
+        selObj->SetAttackMode(static_cast<AttackMode>(ind));
+
+        // update panel hit if currently visible
+        if(mPanelHit->IsVisible())
+            mScreen->UpdatePanelHit(selObj);
     });
 
     // position dialog

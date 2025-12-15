@@ -2104,6 +2104,7 @@ bool ScreenGame::SetupUnitAttack(Unit * unit, GameObject * target, Player * play
     if(player->IsLocal())
     {
         mHUD->SetLocalActionsEnabled(false);
+        mHUD->HidePanelHit();
 
         ClearCellOverlays();
         HideOptionPanels();
@@ -3450,6 +3451,27 @@ void ScreenGame::ClearTempStructIndicator()
     }
 }
 
+void ScreenGame::UpdatePanelHit(const GameObject * attacker)
+{
+    if(attacker == nullptr)
+    {
+        mHUD->HidePanelHit();
+        return;
+    }
+
+    const GameMapCell & gmCell = mGameMap->GetCell(mCurrCell.row, mCurrCell.col);
+    const GameObject * objTarget = gmCell.objTop != nullptr ? gmCell.objTop :
+                                      gmCell.objBottom;
+
+    auto weapon = attacker->GetWeapon();
+
+    if(objTarget != nullptr && objTarget->GetFaction() != attacker->GetFaction() &&
+        weapon->IsTargetInRange(objTarget))
+        mHUD->ShowPanelHit(attacker, objTarget);
+    else
+        mHUD->HidePanelHit();
+}
+
 void ScreenGame::CenterCameraOverPlayerBase()
 {
     const Base * b = mLocalPlayer->GetBase();
@@ -3490,16 +3512,7 @@ void ScreenGame::UpdateCurrentCell()
         ShowActiveUnitIndicators(static_cast<Unit *>(sel), cell);
 
         if(sel->GetActiveAction() == ATTACK)
-        {
-            const GameMapCell & gmCell = mGameMap->GetCell(cell.row, cell.col);
-            const GameObject * objTarget = gmCell.objTop != nullptr ? gmCell.objTop :
-                                           gmCell.objBottom;
-
-            if(objTarget != nullptr && objTarget->GetFaction() != sel->GetFaction())
-                mHUD->ShowPanelHit(sel, objTarget);
-            else
-                mHUD->HidePanelHit();
-        }
+            UpdatePanelHit(sel);
     }
     else if(sel->GetObjectCategory() == GameObject::CAT_MINI_UNIT)
         ShowActiveMiniUnitIndicators(static_cast<MiniUnit *>(sel), cell);

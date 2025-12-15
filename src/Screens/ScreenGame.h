@@ -172,6 +172,8 @@ private:
     void ClearCellOverlays();
     void ClearTempStructIndicator();
 
+    void UpdatePanelHit(const GameObject * attacker);
+
     void CenterCameraOverPlayerBase();
 
     void UpdateCurrentCell();
