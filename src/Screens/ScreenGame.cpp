@@ -3461,12 +3461,11 @@ void ScreenGame::UpdatePanelHit(const GameObject * attacker)
 
     const GameMapCell & gmCell = mGameMap->GetCell(mCurrCell.row, mCurrCell.col);
     const GameObject * objTarget = gmCell.objTop != nullptr ? gmCell.objTop :
-                                      gmCell.objBottom;
+                                   gmCell.objBottom;
 
     auto weapon = attacker->GetWeapon();
 
-    if(objTarget != nullptr && objTarget->GetFaction() != attacker->GetFaction() &&
-        weapon->IsTargetInRange(objTarget))
+    if(objTarget != nullptr && weapon->IsTargetInRange(objTarget))
         mHUD->ShowPanelHit(attacker, objTarget);
     else
         mHUD->HidePanelHit();
