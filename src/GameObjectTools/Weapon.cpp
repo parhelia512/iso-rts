@@ -77,8 +77,18 @@ float Weapon::GetProbabilityHit(const GameObject * target) const
 
     // bonus/malus based on attack mode
     float bonusProb = GetBonusOnAttackMode(finalProb);
+    const float retProb = finalProb + bonusProb;
 
-    return finalProb + bonusProb;
+    // clamp
+    if(retProb < 0.f)
+    {
+        const float minProb = 1.f;
+        return minProb;
+    }
+    else if(retProb > maxProb)
+        return maxProb;
+    else
+        return retProb;
 }
 
 float Weapon::GetProbabilityFatalHit(const GameObject * target) const
@@ -106,8 +116,20 @@ float Weapon::GetProbabilityFatalHit(const GameObject * target) const
 
     // bonus/malus based on attack mode
     const float bonusProb = GetBonusOnAttackMode(finalProb);
+    const float retProb = finalProb + bonusProb;
 
-    return finalProb + bonusProb;
+    // clamp
+    const float maxProb = 100.f;
+
+    if(retProb < 0.f)
+    {
+        const float minProb = 0.1f;
+        return minProb;
+    }
+    else if(retProb > maxProb)
+        return maxProb;
+    else
+        return retProb;
 }
 
 void Weapon::Shoot(float x0, float y0)
@@ -170,10 +192,8 @@ float Weapon::GetBonusOnAttackMode(float prob) const
     }
     else if(mAttackMode == ATT_AIMED_SHOT)
     {
-        const float maxProb = 100.f;
-        const float missProb = maxProb - prob;
         const float bonus = 0.2;
-        return missProb * bonus;
+        return prob * bonus;
     }
     else
         return 0.f;
