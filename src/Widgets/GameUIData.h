@@ -332,12 +332,18 @@ extern const char SpriteFileGameUIShared[];
 
 enum SpriteIdGameUIShared : unsigned int
 {
-    // ICONS WHITE RESOURCES
-    ID_UIS_ICON_W_RES_MONEY,
-    ID_UIS_ICON_W_RES_ENERGY,
-    ID_UIS_ICON_W_RES_MATERIAL,
-    ID_UIS_ICON_W_RES_DIAMONDS,
-    ID_UIS_ICON_W_RES_BLOBS,
+    // ICONS WHITE RESOURCES 24x24
+    ID_UIS_ICON_W_RES_MONEY_24,
+    ID_UIS_ICON_W_RES_ENERGY_24,
+    ID_UIS_ICON_W_RES_MATERIAL_24,
+    ID_UIS_ICON_W_RES_DIAMONDS_24,
+    ID_UIS_ICON_W_RES_BLOBS_24,
+    // ICONS WHITE RESOURCES 16x16
+    ID_UIS_ICON_W_RES_MONEY_16,
+    ID_UIS_ICON_W_RES_ENERGY_16,
+    ID_UIS_ICON_W_RES_MATERIAL_16,
+    ID_UIS_ICON_W_RES_DIAMONDS_16,
+    ID_UIS_ICON_W_RES_BLOBS_16,
 };
 
 // FACTION SELECTION DIALOG
@@ -525,6 +531,9 @@ enum SpriteIdMainMenuButtons : unsigned int
 
     NUM_MAIN_MENU_SPRITES
 };
+
+// PANEL HIT
+extern const char SpriteFilePanelHit[];
 
 // MAP PANELS
 extern const char SpriteFilePanelMinimap[];

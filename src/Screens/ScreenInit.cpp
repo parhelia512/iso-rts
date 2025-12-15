@@ -546,12 +546,18 @@ void ScreenInit::SetupTextures()
     {
         std::vector<sgl::core::Rectd> rects
         {
-            // ICONS WHITE RESOURCES
+            // ICONS WHITE RESOURCES 24x24
             { 0, 0, 24, 24 },
             { 25, 0, 24, 24 },
             { 50, 0, 24, 24 },
             { 75, 0, 24, 24 },
             { 100, 0, 24, 24 },
+            // ICONS WHITE RESOURCES 16x16
+            { 125, 0, 16, 16 },
+            { 142, 0, 16, 16 },
+            { 159, 0, 16, 16 },
+            { 176, 0, 16, 16 },
+            { 193, 0, 16, 16 },
         };
 
         tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_UI_GAME], SpriteFileGameUIShared, rects);
@@ -677,6 +683,12 @@ void ScreenInit::SetupTextures()
         }
 
         tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_GAME], SpriteFileCells, rects);
+    });
+
+    // PANEL HIT
+    mJobs.emplace_back([this, tm]
+    {
+        tm->RegisterTexture(*mTexPackages[PACKAGE_IMGS_GAME], SpriteFilePanelHit);
     });
 
     // MAP UI
