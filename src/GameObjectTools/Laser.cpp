@@ -34,6 +34,22 @@ Laser::Laser(const WeaponData & data, GameObject * owner, GameMap * gm,
     mTex = tm->GetSprite(SpriteFileUnitsParticles, texInd);
 }
 
+int Laser::GetCostEnergy() const
+{
+    const int constSingleBurst = 5;
+
+    switch (GetAttackMode())
+    {
+        case ATT_QUICK_SHOT: return 10; break;
+
+        case ATT_AIMED_SHOT: return 20; break;
+
+        case ATT_BURST_SHOT:  return constSingleBurst * GetBurstShots(); break;
+
+        default: return 0; break;
+    }
+}
+
 void Laser::OnShoot(float x0, float y0)
 {
     GameObject * owner = GetOwner();

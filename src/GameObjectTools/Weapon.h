@@ -27,6 +27,8 @@ public:
     AttackMode GetAttackMode() const;
     void SetAttackMode(AttackMode am);
 
+    virtual int GetCostEnergy() const = 0;
+
     void ClearTarget();
     bool HasTarget() const;
     bool SetTarget(GameObject * obj);
@@ -40,7 +42,6 @@ public:
     unsigned int GetBurstShots() const;
     unsigned int GetBurstToShoot() const;
     float GetBurstDelay() const;
-    void DecreaseBurstShots();
 
     int GetRange() const;
 
@@ -98,11 +99,6 @@ inline void Weapon::SetMaxProbabilityFatalHit(float val) { mMaxProbabilityFatal 
 inline unsigned int Weapon::GetBurstShots() const { return mBurstShots; }
 inline unsigned int Weapon::GetBurstToShoot() const { return mBurstToShoot; }
 inline float Weapon::GetBurstDelay() const { return mBurstDelay; }
-inline void Weapon::DecreaseBurstShots()
-{
-    if(mBurstToShoot > 0)
-        --mBurstToShoot;
-}
 
 inline int Weapon::GetRange() const { return mRange; }
 
