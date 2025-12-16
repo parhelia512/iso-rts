@@ -525,7 +525,7 @@ enum SpriteIdMainMenuButtons : unsigned int
     // ICONS
     IND_MM_ICON_STEAM,
     IND_MM_ICON_DISCORD,
-    IND_MM_ICON_TWITTER,
+    IND_MM_ICON_BLUESKY,
     IND_MM_ICON_YOUTUBE,
     IND_MM_ICON_LINKEDIN,
 

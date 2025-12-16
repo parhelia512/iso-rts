@@ -131,15 +131,15 @@ ScreenMainMenu::ScreenMainMenu(Game * game)
         sys.OpenUrlInBrowser("https://www.youtube.com/c/vivaladev");
     });
 
-    // TWITTER
-    btnSocial = new ButtonMainMenuSocial(IND_MM_ICON_TWITTER, panelSocial);
+    // BLUESKY
+    btnSocial = new ButtonMainMenuSocial(IND_MM_ICON_BLUESKY, panelSocial);
     btnSocial->SetX(socialX);
     socialX += btnSocial->GetWidth() + socialMarginH;
 
     btnSocial->AddOnClickFunction([]
     {
         utilities::System sys;
-        sys.OpenUrlInBrowser("https://twitter.com/vivaladev");
+        sys.OpenUrlInBrowser("https://bsky.app/profile/voxelay.bsky.social");
     });
 
     // LINKEDIN
@@ -344,6 +344,7 @@ void ScreenMainMenu::CreateChangelog()
     textChange->SetText("CHANGES\n"
                         "- New icon for \"end turn\" button.\n"
                         "- Objects selected when a turn ends are re-selected when a new turn begins.\n"
+                        "- Replaced Twitter with Bluesky in main menu.\n"
                         );
     textChange->SetPosition(contX, contY);
     textChange->SetColor(colorContent);
