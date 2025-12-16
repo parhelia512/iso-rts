@@ -332,6 +332,7 @@ void ScreenMainMenu::CreateChangelog()
                          "- All game objects use their attributes to define their properties"
                          " (i.e.: energy, attack, speed, etc...).\n"
                          "- Added hit points when an object is damaged.\n"
+                         "- Weapons have different types of shot.\n"
                          );
     textNewFeat->SetPosition(contX, contY);
     textNewFeat->SetColor(colorContent);
