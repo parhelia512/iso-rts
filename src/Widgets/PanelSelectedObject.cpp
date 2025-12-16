@@ -105,7 +105,7 @@ public:
         const int sizeFont = 16;
         const unsigned int colorDigits = 0x70a9c2ff;
         const unsigned int colorZeros = 0x35677dff;
-        mDigits = new DigitsDisplay(3, sizeFont, "%", this);
+        mDigits = new DigitsDisplay(4, sizeFont, std::string(), this);
         mDigits->SetColorDigits(colorDigits);
         mDigits->SetColorZeros(colorZeros);
 
@@ -146,7 +146,7 @@ public:
         mIcon->SetColor(colorIcon);
 
         // DIGITS
-        mDigits->SetValue(perc);
+        mDigits->SetValue(val);
     }
 
 private:
