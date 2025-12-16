@@ -418,7 +418,7 @@ void GameMap::CreateObjectFromFile(unsigned int layerId, GameObjectTypeId type, 
 
         const Cell2D dest(r0, c0);
 
-        CreateUnit(type, nullptr, dest, owner);
+        CreateUnit(type, dest, owner);
     }
     else
         CreateObject(layerId, type, variant, pf, r0, c0, true);
@@ -1630,7 +1630,7 @@ void GameMap::StartCreateUnit(GameObjectTypeId ut, GameObject * gen, const Cell2
     gcell.changing = true;
 }
 
-void GameMap::CreateUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & dest, Player * player)
+Unit * GameMap::CreateUnit(GameObjectTypeId ut, const Cell2D & dest, Player * player)
 {
     const unsigned int r = static_cast<unsigned int>(dest.row);
     const unsigned int c = static_cast<unsigned int>(dest.col);
@@ -1671,6 +1671,8 @@ void GameMap::CreateUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & d
     // update visibility map
     AddPlayerObjVisibility(unit, player);
     ApplyLocalVisibility();
+
+    return unit;
 }
 
 bool GameMap::CanCreateMiniUnit(GameObjectTypeId ut, GameObject * gen, int elements, Player * player)

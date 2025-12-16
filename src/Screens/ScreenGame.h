@@ -194,6 +194,10 @@ private:
     // SFX
     void PlayLocalActionErrorSFX(const Player * player);
 
+#ifdef DEV_MODE
+    void CreateEnemyInCurrentCell(GameObjectTypeId type);
+#endif
+
 private:
     friend class GameHUD;
     friend class TutorialGameIntro;

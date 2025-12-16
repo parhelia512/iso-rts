@@ -965,6 +965,11 @@ void ScreenGame::OnKeyUp(sgl::core::KeyboardEvent & event)
     // DEBUG: show dialog trading
     else if(event.IsModShiftDown() && key == KeyboardEvent::KEY_T)
         mHUD->ShowDialogTrading();
+    // DEBUG: add enemy on current cell
+    else if(event.IsModShiftDown() && key == KeyboardEvent::KEY_E)
+        CreateEnemyInCurrentCell(GameObject::TYPE_UNIT_SOLDIER1);
+    else if(event.IsModAltDown() && key == KeyboardEvent::KEY_E)
+        CreateEnemyInCurrentCell(GameObject::TYPE_UNIT_SOLDIER2);
 #endif
 }
 
@@ -1944,7 +1949,7 @@ bool ScreenGame::SetupNewUnit(GameObjectTypeId type, GameObject * gen, Player * 
         gen->ActionStepCompleted(BUILD_UNIT);
         gen->SetCurrentAction(GameObjectActionType::IDLE);
 
-        mGameMap->CreateUnit(type, gen, cell, player);
+        mGameMap->CreateUnit(type, cell, player);
 
         // add unit to map if cell is visible to local player
         if(mGameMap->IsCellVisibleToLocalPlayer(cell.row, cell.col))
@@ -3776,5 +3781,19 @@ void ScreenGame::PlayLocalActionErrorSFX(const Player * player)
         player->PlaySound("game/error_action_01.ogg");
     }
 }
+
+#ifdef DEV_MODE
+void ScreenGame::CreateEnemyInCurrentCell(GameObjectTypeId type)
+{
+    const GameMapCell & gmCell = mGameMap->GetCell(mCurrCell.row, mCurrCell.col);
+
+    if(gmCell.objTop == nullptr && gmCell.objBottom == nullptr)
+    {
+        auto player = mAiPlayers[0];
+        auto unit = mGameMap->CreateUnit(type, mCurrCell, player);
+        player->RemoveUnit(unit);
+    }
+}
+#endif
 
 } // namespace game
