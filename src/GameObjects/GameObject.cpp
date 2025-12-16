@@ -449,7 +449,8 @@ bool GameObject::HasEnergyForActionStep(GameObjectActionType action) const
 {
     if(action < NUM_OBJ_ACTIONS)
     {
-        const float cost = GetActionEnergyCost(action);
+        const float cost = (ATTACK == action) ? mWeapon->GetCostEnergy() :
+                           GetActionEnergyCost(action);
 
         // do not consider turn energy for mini units
         if(mOwner != nullptr && mCategory != CAT_MINI_UNIT)
@@ -814,6 +815,9 @@ void GameObject::UpdateRegenerationPower()
 
 float GameObject::GetActionEnergyCost(GameObjectActionType action) const
 {
+    if(ATTACK == action)
+        return mWeapon->GetCostEnergyPerShot();
+
     constexpr float ACTION_COSTS[NUM_OBJ_ACTIONS] =
     {
         0.f,        // IDLE
@@ -822,7 +826,7 @@ float GameObject::GetActionEnergyCost(GameObjectActionType action) const
         5.f,        // MOVE
         10.f,       // CONQUER_CELL
         20.f,       // CONQUER_STRUCTURE
-        2.f,        // ATTACK
+        0.f,        // ATTACK
         30.f,       // BUILD_STRUCTURE
         10.f,       // BUILD_WALL
         5.f,        // HEAL

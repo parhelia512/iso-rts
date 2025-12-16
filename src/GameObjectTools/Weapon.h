@@ -27,7 +27,10 @@ public:
     AttackMode GetAttackMode() const;
     void SetAttackMode(AttackMode am);
 
+    // cost for whole attack (i.e.: all burst shots)
     virtual int GetCostEnergy() const = 0;
+    // cost for a single shot of an attack
+    virtual int GetCostEnergyPerShot() const = 0;
 
     void ClearTarget();
     bool HasTarget() const;

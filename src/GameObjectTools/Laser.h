@@ -19,6 +19,7 @@ public:
           const sgl::graphic::ParticlesManager * partMan);
 
     int GetCostEnergy() const override;
+    int GetCostEnergyPerShot() const override;
 
 private:
     void OnShoot(float x0, float y0) override;

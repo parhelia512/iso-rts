@@ -36,15 +36,23 @@ Laser::Laser(const WeaponData & data, GameObject * owner, GameMap * gm,
 
 int Laser::GetCostEnergy() const
 {
-    const int constSingleBurst = 5;
+    const int costSingleShot = GetCostEnergyPerShot();
 
+    if(GetAttackMode() == ATT_BURST_SHOT)
+        return costSingleShot * GetBurstShots();
+    else
+        return costSingleShot;
+}
+
+int Laser::GetCostEnergyPerShot() const
+{
     switch (GetAttackMode())
     {
         case ATT_QUICK_SHOT: return 10; break;
 
         case ATT_AIMED_SHOT: return 20; break;
 
-        case ATT_BURST_SHOT:  return constSingleBurst * GetBurstShots(); break;
+        case ATT_BURST_SHOT:  return 5; break;
 
         default: return 0; break;
     }
