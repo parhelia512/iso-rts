@@ -16,7 +16,7 @@ SceneObject::SceneObject(const ObjectData & data, GameObjectVariantId part)
     mVariant = part;
 
     // set object health
-    if(TYPE_MOUNTAINS == data.GetType())
+    if(ObjectData::TYPE_MOUNTAINS == data.GetType())
     {
         // health
         const float maxHealthValue = 5000.f;
@@ -49,12 +49,12 @@ void SceneObject::SetImage()
 
     const GameObjectTypeId type = GetObjectType();
 
-    if(type == TYPE_ROCKS)
+    if(type == ObjectData::TYPE_ROCKS)
     {
         const unsigned int spriteId = SpriteRocksId::ROCKS_ROW_END_L_1 + mVariant;
         tex = tm->GetSprite(SpriteRocksFile, spriteId);
     }
-    else if(type == TYPE_MOUNTAINS)
+    else if(type == ObjectData::TYPE_MOUNTAINS)
     {
         const int sel = static_cast<int>(IsSelected());
         const unsigned int spriteId = ID_SCENE_MOUNTAIN_L + mVariant + (sel * NUM_MOUNTAINS_SPRITES);

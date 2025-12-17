@@ -131,10 +131,10 @@ bool MapIO::Save(const std::string & filename, const std::vector<GameMapCell> & 
     const int statDiamonds = DefineStatResourceForCells(cells, DIAMONDS_SOURCE);
     fs << MAP_TAG_STAT_DIAMONDS << " " << statDiamonds << "\n";
 
-    const int statEnergy = DefineStatResourceForObjects(objects, mapSize, GameObject::TYPE_RES_GEN_ENERGY);
+    const int statEnergy = DefineStatResourceForObjects(objects, mapSize, ObjectData::TYPE_RES_GEN_ENERGY);
     fs << MAP_TAG_STAT_ENERGY << " " << statEnergy << "\n";
 
-    const int statMaterial = DefineStatResourceForObjects(objects, mapSize, GameObject::TYPE_RES_GEN_MATERIAL);
+    const int statMaterial = DefineStatResourceForObjects(objects, mapSize, ObjectData::TYPE_RES_GEN_MATERIAL);
     fs << MAP_TAG_STAT_MATERIAL << " " << statMaterial << "\n";
 
     const int statValue = DefineStatValue(statBlobs, statDiamonds, statEnergy, statMaterial);

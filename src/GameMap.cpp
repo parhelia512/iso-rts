@@ -406,10 +406,10 @@ void GameMap::CreateObjectFromFile(unsigned int layerId, GameObjectTypeId type, 
 {
     const auto pf = static_cast<PlayerFaction>(faction);
 
-    if(GameObject::TYPE_UNIT_MEDIC1 == type || GameObject::TYPE_UNIT_SCOUT1 == type ||
-       GameObject::TYPE_UNIT_SOLDIER1 == type || GameObject::TYPE_UNIT_SOLDIER2 == type ||
-       GameObject::TYPE_UNIT_SPAWNER1 == type || GameObject::TYPE_UNIT_SPAWNER2 == type ||
-       GameObject::TYPE_UNIT_WORKER1 == type)
+    if(ObjectData::TYPE_UNIT_MEDIC1 == type || ObjectData::TYPE_UNIT_SCOUT1 == type ||
+       ObjectData::TYPE_UNIT_SOLDIER1 == type || ObjectData::TYPE_UNIT_SOLDIER2 == type ||
+       ObjectData::TYPE_UNIT_SPAWNER1 == type || ObjectData::TYPE_UNIT_SPAWNER2 == type ||
+       ObjectData::TYPE_UNIT_WORKER1 == type)
     {
         Player * owner =  mGame->GetPlayerByFaction(pf);
 
@@ -462,63 +462,63 @@ GameObject * GameMap::CreateObject(unsigned int layerId, GameObjectTypeId type,
     o2a.obj = nullptr;
     o2a.owner = mGame->GetPlayerByFaction(faction);
 
-    if(GameObject::TYPE_MOUNTAINS == type ||
-       GameObject::TYPE_ROCKS == type)
+    if(ObjectData::TYPE_MOUNTAINS == type ||
+       ObjectData::TYPE_ROCKS == type)
         o2a.obj = new SceneObject(data, variant);
-    else if(GameObject::TYPE_RES_GEN_ENERGY == type ||
-       GameObject::TYPE_RES_GEN_MATERIAL == type ||
-       GameObject::TYPE_RES_GEN_ENERGY_SOLAR == type ||
-       GameObject::TYPE_RES_GEN_MATERIAL_EXTRACT == type)
+    else if(ObjectData::TYPE_RES_GEN_ENERGY == type ||
+       ObjectData::TYPE_RES_GEN_MATERIAL == type ||
+       ObjectData::TYPE_RES_GEN_ENERGY_SOLAR == type ||
+       ObjectData::TYPE_RES_GEN_MATERIAL_EXTRACT == type)
         o2a.obj = new ResourceGenerator(data);
-    else if(GameObject::TYPE_RES_STORAGE_BLOBS == type ||
-            GameObject::TYPE_RES_STORAGE_DIAMONDS == type ||
-            GameObject::TYPE_RES_STORAGE_ENERGY == type ||
-            GameObject::TYPE_RES_STORAGE_MATERIAL == type)
+    else if(ObjectData::TYPE_RES_STORAGE_BLOBS == type ||
+            ObjectData::TYPE_RES_STORAGE_DIAMONDS == type ||
+            ObjectData::TYPE_RES_STORAGE_ENERGY == type ||
+            ObjectData::TYPE_RES_STORAGE_MATERIAL == type)
         o2a.obj = new ResourceStorage(data);
-    else if(GameObject::TYPE_DIAMONDS == type)
+    else if(ObjectData::TYPE_DIAMONDS == type)
         o2a.obj = new Diamonds(data);
-    else if(GameObject::TYPE_BLOBS == type)
+    else if(ObjectData::TYPE_BLOBS == type)
         o2a.obj  = new Blobs(data);
-    else if(GameObject::TYPE_TREES == type)
+    else if(ObjectData::TYPE_TREES == type)
         o2a.obj  = new Trees(data, variant);
-    else if(GameObject::TYPE_RADAR_STATION == type)
+    else if(ObjectData::TYPE_RADAR_STATION == type)
         o2a.obj = new RadarStation(data);
-    else if(GameObject::TYPE_RADAR_TOWER == type)
+    else if(ObjectData::TYPE_RADAR_TOWER == type)
         o2a.obj = new RadarTower(data);
-    else if(GameObject::TYPE_BARRACKS == type)
+    else if(ObjectData::TYPE_BARRACKS == type)
         o2a.obj = new Barracks(data);
-    else if(GameObject::TYPE_RESEARCH_CENTER == type)
+    else if(ObjectData::TYPE_RESEARCH_CENTER == type)
         o2a.obj = new ResearchCenter(data);
-    else if(GameObject::TYPE_HOSPITAL == type)
+    else if(ObjectData::TYPE_HOSPITAL == type)
         o2a.obj = new Hospital(data);
-    else if(GameObject::TYPE_DEFENSIVE_TOWER == type)
+    else if(ObjectData::TYPE_DEFENSIVE_TOWER == type)
         o2a.obj = new DefensiveTower(data);
-    else if(GameObject::TYPE_BUNKER == type)
+    else if(ObjectData::TYPE_BUNKER == type)
         o2a.obj = new Bunker(data);
-    else if(GameObject::TYPE_SPAWN_TOWER == type)
+    else if(ObjectData::TYPE_SPAWN_TOWER == type)
         o2a.obj = new SpawningTower(data);
-    else if(GameObject::TYPE_TRADING_POST == type)
+    else if(ObjectData::TYPE_TRADING_POST == type)
         o2a.obj = new TradingPost(data);
-    else if(GameObject::TYPE_WALL == type)
+    else if(ObjectData::TYPE_WALL == type)
         o2a.obj = new Wall(data, variant);
-    else if(GameObject::TYPE_WALL_GATE == type)
+    else if(ObjectData::TYPE_WALL_GATE == type)
         o2a.obj = new WallGate(data, variant);
-    else if(GameObject::TYPE_LOOTBOX == type)
+    else if(ObjectData::TYPE_LOOTBOX == type)
         o2a.obj = new LootBox(data);
-    else if(GameObject::TYPE_TEMPLE == type)
+    else if(ObjectData::TYPE_TEMPLE == type)
         o2a.obj = new Temple(data);
-    else if(GameObject::TYPE_PRACTICE_TARGET == type)
+    else if(ObjectData::TYPE_PRACTICE_TARGET == type)
         o2a.obj = new PracticeTarget(data);
-    else if(GameObject::TYPE_BASE == type || GameObject::TYPE_BASE_SPOT == type)
+    else if(ObjectData::TYPE_BASE == type || ObjectData::TYPE_BASE_SPOT == type)
     {
-        if(GameObject::TYPE_BASE_SPOT == type)
+        if(ObjectData::TYPE_BASE_SPOT == type)
         {
             o2a.owner = mGame->GetPlayerByIndex(variant);
             faction = o2a.owner->GetFaction();
         }
 
         // needeed to bypass BaseSpot data
-        const ObjectData & dataBase = GetObjectData(GameObject::TYPE_BASE);
+        const ObjectData & dataBase = GetObjectData(ObjectData::TYPE_BASE);
         auto b = new Base(dataBase);
         o2a.obj = b;
 
@@ -909,7 +909,7 @@ void GameMap::BuildStructure(const Cell2D & cell, Player * player, GameObjectTyp
     UpdateLinkedCells(player);
 
     // update surrounding walls if building an object that can connect
-    if(obj->GetObjectType() == GameObject::TYPE_DEFENSIVE_TOWER || obj->GetObjectType() == GameObject::TYPE_WALL_GATE)
+    if(obj->GetObjectType() == ObjectData::TYPE_DEFENSIVE_TOWER || obj->GetObjectType() == ObjectData::TYPE_WALL_GATE)
         UpdateWalls(cell);
 
     // update visibility map
@@ -999,14 +999,14 @@ void GameMap::BuildWall(const Cell2D & cell, Player * player, GameObjectTypeId p
     UpdateInfluencedCells(cell.row, cell.col);
 
     // add object wall
-    CreateObject(OBJECTS2, GameObject::TYPE_WALL, planned, player->GetFaction(), cell.row, cell.col, true);
+    CreateObject(OBJECTS2, ObjectData::TYPE_WALL, planned, player->GetFaction(), cell.row, cell.col, true);
 
     UpdateLinkedCells(player);
 
     // update minimap
     if(IsCellVisibleToLocalPlayer(cell.row, cell.col))
     {
-        const ObjectData & data = GetObjectData(GameObject::TYPE_WALL);
+        const ObjectData & data = GetObjectData(ObjectData::TYPE_WALL);
 
         const PlayerFaction faction = player->GetFaction();
         const MiniMap::MiniMapElemType type = static_cast<MiniMap::MiniMapElemType>(MiniMap::MME_FACTION1 + faction);
@@ -1169,7 +1169,7 @@ void GameMap::ConquerStructure(const Cell2D & end, Player * player)
         if(prevOwner)
             prevOwner->RemoveStructure(st);
 
-        if(obj->GetObjectCategory() == GameObject::CAT_RES_GENERATOR)
+        if(obj->GetObjectCategory() == ObjectData::CAT_RES_GENERATOR)
         {
             auto rg = static_cast<ResourceGenerator *>(obj);
 
@@ -1249,7 +1249,7 @@ void GameMap::HandleTempleExplorationOutcome(unsigned int outcome, Player * p, T
                 for(GameObject * o : mObjects)
                 {
                     if(o->GetFaction() == faction &&
-                       o->GetObjectType() == GameObject::TYPE_RES_GEN_ENERGY)
+                       o->GetObjectType() == ObjectData::TYPE_RES_GEN_ENERGY)
                         static_cast<ResourceGenerator *>(o)->ScaleOutput(mult);
                 }
             }
@@ -1262,7 +1262,7 @@ void GameMap::HandleTempleExplorationOutcome(unsigned int outcome, Player * p, T
                 for(GameObject * o : mObjects)
                 {
                     if(o->GetFaction() == faction &&
-                       o->GetObjectType() == GameObject::TYPE_RES_GEN_MATERIAL)
+                       o->GetObjectType() == ObjectData::TYPE_RES_GEN_MATERIAL)
                         static_cast<ResourceGenerator *>(o)->ScaleOutput(mult);
                 }
             }
@@ -1273,7 +1273,7 @@ void GameMap::HandleTempleExplorationOutcome(unsigned int outcome, Player * p, T
             {
                 for(GameObject * o : mObjects)
                 {
-                    if(o->GetObjectType() == GameObject::TYPE_BLOBS)
+                    if(o->GetObjectType() == ObjectData::TYPE_BLOBS)
                         static_cast<Blobs *>(o)->MaximizeUnits();
                 }
             }
@@ -1283,7 +1283,7 @@ void GameMap::HandleTempleExplorationOutcome(unsigned int outcome, Player * p, T
             {
                 for(GameObject * o : mObjects)
                 {
-                    if(o->GetObjectType() == GameObject::TYPE_DIAMONDS)
+                    if(o->GetObjectType() == ObjectData::TYPE_DIAMONDS)
                         static_cast<Diamonds *>(o)->MaximizeUnits();
                 }
             }
@@ -1337,7 +1337,7 @@ void GameMap::HandleTempleExplorationOutcome(unsigned int outcome, Player * p, T
                 for(GameObject * o : mObjects)
                 {
                     if(o->GetFaction() == faction &&
-                       o->GetObjectType() == GameObject::TYPE_RES_GEN_ENERGY)
+                       o->GetObjectType() == ObjectData::TYPE_RES_GEN_ENERGY)
                         static_cast<ResourceGenerator *>(o)->ScaleOutput(mult);
                 }
             }
@@ -1350,7 +1350,7 @@ void GameMap::HandleTempleExplorationOutcome(unsigned int outcome, Player * p, T
                 for(GameObject * o : mObjects)
                 {
                     if(o->GetFaction() == faction &&
-                       o->GetObjectType() == GameObject::TYPE_RES_GEN_MATERIAL)
+                       o->GetObjectType() == ObjectData::TYPE_RES_GEN_MATERIAL)
                         static_cast<ResourceGenerator *>(o)->ScaleOutput(mult);
                 }
             }
@@ -1361,7 +1361,7 @@ void GameMap::HandleTempleExplorationOutcome(unsigned int outcome, Player * p, T
             {
                 for(GameObject * o : mObjects)
                 {
-                    if(o->GetObjectType() == GameObject::TYPE_BLOBS)
+                    if(o->GetObjectType() == ObjectData::TYPE_BLOBS)
                         static_cast<Blobs *>(o)->MinimizeUnits();
                 }
             }
@@ -1371,7 +1371,7 @@ void GameMap::HandleTempleExplorationOutcome(unsigned int outcome, Player * p, T
             {
                 for(GameObject * o : mObjects)
                 {
-                    if(o->GetObjectType() == GameObject::TYPE_DIAMONDS)
+                    if(o->GetObjectType() == ObjectData::TYPE_DIAMONDS)
                         static_cast<Diamonds *>(o)->MinimizeUnits();
                 }
             }
@@ -1397,8 +1397,8 @@ bool GameMap::CanCreateUnit(GameObjectTypeId ut, GameObject * gen, Player * play
     // check if generator is valid
     const GameObjectTypeId genType = gen->GetObjectType();
 
-    if(genType != GameObject::TYPE_BASE && genType != GameObject::TYPE_BARRACKS &&
-       genType != GameObject::TYPE_HOSPITAL)
+    if(genType != ObjectData::TYPE_BASE && genType != ObjectData::TYPE_BARRACKS &&
+       genType != ObjectData::TYPE_HOSPITAL)
         return false;
 
     // generator is already busy
@@ -3023,14 +3023,14 @@ void GameMap::UpdateLinkedCells(Player * player)
                 mControlMap->AddControlPointsForObject(obj);
 
                 // mark linked radar
-                if(obj->GetObjectType() == GameObject::TYPE_RADAR_STATION)
+                if(obj->GetObjectType() == ObjectData::TYPE_RADAR_STATION)
                     radarLinked = true;
             }
         }
         // linked status unchanged
         else
         {
-            if(obj->IsLinked() && obj->GetObjectType() == GameObject::TYPE_RADAR_STATION)
+            if(obj->IsLinked() && obj->GetObjectType() == ObjectData::TYPE_RADAR_STATION)
                 radarLinked = true;
         }
     }
@@ -3238,7 +3238,7 @@ void GameMap::AddObjectToMap(const ObjectToAdd & o2a)
     if(o2a.owner != nullptr)
     {
         // register objects to Player
-        if(o2a.obj->GetObjectCategory() == GameObject::CAT_RES_GENERATOR)
+        if(o2a.obj->GetObjectCategory() == ObjectData::CAT_RES_GENERATOR)
             o2a.owner->AddResourceGenerator(static_cast<ResourceGenerator *>(o2a.obj));
         if(o2a.obj->IsStructure())
             o2a.owner->AddStructure(static_cast<Structure *>(o2a.obj));
@@ -3283,7 +3283,7 @@ void GameMap::DestroyObject(GameObject * obj)
         }
 
         // remove unit from player
-        if(obj->GetObjectCategory() == GameObject::CAT_UNIT)
+        if(obj->GetObjectCategory() == ObjectData::CAT_UNIT)
             owner->RemoveUnit(static_cast<Unit *>(obj));
         // remove structure
         else if(obj->IsStructure())
@@ -3291,7 +3291,7 @@ void GameMap::DestroyObject(GameObject * obj)
             owner->RemoveStructure(static_cast<Structure *>(obj));
 
             // remove resource generator
-            if(obj->GetObjectCategory() == GameObject::CAT_RES_GENERATOR)
+            if(obj->GetObjectCategory() == ObjectData::CAT_RES_GENERATOR)
                 owner->RemoveResourceGenerator(static_cast<ResourceGenerator *>(obj));
         }
     }
@@ -3517,7 +3517,7 @@ void GameMap::DestroyObjectPaths(GameObject * obj)
     }
 
     // other paths are only for units
-    if(obj->GetObjectCategory() != GameObject::CAT_UNIT)
+    if(obj->GetObjectCategory() != ObjectData::CAT_UNIT)
         return ;
 
     auto unit = static_cast<Unit *>(obj);
@@ -3577,7 +3577,7 @@ void GameMap::UpdateObjectPaths(float delta)
         if(path->IsTerminated())
         {
             // AUTO MOVING MINI UNITS -> continue if possible
-            if(path->GetObject()->GetObjectCategory() == GameObject::CAT_MINI_UNIT)
+            if(path->GetObject()->GetObjectCategory() == ObjectData::CAT_MINI_UNIT)
                 ContinueMiniUnitGroupMove(path);
 
             delete path;
@@ -3687,28 +3687,28 @@ void GameMap::UpdateWall(const Cell2D & cell)
     GameObject * obj = GetCell(cell.row, cell.col).objTop;
 
     // no wall or gate here
-    if(nullptr == obj || (obj->GetObjectType() != GameObject::TYPE_WALL && obj->GetObjectType() != GameObject::TYPE_WALL_GATE))
+    if(nullptr == obj || (obj->GetObjectType() != ObjectData::TYPE_WALL && obj->GetObjectType() != ObjectData::TYPE_WALL_GATE))
         return ;
 
     const GameObject * objN = (cell.row - 1 >= 0) ? GetCell(cell.row - 1, cell.col).objTop : nullptr;
-    const bool wallN = objN && (objN->GetObjectType() == GameObject::TYPE_WALL ||
-                                objN->GetObjectType() == GameObject::TYPE_DEFENSIVE_TOWER ||
-                                objN->GetObjectType() == GameObject::TYPE_WALL_GATE);
+    const bool wallN = objN && (objN->GetObjectType() == ObjectData::TYPE_WALL ||
+                                objN->GetObjectType() == ObjectData::TYPE_DEFENSIVE_TOWER ||
+                                objN->GetObjectType() == ObjectData::TYPE_WALL_GATE);
 
     const GameObject * objS = (cell.row + 1 < static_cast<int>(mRows)) ? GetCell(cell.row + 1, cell.col).objTop : nullptr;
-    const bool wallS = objS && (objS->GetObjectType() == GameObject::TYPE_WALL ||
-                                objS->GetObjectType() == GameObject::TYPE_DEFENSIVE_TOWER ||
-                                objS->GetObjectType() == GameObject::TYPE_WALL_GATE);
+    const bool wallS = objS && (objS->GetObjectType() == ObjectData::TYPE_WALL ||
+                                objS->GetObjectType() == ObjectData::TYPE_DEFENSIVE_TOWER ||
+                                objS->GetObjectType() == ObjectData::TYPE_WALL_GATE);
 
     const GameObject * objW = (cell.col - 1 >= 0) ? GetCell(cell.row, cell.col - 1).objTop : nullptr;
-    const bool wallW = objW && (objW->GetObjectType() == GameObject::TYPE_WALL ||
-                                objW->GetObjectType() == GameObject::TYPE_DEFENSIVE_TOWER ||
-                                objW->GetObjectType() == GameObject::TYPE_WALL_GATE);
+    const bool wallW = objW && (objW->GetObjectType() == ObjectData::TYPE_WALL ||
+                                objW->GetObjectType() == ObjectData::TYPE_DEFENSIVE_TOWER ||
+                                objW->GetObjectType() == ObjectData::TYPE_WALL_GATE);
 
     const GameObject * objE = (cell.col + 1 < static_cast<int>(mCols)) ? GetCell(cell.row, cell.col + 1).objTop : nullptr;
-    const bool wallE = objE && (objE->GetObjectType() == GameObject::TYPE_WALL ||
-                                objE->GetObjectType() == GameObject::TYPE_DEFENSIVE_TOWER ||
-                                objE->GetObjectType() == GameObject::TYPE_WALL_GATE);
+    const bool wallE = objE && (objE->GetObjectType() == ObjectData::TYPE_WALL ||
+                                objE->GetObjectType() == ObjectData::TYPE_DEFENSIVE_TOWER ||
+                                objE->GetObjectType() == ObjectData::TYPE_WALL_GATE);
 
     enum Flags
     {
@@ -3746,7 +3746,7 @@ void GameMap::UpdateWall(const Cell2D & cell)
                      WEST * static_cast<int>(wallW) +
                      EAST * static_cast<int>(wallE);
 
-    if(obj->GetObjectType() == GameObject::TYPE_WALL)
+    if(obj->GetObjectType() == ObjectData::TYPE_WALL)
     {
         auto wall = static_cast<Wall *>(obj);
 
@@ -3799,7 +3799,7 @@ void GameMap::UpdateWall(const Cell2D & cell)
             break;
         }
     }
-    else if(obj->GetObjectType() == GameObject::TYPE_WALL_GATE)
+    else if(obj->GetObjectType() == ObjectData::TYPE_WALL_GATE)
     {
         auto gate = static_cast<WallGate *>(obj);
 

@@ -50,7 +50,7 @@ bool Hospital::IsTargetHealingInRange(GameObject * obj) const
 bool Hospital::SetTargetHealing(GameObject * obj)
 {
     if(nullptr == obj || !IsTargetHealingInRange(obj) || !obj->IsVisible() ||
-       obj == this || obj->GetObjectCategory() != GameObject::CAT_UNIT ||
+       obj == this || obj->GetObjectCategory() != ObjectData::CAT_UNIT ||
        obj->IsHealthMax())
         return false;
 

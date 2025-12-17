@@ -83,15 +83,15 @@ void PanelObjectActions::SetObject(GameObject * obj)
     const GameObjectTypeId objType = mObj->GetObjectType();
 
     // self destruction available for all, but base
-    if(objType != GameObject::TYPE_BASE)
+    if(objType != ObjectData::TYPE_BASE)
         mButtons[BTN_SELF_DESTROY]->SetVisible(true);
 
-    if(objType == GameObject::TYPE_BASE)
+    if(objType == ObjectData::TYPE_BASE)
     {
         mButtons[BTN_MISSION_GOALS]->SetVisible(true);
         mButtons[BTN_BUILD_UNIT_BASE]->SetVisible(true);
     }
-    else if(mObj->GetObjectCategory() == GameObject::CAT_UNIT)
+    else if(mObj->GetObjectCategory() == ObjectData::CAT_UNIT)
     {
         auto unit = static_cast<Unit *>(mObj);
 
@@ -115,18 +115,18 @@ void PanelObjectActions::SetObject(GameObject * obj)
         if(unit->CanSpawn())
             mButtons[BTN_SPAWN]->SetVisible(true);
     }
-    else if(mObj->GetObjectCategory() == GameObject::CAT_MINI_UNIT)
+    else if(mObj->GetObjectCategory() == ObjectData::CAT_MINI_UNIT)
     {
         mButtons[BTN_SET_TARGET]->SetVisible(true);
     }
-    else if(objType == GameObject::TYPE_BARRACKS)
+    else if(objType == ObjectData::TYPE_BARRACKS)
     {
         if(obj->IsLinked())
             mButtons[BTN_BUILD_UNIT_BARRACKS]->SetVisible(true);
         else
             mButtons[BTN_CANCEL]->SetVisible(false);
     }
-    else if(objType == GameObject::TYPE_HOSPITAL)
+    else if(objType == ObjectData::TYPE_HOSPITAL)
     {
         if(obj->IsLinked())
         {
@@ -136,21 +136,21 @@ void PanelObjectActions::SetObject(GameObject * obj)
         else
             mButtons[BTN_CANCEL]->SetVisible(false);
     }
-    else if(objType == GameObject::TYPE_SPAWN_TOWER)
+    else if(objType == ObjectData::TYPE_SPAWN_TOWER)
     {
         if(obj->IsLinked())
             mButtons[BTN_SPAWN]->SetVisible(true);
         else
             mButtons[BTN_CANCEL]->SetVisible(false);
     }
-    else if(objType == GameObject::TYPE_TRADING_POST)
+    else if(objType == ObjectData::TYPE_TRADING_POST)
     {
         if(obj->IsLinked())
             mButtons[BTN_TRADE]->SetVisible(true);
         else
             mButtons[BTN_CANCEL]->SetVisible(false);
     }
-    else if(objType == GameObject::TYPE_WALL_GATE)
+    else if(objType == ObjectData::TYPE_WALL_GATE)
     {
         auto gate = static_cast<WallGate *>(mObj);
 

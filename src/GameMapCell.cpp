@@ -33,7 +33,7 @@ GameMapCell::GameMapCell()
 
 Unit * GameMapCell::GetUnit() const
 {
-    if(objTop != nullptr && objTop->GetObjectCategory() == GameObject::CAT_UNIT)
+    if(objTop != nullptr && objTop->GetObjectCategory() == ObjectData::CAT_UNIT)
         return static_cast<Unit *>(objTop);
     else
         return nullptr;
@@ -41,12 +41,12 @@ Unit * GameMapCell::GetUnit() const
 
 bool GameMapCell::HasUnit() const
 {
-    return objTop != nullptr && objTop->GetObjectCategory() == GameObject::CAT_UNIT;
+    return objTop != nullptr && objTop->GetObjectCategory() == ObjectData::CAT_UNIT;
 }
 
 ResourceGenerator * GameMapCell::GetResourceGenerator() const
 {
-    if(objTop != nullptr && objTop->GetObjectCategory() == GameObject::CAT_RES_GENERATOR)
+    if(objTop != nullptr && objTop->GetObjectCategory() == ObjectData::CAT_RES_GENERATOR)
         return static_cast<ResourceGenerator *>(objTop);
     else
         return nullptr;

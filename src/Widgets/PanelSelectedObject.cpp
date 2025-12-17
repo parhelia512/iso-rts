@@ -419,7 +419,7 @@ void PanelSelectedObject::SetObject(GameObject * obj)
     sgl::graphic::Texture * tex = nullptr;
 
     // TITLE
-    mTitle->SetText(GameObject::TITLES.at(type).c_str());
+    mTitle->SetText(ObjectData::TITLES.at(type).c_str());
 
     // BAR LEVEL
     const int maxLvl = 10;
@@ -437,7 +437,7 @@ void PanelSelectedObject::SetObject(GameObject * obj)
     const ObjectData & data = mObjDataReg->GetObjectData(type);
 
     // MiniUnits are a special case as preview is based on num of elements
-    if(data.GetCategory() == GameObject::CAT_MINI_UNIT)
+    if(data.GetCategory() == ObjectData::CAT_MINI_UNIT)
     {
         const auto mu = static_cast<MiniUnit *>(obj);
         const unsigned int texInd0 = data.GetIconTexId(faction);
@@ -496,7 +496,7 @@ void PanelSelectedObject::SetObject(GameObject * obj)
     UpdateStats();
 
     // BUTTONS FUNCTION
-    const bool showAutoActions = obj->GetObjectCategory() == GameObject::CAT_UNIT;
+    const bool showAutoActions = obj->GetObjectCategory() == ObjectData::CAT_UNIT;
 
     mButtonAutoAttack->SetVisible(showAutoActions);
     mButtonAutoMove->SetVisible(showAutoActions);

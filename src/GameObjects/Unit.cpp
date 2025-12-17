@@ -22,7 +22,7 @@ namespace game
 
 Unit::Unit(const ObjectData & data)
     : GameObject(data)
-    , mStructToBuild(GameObject::TYPE_NULL)
+    , mStructToBuild(ObjectData::TYPE_NULL)
 {
     // set healing range converting attribute
     const int maxHealVal = 11;
@@ -94,7 +94,7 @@ bool Unit::IsTargetHealingInRange(GameObject * obj) const
 bool Unit::SetTargetHealing(GameObject * obj)
 {
     if(nullptr == obj || !IsTargetHealingInRange(obj) || !obj->IsVisible() ||
-       obj == this || obj->GetObjectCategory() != GameObject::CAT_UNIT ||
+       obj == this || obj->GetObjectCategory() != ObjectData::CAT_UNIT ||
        obj->IsHealthMax())
         return false;
 
@@ -143,7 +143,7 @@ float Unit::GetTimeBuildWall() const
     return GetTime(maxTime, GetAttribute(OBJ_ATT_CONSTRUCTION));
 }
 
-void Unit::ClearStructureToBuild() { mStructToBuild = GameObject::TYPE_NULL; }
+void Unit::ClearStructureToBuild() { mStructToBuild = ObjectData::TYPE_NULL; }
 
 bool Unit::CanConquer() const
 {
@@ -306,13 +306,13 @@ unsigned int Unit::TypeToIndex(GameObjectTypeId type)
 {
     const std::unordered_map<GameObjectTypeId, unsigned int> indexes =
     {
-        { GameObject::TYPE_UNIT_WORKER1, 0 },
-        { GameObject::TYPE_UNIT_SOLDIER1, 1 },
-        { GameObject::TYPE_UNIT_SOLDIER2, 2 },
-        { GameObject::TYPE_UNIT_SCOUT1, 3 },
-        { GameObject::TYPE_UNIT_MEDIC1, 4 },
-        { GameObject::TYPE_UNIT_SPAWNER1, 5 },
-        { GameObject::TYPE_UNIT_SPAWNER2, 6 },
+        { ObjectData::TYPE_UNIT_WORKER1, 0 },
+        { ObjectData::TYPE_UNIT_SOLDIER1, 1 },
+        { ObjectData::TYPE_UNIT_SOLDIER2, 2 },
+        { ObjectData::TYPE_UNIT_SCOUT1, 3 },
+        { ObjectData::TYPE_UNIT_MEDIC1, 4 },
+        { ObjectData::TYPE_UNIT_SPAWNER1, 5 },
+        { ObjectData::TYPE_UNIT_SPAWNER2, 6 },
     };
 
     return indexes.at(type);
@@ -322,13 +322,13 @@ GameObjectTypeId Unit::IndexToType(unsigned int ind)
 {
     const GameObjectTypeId types[] =
     {
-        GameObject::TYPE_UNIT_WORKER1,
-        GameObject::TYPE_UNIT_SOLDIER1,
-        GameObject::TYPE_UNIT_SOLDIER2,
-        GameObject::TYPE_UNIT_SCOUT1,
-        GameObject::TYPE_UNIT_MEDIC1,
-        GameObject::TYPE_UNIT_SPAWNER1,
-        GameObject::TYPE_UNIT_SPAWNER2,
+        ObjectData::TYPE_UNIT_WORKER1,
+        ObjectData::TYPE_UNIT_SOLDIER1,
+        ObjectData::TYPE_UNIT_SOLDIER2,
+        ObjectData::TYPE_UNIT_SCOUT1,
+        ObjectData::TYPE_UNIT_MEDIC1,
+        ObjectData::TYPE_UNIT_SPAWNER1,
+        ObjectData::TYPE_UNIT_SPAWNER2,
     };
 
     return types[ind];

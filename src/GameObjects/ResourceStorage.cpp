@@ -16,13 +16,13 @@ namespace game
 ResourceStorage::ResourceStorage(const ObjectData & data)
     : Structure(data)
 {
-    if(TYPE_RES_STORAGE_BLOBS == data.GetType())
+    if(ObjectData::TYPE_RES_STORAGE_BLOBS == data.GetType())
         mResource = RES_BLOBS;
-    else if(TYPE_RES_STORAGE_DIAMONDS == data.GetType())
+    else if(ObjectData::TYPE_RES_STORAGE_DIAMONDS == data.GetType())
         mResource = RES_DIAMONDS;
-    else if(TYPE_RES_STORAGE_ENERGY == data.GetType())
+    else if(ObjectData::TYPE_RES_STORAGE_ENERGY == data.GetType())
         mResource = RES_ENERGY;
-    else if(TYPE_RES_STORAGE_MATERIAL == data.GetType())
+    else if(ObjectData::TYPE_RES_STORAGE_MATERIAL == data.GetType())
         mResource = RES_MATERIAL1;
     else
     {

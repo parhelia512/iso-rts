@@ -359,7 +359,7 @@ void ScreenGame::SelectObject(GameObject * obj, Player * player)
     player->SetSelectedObject(obj);
 
     // update quick selection buttons when selected unit
-    if(obj->GetObjectCategory() == GameObject::CAT_UNIT)
+    if(obj->GetObjectCategory() == ObjectData::CAT_UNIT)
     {
         mHUD->SetQuickUnitButtonChecked(obj);
 
@@ -372,14 +372,14 @@ void ScreenGame::SelectObject(GameObject * obj, Player * player)
         mHUD->ClearQuickUnitButtonChecked();
 
         // show attack range overlay for towers
-        if(GameObject::TYPE_DEFENSIVE_TOWER == obj->GetObjectType())
+        if(ObjectData::TYPE_DEFENSIVE_TOWER == obj->GetObjectType())
         {
             auto tower = static_cast<DefensiveTower *>(obj);
             const int range = tower->GetWeapon()->GetRange();
             ShowAttackIndicators(tower, range);
         }
 
-        if(obj->GetObjectCategory() == GameObject::CAT_MINI_UNIT)
+        if(obj->GetObjectCategory() == ObjectData::CAT_MINI_UNIT)
         {
             auto group = static_cast<MiniUnitsGroup *>(obj->GetGroup());
 
@@ -799,7 +799,7 @@ void ScreenGame::CreateUI()
         const GameObjectActionType action = selObj->GetActiveAction();
 
         // special case MiniUnits
-        if(selObj->GetObjectCategory() == GameObject::CAT_MINI_UNIT)
+        if(selObj->GetObjectCategory() == ObjectData::CAT_MINI_UNIT)
             CancelMiniUnitsGroupPath(selObj->GetGroup());
 
         if(action == CONQUER_CELL || action == BUILD_WALL)
@@ -954,7 +954,7 @@ void ScreenGame::OnKeyUp(sgl::core::KeyboardEvent & event)
         for(GameObject * o : objs)
         {
             // assign first Temple found
-            if(o->GetObjectType() == GameObject::TYPE_TEMPLE)
+            if(o->GetObjectType() == ObjectData::TYPE_TEMPLE)
             {
                 mHUD->ShowDialogExploreTemple(mLocalPlayer, static_cast<Temple *>(o));
 
@@ -967,9 +967,9 @@ void ScreenGame::OnKeyUp(sgl::core::KeyboardEvent & event)
         mHUD->ShowDialogTrading();
     // DEBUG: add enemy on current cell
     else if(event.IsModShiftDown() && key == KeyboardEvent::KEY_E)
-        CreateEnemyInCurrentCell(GameObject::TYPE_UNIT_SOLDIER1);
+        CreateEnemyInCurrentCell(ObjectData::TYPE_UNIT_SOLDIER1);
     else if(event.IsModAltDown() && key == KeyboardEvent::KEY_E)
-        CreateEnemyInCurrentCell(GameObject::TYPE_UNIT_SOLDIER2);
+        CreateEnemyInCurrentCell(ObjectData::TYPE_UNIT_SOLDIER2);
 #endif
 }
 
@@ -1481,14 +1481,14 @@ void ScreenGame::CancelObjectAction(GameObject * obj)
             const GameObjectActionType actType = act.type;
 
             // object is a Base
-            if(objType == GameObject::TYPE_BASE)
+            if(objType == ObjectData::TYPE_BASE)
             {
                 // building a new unit
                 if(actType == GameObjectActionType::BUILD_UNIT)
                     act.progressBar->DeleteLater();
             }
             // object is a Unit
-            else if(act.obj->GetObjectCategory() == GameObject::CAT_UNIT)
+            else if(act.obj->GetObjectCategory() == ObjectData::CAT_UNIT)
             {
                 if(actType == GameObjectActionType::MOVE)
                     mGameMap->AbortMove(obj);
@@ -1513,7 +1513,7 @@ void ScreenGame::CancelObjectAction(GameObject * obj)
                 }
             }
             // object is a Hospital
-            else if(objType == GameObject::TYPE_HOSPITAL)
+            else if(objType == ObjectData::TYPE_HOSPITAL)
             {
                 if(actType == GameObjectActionType::HEAL)
                 {
@@ -1535,7 +1535,7 @@ void ScreenGame::CancelObjectAction(GameObject * obj)
                 mHUD->SetLocalActionsEnabled(true);
 
                 // show current indicator for units
-                if(obj->GetObjectCategory() == GameObject::CAT_UNIT)
+                if(obj->GetObjectCategory() == ObjectData::CAT_UNIT)
                     ShowActiveUnitIndicators(static_cast<Unit *>(act.obj), mCurrCell);
             }
 
@@ -1724,7 +1724,7 @@ bool ScreenGame::CheckIfGoalCompleted(MissionGoal & g)
         // check if destroyed all enemy bases
         for(Player * p : mAiPlayers)
         {
-            if(p->HasStructure(GameObject::TYPE_BASE))
+            if(p->HasStructure(ObjectData::TYPE_BASE))
                 return false;
         }
     }
@@ -1846,7 +1846,7 @@ void ScreenGame::AssignMapToFaction(PlayerFaction faction)
 bool ScreenGame::CheckGameOverForLocalPlayer()
 {
     // check if player still has base
-    return !mLocalPlayer->HasStructure(GameObject::TYPE_BASE);
+    return !mLocalPlayer->HasStructure(ObjectData::TYPE_BASE);
 }
 
 int ScreenGame::CellToIndex(const Cell2D & cell) const
@@ -1875,9 +1875,9 @@ bool ScreenGame::SetupNewMiniUnits(GameObjectTypeId type, GameObject * gen, Game
     // set time to build
     float timeSpawn = 0.f;
 
-    if(gen->GetObjectCategory() == GameObject::CAT_UNIT)
+    if(gen->GetObjectCategory() == ObjectData::CAT_UNIT)
         timeSpawn = static_cast<Unit *>(gen)->GetTimeSpawnMiniUnit();
-    else if(gen->GetObjectType() == GameObject::TYPE_SPAWN_TOWER)
+    else if(gen->GetObjectType() == ObjectData::TYPE_SPAWN_TOWER)
         timeSpawn = static_cast<SpawningTower *>(gen)->GetTimeSpawnMiniUnit();
 
     // no group set yet -> create one
@@ -1987,7 +1987,7 @@ bool ScreenGame::SetupStructureConquest(Unit * unit, const Cell2D & start, const
     // handle special case: TEMPLE
     if(player->IsLocal())
     {
-        if(target->GetObjectType() == GameObject::TYPE_TEMPLE)
+        if(target->GetObjectType() == ObjectData::TYPE_TEMPLE)
         {
             mHUD->ShowDialogExploreTemple(player, static_cast<Temple *>(target));
             return false;
@@ -2335,7 +2335,7 @@ bool ScreenGame::FindWhereToBuildStructureAI(Unit * unit, Cell2D & target)
     // no similar structure -> build close to base
     else
     {
-        structures = player->GetStructuresByType(GameObject::TYPE_BASE);
+        structures = player->GetStructuresByType(ObjectData::TYPE_BASE);
 
         std::cout << "ScreenGame::FindWhereToBuildStructureAI - search near base" << std::endl;
     }
@@ -2798,7 +2798,7 @@ void ScreenGame::HandleActionClick(sgl::core::MouseButtonEvent & event)
     GameObject * clickObj = clickGameCell.objTop ? clickGameCell.objTop : clickGameCell.objBottom;
 
     // selected object is a unit
-    if(selObj->GetObjectCategory() == GameObject::CAT_UNIT)
+    if(selObj->GetObjectCategory() == ObjectData::CAT_UNIT)
     {
         auto selUnit = static_cast<Unit *>(selObj);
 
@@ -2890,14 +2890,14 @@ void ScreenGame::HandleActionClick(sgl::core::MouseButtonEvent & event)
         else if (action == GameObjectActionType::BUILD_STRUCTURE)
             HandleUnitBuildStructureOnMouseUp(selUnit, clickCell);
     }
-    else if(selObj->GetObjectCategory() == GameObject::CAT_MINI_UNIT)
+    else if(selObj->GetObjectCategory() == ObjectData::CAT_MINI_UNIT)
     {
         const GameObjectActionType action = selObj->GetActiveAction();
 
         if(action == GameObjectActionType::SET_TARGET)
             HandleMiniUnitSetTargetOnMouseUp(selObj, clickCell);
     }
-    else if(selObj->GetObjectType() == GameObject::TYPE_HOSPITAL)
+    else if(selObj->GetObjectType() == ObjectData::TYPE_HOSPITAL)
     {
         auto selHospital = static_cast<Hospital *>(selObj);
 
@@ -3515,14 +3515,14 @@ void ScreenGame::UpdateCurrentCell()
     if(sel == nullptr)
         return;
 
-    if(sel->GetObjectCategory() == GameObject::CAT_UNIT)
+    if(sel->GetObjectCategory() == ObjectData::CAT_UNIT)
     {
         ShowActiveUnitIndicators(static_cast<Unit *>(sel), cell);
 
         if(sel->GetActiveAction() == ATTACK)
             UpdatePanelHit(sel);
     }
-    else if(sel->GetObjectCategory() == GameObject::CAT_MINI_UNIT)
+    else if(sel->GetObjectCategory() == ObjectData::CAT_MINI_UNIT)
         ShowActiveMiniUnitIndicators(static_cast<MiniUnit *>(sel), cell);
 }
 

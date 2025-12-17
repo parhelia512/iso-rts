@@ -153,7 +153,7 @@ void ObjectPath::Update(float delta)
 
         // collect collectable object, if any
         if(targetCell.objTop != nullptr &&
-           targetCell.objTop->GetObjectCategory() == GameObject::CAT_COLLECTABLE)
+           targetCell.objTop->GetObjectCategory() == ObjectData::CAT_COLLECTABLE)
         {
             player->HandleCollectable(targetCell.objTop);
 
@@ -194,7 +194,7 @@ bool ObjectPath::Fail()
         mState = FAILED;
 
         // clear action data once the action is completed - only for units
-        if(mObj->GetObjectCategory() == GameObject::CAT_UNIT)
+        if(mObj->GetObjectCategory() == ObjectData::CAT_UNIT)
             mScreen->SetObjectActionFailed(mObj);
     }
     else
@@ -210,7 +210,7 @@ bool ObjectPath::Finish()
         mState = COMPLETED;
 
         // clear action data once the action is completed - only for units
-        if(mObj->GetObjectCategory() == GameObject::CAT_UNIT)
+        if(mObj->GetObjectCategory() == ObjectData::CAT_UNIT)
             mScreen->SetObjectActionCompleted(mObj);
     }
     else

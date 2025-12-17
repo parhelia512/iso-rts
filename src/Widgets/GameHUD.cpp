@@ -676,7 +676,7 @@ void GameHUD::ShowMissionCountdown(int secs)
 {
     const Player * p = mScreen->GetGame()->GetLocalPlayer();
     const PlayerFaction pf = p->GetFaction();
-    const auto bases = p->GetStructuresByType(GameObject::TYPE_BASE);
+    const auto bases = p->GetStructuresByType(ObjectData::TYPE_BASE);
 
     // this shouldn't happen
     if(bases.empty())
@@ -709,7 +709,7 @@ void GameHUD::ShowGoalCompletedIcon()
 
     const Player * p = mScreen->GetGame()->GetLocalPlayer();
     const PlayerFaction pf = p->GetFaction();
-    const auto bases = p->GetStructuresByType(GameObject::TYPE_BASE);
+    const auto bases = p->GetStructuresByType(ObjectData::TYPE_BASE);
 
     // this shouldn't happen
     if(bases.empty())

@@ -59,66 +59,8 @@ enum PlayerFaction : unsigned int;
 class GameObject
 {
 public:
-    // -- OBJECT TYPE --
-    static const GameObjectTypeId TYPE_NULL;
-
-    static const GameObjectTypeId TYPE_BARRACKS;
-    static const GameObjectTypeId TYPE_BASE;
-    static const GameObjectTypeId TYPE_BASE_SPOT;
-    static const GameObjectTypeId TYPE_BLOBS;
-    static const GameObjectTypeId TYPE_BUNKER;
-    static const GameObjectTypeId TYPE_DEFENSIVE_TOWER;
-    static const GameObjectTypeId TYPE_DIAMONDS;
-    static const GameObjectTypeId TYPE_HOSPITAL;
-    static const GameObjectTypeId TYPE_LOOTBOX;
-    static const GameObjectTypeId TYPE_MINI_UNIT1;
-    static const GameObjectTypeId TYPE_MINI_UNIT2;
-    static const GameObjectTypeId TYPE_MOUNTAINS;
-    static const GameObjectTypeId TYPE_PRACTICE_TARGET;
-    static const GameObjectTypeId TYPE_RADAR_STATION;
-    static const GameObjectTypeId TYPE_RADAR_TOWER;
-    static const GameObjectTypeId TYPE_RESEARCH_CENTER;
-    static const GameObjectTypeId TYPE_RES_GEN_ENERGY;
-    static const GameObjectTypeId TYPE_RES_GEN_ENERGY_SOLAR;
-    static const GameObjectTypeId TYPE_RES_GEN_MATERIAL;
-    static const GameObjectTypeId TYPE_RES_GEN_MATERIAL_EXTRACT;
-    static const GameObjectTypeId TYPE_RES_STORAGE_BLOBS;
-    static const GameObjectTypeId TYPE_RES_STORAGE_DIAMONDS;
-    static const GameObjectTypeId TYPE_RES_STORAGE_ENERGY;
-    static const GameObjectTypeId TYPE_RES_STORAGE_MATERIAL;
-    static const GameObjectTypeId TYPE_ROCKS;
-    static const GameObjectTypeId TYPE_SPAWN_TOWER;
-    static const GameObjectTypeId TYPE_TEMPLE;
-    static const GameObjectTypeId TYPE_TRADING_POST;
-    static const GameObjectTypeId TYPE_TREES;
-    static const GameObjectTypeId TYPE_UNIT_MEDIC1;
-    static const GameObjectTypeId TYPE_UNIT_SCOUT1;
-    static const GameObjectTypeId TYPE_UNIT_SOLDIER1;
-    static const GameObjectTypeId TYPE_UNIT_SOLDIER2;
-    static const GameObjectTypeId TYPE_UNIT_SPAWNER1;
-    static const GameObjectTypeId TYPE_UNIT_SPAWNER2;
-    static const GameObjectTypeId TYPE_UNIT_WORKER1;
-    static const GameObjectTypeId TYPE_WALL;
-    static const GameObjectTypeId TYPE_WALL_GATE;
-
-    static const std::unordered_map<GameObjectTypeId, std::string> TITLES;
-    static const std::unordered_map<GameObjectTypeId, std::string> DESCRIPTIONS;
-
-    // -- OBJECT CATEGORY --
-    static const GameObjectCategoryId CAT_NULL;
-
-    static const GameObjectCategoryId CAT_COLLECTABLE;
-    static const GameObjectCategoryId CAT_MINI_UNIT;
-    static const GameObjectCategoryId CAT_RES_GENERATOR;
-    static const GameObjectCategoryId CAT_RES_STORAGE;
-    static const GameObjectCategoryId CAT_SCENE_OBJ;
-    static const GameObjectCategoryId CAT_STRUCTURE;
-    static const GameObjectCategoryId CAT_UNIT;
-
     // -- OBJECT VARIANT --
     static const GameObjectVariantId VAR_0;
-
-    static std::string GetObjectTypeStr(const GameObjectTypeId type);
 
 public:
     GameObject(const ObjectData & data);
@@ -291,47 +233,6 @@ private:
 private:
     static unsigned int counter;
 
-    static const std::string TYPE_STR_BARRACKS;
-    static const std::string TYPE_STR_BASE;
-    static const std::string TYPE_STR_BASE_SPOT;
-    static const std::string TYPE_STR_BLOBS;
-    static const std::string TYPE_STR_BUNKER;
-    static const std::string TYPE_STR_DEFENSIVE_TOWER;
-    static const std::string TYPE_STR_DIAMONDS;
-    static const std::string TYPE_STR_HOSPITAL;
-    static const std::string TYPE_STR_LOOTBOX;
-    static const std::string TYPE_STR_MINI_UNIT1;
-    static const std::string TYPE_STR_MINI_UNIT2;
-    static const std::string TYPE_STR_MOUNTAINS;
-    static const std::string TYPE_STR_PRACTICE_TARGET;
-    static const std::string TYPE_STR_RADAR_STATION;
-    static const std::string TYPE_STR_RADAR_TOWER;
-    static const std::string TYPE_STR_RESEARCH_CENTER;
-    static const std::string TYPE_STR_RES_GEN_ENERGY;
-    static const std::string TYPE_STR_RES_GEN_ENERGY_SOLAR;
-    static const std::string TYPE_STR_RES_GEN_MATERIAL;
-    static const std::string TYPE_STR_RES_GEN_MATERIAL_EXTRACT;
-    static const std::string TYPE_STR_RES_STORAGE_BLOBS;
-    static const std::string TYPE_STR_RES_STORAGE_DIAMONDS;
-    static const std::string TYPE_STR_RES_STORAGE_ENERGY;
-    static const std::string TYPE_STR_RES_STORAGE_MATERIAL;
-    static const std::string TYPE_STR_ROCKS;
-    static const std::string TYPE_STR_SPAWN_TOWER;
-    static const std::string TYPE_STR_TEMPLE;
-    static const std::string TYPE_STR_TRADING_POST;
-    static const std::string TYPE_STR_TREES;
-    static const std::string TYPE_STR_UNIT_MEDIC1;
-    static const std::string TYPE_STR_UNIT_SCOUT1;
-    static const std::string TYPE_STR_UNIT_SOLDIER1;
-    static const std::string TYPE_STR_UNIT_SOLDIER2;
-    static const std::string TYPE_STR_UNIT_SPAWNER1;
-    static const std::string TYPE_STR_UNIT_SPAWNER2;
-    static const std::string TYPE_STR_UNIT_WORKER1;
-    static const std::string TYPE_STR_WALL;
-    static const std::string TYPE_STR_WALL_GATE;
-
-    static const std::unordered_map<GameObjectTypeId, std::string> TYPE_STR_MAP;
-
 private:
     std::map<unsigned int, std::function<void()>> mOnValueChanged;
 
@@ -350,8 +251,8 @@ private:
 
     const GameMapCell * mCell = nullptr;
 
-    GameObjectTypeId mType = TYPE_NULL;
-    GameObjectCategoryId mCategory = CAT_NULL;
+    GameObjectTypeId mType = ObjectData::TYPE_NULL;
+    GameObjectCategoryId mCategory = ObjectData::CAT_NULL;
 
     GameObjectActionType mActiveAction = IDLE;
     GameObjectActionType mCurrAction = IDLE;
@@ -402,7 +303,7 @@ inline bool GameObject::IsStructure() const { return mStructure; }
 
 inline bool GameObject::CanBeConquered() const { return mCanBeConq; }
 
-inline bool GameObject::CanBeCollected() const { return GameObject::CAT_COLLECTABLE == mCategory; }
+inline bool GameObject::CanBeCollected() const { return ObjectData::CAT_COLLECTABLE == mCategory; }
 
 inline bool GameObject::IsSelected() const { return mSelected; }
 
@@ -431,7 +332,7 @@ inline GameObjectTypeId GameObject::GetObjectType() const { return mType; }
 
 inline std::string GameObject::GetObjectTypeStr() const
 {
-    return GetObjectTypeStr(mType);
+    return ObjectData::GetObjectTypeStr(mType);
 }
 
 inline GameObjectCategoryId GameObject::GetObjectCategory() const { return mCategory; }

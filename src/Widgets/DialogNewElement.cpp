@@ -741,7 +741,7 @@ void DialogNewElement::UpdateSlots()
         const ObjectData & data = mDataReg->GetObjectData(t);
 
         auto tex = tm->GetSprite(data.GetIconTexFile(), data.GetIconTexId(f));
-        slot->SetData(GameObject::TITLES.at(t).c_str(), tex);
+        slot->SetData(ObjectData::TITLES.at(t).c_str(), tex);
 
         // check first
         slot->SetChecked(false);
@@ -788,7 +788,7 @@ void DialogNewElement::ShowData(int ind)
     const ObjectData & data = mDataReg->GetObjectData(t);
 
     // DESCRIPTION
-    mDescription->SetText(GameObject::DESCRIPTIONS.at(t).c_str());
+    mDescription->SetText(ObjectData::DESCRIPTIONS.at(t).c_str());
 
     // CLASS
     mCategory->SetText(ObjectData::STR_CLASS[data.GetClass()]);

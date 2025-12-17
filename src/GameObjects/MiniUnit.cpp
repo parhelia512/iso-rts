@@ -125,7 +125,7 @@ void MiniUnit::Update(float delta)
     {
         const GameObjectTypeId type = GetObjectType();
 
-        if(type == TYPE_MINI_UNIT1)
+        if(type == ObjectData::TYPE_MINI_UNIT1)
             ExplodeNearEnemy();
 
         // reset flag
@@ -161,7 +161,7 @@ void MiniUnit::SetImage()
 
     unsigned int texInd0 = SID_MUNIT_01_1X_F1;
 
-    if(GetObjectType() == TYPE_MINI_UNIT2)
+    if(GetObjectType() == ObjectData::TYPE_MINI_UNIT2)
         texInd0 = SID_MUNIT_02_1X_F1;
 
     const unsigned int texInd = texInd0 +

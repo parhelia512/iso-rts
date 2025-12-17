@@ -354,17 +354,17 @@ void Player::HandleCollectable(GameObject * obj)
     const GameObjectTypeId type = obj->GetObjectType();
 
     // DIAMONDS
-    if(type == GameObject::TYPE_DIAMONDS)
+    if(type == ObjectData::TYPE_DIAMONDS)
     {
         auto d = static_cast<Diamonds *>(obj);
         mStats[Stat::DIAMONDS].SumValue(d->GetNum());
     }
-    else if(type == GameObject::TYPE_BLOBS)
+    else if(type == ObjectData::TYPE_BLOBS)
     {
         auto d = static_cast<Blobs *>(obj);
         mStats[Stat::BLOBS].SumValue(d->GetNum());
     }
-    else if(type == GameObject::TYPE_LOOTBOX)
+    else if(type == ObjectData::TYPE_LOOTBOX)
     {
         auto lb = static_cast<LootBox *>(obj);
         auto type = static_cast<Player::Stat>(lb->GetPrizeType());

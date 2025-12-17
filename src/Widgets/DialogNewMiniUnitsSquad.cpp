@@ -559,7 +559,7 @@ void DialogNewMiniUnitsSquad::UpdateData()
     UpdatePreview();
 
     // DESCRIPTION
-    mDescription->SetText(GameObject::DESCRIPTIONS.at(typeToBuild).c_str());
+    mDescription->SetText(ObjectData::DESCRIPTIONS.at(typeToBuild).c_str());
 
     // COSTS
     const std::array<int, NUM_OBJ_COSTS> & costs = data.GetCosts();
