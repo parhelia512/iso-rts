@@ -25,6 +25,7 @@ class Game;
 class GameObject;
 class IsoMap;
 class GameObject;
+class MiniUnit;
 class MiniUnitsGroup;
 class ObjectData;
 class ObjectPath;
@@ -248,13 +249,16 @@ private:
 
     // mini units
     void DeleteEmptyMiniUnitsGroups();
-    void InitMiniUnitsGroupsToMove(PlayerFaction faction);
+    void InitMiniUnitsGroupsReadyToMove(PlayerFaction faction);
     void SetNextMiniUnitsGroupToMove();
     bool StartMiniUnitGroupMove();
     void ContinueMiniUnitGroupMove(const ObjectPath * prevOP);
     void ClearMiniUnitsGroupMoveCompleted(bool finished);
     void ClearMiniUnitsGroupMoveFailed();
     void ClearMovingMiniUnitsGroup();
+
+    void InitMiniUnitsReadyToAttack(PlayerFaction faction);
+    void UpdateMiniUnitsAttacking();
 
 private:
     struct ObjectToAdd
@@ -285,6 +289,7 @@ private:
 
     std::vector<MiniUnitsGroup *> mMiniUnitsGroups;
     std::vector<MiniUnitsGroup *> mMiniUnitsGroupsToMove;
+    std::vector<MiniUnit *> mMiniUnitsAttacking;
 
     sgl::ai::Pathfinder * mPathfinder = nullptr;
 
@@ -402,7 +407,10 @@ inline void GameMap::RegisterCasualty(PlayerFaction killed) { ++mCasualties[kill
 inline unsigned int GameMap::GetEnemiesKilled(PlayerFaction killer) const { return mEnemiesKilled.at(killer); }
 inline unsigned int GameMap::GetCasualties(PlayerFaction faction) const { return mCasualties.at(faction); }
 
-inline bool GameMap::AreMiniUnitsMoving() const { return !mMiniUnitsGroupsToMove.empty(); }
+inline bool GameMap::AreMiniUnitsMoving() const
+{
+    return !mMiniUnitsGroupsToMove.empty() && !mMiniUnitsAttacking.empty();
+}
 
 /**
  * @brief Gets a GameMapCell object from the map. No boundaries check is done.

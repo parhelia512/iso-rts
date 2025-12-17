@@ -18,6 +18,8 @@ public:
     void SetMoving(bool moving);
     void setTargetReached();
 
+    void FindEnemyTarget();
+
     void Update(float delta) override;
 
 private:
@@ -26,7 +28,6 @@ private:
     void SetImage();
 
     void ExplodeNearEnemy();
-    void FindTarget();
 
     void PrepareShoot();
 

@@ -19,6 +19,8 @@ public:
 
     PlayerFaction GetFaction() const;
 
+    bool CanAttack() const;
+
     // PATH
     void ClearPath();
     const std::vector<unsigned int> & GetPath() const;

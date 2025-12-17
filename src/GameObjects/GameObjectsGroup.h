@@ -25,6 +25,9 @@ public:
 
     void SetSelected(bool selected) const;
 
+protected:
+    const std::vector<GameObject *> & GetObjects() const;
+
 private:
     std::vector<GameObject *> mObjects;
 };
@@ -33,5 +36,10 @@ inline void GameObjectsGroup::AddObject(GameObject * o) { mObjects.emplace_back(
 
 inline unsigned int GameObjectsGroup::GetNumObjects() const { return mObjects.size(); }
 inline bool GameObjectsGroup::IsEmpty() const { return mObjects.empty(); }
+
+inline const std::vector<GameObject *> & GameObjectsGroup::GetObjects() const
+{
+    return mObjects;
+}
 
 } // namespace game

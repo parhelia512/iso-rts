@@ -2744,7 +2744,7 @@ void GameMap::OnNewTurn(PlayerFaction faction)
 
     // select groups of mini units to move
     DeleteEmptyMiniUnitsGroups();
-    InitMiniUnitsGroupsToMove(faction);
+    InitMiniUnitsGroupsReadyToMove(faction);
 }
 
 int GameMap::GetFactionMoneyPerTurn(PlayerFaction faction)
@@ -2807,6 +2807,9 @@ void GameMap::Update(float delta)
 
     // wall building paths
     UpdateWallBuildPaths(delta);
+
+    // attacking mini units
+    UpdateMiniUnitsAttacking();
 }
 
 // ==================== PRIVATE METHODS ====================
@@ -3869,7 +3872,7 @@ void GameMap::DeleteEmptyMiniUnitsGroups()
     }
 }
 
-void GameMap::InitMiniUnitsGroupsToMove(PlayerFaction faction)
+void GameMap::InitMiniUnitsGroupsReadyToMove(PlayerFaction faction)
 {
     // populate list of groups to move
     for(auto g : mMiniUnitsGroups)
@@ -3879,7 +3882,11 @@ void GameMap::InitMiniUnitsGroupsToMove(PlayerFaction faction)
     }
 
     // start to move
-    SetNextMiniUnitsGroupToMove();
+    if(!mMiniUnitsGroupsToMove.empty())
+        SetNextMiniUnitsGroupToMove();
+    // no mini units need to move -> check for attack
+    else
+        InitMiniUnitsReadyToAttack(faction);
 }
 
 void GameMap::SetNextMiniUnitsGroupToMove()
@@ -4100,11 +4107,75 @@ void GameMap::ClearMiniUnitsGroupMoveFailed()
 
 void GameMap::ClearMovingMiniUnitsGroup()
 {
+    const PlayerFaction faction = mMiniUnitsGroupsToMove.back()->GetFaction();
+
     // clear element from list
     mMiniUnitsGroupsToMove.pop_back();
 
+    // move done -> next step, make mini units with weapon attack
     if(mMiniUnitsGroupsToMove.empty())
-        mScreenGame->OnMiniUnitsGroupsMoveFinished();
+        InitMiniUnitsReadyToAttack(faction);
+}
+
+void GameMap::InitMiniUnitsReadyToAttack(PlayerFaction faction)
+{
+    // populate list of groups to move
+    for(auto g : mMiniUnitsGroups)
+    {
+        if(g->GetFaction() == faction && g->CanAttack())
+        {
+            g->DoForAll([this](GameObject * o)
+            {
+                if(o->GetWeapon() != nullptr)
+                {
+                    o->SetActiveAction(GameObjectActionType::ATTACK);
+                    mMiniUnitsAttacking.emplace_back(static_cast<MiniUnit *>(o));
+                }
+            });
+        }
+    }
+}
+
+void GameMap::UpdateMiniUnitsAttacking()
+{
+    // empty queue -> nothing to do
+    if(mMiniUnitsAttacking.empty())
+        return ;
+
+    MiniUnit * mu = mMiniUnitsAttacking.back();
+
+    // mini unit still attacking -> nothing to do
+    if(mu->GetWeapon()->HasTarget())
+        return ;
+
+    while(!mMiniUnitsAttacking.empty())
+    {
+        // unit not processed yet -> try to find a target
+        if(mu->GetCurrentAction() == GameObjectActionType::IDLE)
+            mu->FindEnemyTarget();
+
+        // target found -> start attack
+        if(mu->GetWeapon()->HasTarget())
+        {
+            mu->SetCurrentAction(GameObjectActionType::ATTACK);
+            return ;
+        }
+        // no target -> clear mini unit from queue
+        else
+        {
+            mu->SetActiveAction(GameObjectActionType::IDLE);
+            mu->SetCurrentAction(GameObjectActionType::IDLE);
+
+            mMiniUnitsAttacking.pop_back();
+
+            // check next mini unit in queue, if any
+            if(!mMiniUnitsAttacking.empty())
+                mu = mMiniUnitsAttacking.back();
+        }
+    }
+
+    // no more mini units to check -> finished
+    mScreenGame->OnMiniUnitsGroupsMoveFinished();
 }
 
 } // namespace game
