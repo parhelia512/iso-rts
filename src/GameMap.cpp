@@ -4146,34 +4146,26 @@ void GameMap::UpdateMiniUnitsAttacking()
     if(mu->GetWeapon()->HasTarget())
         return ;
 
-    while(!mMiniUnitsAttacking.empty())
+    // unit not processed yet -> try to find a target
+    if(mu->GetCurrentAction() == GameObjectActionType::IDLE)
+        mu->FindEnemyTarget();
+
+    // target found -> start attack
+    if(mu->GetWeapon()->HasTarget())
     {
-        // unit not processed yet -> try to find a target
-        if(mu->GetCurrentAction() == GameObjectActionType::IDLE)
-            mu->FindEnemyTarget();
-
-        // target found -> start attack
-        if(mu->GetWeapon()->HasTarget())
-        {
-            mu->SetCurrentAction(GameObjectActionType::ATTACK);
-            return ;
-        }
-        // no target -> clear mini unit from queue
-        else
-        {
-            mu->SetActiveAction(GameObjectActionType::IDLE);
-            mu->SetCurrentAction(GameObjectActionType::IDLE);
-
-            mMiniUnitsAttacking.pop_back();
-
-            // check next mini unit in queue, if any
-            if(!mMiniUnitsAttacking.empty())
-                mu = mMiniUnitsAttacking.back();
-        }
+        mu->SetCurrentAction(GameObjectActionType::ATTACK);
+        return ;
     }
 
+    // no target -> clear mini unit from queue
+    mu->SetActiveAction(GameObjectActionType::IDLE);
+    mu->SetCurrentAction(GameObjectActionType::IDLE);
+
+    mMiniUnitsAttacking.pop_back();
+
     // no more mini units to check -> finished
-    mScreenGame->OnMiniUnitsGroupsMoveFinished();
+    if(mMiniUnitsAttacking.empty())
+        mScreenGame->OnMiniUnitsGroupsMoveFinished();
 }
 
 } // namespace game
