@@ -127,8 +127,6 @@ void MiniUnit::Update(float delta)
 
         if(type == TYPE_MINI_UNIT1)
             ExplodeNearEnemy();
-        else if(mWeapon != nullptr)
-            FindEnemyTarget();
 
         // reset flag
         mTargetReached = false;
