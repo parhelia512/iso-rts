@@ -2809,7 +2809,7 @@ void GameMap::Update(float delta)
     UpdateWallBuildPaths(delta);
 
     // attacking mini units
-    UpdateMiniUnitsAttacking();
+    UpdateMiniUnitsAttacking(delta);
 }
 
 // ==================== PRIVATE METHODS ====================
@@ -4134,10 +4134,16 @@ void GameMap::InitMiniUnitsReadyToAttack(PlayerFaction faction)
     }
 }
 
-void GameMap::UpdateMiniUnitsAttacking()
+void GameMap::UpdateMiniUnitsAttacking(float delta)
 {
     // empty queue -> nothing to do
     if(mMiniUnitsAttacking.empty())
+        return ;
+
+    mTimerMiniUnitsAttacking -= delta;
+
+    // attack delay -> exit
+    if(mTimerMiniUnitsAttacking > 0.f)
         return ;
 
     MiniUnit * mu = mMiniUnitsAttacking.back();
@@ -4162,6 +4168,9 @@ void GameMap::UpdateMiniUnitsAttacking()
     mu->SetCurrentAction(GameObjectActionType::IDLE);
 
     mMiniUnitsAttacking.pop_back();
+
+    const float timeDelay = 0.50f;
+    mTimerMiniUnitsAttacking = timeDelay;
 
     // no more mini units to check -> finished
     if(mMiniUnitsAttacking.empty())

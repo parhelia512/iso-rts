@@ -258,7 +258,7 @@ private:
     void ClearMovingMiniUnitsGroup();
 
     void InitMiniUnitsReadyToAttack(PlayerFaction faction);
-    void UpdateMiniUnitsAttacking();
+    void UpdateMiniUnitsAttacking(float delta);
 
 private:
     struct ObjectToAdd
@@ -290,6 +290,8 @@ private:
     std::vector<MiniUnitsGroup *> mMiniUnitsGroups;
     std::vector<MiniUnitsGroup *> mMiniUnitsGroupsToMove;
     std::vector<MiniUnit *> mMiniUnitsAttacking;
+
+    float mTimerMiniUnitsAttacking = 0.f;
 
     sgl::ai::Pathfinder * mPathfinder = nullptr;
 
