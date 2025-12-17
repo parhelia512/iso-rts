@@ -3938,8 +3938,6 @@ bool GameMap::StartMiniUnitGroupMove()
     auto op = new ObjectPath(obj, mIsoMap, this, mScreenGame);
     op->SetPath(path);
 
-    obj->SetCurrentAction(GameObjectActionType::MOVE);
-
     return MoveUnit(op);
 }
 

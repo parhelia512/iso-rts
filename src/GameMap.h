@@ -409,7 +409,7 @@ inline unsigned int GameMap::GetCasualties(PlayerFaction faction) const { return
 
 inline bool GameMap::AreMiniUnitsMoving() const
 {
-    return !mMiniUnitsGroupsToMove.empty() && !mMiniUnitsAttacking.empty();
+    return !mMiniUnitsGroupsToMove.empty() || !mMiniUnitsAttacking.empty();
 }
 
 /**
