@@ -118,9 +118,6 @@ void Unit::Update(float delta)
 
             if(mWeapon->IsReadyToShoot())
                 PrepareShoot();
-
-            if(!mWeapon->HasTarget())
-                GetScreen()->SetObjectActionCompleted(this);
         }
     }
 
@@ -255,6 +252,9 @@ void Unit::PrepareShoot()
     const float y0 = isoObj->GetY();
 
     mWeapon->Shoot(x0, y0);
+
+    if(!mWeapon->HasTarget())
+        GetScreen()->SetObjectActionCompleted(this);
 }
 
 void Unit::Heal()
