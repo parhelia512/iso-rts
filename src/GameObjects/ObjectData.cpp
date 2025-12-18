@@ -195,7 +195,8 @@ const std::unordered_map<GameObjectTypeId, std::string> ObjectData::DESCRIPTIONS
         { ObjectData::TYPE_LOOTBOX, "A loot box that can be collected by a unit to obtain various resources."},
         { ObjectData::TYPE_MINI_UNIT1, "Basic mini units that explode when they reach their target and"
                                       " there's an enemy nearby."},
-        { ObjectData::TYPE_MINI_UNIT2, "Mini units that shoot enemies close to their target position."},
+        { ObjectData::TYPE_MINI_UNIT2, "Mini units that attack enemies nearby when not moving.\n"
+                                       "Attack mode is \"QUICK SHOT\"."},
         { ObjectData::TYPE_MOUNTAINS, "Some mountains"},
         { ObjectData::TYPE_PRACTICE_TARGET, "A practice target.\nIt can be used to train your units "
                                            "and to improve their attack skills."},
