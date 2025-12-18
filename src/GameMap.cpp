@@ -4132,6 +4132,9 @@ void GameMap::InitMiniUnitsReadyToAttack(PlayerFaction faction)
             });
         }
     }
+
+    if(mMiniUnitsAttacking.empty())
+        mScreenGame->OnMiniUnitsGroupsMoveFinished();
 }
 
 void GameMap::UpdateMiniUnitsAttacking(float delta)
