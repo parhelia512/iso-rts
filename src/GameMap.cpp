@@ -561,6 +561,9 @@ GameObject * GameMap::CreateObject(unsigned int layerId, GameObjectTypeId type,
     // set object properties
     o2a.obj->SetCell(&mCells[ind0]);
 
+    // weapon
+    AssignWeaponToObject(data.GetWeapon(), o2a.obj);
+
     // schedule object for map addition
     if(instantAdd)
         AddObjectToMap(o2a);
