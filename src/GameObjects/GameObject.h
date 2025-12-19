@@ -163,6 +163,9 @@ public:
 
     void SetAttackMode(AttackMode am);
 
+    void FindAndSetEnemyTarget();
+    bool HasEnemyInRange();
+
     void Hit(float damage, GameObject * attacker, bool fatal);
     void MissHit();
     void SelfDestroy();

@@ -21,6 +21,8 @@
 #include <sgl/graphic/TextureManager.h>
 #include <sgl/utilities/UniformDistribution.h>
 
+#include <cstdlib>
+
 namespace
 {
 const float minDelta = 0.01f;
@@ -326,6 +328,103 @@ void GameObject::SetAttackMode(AttackMode am)
 {
     if(mWeapon != nullptr)
         mWeapon->SetAttackMode(am);
+}
+
+void GameObject::FindAndSetEnemyTarget()
+{
+    if(mWeapon == nullptr)
+        return ;
+
+    auto gm = GetGameMap();
+
+    const std::vector<GameMapCell> & cells = gm->GetCells();
+    const int mapRows = gm->GetNumRows();
+    const int mapCols = gm->GetNumCols();
+
+    const int cr = GetRow0();
+    const int cc = GetCol0();
+
+    const int rad = mWeapon->GetRange();
+    const int r0 = cr >= rad ? cr - rad : 0;
+    const int r1 = cr + rad < mapRows ? cr + rad + 1 : mapRows;
+    const int c0 = cc >= rad ? cc - rad : 0;
+    const int c1 = cc + rad < mapCols ? cc + rad + 1 : mapCols;
+
+    GameObject * target = nullptr;
+    int minDist = mapRows + mapCols;
+
+    for(int r = r0; r < r1; ++r)
+    {
+        const int ind0 = r * mapCols;
+
+        for(int c = c0; c < c1; ++c)
+        {
+            const int ind = ind0 + c;
+            const GameMapCell & cell = cells[ind];
+
+            // prioritize object on top
+            GameObject * obj = cell.objTop != nullptr ? cell.objTop : cell.objBottom;
+
+            // enemy found
+            if(obj != nullptr && obj->GetFaction() != mFaction && obj->GetFaction() != NO_FACTION)
+            {
+                const int dist = std::abs(cr - r) + std::abs(cc - c);
+
+                // enemy is closer than others
+                if(dist < minDist)
+                {
+                    minDist = dist;
+                    target = cell.objTop != nullptr ? cell.objTop : cell.objBottom;
+                }
+            }
+        }
+    }
+
+    if(target != nullptr)
+        mWeapon->SetTarget(target);
+    else
+        mWeapon->ClearTarget();
+}
+
+bool GameObject::HasEnemyInRange()
+{
+    if(mWeapon == nullptr)
+        return false;
+
+    auto gm = GetGameMap();
+
+    const std::vector<GameMapCell> & cells = gm->GetCells();
+    const int mapRows = gm->GetNumRows();
+    const int mapCols = gm->GetNumCols();
+
+    const int cr = GetRow0();
+    const int cc = GetCol0();
+
+    const int rad = mWeapon->GetRange();
+    const int r0 = cr >= rad ? cr - rad : 0;
+    const int r1 = cr + rad < mapRows ? cr + rad + 1 : mapRows;
+    const int c0 = cc >= rad ? cc - rad : 0;
+    const int c1 = cc + rad < mapCols ? cc + rad + 1 : mapCols;
+
+    for(int r = r0; r < r1; ++r)
+    {
+        const int ind0 = r * mapCols;
+
+        for(int c = c0; c < c1; ++c)
+        {
+            const int ind = ind0 + c;
+            const GameMapCell & cell = cells[ind];
+
+            // prioritize object on top
+            GameObject * obj = cell.objTop != nullptr ? cell.objTop : cell.objBottom;
+
+            // enemy found
+            if(obj != nullptr && obj->GetFaction() != mFaction && obj->GetFaction() != NO_FACTION)
+                return true;
+        }
+    }
+
+    return false;
 }
 
 void GameObject::Hit(float damage, GameObject * attacker, bool fatal)

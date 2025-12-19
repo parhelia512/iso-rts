@@ -12,8 +12,6 @@ class DefensiveTower : public Structure
 public:
     DefensiveTower(const ObjectData & data);
 
-    void FindEnemyTarget();
-
     void Update(float delta) override;
 
 protected:

@@ -4127,7 +4127,7 @@ void GameMap::InitMiniUnitsReadyToAttack(PlayerFaction faction)
         {
             g->DoForAll([this](GameObject * o)
             {
-                if(o->GetWeapon() != nullptr)
+                if(o->HasEnemyInRange())
                 {
                     o->SetActiveAction(GameObjectActionType::ATTACK);
                     mMiniUnitsAttacking.emplace_back(static_cast<MiniUnit *>(o));
@@ -4163,7 +4163,7 @@ void GameMap::UpdateMiniUnitsAttacking(float delta)
 
     // unit not processed yet -> try to find a target
     if(mu->GetCurrentAction() == GameObjectActionType::IDLE)
-        mu->FindEnemyTarget();
+        mu->FindAndSetEnemyTarget();
 
     // target found -> start attack
     if(mu->GetWeapon()->HasTarget())
@@ -4194,7 +4194,7 @@ void GameMap::InitStructuresReadyToAttack()
 
     for(auto s : structures)
     {
-        if(s->GetWeapon() != nullptr)
+        if(s->HasEnemyInRange())
             mStructuresAttacking.emplace_back(s);
     }
 
@@ -4216,14 +4216,8 @@ void GameMap::UpdateStructuresAttacking(float delta)
         return ;
 
     // object not processed yet -> try to find a target
-    //if(obj->GetCurrentAction() == GameObjectActionType::IDLE)
     if(obj->HasEnergyForActionStep(GameObjectActionType::ATTACK))
-    {
-        const GameObjectTypeId type = obj->GetObjectType();
-
-        if(type == ObjectData::TYPE_DEFENSIVE_TOWER)
-            static_cast<DefensiveTower *>(obj)->FindEnemyTarget();
-    }
+        obj->FindAndSetEnemyTarget();
 
     // target found -> start attack
     if(obj->GetWeapon()->HasTarget())
