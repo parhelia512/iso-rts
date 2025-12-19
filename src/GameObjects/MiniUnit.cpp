@@ -82,14 +82,10 @@ void MiniUnit::Update(float delta)
     // ATTACKING OTHER OBJECTS
     if(mWeapon != nullptr)
     {
-        if(mWeapon->HasTarget())
-        {
-            if(!mWeapon->Update(delta))
-                return ;
+        mWeapon->Update(delta);
 
-            if(mWeapon->IsReadyToShoot())
-                PrepareShoot();
-        }
+        if(mWeapon->IsReadyToShoot())
+            PrepareShoot();
     }
 }
 

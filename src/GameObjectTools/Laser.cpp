@@ -34,16 +34,6 @@ Laser::Laser(const WeaponData & data, GameObject * owner, GameMap * gm,
     mTex = tm->GetSprite(SpriteFileUnitsParticles, texInd);
 }
 
-int Laser::GetCostEnergy() const
-{
-    const int costSingleShot = GetCostEnergyPerShot();
-
-    if(GetAttackMode() == ATT_BURST_SHOT)
-        return costSingleShot * GetBurstShots();
-    else
-        return costSingleShot;
-}
-
 int Laser::GetCostEnergyPerShot() const
 {
     switch (GetAttackMode())

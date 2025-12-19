@@ -19,11 +19,21 @@ Weapon::Weapon(const WeaponData & data, GameObject * owner, GameMap * gm,
     , mAttackMode(ATT_QUICK_SHOT)
     , mBurstShots(data.GetBurstShots())
     , mBurstToShoot(data.GetBurstShots())
-    , mBurstDelay(data.GetBurstDelay())
+    , mTimeCooldown(data.GetTimeCooldown())
 {
     // set attack range converting attribute
     const int attRanges[] = { 0, 2, 3, 4, 5, 6, 8, 9, 10, 11, 13 };
     mRange = attRanges[mAttributes[OBJ_ATT_ATTACK_RANGE]];
+}
+
+int Weapon::GetCostEnergy() const
+{
+    const int costSingleShot = GetCostEnergyPerShot();
+
+    if(GetAttackMode() == ATT_BURST_SHOT)
+        return costSingleShot * GetBurstShots();
+    else
+        return costSingleShot;
 }
 
 bool Weapon::SetTarget(GameObject * obj)
@@ -33,11 +43,10 @@ bool Weapon::SetTarget(GameObject * obj)
         return false;
 
     mTarget = obj;
-    mTimerBurst = 0.f;
 
     mReadyToShoot = false;
 
-    InitBurstShoot();
+    mBurstToShoot = mBurstShots;
 
     return true;
 }
@@ -136,16 +145,18 @@ void Weapon::Shoot(float x0, float y0)
 {
     OnShoot(x0, y0);
 
+    // reset attack timer
+    mTimerAttack = mTimeCooldown;
+
+    // handle burst shots
     if(mAttackMode == ATT_BURST_SHOT)
     {
         --mBurstToShoot;
 
         if(mBurstToShoot == 0)
             mTarget = nullptr;
-        else
-            mTimerBurst = mBurstDelay;
     }
-    // single shot
+    // clear target for single shots
     else
         mTarget = nullptr;
 
@@ -155,25 +166,25 @@ void Weapon::Shoot(float x0, float y0)
 // returns TRUE when owner needs to shoot
 bool Weapon::Update(float delta)
 {
-    // target already destroyed
+    mTimerAttack -= delta;
+
+    // nothing to do
+    if(mTarget == nullptr)
+        return true;
+
+    // FAIL target already destroyed
     if(!mGameMap->HasObject(mTarget))
     {
         mTarget = nullptr;
         return false;
     }
 
-    if(mAttackMode == ATT_BURST_SHOT)
-    {
-        mTimerBurst -= delta;
+    // cooldown time not over yet
+    if(mTimerAttack > 0.f)
+        return true;
 
-        if(mTimerBurst > 0.f)
-            return true;
-
-        mReadyToShoot = true;
-    }
-    // single shot
-    else
-        mReadyToShoot = true;
+    // all good -> shoot!
+    mReadyToShoot = true;
 
     return true;
 }

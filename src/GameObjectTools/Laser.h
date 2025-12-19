@@ -18,7 +18,6 @@ public:
     Laser(const WeaponData & data, GameObject * owner, GameMap * gm,
           const sgl::graphic::ParticlesManager * partMan);
 
-    int GetCostEnergy() const override;
     int GetCostEnergyPerShot() const override;
 
 private:

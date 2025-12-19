@@ -28,7 +28,7 @@ public:
     void SetAttackMode(AttackMode am);
 
     // cost for whole attack (i.e.: all burst shots)
-    virtual int GetCostEnergy() const = 0;
+    int GetCostEnergy() const;
     // cost for a single shot of an attack
     virtual int GetCostEnergyPerShot() const = 0;
 
@@ -45,7 +45,8 @@ public:
 
     unsigned int GetBurstShots() const;
     unsigned int GetBurstToShoot() const;
-    float GetBurstDelay() const;
+
+    float GetTimeCooldown() const;
 
     int GetRange() const;
 
@@ -65,8 +66,6 @@ protected:
     GameObject * mTarget = nullptr;
 
 private:
-    void InitBurstShoot();
-
     float GetBonusOnAttackMode(float prob) const;
 
     virtual void OnShoot(float x0, float y0) = 0;
@@ -81,12 +80,12 @@ private:
 
     // attack
     AttackMode mAttackMode;
-    float mTimerBurst = 0.f;
+    float mTimerAttack = 0.f;
 
     int mRange = 0;
     int mBurstShots = 0;
     int mBurstToShoot = 0;
-    float mBurstDelay = 0.f;
+    float mTimeCooldown = 0.f;
     float mMaxProbabilityFatal = 3.f;
 
     bool mReadyToShoot = false;
@@ -104,7 +103,7 @@ inline void Weapon::SetMaxProbabilityFatalHit(float val) { mMaxProbabilityFatal 
 
 inline unsigned int Weapon::GetBurstShots() const { return mBurstShots; }
 inline unsigned int Weapon::GetBurstToShoot() const { return mBurstToShoot; }
-inline float Weapon::GetBurstDelay() const { return mBurstDelay; }
+inline float Weapon::GetTimeCooldown() const { return mTimeCooldown; }
 
 inline int Weapon::GetRange() const { return mRange; }
 
@@ -117,11 +116,5 @@ inline GameObject * Weapon::GetOwner() const { return mOwner; }
 inline GameMap * Weapon::GetGameMap() const { return mGameMap; }
 
 inline const sgl::graphic::ParticlesManager * Weapon::GetParticlesManager() const { return mPartMan; }
-
-inline void Weapon::InitBurstShoot()
-{
-    mBurstToShoot = mBurstShots;
-    mTimerBurst = 0.f;
-}
 
 } // namespace game

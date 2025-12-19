@@ -21,9 +21,6 @@ private:
     void SetImage();
 
     void PrepareShoot();
-
-private:
-    float mTimerAttack = 0.f;
 };
 
 } // namespace game

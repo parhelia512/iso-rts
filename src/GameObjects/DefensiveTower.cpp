@@ -29,18 +29,7 @@ void DefensiveTower::Update(float delta)
     if(!IsLinked())
         return ;
 
-    mTimerAttack -= delta;
-
-    // not ready to attack yet
-    if(mTimerAttack > 0.f)
-        return ;
-
-    // nothing to do
-    if(!mWeapon->HasTarget())
-        return ;
-
-    if(!mWeapon->Update(delta))
-        return ;
+    mWeapon->Update(delta);
 
     if(mWeapon->IsReadyToShoot())
         PrepareShoot();
@@ -90,9 +79,6 @@ void DefensiveTower::PrepareShoot()
     const float y0 = isoTargetY < isoY ? isoY + 4 : isoY + 30;
 
     mWeapon->Shoot(x0, y0);
-
-    const float timeAttack = 0.5f;
-    mTimerAttack = timeAttack;
 }
 
 } // namespace game

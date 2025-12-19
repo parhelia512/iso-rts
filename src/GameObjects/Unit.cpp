@@ -111,14 +111,11 @@ void Unit::Update(float delta)
     // ATTACKING OTHER OBJECTS
     if(mWeapon != nullptr)
     {
-        if(mWeapon->HasTarget())
-        {
-            if(!mWeapon->Update(delta))
-                GetScreen()->SetObjectActionFailed(this);
+        if(!mWeapon->Update(delta))
+            GetScreen()->SetObjectActionFailed(this);
 
-            if(mWeapon->IsReadyToShoot())
-                PrepareShoot();
-        }
+        if(mWeapon->IsReadyToShoot())
+            PrepareShoot();
     }
 
     // HEALING OTHER OBJECTS
