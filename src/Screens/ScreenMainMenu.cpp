@@ -346,6 +346,7 @@ void ScreenMainMenu::CreateChangelog()
                         "- New icon for \"end turn\" button.\n"
                         "- Objects selected when a turn ends are re-selected when a new turn begins.\n"
                         "- Replaced Twitter with Bluesky in main menu.\n"
+                        "- New overlay showing attack area of towers and units.\n"
                         );
     textChange->SetPosition(contX, contY);
     textChange->SetColor(colorContent);

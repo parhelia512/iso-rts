@@ -12,7 +12,7 @@ class AttackRangeIndicator : public IsoObject
 public:
     AttackRangeIndicator();
 
-    void SetFaction(PlayerFaction faction);
+    void SetDistance(unsigned int d, unsigned int range);
 };
 
 } // namespace game

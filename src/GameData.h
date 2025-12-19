@@ -93,9 +93,7 @@ enum SpriteIdIndicators : unsigned int
     IND_CONQUEST_F3,
 
     // ATTACK RANGE INDICATOR
-    IND_ATTACK_F1,
-    IND_ATTACK_F2,
-    IND_ATTACK_F3,
+    IND_ATTACK_RANGE,
 
     // HEALING RANGE INDICATOR
     IND_RANGE_HEAL_F1,

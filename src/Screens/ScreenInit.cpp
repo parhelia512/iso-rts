@@ -923,9 +923,7 @@ void ScreenInit::SetupTextures()
             { 291, 147, 96, 48 },
             { 388, 147, 96, 48 },
             // attack range indicator
-            { 485, 147, 96, 48 },
             { 0, 196, 96, 48 },
-            { 97, 196, 96, 48 },
             // HEALING RANGE INDICATOR
             { 582, 0, 96, 48 },
             { 582, 49, 96, 48 },

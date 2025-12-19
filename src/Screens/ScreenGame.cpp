@@ -3018,12 +3018,9 @@ void ScreenGame::ShowAttackIndicators(const GameObject * obj, int range)
     }
 
     // init needed indicators
-    const PlayerFaction faction = obj->GetFaction();
-
     for(int i = 0; i < neededInd; ++i)
     {
         mAttIndicators[i]->SetVisible(true);
-        mAttIndicators[i]->SetFaction(faction);
     }
 
     // hide other indicators
@@ -3039,7 +3036,17 @@ void ScreenGame::ShowAttackIndicators(const GameObject * obj, int range)
         for(int c = colTL; c <= colBR; ++c)
         {
             if(r != r0 || c != c0)
-                layer->AddObject(mAttIndicators[ind++], r, c);
+            {
+                layer->AddObject(mAttIndicators[ind], r, c);
+
+                const int distR = std::abs(r - r0);
+                const int distC = std::abs(c - c0);
+                const int dist = distR > distC ? distR : distC;
+
+                mAttIndicators[ind]->SetDistance(dist, range);
+
+                ++ind;
+            }
         }
     }
 }
