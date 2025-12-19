@@ -66,14 +66,6 @@
 #include <string>
 #include <vector>
 
-namespace
-{
-const char * TEXT_ENEMY_TURN = "ENEMY TURN";
-const char * TEXT_MOVING_MU = "MOVING MINI UNITS";
-const char * TEXT_TOWERS_ATTACKING = "TOWERS ARE SHOOTING";
-const char * TEXT_PAUSE = "GAME PAUSED";
-}
-
 namespace game
 {
 
@@ -84,6 +76,7 @@ ScreenGame::ScreenGame(Game * game)
     , mCurrCell(-1, -1)
     , mTimerAutoEndTurn(TIME_AUTO_END_TURN)
     , mLocalPlayer(game->GetLocalPlayer())
+    , mTurnStage(TURN_STAGE_PLAY)
 {
     game->SetClearColor(0x1A, 0x1A, 0x1A, 0xFF);
 
@@ -437,16 +430,7 @@ void ScreenGame::SetPause(bool paused)
 
     mHUD->SetEnabled(!paused);
 
-    // handle turn control panel text
-    if(paused)
-        mHUD->ShowTurnControlText(TEXT_PAUSE);
-    else
-    {
-        if(IsCurrentTurnLocal())
-            mHUD->ShowTurnControlPanel();
-        else
-            mHUD->ShowTurnControlText(TEXT_ENEMY_TURN);
-    }
+    mHUD->UpdatePanelTurnControl();
 }
 
 void ScreenGame::CollectMissionGoalReward(unsigned int index)
@@ -488,6 +472,17 @@ void ScreenGame::CollectMissionGoalReward(unsigned int index)
     g.SetRewardCollected();
 
     UpdateGoalCompletedIcon();
+}
+
+void ScreenGame::SetLocalTurnStage(TurnStage ts)
+{
+    // only set stage for local player
+    if(!IsCurrentTurnLocal())
+        return ;
+
+    mTurnStage = ts;
+
+    mHUD->UpdatePanelTurnControl();
 }
 
 bool ScreenGame::CanLocalPlayerInteract() const
@@ -3743,23 +3738,22 @@ void ScreenGame::EndTurn()
     // new active player is local player
     if(IsCurrentTurnLocal())
     {
-        if(mGameMap->IsDoingAutomaticMoves())
-            mHUD->ShowTurnControlText(TEXT_MOVING_MU);
-        else
+        if(!mGameMap->IsDoingAutomaticMoves())
             InitLocalTurn();
     }
     // new active player is AI
     else
     {
         mHUD->SetLocalActionsEnabled(false);
-        mHUD->ShowTurnControlText(TEXT_ENEMY_TURN);
+        mHUD->UpdatePanelTurnControl();
     }
 }
 
 void ScreenGame::InitLocalTurn()
 {
+    SetLocalTurnStage(TURN_STAGE_PLAY);
+
     mHUD->SetLocalActionsEnabled(true);
-    mHUD->ShowTurnControlPanel();
 
     ReselectLastSelected();
 

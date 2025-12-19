@@ -3886,7 +3886,11 @@ void GameMap::InitMiniUnitsGroupsReadyToMove(PlayerFaction faction)
 
     // start to move
     if(!mMiniUnitsGroupsToMove.empty())
+    {
+        mScreenGame->SetLocalTurnStage(TURN_STAGE_MINI_UNITS_MOVE);
+
         SetNextMiniUnitsGroupToMove();
+    }
     // no mini units need to move -> check for attack
     else
         InitMiniUnitsReadyToAttack(faction);
@@ -4141,6 +4145,8 @@ void GameMap::InitMiniUnitsReadyToAttack(PlayerFaction faction)
     // nothing to do -> end here
     if(mMiniUnitsAttacking.empty())
         InitStructuresReadyToAttack();
+    else
+        mScreenGame->SetLocalTurnStage(TURN_STAGE_MINI_UNITS_ATTACK);
 }
 
 void GameMap::UpdateMiniUnitsAttacking(float delta)
@@ -4201,6 +4207,8 @@ void GameMap::InitStructuresReadyToAttack()
     // nothing to do -> end here
     if(mStructuresAttacking.empty())
         mScreenGame->OnAutomaticMovesFinished();
+    else
+        mScreenGame->SetLocalTurnStage(TURN_STAGE_TOWERS_ATTACK);
 }
 
 void GameMap::UpdateStructuresAttacking(float delta)

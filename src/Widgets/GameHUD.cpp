@@ -767,6 +767,35 @@ void GameHUD::ShowTurnControlText(const char * text)
     mPanelTurnCtrl->ShowText(text);
 }
 
+
+void GameHUD::UpdatePanelTurnControl()
+{
+    // GAME PAUSED
+    if(mScreen->mPaused)
+    {
+        ShowTurnControlText("GAME PAUSED");
+        return ;
+    }
+
+    // ENEMY TURN
+    if(!mScreen->IsCurrentTurnLocal())
+    {
+        ShowTurnControlText("ENEMY TURN");
+        return ;
+    }
+
+    // LOCAL TURN
+    if(TURN_STAGE_MINI_UNITS_MOVE == mScreen->mTurnStage)
+        ShowTurnControlText("MINI UNITS MOVING");
+    else if(TURN_STAGE_MINI_UNITS_ATTACK == mScreen->mTurnStage)
+        ShowTurnControlText("MINI UNITS SHOOTING");
+    else if(TURN_STAGE_TOWERS_ATTACK == mScreen->mTurnStage)
+        ShowTurnControlText("TOWERS SHOOTING");
+    else
+        ShowTurnControlPanel();
+}
+
+
 void GameHUD::ShowDialogNewMiniUnitsSquad(GameObject * spawner)
 {
     if(mDialogNewMiniUnits != nullptr)

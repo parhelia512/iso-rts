@@ -44,6 +44,7 @@ class Unit;
 class WallIndicator;
 
 enum PlayerFaction : unsigned int;
+enum TurnStage : unsigned int;
 
 class ScreenGame : public Screen
 {
@@ -95,6 +96,7 @@ public:
     void CollectMissionGoalReward(unsigned int index);
 
     // TURN SYSTEM
+    void SetLocalTurnStage(TurnStage ts);
     bool IsCurrentTurnLocal() const;
 
     bool CanLocalPlayerInteract() const;
@@ -251,6 +253,8 @@ private:
     Player * mLocalPlayer = nullptr;
 
     GameObject * mLastSelected = nullptr;
+
+    TurnStage mTurnStage;
 
     int mActivePlayerIdx = 0;
 

@@ -181,6 +181,16 @@ enum TutorialState : unsigned int
     TS_UNKNOWN
 };
 
+enum TurnStage : unsigned int
+{
+    TURN_STAGE_MINI_UNITS_ATTACK,
+    TURN_STAGE_MINI_UNITS_MOVE,
+    TURN_STAGE_PLAY,
+    TURN_STAGE_TOWERS_ATTACK,
+
+    NUM_TURN_STAGES
+};
+
 extern const char * FACTIONS_NAME[NUM_FACTIONS];
 extern const char * MISSION_CATEGORY_TITLE[NUM_MISSION_CATEGORIES];
 extern const char * PLANETS_NAME[NUM_PLANETS];

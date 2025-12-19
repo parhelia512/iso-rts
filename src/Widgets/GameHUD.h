@@ -97,6 +97,7 @@ public:
 
     void ShowTurnControlPanel();
     void ShowTurnControlText(const char * text);
+    void UpdatePanelTurnControl();
     const PanelTurnControl * GetPanelTurnControl() const;
 
     void ShowDialogNewMiniUnitsSquad(GameObject * spawner);
