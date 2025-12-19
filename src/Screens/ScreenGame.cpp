@@ -70,6 +70,7 @@ namespace
 {
 const char * TEXT_ENEMY_TURN = "ENEMY TURN";
 const char * TEXT_MOVING_MU = "MOVING MINI UNITS";
+const char * TEXT_TOWERS_ATTACKING = "TOWERS ARE SHOOTING";
 const char * TEXT_PAUSE = "GAME PAUSED";
 }
 
@@ -412,6 +413,11 @@ void ScreenGame::CenterCameraOverObject(GameObject * obj)
     UpdateCurrentCell();
 }
 
+Player * ScreenGame::GetActivePlayer() const
+{
+    return GetGame()->GetPlayerByIndex(mActivePlayerIdx);
+}
+
 MiniMap * ScreenGame::GetMiniMap() const
 {
     if(mHUD)
@@ -486,7 +492,7 @@ void ScreenGame::CollectMissionGoalReward(unsigned int index)
 
 bool ScreenGame::CanLocalPlayerInteract() const
 {
-    return IsCurrentTurnLocal() && !mGameMap->AreMiniUnitsMoving();
+    return IsCurrentTurnLocal() && !mGameMap->IsDoingAutomaticMoves();
 }
 
 void ScreenGame::OnApplicationQuit(sgl::core::ApplicationEvent & event)
@@ -1037,7 +1043,7 @@ void ScreenGame::OnWindowMouseLeft(sgl::graphic::WindowEvent & event)
         mHUD->ShowDialogExit();
 }
 
-void ScreenGame::OnMiniUnitsGroupsMoveFinished()
+void ScreenGame::OnAutomaticMovesFinished()
 {
     if(IsCurrentTurnLocal())
         InitLocalTurn();
@@ -3737,7 +3743,7 @@ void ScreenGame::EndTurn()
     // new active player is local player
     if(IsCurrentTurnLocal())
     {
-        if(mGameMap->AreMiniUnitsMoving())
+        if(mGameMap->IsDoingAutomaticMoves())
             mHUD->ShowTurnControlText(TEXT_MOVING_MU);
         else
             InitLocalTurn();

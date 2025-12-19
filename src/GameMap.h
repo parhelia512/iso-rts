@@ -156,7 +156,7 @@ public:
 
     MiniUnitsGroup * CreateMiniUnitsGroup(PlayerFaction faction);
 
-    bool AreMiniUnitsMoving() const;
+    bool IsDoingAutomaticMoves() const;
 
     // damage
     void DamageArea(const Cell2D & srcBR, const Cell2D & srcTL, int radius, float maxDamage);
@@ -260,6 +260,10 @@ private:
     void InitMiniUnitsReadyToAttack(PlayerFaction faction);
     void UpdateMiniUnitsAttacking(float delta);
 
+    // auto-attacking structures
+    void InitStructuresReadyToAttack();
+    void UpdateStructuresAttacking(float delta);
+
 private:
     struct ObjectToAdd
     {
@@ -290,6 +294,8 @@ private:
     std::vector<MiniUnitsGroup *> mMiniUnitsGroups;
     std::vector<MiniUnitsGroup *> mMiniUnitsGroupsToMove;
     std::vector<MiniUnit *> mMiniUnitsAttacking;
+
+    std::vector<GameObject *> mStructuresAttacking;
 
     float mTimerMiniUnitsAttacking = 0.f;
 
@@ -409,9 +415,10 @@ inline void GameMap::RegisterCasualty(PlayerFaction killed) { ++mCasualties[kill
 inline unsigned int GameMap::GetEnemiesKilled(PlayerFaction killer) const { return mEnemiesKilled.at(killer); }
 inline unsigned int GameMap::GetCasualties(PlayerFaction faction) const { return mCasualties.at(faction); }
 
-inline bool GameMap::AreMiniUnitsMoving() const
+inline bool GameMap::IsDoingAutomaticMoves() const
 {
-    return !mMiniUnitsGroupsToMove.empty() || !mMiniUnitsAttacking.empty();
+    return !mMiniUnitsGroupsToMove.empty() || !mMiniUnitsAttacking.empty() ||
+           !mStructuresAttacking.empty();
 }
 
 /**

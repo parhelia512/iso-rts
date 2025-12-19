@@ -547,9 +547,6 @@ GameObject * GameMap::CreateObject(unsigned int layerId, GameObjectTypeId type,
         return nullptr;
     }
 
-    // weapon
-    AssignWeaponToObject(data.GetWeapon(), o2a.obj);
-
     // links to other objects
     o2a.obj->SetGameMap(this);
     o2a.obj->SetParticlesManager(pm);
@@ -2811,8 +2808,11 @@ void GameMap::Update(float delta)
     // wall building paths
     UpdateWallBuildPaths(delta);
 
-    // attacking mini units
+    // mini units attacking
     UpdateMiniUnitsAttacking(delta);
+
+    // structures attacking
+    UpdateStructuresAttacking(delta);
 }
 
 // ==================== PRIVATE METHODS ====================
@@ -4136,8 +4136,11 @@ void GameMap::InitMiniUnitsReadyToAttack(PlayerFaction faction)
         }
     }
 
+    mTimerMiniUnitsAttacking = 0.f;
+
+    // nothing to do -> end here
     if(mMiniUnitsAttacking.empty())
-        mScreenGame->OnMiniUnitsGroupsMoveFinished();
+        InitStructuresReadyToAttack();
 }
 
 void GameMap::UpdateMiniUnitsAttacking(float delta)
@@ -4180,7 +4183,64 @@ void GameMap::UpdateMiniUnitsAttacking(float delta)
 
     // no more mini units to check -> finished
     if(mMiniUnitsAttacking.empty())
-        mScreenGame->OnMiniUnitsGroupsMoveFinished();
+        InitStructuresReadyToAttack();
+}
+
+void GameMap::InitStructuresReadyToAttack()
+{
+    Player * player = mScreenGame->GetActivePlayer();
+
+    const std::vector<Structure *> & structures = player->GetStructures();
+
+    for(auto s : structures)
+    {
+        if(s->GetWeapon() != nullptr)
+            mStructuresAttacking.emplace_back(s);
+    }
+
+    // nothing to do -> end here
+    if(mStructuresAttacking.empty())
+        mScreenGame->OnAutomaticMovesFinished();
+}
+
+void GameMap::UpdateStructuresAttacking(float delta)
+{
+    // empty queue -> nothing to do
+    if(mStructuresAttacking.empty())
+        return ;
+
+    GameObject * obj = mStructuresAttacking.back();
+
+    // object still attacking -> nothing to do
+    if(obj->GetWeapon()->HasTarget())
+        return ;
+
+    // object not processed yet -> try to find a target
+    //if(obj->GetCurrentAction() == GameObjectActionType::IDLE)
+    if(obj->HasEnergyForActionStep(GameObjectActionType::ATTACK))
+    {
+        const GameObjectTypeId type = obj->GetObjectType();
+
+        if(type == ObjectData::TYPE_DEFENSIVE_TOWER)
+            static_cast<DefensiveTower *>(obj)->FindEnemyTarget();
+    }
+
+    // target found -> start attack
+    if(obj->GetWeapon()->HasTarget())
+    {
+        obj->SetCurrentAction(GameObjectActionType::ATTACK);
+        return ;
+    }
+
+    // no target -> clear mini unit from queue
+    obj->SetActiveAction(GameObjectActionType::IDLE);
+    obj->SetCurrentAction(GameObjectActionType::IDLE);
+
+    mStructuresAttacking.pop_back();
+
+    // nothing to do -> end here
+    if(mStructuresAttacking.empty())
+        mScreenGame->OnAutomaticMovesFinished();
 }
 
 } // namespace game

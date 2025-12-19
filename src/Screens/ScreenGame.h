@@ -65,7 +65,7 @@ public:
     void OnWindowMouseEntered(sgl::graphic::WindowEvent & event) override;
     void OnWindowMouseLeft(sgl::graphic::WindowEvent & event) override;
 
-    void OnMiniUnitsGroupsMoveFinished();
+    void OnAutomaticMovesFinished();
 
     void OnObjectDestroyed(GameObject * obj);
 
@@ -79,6 +79,8 @@ public:
 
     void CenterCameraOverCell(int row, int col);
     void CenterCameraOverObject(GameObject * obj);
+
+    Player * GetActivePlayer() const;
 
     GameHUD * GetHUD() const;
 

@@ -12,6 +12,8 @@ class DefensiveTower : public Structure
 public:
     DefensiveTower(const ObjectData & data);
 
+    void FindEnemyTarget();
+
     void Update(float delta) override;
 
 protected:
@@ -25,9 +27,6 @@ private:
     void PrepareShoot();
 
 private:
-    GameObject * mTarget = nullptr;
-
-    float mTimeAttack = 0.25f;
     float mTimerAttack = 0.f;
 };
 

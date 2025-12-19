@@ -23,36 +23,87 @@ DefensiveTower::DefensiveTower(const ObjectData & data)
     SetImage();
 }
 
+void DefensiveTower::FindEnemyTarget()
+{
+    // not working if not linked
+    if(!IsLinked())
+        return ;
+
+    const GameMap * gm = GetGameMap();
+
+    const int r0 = GetRow0();
+    const int c0 = GetCol0();
+
+    const int mapRows = gm->GetNumRows();
+    const int mapCols = gm->GetNumCols();
+
+    const PlayerFaction faction = GetFaction();
+
+    GameObject * target = nullptr;
+    int minDist = mapRows + mapCols;
+
+    // find all enemies in range
+    const int range = GetWeapon()->GetRange();
+
+    for(int i = 1; i <= range; ++i)
+    {
+        const int rTL = (r0 - i) > 0 ? (r0 - i) : 0;
+        const int rBR = (r0 + i) < mapRows ? (r0 + i) : (mapRows - 1);
+
+        const int cTL = (c0 - i) > 0 ?  (c0 - i) : 0;
+        const int cBR = (c0 + i) < mapCols ? (c0 + i) : (mapCols - 1);
+
+        for(int r = rTL; r <= rBR; ++r)
+        {
+            for(int c = cTL; c <= cBR; ++c)
+            {
+                const GameMapCell & cell = gm->GetCell(r, c);
+
+                GameObject * obj = cell.objTop;
+
+                // only visible enemy objects
+                if(obj && obj->GetFaction() != NO_FACTION && obj->GetFaction() != faction && obj->IsVisible())
+                {
+                    const int dist = std::abs(r0 - r) + std::abs(c0 - c);
+
+                    if(dist < minDist)
+                    {
+                        target = obj;
+                        minDist = dist;
+                    }
+                }
+            }
+        }
+    }
+
+    if(target != nullptr)
+        mWeapon->SetTarget(target);
+    else
+        mWeapon->ClearTarget();
+}
+
+
 void DefensiveTower::Update(float delta)
 {
     // do nothing if not linked
     if(!IsLinked())
-    {
-        mTarget = nullptr;
         return ;
-    }
 
-    // check if there's any target in range
-    CheckForEnemies();
+    mTimerAttack -= delta;
 
-    // attacking other object
-    if(mTarget)
-    {
-        mTimerAttack -= delta;
+    // not ready to attack yet
+    if(mTimerAttack > 0.f)
+        return ;
 
-        // time to shoot!
-        if(mTimerAttack < 0.f)
-        {
-            // target still alive -> shoot
-            if(GetGameMap()->HasObject(mTarget))
-                PrepareShoot();
-            // target destroyed -> clear pointer
-            else
-                mTarget = nullptr;
+    // nothing to do
+    if(!mWeapon->HasTarget())
+        return ;
 
-            mTimerAttack = mTimeAttack;
-        }
-    }
+    if(!mWeapon->Update(delta))
+        return ;
+
+    if(mWeapon->IsReadyToShoot())
+        PrepareShoot();
 }
 
 void DefensiveTower::UpdateGraphics()
@@ -85,62 +136,10 @@ void DefensiveTower::SetImage()
     isoObj->SetTexture(tex);
 }
 
-void DefensiveTower::CheckForEnemies()
-{
-    const GameMap * gm = GetGameMap();
-
-    const int row = GetRow0();
-    const int col = GetCol0();
-
-    const int mapRows = gm->GetNumRows();
-    const int mapCols = gm->GetNumCols();
-
-    const PlayerFaction faction = GetFaction();
-
-    std::vector<GameObject *> objs;
-
-    // find all enemies in range
-    const int range = GetWeapon()->GetRange();
-
-    for(int i = 1; i <= range; ++i)
-    {
-        const int rTL = (row - i) > 0 ? (row - i) : 0;
-        const int rBR = (row + i) < mapRows ? (row + i) : (mapRows - 1);
-
-        const int cTL = (col - i) > 0 ?  (col - i) : 0;
-        const int cBR = (col + i) < mapCols ? (col + i) : (mapCols - 1);
-
-        for(int r = rTL; r <= rBR; ++r)
-        {
-            for(int c = cTL; c <= cBR; ++c)
-            {
-                const GameMapCell & cell = gm->GetCell(r, c);
-
-                GameObject * obj = cell.objTop;
-
-                // only visible enemy objects
-                if(obj && obj->GetFaction() != NO_FACTION && obj->GetFaction() != faction && obj->IsVisible())
-                    objs.push_back(cell.objTop);
-            }
-        }
-    }
-
-    // no potential target -> clear current
-    if(objs.empty())
-    {
-        mTarget = nullptr;
-        return ;
-    }
-
-    // chose target
-    // TODO more complex logic, for now just selecting 1st one
-    mTarget = objs.front();
-}
-
 void DefensiveTower::PrepareShoot()
 {
-    IsoObject * isoObj = GetIsoObject();
-    IsoObject * isoTarget = mTarget->GetIsoObject();
+    const IsoObject * isoObj = GetIsoObject();
+    const IsoObject * isoTarget = mWeapon->GetTarget()->GetIsoObject();
 
     const float isoX = isoObj->GetX();
     const float isoXC = isoObj->GetX() + isoObj->GetWidth() * 0.5f;
@@ -151,6 +150,9 @@ void DefensiveTower::PrepareShoot()
     const float y0 = isoTargetY < isoY ? isoY + 4 : isoY + 30;
 
     mWeapon->Shoot(x0, y0);
+
+    const float timeAttack = 0.5f;
+    mTimerAttack = timeAttack;
 }
 
 } // namespace game
