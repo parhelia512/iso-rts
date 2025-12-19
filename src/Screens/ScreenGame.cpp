@@ -366,14 +366,14 @@ void ScreenGame::SelectObject(GameObject * obj, Player * player)
         mHUD->ClearQuickUnitButtonChecked();
 
         // show attack range overlay for towers
-        if(ObjectData::TYPE_DEFENSIVE_TOWER == obj->GetObjectType())
-        {
-            auto tower = static_cast<DefensiveTower *>(obj);
-            const int range = tower->GetWeapon()->GetRange();
-            ShowAttackIndicators(tower, range);
-        }
+        const GameObjectTypeId type = obj->GetObjectType();
 
-        if(obj->GetObjectCategory() == ObjectData::CAT_MINI_UNIT)
+        if(type == ObjectData::TYPE_DEFENSIVE_TOWER || type == ObjectData::TYPE_BUNKER)
+        {
+            const int range = obj->GetWeapon()->GetRange();
+            ShowAttackIndicators(obj, range);
+        }
+        else if(obj->GetObjectCategory() == ObjectData::CAT_MINI_UNIT)
         {
             auto group = static_cast<MiniUnitsGroup *>(obj->GetGroup());
 

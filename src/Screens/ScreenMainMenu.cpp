@@ -333,6 +333,7 @@ void ScreenMainMenu::CreateChangelog()
                          " (i.e.: energy, attack, speed, etc...).\n"
                          "- Added hit points when an object is damaged.\n"
                          "- Weapons have different types of shot.\n"
+                         "- Towers attack enemies automatically at the beginning of own turn.\n"
                          );
     textNewFeat->SetPosition(contX, contY);
     textNewFeat->SetColor(colorContent);
