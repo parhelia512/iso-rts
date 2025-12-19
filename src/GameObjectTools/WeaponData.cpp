@@ -1,5 +1,7 @@
 #include "WeaponData.h"
 
+#include "GameConstants.h"
+
 namespace game
 {
 
@@ -22,6 +24,19 @@ const WeaponType WeaponData::TYPE_LASER5 = h{}(STR_LASER5);
 const WeaponType WeaponData::TYPE_NULL = 0;
 
 // NULL OBJECT
-const WeaponData WeaponData::NullObj(TYPE_NULL, WEAPONC_NULL, 0, 0.f, {});
+const WeaponData WeaponData::NullObj(TYPE_NULL, WEAPONC_NULL, 0, 0.f, {},
+                                     { {ATT_AIMED_SHOT, 0}, {ATT_BURST_SHOT, 0}, {ATT_QUICK_SHOT, 0} });
+
+WeaponData::WeaponData(WeaponType wt, WeaponClass wc, unsigned int bs, float tc,
+                       const std::unordered_map<ObjAttId, int> & atts,
+                       const std::unordered_map<AttackMode, int> & ec)
+    : mAttributes(atts)
+    , mEnergyCosts(ec)
+    , mType(wt)
+    , mClass(wc)
+    , mTimeCooldown(tc)
+    , mBurstShots(bs)
+{
+}
 
 } // namespace game

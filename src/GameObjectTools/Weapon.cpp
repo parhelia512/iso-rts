@@ -13,6 +13,7 @@ namespace game
 Weapon::Weapon(const WeaponData & data, GameObject * owner, GameMap * gm,
                const sgl::graphic::ParticlesManager * partMan)
     : mAttributes(data.GetAttributes())
+    , mEnergyCosts(data.GetEnergyCosts())
     , mOwner(owner)
     , mGameMap(gm)
     , mPartMan(partMan)
@@ -34,6 +35,16 @@ int Weapon::GetCostEnergy() const
         return costSingleShot * GetBurstShots();
     else
         return costSingleShot;
+}
+
+int Weapon::GetCostEnergyPerShot() const
+{
+    auto it = mEnergyCosts.find(mAttackMode);
+
+    if(it != mEnergyCosts.end())
+        return it->second;
+    else
+        return 0;
 }
 
 bool Weapon::SetTarget(GameObject * obj)

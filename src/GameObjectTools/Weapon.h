@@ -30,7 +30,7 @@ public:
     // cost for whole attack (i.e.: all burst shots)
     int GetCostEnergy() const;
     // cost for a single shot of an attack
-    virtual int GetCostEnergyPerShot() const = 0;
+    int GetCostEnergyPerShot() const;
 
     void ClearTarget();
     bool HasTarget() const;
@@ -72,6 +72,8 @@ private:
 
 private:
     std::unordered_map<ObjAttId, int> mAttributes;
+
+    const std::unordered_map<AttackMode, int> mEnergyCosts;
 
     GameObject * mOwner = nullptr;
     GameMap * mGameMap = nullptr;

@@ -17,6 +17,7 @@ enum WeaponClass : unsigned int
     WEAPONC_NULL
 };
 
+enum AttackMode : unsigned int;
 enum ObjAttId : unsigned int;
 
 class WeaponData
@@ -33,12 +34,15 @@ public:
 
 public:
     WeaponData(WeaponType wt, WeaponClass wc, unsigned int bs, float tc,
-               const std::unordered_map<ObjAttId, int> & atts);
+               const std::unordered_map<ObjAttId, int> & atts,
+               const std::unordered_map<AttackMode, int> & ec);
 
     WeaponType GetType() const;
     WeaponClass GetClass() const;
 
     const std::unordered_map<ObjAttId, int> & GetAttributes() const;
+
+    const std::unordered_map<AttackMode, int> & GetEnergyCosts() const;
 
     unsigned int GetBurstShots() const;
     float GetTimeCooldown() const;
@@ -51,7 +55,8 @@ private:
     static const std::string STR_LASER5;
 
 private:
-    std::unordered_map<ObjAttId, int> mAttributes;
+    const std::unordered_map<ObjAttId, int> mAttributes;
+    const std::unordered_map<AttackMode, int> mEnergyCosts;
 
     WeaponType mType;
     WeaponClass mClass;
@@ -60,22 +65,17 @@ private:
     int mBurstShots;
 };
 
-inline WeaponData::WeaponData(WeaponType wt, WeaponClass wc, unsigned int bs, float tc,
-                              const std::unordered_map<ObjAttId, int> & atts)
-    : mAttributes(atts)
-    , mType(wt)
-    , mClass(wc)
-    , mTimeCooldown(tc)
-    , mBurstShots(bs)
-{
-}
-
 inline WeaponType WeaponData::GetType() const { return mType; }
 inline WeaponClass WeaponData::GetClass() const { return mClass; }
 
 inline const std::unordered_map<ObjAttId, int> & WeaponData::GetAttributes() const
 {
     return mAttributes;
+}
+
+inline const std::unordered_map<AttackMode, int> & WeaponData::GetEnergyCosts() const
+{
+    return mEnergyCosts;
 }
 
 inline unsigned int WeaponData::GetBurstShots() const { return mBurstShots; }

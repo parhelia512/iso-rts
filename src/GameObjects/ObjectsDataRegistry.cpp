@@ -354,23 +354,28 @@ void ObjectsDataRegistry::InitWeaponData()
 {
     mDataWeapons.emplace(WeaponData::TYPE_LASER1,
         WeaponData(WeaponData::TYPE_LASER1, WEAPONC_LASER, 2, 0.4f,
-                   { {OBJ_ATT_ATTACK_ACCURACY, 6}, {OBJ_ATT_ATTACK_POWER, 1}, {OBJ_ATT_ATTACK_RANGE, 5} }));
+                   { {OBJ_ATT_ATTACK_ACCURACY, 6}, {OBJ_ATT_ATTACK_POWER, 1}, {OBJ_ATT_ATTACK_RANGE, 5} },
+                   { {ATT_AIMED_SHOT, 20}, {ATT_BURST_SHOT, 5}, {ATT_QUICK_SHOT, 10} }));
 
     mDataWeapons.emplace(WeaponData::TYPE_LASER2,
         WeaponData(WeaponData::TYPE_LASER2, WEAPONC_LASER, 3, 0.4f,
-                   { {OBJ_ATT_ATTACK_ACCURACY, 4}, {OBJ_ATT_ATTACK_POWER, 2}, {OBJ_ATT_ATTACK_RANGE, 4} }));
+                   { {OBJ_ATT_ATTACK_ACCURACY, 4}, {OBJ_ATT_ATTACK_POWER, 2}, {OBJ_ATT_ATTACK_RANGE, 4} },
+                   { {ATT_AIMED_SHOT, 25}, {ATT_BURST_SHOT, 10}, {ATT_QUICK_SHOT, 15} }));
 
     mDataWeapons.emplace(WeaponData::TYPE_LASER3,
         WeaponData(WeaponData::TYPE_LASER3, WEAPONC_LASER, 3, 0.4f,
-                   { {OBJ_ATT_ATTACK_ACCURACY, 5}, {OBJ_ATT_ATTACK_POWER, 3}, {OBJ_ATT_ATTACK_RANGE, 3} }));
+                   { {OBJ_ATT_ATTACK_ACCURACY, 5}, {OBJ_ATT_ATTACK_POWER, 3}, {OBJ_ATT_ATTACK_RANGE, 3} },
+                   { {ATT_AIMED_SHOT, 30}, {ATT_BURST_SHOT, 15}, {ATT_QUICK_SHOT, 20} }));
 
     mDataWeapons.emplace(WeaponData::TYPE_LASER4,
         WeaponData(WeaponData::TYPE_LASER4, WEAPONC_LASER, 4, 0.5f,
-                   { {OBJ_ATT_ATTACK_ACCURACY, 5}, {OBJ_ATT_ATTACK_POWER, 4}, {OBJ_ATT_ATTACK_RANGE, 4} }));
+                   { {OBJ_ATT_ATTACK_ACCURACY, 5}, {OBJ_ATT_ATTACK_POWER, 4}, {OBJ_ATT_ATTACK_RANGE, 4} },
+                   { {ATT_AIMED_SHOT, 35}, {ATT_BURST_SHOT, 20}, {ATT_QUICK_SHOT, 25} }));
 
     mDataWeapons.emplace(WeaponData::TYPE_LASER5,
-        WeaponData(WeaponData::TYPE_LASER5, WEAPONC_LASER, 5, 0.5f,
-                   { {OBJ_ATT_ATTACK_ACCURACY, 5}, {OBJ_ATT_ATTACK_POWER, 5}, {OBJ_ATT_ATTACK_RANGE, 5} }));
+        WeaponData(WeaponData::TYPE_LASER5, WEAPONC_LASER, 4, 0.5f,
+                   { {OBJ_ATT_ATTACK_ACCURACY, 6}, {OBJ_ATT_ATTACK_POWER, 5}, {OBJ_ATT_ATTACK_RANGE, 5} },
+                   { {ATT_AIMED_SHOT, 40}, {ATT_BURST_SHOT, 25}, {ATT_QUICK_SHOT, 30} }));
 }
 
 } // namespace game

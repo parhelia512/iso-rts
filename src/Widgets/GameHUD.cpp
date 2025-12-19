@@ -277,7 +277,7 @@ void GameHUD::ShowPanelShotType()
     if(mPanelShotType != nullptr)
         return ;
 
-    // CREATE DIALOG
+    // CREATE PANEL
     auto selObj = mScreen->mLocalPlayer->GetSelectedObject();
     const unsigned int am = selObj->GetWeapon()->GetAttackMode();
 
