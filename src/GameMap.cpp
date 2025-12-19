@@ -53,6 +53,11 @@
 #include <cmath>
 #include <iostream>
 
+namespace
+{
+const float timeAutoAttackDelay = 0.50f;
+}
+
 namespace game
 {
 
@@ -4140,7 +4145,7 @@ void GameMap::InitMiniUnitsReadyToAttack(PlayerFaction faction)
         }
     }
 
-    mTimerMiniUnitsAttacking = 0.f;
+    mTimerAutoAttacking = 0.f;
 
     // nothing to do -> end here
     if(mMiniUnitsAttacking.empty())
@@ -4155,10 +4160,10 @@ void GameMap::UpdateMiniUnitsAttacking(float delta)
     if(mMiniUnitsAttacking.empty())
         return ;
 
-    mTimerMiniUnitsAttacking -= delta;
+    mTimerAutoAttacking -= delta;
 
     // attack delay -> exit
-    if(mTimerMiniUnitsAttacking > 0.f)
+    if(mTimerAutoAttacking > 0.f)
         return ;
 
     MiniUnit * mu = mMiniUnitsAttacking.back();
@@ -4184,8 +4189,8 @@ void GameMap::UpdateMiniUnitsAttacking(float delta)
 
     mMiniUnitsAttacking.pop_back();
 
-    const float timeDelay = 0.50f;
-    mTimerMiniUnitsAttacking = timeDelay;
+    // reset auto-attack timer to delay next attacker
+    mTimerAutoAttacking = timeAutoAttackDelay;
 
     // no more mini units to check -> finished
     if(mMiniUnitsAttacking.empty())
@@ -4204,6 +4209,8 @@ void GameMap::InitStructuresReadyToAttack()
             mStructuresAttacking.emplace_back(s);
     }
 
+    mTimerAutoAttacking = 0.f;
+
     // nothing to do -> end here
     if(mStructuresAttacking.empty())
         mScreenGame->OnAutomaticMovesFinished();
@@ -4215,6 +4222,12 @@ void GameMap::UpdateStructuresAttacking(float delta)
 {
     // empty queue -> nothing to do
     if(mStructuresAttacking.empty())
+        return ;
+
+    mTimerAutoAttacking -= delta;
+
+    // attack delay -> exit
+    if(mTimerAutoAttacking > 0.f)
         return ;
 
     GameObject * obj = mStructuresAttacking.back();
@@ -4239,6 +4252,9 @@ void GameMap::UpdateStructuresAttacking(float delta)
     obj->SetCurrentAction(GameObjectActionType::IDLE);
 
     mStructuresAttacking.pop_back();
+
+    // reset auto-attack timer to delay next attacker
+    mTimerAutoAttacking = timeAutoAttackDelay;
 
     // nothing to do -> end here
     if(mStructuresAttacking.empty())

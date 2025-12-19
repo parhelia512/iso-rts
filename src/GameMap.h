@@ -297,7 +297,7 @@ private:
 
     std::vector<GameObject *> mStructuresAttacking;
 
-    float mTimerMiniUnitsAttacking = 0.f;
+    float mTimerAutoAttacking = 0.f;
 
     sgl::ai::Pathfinder * mPathfinder = nullptr;
 
