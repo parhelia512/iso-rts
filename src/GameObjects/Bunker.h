@@ -20,15 +20,9 @@ protected:
 private:
     void SetImage();
 
-    void CheckForEnemies();
-
     void PrepareShoot();
 
 private:
-    GameObject * mTarget = nullptr;
-
-    // weapon
-    float mTimeAttack = 0.25f;
     float mTimerAttack = 0.f;
 };
 

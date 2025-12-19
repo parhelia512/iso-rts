@@ -20,8 +20,6 @@ protected:
 private:
     void SetImage();
 
-    void CheckForEnemies();
-
     void PrepareShoot();
 
 private:
