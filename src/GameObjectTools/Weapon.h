@@ -34,6 +34,7 @@ public:
 
     void ClearTarget();
     bool HasTarget() const;
+    const GameObject * GetTarget() const;
     bool SetTarget(GameObject * obj);
     bool IsTargetInRange(const GameObject * obj) const;
 
@@ -57,9 +58,11 @@ public:
 
 protected:
     GameObject * GetOwner() const;
-    GameObject * GetTarget() const;
     GameMap * GetGameMap() const;
     const sgl::graphic::ParticlesManager * GetParticlesManager() const;
+
+protected:
+    GameObject * mTarget = nullptr;
 
 private:
     void InitBurstShoot();
@@ -78,7 +81,6 @@ private:
 
     // attack
     AttackMode mAttackMode;
-    GameObject * mTarget = nullptr;
     float mTimerBurst = 0.f;
 
     int mRange = 0;
@@ -95,6 +97,7 @@ inline void Weapon::SetAttackMode(AttackMode am) { mAttackMode = am; }
 
 inline void Weapon::ClearTarget() { mTarget = nullptr; }
 inline bool Weapon::HasTarget() const { return mTarget != nullptr; }
+inline const GameObject * Weapon::GetTarget() const { return mTarget; }
 
 inline float Weapon::GetMaxProbabilityFatalHit() const { return mMaxProbabilityFatal; }
 inline void Weapon::SetMaxProbabilityFatalHit(float val) { mMaxProbabilityFatal = val; }
@@ -110,8 +113,6 @@ inline bool Weapon::IsReadyToShoot() const { return mReadyToShoot; }
 inline const std::unordered_map<ObjAttId, int> & Weapon::GetAttributes() const { return mAttributes; }
 
 inline GameObject * Weapon::GetOwner() const { return mOwner; }
-
-inline GameObject * Weapon::GetTarget() const { return mTarget; }
 
 inline GameMap * Weapon::GetGameMap() const { return mGameMap; }
 

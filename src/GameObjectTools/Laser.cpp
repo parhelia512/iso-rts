@@ -61,9 +61,8 @@ int Laser::GetCostEnergyPerShot() const
 void Laser::OnShoot(float x0, float y0)
 {
     GameObject * owner = GetOwner();
-    GameObject * target = GetTarget();
 
-    const IsoObject * isoTarget = target->GetIsoObject();
+    const IsoObject * isoTarget = mTarget->GetIsoObject();
     const float tX = isoTarget->GetX() + (isoTarget->GetWidth() - mTex->GetWidth()) * 0.5f;
     const float tY = isoTarget->GetY() + (isoTarget->GetHeight() - mTex->GetHeight()) * 0.5f;
     const float speed = 400.f;
@@ -98,7 +97,7 @@ void Laser::OnShoot(float x0, float y0)
 
     // decide if hit or miss
     const float maxProb = 100.f;
-    const float probHit = GetProbabilityHit(target);
+    const float probHit = GetProbabilityHit(mTarget);
 
     auto dist = sgl::utilities::UniformRealDistribution(0.f, maxProb);
     const float valHit = dist.GetNextValue();
@@ -116,7 +115,7 @@ void Laser::OnShoot(float x0, float y0)
         damage = maxDamage * owner->GetAttribute(OBJ_ATT_ATTACK_POWER) / MAX_STAV_VAL;
 
         // check for fatal hit
-        const float probFatal = GetProbabilityFatalHit(target);
+        const float probFatal = GetProbabilityFatalHit(mTarget);
         const float valFatal = dist.GetNextValue();
 
         fatal = valFatal < probFatal;
@@ -128,7 +127,7 @@ void Laser::OnShoot(float x0, float y0)
     {
         mTex,
         GetGameMap(),
-        target,
+        mTarget,
         angle,
         x0,
         y0,
