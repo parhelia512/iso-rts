@@ -4200,7 +4200,7 @@ void GameMap::InitStructuresReadyToAttack()
 
     for(auto s : structures)
     {
-        if(s->HasEnemyInRange())
+        if(s->IsLinked() && s->HasEnemyInRange())
             mStructuresAttacking.emplace_back(s);
     }
 
