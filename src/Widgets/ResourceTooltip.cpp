@@ -23,9 +23,6 @@ ResourceTooltip::ResourceTooltip(const char * title)
     auto fm = graphic::FontManager::Instance();
     auto tm = graphic::TextureManager::Instance();
 
-    const int marginL = 40;
-    const int marginT = 8;
-
     // BACKGROUND
     graphic::Texture * tex = tm->GetSprite(SpriteFileTooltips, IND_TOOLTIP_RES_BAR_BG);
 
@@ -56,7 +53,7 @@ ResourceTooltip::ResourceTooltip(const char * title)
     SetValues(0, 0);
 }
 
-void ResourceTooltip::SetValues(unsigned int resIn, unsigned int resOut)
+void ResourceTooltip::SetValues(int resIn, int resOut)
 {
     if(resIn == mIn && resOut == mOut)
         return ;
@@ -117,7 +114,6 @@ void ResourceTooltip::SetPositions()
     const int x0 = GetScreenX();
     const int y0 = GetScreenY();
     const int w = GetWidth();
-    const int h = GetHeight();
 
     // BACKGROUND
     mBg->SetPosition(x0, y0);

@@ -11,9 +11,9 @@ namespace game
 {
 
 class GameMap;
-class GameMapCell;
 class GameObject;
 class IsoMap;
+struct GameMapCell;
 
 enum CellTypes : int;
 enum MissionCategory : unsigned int;
