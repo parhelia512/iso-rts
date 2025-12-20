@@ -157,7 +157,7 @@ private:
     // SETTINGS
     int mMapDraggingSpeed = 5;
     int mMapScrollingSpeed = 6;
-    int mMapDragging = true;
+    bool mMapDragging = true;
     bool mMapScrollingOnEdges = true;
     bool mAutoEndTurn = true;
     bool mTutorialEnabled = true;
