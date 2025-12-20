@@ -27,7 +27,7 @@ StepGameMissionGoalsIcon::StepGameMissionGoalsIcon(PanelObjectActions * panel)
     info->SetPosition(300, 550);
 
     info->AddInfoEntry("For example you can check your missions goals from here.",
-                       colorTutorialText, 4.f, true, false);
+                       colorTutorialText, 5.f, true, false);
     info->AddInfoEntry("Click this button to open the mission goals dialog.",
                        colorTutorialTextAction, 0.f, false, false, [this, panel]
                        {

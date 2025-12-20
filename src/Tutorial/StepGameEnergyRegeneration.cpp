@@ -15,11 +15,11 @@ StepGameEnergyRegeneration::StepGameEnergyRegeneration()
     info->SetPosition(1250, 600);
 
     info->AddInfoEntry("As you can see now all your faction energy is restored.",
-                       colorTutorialText, 5.f, true, false);
-    info->AddInfoEntry("Your unit's energy is fully restored too, but it's not always the case.",
                        colorTutorialText, 6.f, true, false);
+    info->AddInfoEntry("Your unit's energy is fully restored too, but it's not always the case.",
+                       colorTutorialText, 7.f, true, false);
     info->AddInfoEntry("The amount restored depends on its REGENERATION attribute and by how much "
-                       "there was left when you ended your turn.", colorTutorialText, 10.f, true, false);
+                       "there was left when you ended your turn.", colorTutorialText, 11.f, true, false);
 
     info->SetFunctionOnFinished([this]
     {

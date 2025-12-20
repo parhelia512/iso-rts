@@ -24,9 +24,9 @@ StepGameMoveUnit::StepGameMoveUnit(const Player * p, const IsoMap * isoMap)
     info->SetPosition(1350, 125);
 
     info->AddInfoEntry("Now that your unit is selected you can do several things with it.",
-                       colorTutorialText, 6.f, true, false);
+                       colorTutorialText, 7.f, true, false);
     info->AddInfoEntry("The default action is MOVE, so let's start with that.",
-                       colorTutorialText, 6.f, true, false);
+                       colorTutorialText, 7.f, true, false);
     info->AddInfoEntry("Click inside this cell with the RIGHT MOUSE BUTTON to move next to that spiky structure.",
                        colorTutorialTextAction, 0.f, false, false, [this, p, isoMap]
                        {

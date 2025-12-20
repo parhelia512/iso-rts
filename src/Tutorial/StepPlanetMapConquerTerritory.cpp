@@ -35,7 +35,7 @@ StepPlanetMapConquerTerritory::StepPlanetMapConquerTerritory(PanelPlanetActions 
     info->SetPosition(infoPlanetMapX, infoPlanetMapY);
 
     info->AddInfoEntry("I would suggest you to conquer the territory yourself.",
-                       colorTutorialText, 5.f, true, true);
+                       colorTutorialText, 6.f, true, true);
     info->AddInfoEntry("To do that click the button CONQUER.",
                        colorTutorialTextAction, 0.f, false, false, [this, fX, fY, fW, fH]
                        {

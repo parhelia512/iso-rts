@@ -347,6 +347,7 @@ void ScreenMainMenu::CreateChangelog()
                         "- Objects selected when a turn ends are re-selected when a new turn begins.\n"
                         "- Replaced Twitter with Bluesky in main menu.\n"
                         "- New overlay showing attack area of towers and units.\n"
+                        "- Tutorial steps have longer times before hiding text.\n"
                         );
     textChange->SetPosition(contX, contY);
     textChange->SetColor(colorContent);

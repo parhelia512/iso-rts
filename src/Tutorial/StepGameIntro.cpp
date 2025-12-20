@@ -15,9 +15,9 @@ StepGameIntro::StepGameIntro()
     info->SetPosition(200, 100);
 
     info->AddInfoEntry("Welcome commander,",
-                       colorTutorialText, 3.5f, true, false);
+                       colorTutorialText, 4.f, true, false);
     info->AddInfoEntry("I am your field assistant and I am going to guide you during your first mission.",
-                       colorTutorialText, 6.f, true, false);
+                       colorTutorialText, 7.f, true, false);
 
     info->SetFunctionOnFinished([this]
     {

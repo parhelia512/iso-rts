@@ -31,9 +31,9 @@ StepGameBase::StepGameBase(const Base * b)
 
     info->SetPosition(1150, 400);
 
-    info->AddInfoEntry("This is your base.", colorTutorialText, 3.f, true, false);
+    info->AddInfoEntry("This is your base.", colorTutorialText, 4.f, true, false);
     info->AddInfoEntry("You must protect it at all costs because if "
-                       "destroyed you are defeated.", colorTutorialText, 6.f, true, false);
+                       "destroyed you are defeated.", colorTutorialText, 7.f, true, false);
     info->AddInfoEntry("Select it with the LEFT MOUSE BUTTON", colorTutorialTextAction, 0.f, false, false);
 
     info->SetFunctionOnFinished([this, objX, objY, objW, objH]

@@ -15,7 +15,7 @@ StepGameMapNavigation::StepGameMapNavigation()
     info->SetPosition(1200, 450);
 
     info->AddInfoEntry("Now that you learned how to control your units I want to show you how to move around.",
-                       colorTutorialText, 8.f, true, true);
+                       colorTutorialText, 9.f, true, true);
     info->AddInfoEntry("You can navigate the map in 3 different ways:", colorTutorialText, 5.f, true, false);
     info->AddInfoEntry("- You can move your mouse to the border of the screen and the map will scroll in that "
                        "direction.", colorTutorialText, 12.f, true, false);

@@ -36,8 +36,9 @@ StepGameConquerStruct::StepGameConquerStruct(const GameObject * energyGen, const
 
     info->SetPosition(1300, 200);
 
-    info->AddInfoEntry("When your unit action is set to MOVE you can also conquer structures.", colorTutorialText, 6.f, true, false);
-    info->AddInfoEntry("For example we can conquer this ENERGY GENERATOR.", colorTutorialText, 6.f, true, false,
+    info->AddInfoEntry("When your unit action is set to MOVE you can also conquer structures.",
+                       colorTutorialText, 7.f, true, false);
+    info->AddInfoEntry("For example we can conquer this ENERGY GENERATOR.", colorTutorialText, 7.f, true, false,
                        [this]
                        {
                            mFocusArea->SetVisible(true);

@@ -29,7 +29,7 @@ StepGameMissionGoalsDialog::StepGameMissionGoalsDialog(GameHUD * HUD)
 
     info->AddInfoEntry("In this dialog you can find your primary goals, which are the ones you need "
                        "to complete in order to win this mission.",
-                       colorTutorialText, 12.f, true, true, [this]
+                       colorTutorialText, 13.f, true, true, [this]
                        {
                            mFocusArea->SetScreenArea(340, 290, 1240, 160);
                            mFocusArea->SetBlinking(true);
@@ -37,7 +37,7 @@ StepGameMissionGoalsDialog::StepGameMissionGoalsDialog(GameHUD * HUD)
                        });
 
     info->AddInfoEntry("Below there are your secondary goals, which you can complete to gain extra rewards.",
-                       colorTutorialText, 8.f, true, true, [this]
+                       colorTutorialText, 9.f, true, true, [this]
                        {
                            mFocusArea->SetScreenArea(340, 460, 1240, 345);
                            mFocusArea->SetBlinking(true);

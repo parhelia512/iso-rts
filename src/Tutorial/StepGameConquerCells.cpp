@@ -24,10 +24,10 @@ StepGameConquerCells::StepGameConquerCells(const Player * p, const IsoMap * isoM
     info->SetPosition(1300, 350);
 
     info->AddInfoEntry("Now that your unit is selected you can decide what cells to conquer.",
-                       colorTutorialText, 6.f, true, false);
+                       colorTutorialText, 7.f, true, false);
     info->AddInfoEntry("Moving your mouse around will design a path for your unit to conquer.\n"
                        "You can set anchor points clicking the RIGHT MOUSE BUTTON and finalize "
-                       "the path with a double click.", colorTutorialText, 10.f, true, false);
+                       "the path with a double click.", colorTutorialText, 14.f, true, false);
     info->AddInfoEntry("Now move your mouse inside this cell and double click the RIGHT MOUSE BUTTON to "
                        "start the conquest.", colorTutorialTextAction, 0.f, false, false, [this, p, isoMap]
                        {

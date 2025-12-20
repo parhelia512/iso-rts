@@ -26,10 +26,10 @@ StepGameTurnEnergy::StepGameTurnEnergy(const GameHUD * HUD)
 
     info->SetPosition(1300, 550);
 
-    info->AddInfoEntry("Well done commander!\nNow this energy generator is under your control and we can keep going.",
-                       colorTutorialText, 8.f, true, true);
+    info->AddInfoEntry("Well done commander!\nNow this energy generator is under your control and we "
+                       "can keep going.", colorTutorialText, 9.f, true, true);
     info->AddInfoEntry("Always remember that your faction has a limited amount of energy to spend for "
-                       "units and structures each turn.", colorTutorialText, 9.f, true, false);
+                       "units and structures each turn.", colorTutorialText, 10.f, true, false);
     info->AddInfoEntry("The big bar in this panel shows your remaining faction energy.", colorTutorialText,
                        8.f, true, false, [this, HUD]
                        {
@@ -46,7 +46,7 @@ StepGameTurnEnergy::StepGameTurnEnergy(const GameHUD * HUD)
                            mFocusArea->SetBlinking(true);
                        });
     info->AddInfoEntry("You also need to consider the energy of your units or structures, which you can "
-                       "track in the object panel.", colorTutorialText, 9.f, true, false, [this, HUD]
+                       "track in the object panel.", colorTutorialText, 10.f, true, false, [this, HUD]
                        {
                            // FOCUS
                            const auto panel = HUD->GetPanelSelectedObject();

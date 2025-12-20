@@ -44,9 +44,9 @@ StepPlanetMapNoInfo::StepPlanetMapNoInfo(const PanelPlanetInfo * panelInfo,
     info->SetPosition(infoPlanetMapX, infoPlanetMapY);
 
     info->AddInfoEntry("You selected a territory, but the RESOURCES and INFO panels "
-                       "do not show any data yet.", colorTutorialText, 7.f, true, true);
+                       "do not show any data yet.", colorTutorialText, 8.f, true, true);
     info->AddInfoEntry("That's because this territory is still unexplored.",
-                       colorTutorialText, 5.f, true, true, [this]
+                       colorTutorialText, 6.f, true, true, [this]
                        {
                            mFocusInfo->SetVisible(false);
                            mFocusResources->SetVisible(false);

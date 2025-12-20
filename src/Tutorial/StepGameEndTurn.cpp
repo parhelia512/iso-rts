@@ -27,7 +27,7 @@ StepGameEndTurn::StepGameEndTurn(const PanelTurnControl * panel)
     info->SetPosition(1300, 650);
 
     info->AddInfoEntry("You can restore your energy by ending a turn and waiting for your "
-                       "opponents to finish theirs.", colorTutorialText, 9.f, true, false);
+                       "opponents to finish theirs.", colorTutorialText, 10.f, true, false);
 
     info->AddInfoEntry("Click this button to END THIS TURN, then wait your enemy's moves.",
                        colorTutorialTextAction, 0.f, false, false, [this, panel]
