@@ -1,16 +1,14 @@
 #pragma once
 
-#include "Tutorial/TutorialStep.h"
+#include "Tutorial/TutorialInfoStep.h"
 
 namespace game
 {
 
 class GameHUD;
 class FocusArea;
-class PanelClickFilter;
-class PanelInfoTutorial;
 
-class StepGameBaseBuildUnit : public TutorialStep
+class StepGameBaseBuildUnit : public TutorialInfoStep
 {
 public:
     StepGameBaseBuildUnit(GameHUD * HUD);
@@ -21,8 +19,6 @@ public:
 
 private:
     FocusArea * mFocusArea = nullptr;
-    PanelClickFilter * mClickFilter = nullptr;
-    PanelInfoTutorial * mInfo = nullptr;
 
     GameHUD * mHUD = nullptr;
     unsigned int mButtonActId;

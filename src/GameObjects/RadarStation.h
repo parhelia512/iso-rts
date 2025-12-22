@@ -8,12 +8,10 @@ namespace game
 class RadarStation : public Structure
 {
 public:
-    RadarStation();
+    RadarStation(const ObjectData & data);
 
 protected:
     void UpdateGraphics() override;
-
-    void OnLinkedChanged() override;
 
 private:
     void SetImage();

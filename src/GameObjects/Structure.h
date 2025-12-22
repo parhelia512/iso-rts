@@ -10,8 +10,9 @@ class BlinkingIconEnergy;
 class Structure : public GameObject
 {
 public:
-    Structure(GameObjectTypeId type, GameObjectCategoryId cat, int rows, int cols);
-    ~Structure();
+    Structure(const ObjectData & data);
+
+    float GetTimeBuildUnit() const;
 
     void OnPositionChanged() override;
 

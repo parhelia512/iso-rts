@@ -9,4 +9,5 @@ typedef std::size_t GameObjectCategoryId;
 typedef std::size_t GameObjectTypeId;
 typedef std::size_t GameObjectVariantId;
 
+typedef std::size_t WeaponType;
 };

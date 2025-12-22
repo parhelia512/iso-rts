@@ -8,7 +8,7 @@ namespace game
 class ResearchCenter : public Structure
 {
 public:
-    ResearchCenter();
+    ResearchCenter(const ObjectData & data);
 
 protected:
     void UpdateGraphics() override;

@@ -23,7 +23,19 @@ class Screen;
 class DialogExit : public sgl::sgui::Widget
 {
 public:
-    DialogExit(Game * game, Screen * screen);
+    enum DialogButtons : unsigned int
+    {
+        BTN_MAIN_MENU = 0x01,
+        BTN_PLANET_MAP = 0x02,
+        BTN_QUIT_TUTORIAL = 0x04,
+        BTN_SETTINGS = 0x08,
+
+        BUTTONS_EXIT = BTN_MAIN_MENU | BTN_PLANET_MAP | BTN_SETTINGS,
+        BUTTONS_TUTORIAL = BTN_QUIT_TUTORIAL
+    };
+
+public:
+    DialogExit(DialogButtons buttons, Game * game, Screen * screen);
 
     void SetFunctionOnShowingDialogSettings(const std::function<void()> & f);
     void SetFunctionOnHidingDialogSettings(const std::function<void()> & f);

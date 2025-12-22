@@ -56,15 +56,15 @@ void SharedScreenListener::OnKeyUp(sgl::core::KeyboardEvent & event)
 
         if(event.IsModShiftDown())
         {
-            p->SumResource(Player::Stat::MONEY, 500);
-            p->SumResource(Player::Stat::ENERGY, 100);
-            p->SumResource(Player::Stat::MATERIAL, 100);
-            p->SumResource(Player::Stat::BLOBS, 10);
-            p->SumResource(Player::Stat::DIAMONDS, 10);
+            p->SumResource(Player::Stat::MONEY, 1000);
+            p->SumResource(Player::Stat::ENERGY, 1000);
+            p->SumResource(Player::Stat::MATERIAL, 1000);
+            p->SumResource(Player::Stat::BLOBS, 100);
+            p->SumResource(Player::Stat::DIAMONDS, 100);
         }
         else if(event.IsModCtrlDown())
         {
-            p->SumResource(Player::Stat::MONEY, -500);
+            p->SumResource(Player::Stat::MONEY, -100);
             p->SumResource(Player::Stat::ENERGY, -100);
             p->SumResource(Player::Stat::MATERIAL, -100);
             p->SumResource(Player::Stat::BLOBS, -10);

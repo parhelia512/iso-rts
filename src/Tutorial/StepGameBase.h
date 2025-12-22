@@ -1,17 +1,14 @@
 #pragma once
 
-#include "Tutorial/TutorialStep.h"
+#include "Tutorial/TutorialInfoStep.h"
 
 namespace game
 {
 
 class Base;
 class FocusArea;
-class GameObject;
-class PanelClickFilter;
-class PanelInfoTutorial;
 
-class StepGameBase : public TutorialStep
+class StepGameBase : public TutorialInfoStep
 {
 public:
     StepGameBase(const Base * b);
@@ -23,8 +20,6 @@ public:
 
 private:
     FocusArea * mFocusArea = nullptr;
-    PanelClickFilter * mClickFilter = nullptr;
-    PanelInfoTutorial * mInfo = nullptr;
 
     const Base * mBase = nullptr;
 

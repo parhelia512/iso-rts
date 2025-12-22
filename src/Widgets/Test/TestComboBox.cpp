@@ -1,6 +1,7 @@
 #include "Widgets/Test/TestComboBox.h"
 
 #include "GameTestData.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
@@ -22,7 +23,7 @@ TestComboBoxItem::TestComboBoxItem(const char * txt)
 
     // TEXT LABEL
     auto fm = FontManager::Instance();
-    Font * font = fm->GetFont("Lato-Regular.ttf", 22, Font::NORMAL);
+    Font * font = fm->GetFont(WidgetsConstants::FontFileText, 22, Font::NORMAL);
     mText = new Text(txt, font, true);
     RegisterRenderable(mText);
 
@@ -93,7 +94,7 @@ TestComboBox::TestComboBox(sgl::sgui::Widget * parent)
     using namespace sgl::graphic;
 
     auto fm = FontManager::Instance();
-    Font * font = fm->GetFont("Lato-Regular.ttf", 22, Font::NORMAL);
+    Font * font = fm->GetFont(WidgetsConstants::FontFileText, 22, Font::NORMAL);
     SetLabelFont(font);
 }
 

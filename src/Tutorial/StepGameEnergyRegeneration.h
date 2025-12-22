@@ -1,24 +1,14 @@
 #pragma once
 
-#include "Tutorial/TutorialStep.h"
+#include "Tutorial/TutorialInfoStep.h"
 
 namespace game
 {
 
-class PanelClickFilter;
-class PanelInfoTutorial;
-
-class StepGameEnergyRegeneration : public TutorialStep
+class StepGameEnergyRegeneration : public TutorialInfoStep
 {
 public:
     StepGameEnergyRegeneration();
-    ~StepGameEnergyRegeneration();
-
-    void OnStart() override;
-
-private:
-    PanelClickFilter * mClickFilter = nullptr;
-    PanelInfoTutorial * mInfo = nullptr;
 };
 
 } // namespace game

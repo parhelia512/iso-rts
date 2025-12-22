@@ -14,78 +14,64 @@ namespace game
 {
 
 StepGameBaseBuildUnit::StepGameBaseBuildUnit(GameHUD * HUD)
-    : mHUD(HUD)
+    : TutorialInfoStep(480, 250)
+    , mFocusArea(new FocusArea)
+    , mHUD(HUD)
 {
-    // CLICK FILTER
-    mClickFilter = new PanelClickFilter;
-    mClickFilter->SetEnabled(false);
-
     // FOCUS
-    mFocusArea = new FocusArea;
     mFocusArea->SetCornersColor(colorTutorialFocusAction);
     mFocusArea->SetBlinking(true);
     mFocusArea->SetVisible(false);
 
     // INFO
-    mInfo = new PanelInfoTutorial(480, 250);
-    mInfo->SetEnabled(false);
-    mInfo->SetVisible(false);
-    mInfo->SetPosition(40, 810);
+    auto info = GetPanelInfo();
 
-    mInfo->AddInfoEntry("You can choose what unit you want to build using this dialog.",
-                        colorTutorialText, 6.f, true, false);
-    mInfo->AddInfoEntry("You can only build worker units for now, so let's do that!",
-                        colorTutorialText, 6.f, true, false);
-    mInfo->AddInfoEntry("Click the button BUILD to create one.",
-                        colorTutorialTextAction, 0.f, false, false, [this, HUD]
-                        {
-                            auto dialog = HUD->GetDialogNewElement();
-                            auto btn = dialog->GetButtonBuild();
+    info->SetPosition(40, 810);
 
-                            mButtonActId = btn->AddOnClickFunction([this]
-                            {
-                                SetDone();
-                            });
+    info->AddInfoEntry("You can choose what unit you want to build using this dialog.",
+                       colorTutorialText, 7.f, true, false);
+    info->AddInfoEntry("You can only build worker units for now, so let's do that!",
+                       colorTutorialText, 7.f, true, false);
+    info->AddInfoEntry("Click the button BUILD to create one.",
+                       colorTutorialTextAction, 0.f, false, false, [this, HUD]
+                       {
+                           auto dialog = HUD->GetDialogNewElement();
+                           auto btn = dialog->GetButtonBuild();
 
-                            // FOCUS
-                            const int padding = 10;
-                            const int fX = dialog->GetX() + btn->GetX() - padding;
-                            const int fY = dialog->GetY() + btn->GetY() - padding;
-                            const int fW = btn->GetWidth() + (padding * 2);
-                            const int fH = btn->GetHeight() + (padding * 2);
+                           mButtonActId = btn->AddOnClickFunction([this]
+                                                                  {
+                                                                      SetDone();
+                                                                  });
 
-                            mFocusArea->SetScreenArea(fX, fY, fW, fH);
-                            mFocusArea->SetVisible(true);
+                           // FOCUS
+                           const int padding = 10;
+                           const int fX = dialog->GetX() + btn->GetX() - padding;
+                           const int fY = dialog->GetY() + btn->GetY() - padding;
+                           const int fW = btn->GetWidth() + (padding * 2);
+                           const int fH = btn->GetHeight() + (padding * 2);
 
-                            // CLICK FILTER
-                            mClickFilter->SetScreenClickableArea(fX, fY, fW, fH);
-                        });
+                           mFocusArea->SetScreenArea(fX, fY, fW, fH);
+                           mFocusArea->SetVisible(true);
+
+                           // CLICK FILTER
+                           GetClickFilter()->SetScreenClickableArea(fX, fY, fW, fH);
+                       });
 }
 
 StepGameBaseBuildUnit::~StepGameBaseBuildUnit()
 {
-    delete mClickFilter;
     delete mFocusArea;
-    delete mInfo;
 }
 
 void StepGameBaseBuildUnit::OnStart()
 {
-    // CLICK FILTER
-    mClickFilter->SetEnabled(true);
-
-    // INFO
-    mInfo->SetEnabled(true);
-    mInfo->SetVisible(true);
-    mInfo->SetFocus();
-
-    mInfo->StartInfo();
+    TutorialInfoStep::OnStart();
 
     // move elements to front
     auto stage = sgl::sgui::Stage::Instance();
     stage->MoveChildToFront(mFocusArea);
-    stage->MoveChildToFront(mClickFilter);
-    stage->MoveChildToFront(mInfo);
+    stage->MoveChildToFront(GetClickFilter());
+    stage->MoveChildToFront(GetPanelInfo());
 }
 
 void StepGameBaseBuildUnit::OnEnd()

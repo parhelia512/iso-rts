@@ -1,11 +1,13 @@
 #include "Widgets/DialogObject.h"
 
 #include "Game.h"
-#include "GameObjects/GameObject.h"
+#include "GameData.h"
+#include "GameObjects/MiniUnit.h"
 #include "GameObjects/ObjectsDataRegistry.h"
 #include "Widgets/GameUIData.h"
 #include "Widgets/ObjectVisualAttribute.h"
 #include "Widgets/ProgressBarObjectVisualStat.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/core/event/KeyboardEvent.h>
 #include <sgl/graphic/Font.h>
@@ -23,8 +25,11 @@
 #include <cmath>
 #include <sstream>
 
-namespace game
+// anonymous namespace for local "private" classes
+namespace
 {
+
+using namespace game;
 
 // ====== BUTTON CLOSE =====
 class ButtonCloseDO : public sgl::sgui::ImageButton
@@ -92,20 +97,18 @@ public:
         auto tm = graphic::TextureManager::Instance();
         //auto tex = tm->GetSprite(SpriteFilePanelSelectedObject, textIds[type]);
 
-        const char * fileFontHeader = "Lato-Regular.ttf";
         const unsigned int colorHeader = 0xb3d4e5ff;
         const int sizeHeader = 18;
 
-        graphic::Font * fontHeader = fm->GetFont(fileFontHeader, sizeHeader, graphic::Font::NORMAL);
+        auto fontHeader = fm->GetFont(WidgetsConstants::FontFileHeader, sizeHeader, graphic::Font::NORMAL);
         mHeader = new sgui::Label(HEADERS[type], fontHeader, this);
         mHeader->SetColor(colorHeader);
 
         // DATA
-        const char * fileFontData = "Lato-Regular.ttf";
         const unsigned int colorData = 0x70a7c2ff;
         const int sizeData = 18;
 
-        graphic::Font * fontData = fm->GetFont(fileFontData, sizeData, graphic::Font::NORMAL);
+        auto fontData = fm->GetFont(WidgetsConstants::FontFileText, sizeData, graphic::Font::NORMAL);
         mData = new sgui::Label(fontData, this);
         mData->SetColor(colorData);
 
@@ -158,20 +161,18 @@ public:
         // HEADER
         auto fm = graphic::FontManager::Instance();
 
-        const char * fileFontHeader = "Lato-Regular.ttf";
         const unsigned int colorHeader = 0xb3d4e5ff;
         const int sizeHeader = 18;
 
-        graphic::Font * fontHeader = fm->GetFont(fileFontHeader, sizeHeader, graphic::Font::NORMAL);
+        auto fontHeader = fm->GetFont(WidgetsConstants::FontFileHeader, sizeHeader, graphic::Font::NORMAL);
         mHeader = new sgui::Label(strHeader, fontHeader, this);
         mHeader->SetColor(colorHeader);
 
         // DATA
-        const char * fileFontData = "Lato-Regular.ttf";
         const unsigned int colorData = 0x70a7c2ff;
         const int sizeData = 18;
 
-        graphic::Font * fontData = fm->GetFont(fileFontData, sizeData, graphic::Font::NORMAL);
+        auto fontData = fm->GetFont(WidgetsConstants::FontFileText, sizeData, graphic::Font::NORMAL);
         mData = new sgui::Label(fontData, this);
         mData->SetColor(colorData);
 
@@ -215,6 +216,11 @@ private:
     sgl::sgui::Image * mBar = nullptr;
 };
 
+} // namespace
+
+namespace game
+{
+
 // ===== DIALOG =====
 DialogObject::DialogObject(const ObjectsDataRegistry * odr)
     : mObjDataReg(odr)
@@ -244,12 +250,11 @@ DialogObject::DialogObject(const ObjectsDataRegistry * odr)
     const int marginL = 30;
 
     // TITLE
-    const unsigned int colorTitle = 0xf0f3f5ff;
     const int marginTitleT = 14;
 
-    auto font = fm->GetFont("Lato-Regular.ttf", 28, sgl::graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 28, sgl::graphic::Font::NORMAL);
     mTitle = new sgui::Label(font, this);
-    mTitle->SetColor(colorTitle);
+    mTitle->SetColor(WidgetsConstants::colorDialogTitle);
     mTitle->SetPosition(marginL, marginTitleT);
 
     // IMAGE
@@ -287,19 +292,19 @@ DialogObject::DialogObject(const ObjectsDataRegistry * odr)
     int attY = attY0;
     int ind = 0;
 
-    for(int c = 0; c < VIS_ATT_COLS; ++c)
+    for(int r = 0; r < VIS_ATT_ROWS; ++r)
     {
-        for(int r = 0; r < VIS_ATT_ROWS; ++r)
+        for(int c = 0; c < VIS_ATT_COLS; ++c)
         {
             mVisAtt[ind] = new ObjectVisualAttribute(this);
             mVisAtt[ind]->SetPosition(attX, attY);
             ++ind;
 
-            attY += mVisAtt[0]->GetHeight();
+            attX += mVisAtt[0]->GetWidth();
         }
 
-        attX += mVisAtt[0]->GetWidth();
-        attY = attY0;
+        attX = attX0;
+        attY += mVisAtt[0]->GetHeight();
     }
 }
 
@@ -320,11 +325,22 @@ void DialogObject::SetObject(GameObject * obj)
     sgl::graphic::Texture * tex = nullptr;
 
     // TITLE
-    mTitle->SetText(GameObject::TITLES.at(type).c_str());
+    mTitle->SetText(ObjectData::TITLES.at(type).c_str());
 
     // IMAGE
     const ObjectData & data = mObjDataReg->GetObjectData(type);
-    tex = tm->GetSprite(data.GetIconTexFile(), data.GetIconTexId(faction));
+
+    // MiniUnits are a special case as preview is based on num of elements
+    if(data.GetCategory() == ObjectData::CAT_MINI_UNIT)
+    {
+        const auto mu = static_cast<MiniUnit *>(obj);
+        const unsigned int texInd0 = data.GetIconTexId(faction);
+        const unsigned int texInd = texInd0 + NUM_MUNIT_SPRITES_PER_SQUAD * (mu->GetNumElements() - 1);
+
+        tex = tm->GetSprite(data.GetIconTexFile(), texInd);
+    }
+    else
+        tex = tm->GetSprite(data.GetIconTexFile(), data.GetIconTexId(faction));
 
     mImg->SetTexture(tex);
 
@@ -339,19 +355,19 @@ void DialogObject::SetObject(GameObject * obj)
     mImg->SetPosition(imgX, imgY);
 
     // VISUAL STATS
-    mStatRank->SetValue(obj->GetExperienceLevel(), obj->GetMaxExperienceLevel());
-    mStatExperience->SetValue(obj->GetExperience(), obj->GetExperienceToNextLevel());
-    mStatEnergy->SetValue(obj->GetEnergy(), obj->GetMaxEnergy());
-    mStatHealth->SetValue(obj->GetHealth(), obj->GetMaxHealth());
+    static_cast<ObjectExtendedVisualRank *>(mStatRank)->SetValue(obj->GetExperienceLevel(),
+                                                                 obj->GetMaxExperienceLevel());
+    static_cast<ObjectExtendedVisualStat *>(mStatExperience)->SetValue(obj->GetExperience(),
+                                                                       obj->GetExperienceToNextLevel());
+    static_cast<ObjectExtendedVisualStat *>(mStatEnergy)->SetValue(obj->GetEnergy(), obj->GetMaxEnergy());
+    static_cast<ObjectExtendedVisualStat *>(mStatHealth)->SetValue(obj->GetHealth(), obj->GetMaxHealth());
 
     // ATTRIBUTES
-    const auto & atts = data.GetAttributes();
-    const int numAtts = atts.size();
     int statsAdded = 0;
 
-    for(int i = 0; i < numAtts; ++i)
+    for(unsigned int i = 0; i < NUM_OBJ_ATTRIBUTES; ++i)
     {
-        const int val = atts[i];
+        const int val = obj->GetAttribute(static_cast<ObjAttId>(i));
 
         if(val > 0)
         {

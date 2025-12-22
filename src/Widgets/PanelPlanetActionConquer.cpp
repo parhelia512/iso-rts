@@ -16,9 +16,7 @@
 
 namespace
 {
-    constexpr unsigned int textColor = 0x80a2b3ff;
     constexpr int textSize = 18;
-    const char * fileFont = "Lato-Regular.ttf";
 }
 
 namespace game
@@ -40,12 +38,10 @@ PanelPlanetActionConquer::PanelPlanetActionConquer()
     SetSize(tex->GetWidth(), tex->GetHeight());
 
     // TITLE
-    const unsigned int colorTitle = 0xe9f7fbcc;
-
-    graphic::Font * fnt = fm->GetFont(fileFont, WidgetsConstants::FontSizePlanetMapTitle,
-                                      graphic::Font::NORMAL);
+    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFilePanelTitle,
+                                      WidgetsConstants::FontSizePlanetMapTitle, graphic::Font::NORMAL);
     mTitle = new graphic::Text("CONQUER", fnt);
-    mTitle->SetColor(colorTitle);
+    mTitle->SetColor(WidgetsConstants::colorPanelTitle);
     RegisterRenderable(mTitle);
 
     // CONTENT
@@ -93,7 +89,7 @@ void PanelPlanetActionConquer::CreateContentStart()
     const int w = GetWidth();
 
     // DESCRIPTION
-    graphic::Font * fnt = fm->GetFont(fileFont, textSize, graphic::Font::NORMAL);
+    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFileText, textSize, graphic::Font::NORMAL);
 
     const int marginL = 20;
     const int marginR = 20;
@@ -102,7 +98,7 @@ void PanelPlanetActionConquer::CreateContentStart()
     const char * txt = "Start a mission to conquer the territory.\n\n"
                        "You will personally lead the construction of a new base and your troops in battle.";
     auto text = new sgui::TextArea(contW, contH, txt, fnt, false, mContentStart);
-    text->SetColor(textColor);
+    text->SetColor(WidgetsConstants::colorPanelText);
 }
 
 void PanelPlanetActionConquer::HandlePositionChanged()
@@ -119,7 +115,7 @@ void PanelPlanetActionConquer::UpdatePositions()
 
     const int marginL = 20;
     const int marginT = 15;
-    const int marginTextT = 5;
+    const int marginTextT = 20;
 
     int x;
     int y;

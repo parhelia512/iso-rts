@@ -10,16 +10,17 @@ enum ResourceType : unsigned int;
 class ResourceStorage : public Structure
 {
 public:
-    ResourceStorage(GameObjectTypeId type, int rows, int cols);
+    ResourceStorage(const ObjectData & data);
 
     ResourceType GetResourceType() const;
 
-protected:
+private:
     void UpdateGraphics() override;
 
     void OnLinkedChanged() override;
 
-private:
+    void UpdateCapacity();
+
     void SetImage();
 
 private:

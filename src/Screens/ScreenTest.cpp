@@ -13,6 +13,7 @@
 #include <sgl/core/Timer.h>
 #include <sgl/core/event/KeyboardEvent.h>
 #include <sgl/core/event/MouseButtonEvent.h>
+#include <sgl/graphic/Cursor.h>
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
 #include <sgl/graphic/Image.h>
@@ -104,6 +105,13 @@ ScreenTest::ScreenTest(Game * game)
     txt->SetColor(50, 150, 250, 128);
     mRenderables.emplace_back(txt);
 
+    // -- cursor --
+    tex = tm->GetSprite(SpriteFileTestUI, IND_TC_CURSOR1);
+    mCursor = new Cursor(tex, 2, 0);
+
+    sgl::sgui::Stage::Instance()->SetCursor(mCursor);
+
+    // -- TESTS --
     TestSprite();
 
     TestRotation();
@@ -119,6 +127,9 @@ ScreenTest::ScreenTest(Game * game)
 
 ScreenTest::~ScreenTest()
 {
+    sgl::sgui::Stage::Instance()->ClearCursor();
+    delete mCursor;
+
     delete mTimer1;
     delete mTimer2;
 
@@ -126,6 +137,8 @@ ScreenTest::~ScreenTest()
         delete r;
 
     sgl::sgui::Stage::Instance()->ClearWidgets();
+
+    GetGame()->SetCurrentCursor(CURSOR_DEFAULT);
 }
 
 void ScreenTest::OnKeyUp(sgl::core::KeyboardEvent & event)
@@ -135,6 +148,13 @@ void ScreenTest::OnKeyUp(sgl::core::KeyboardEvent & event)
     // ESC -> go back to main menu
     if(key == sgl::core::KeyboardEvent::KEY_ESCAPE)
         GetGame()->RequestNextActiveState(StateId::MAIN_MENU);
+    if(key == sgl::core::KeyboardEvent::KEY_C)
+    {
+        if(event.IsModShiftDown())
+            sgl::sgui::Stage::Instance()->ShowCursor();
+        else if(event.IsModCtrlDown())
+            sgl::sgui::Stage::Instance()->HideCursor();
+    }
 }
 
 void ScreenTest::Update(float delta)

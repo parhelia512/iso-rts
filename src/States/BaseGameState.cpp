@@ -12,6 +12,8 @@ BaseGameState::~BaseGameState()
 
 void BaseGameState::Update(float delta)
 {
+    sgl::utilities::State::Update(delta);
+
     mScreen->Update(delta);
 }
 

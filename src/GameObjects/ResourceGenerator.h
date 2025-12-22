@@ -10,7 +10,7 @@ enum ResourceType : unsigned int;
 class ResourceGenerator : public Structure
 {
 public:
-    ResourceGenerator(GameObjectTypeId type, int rows, int cols);
+    ResourceGenerator(const ObjectData & data);
 
     int GetOutput() const;
     void ScaleOutput(float mult);

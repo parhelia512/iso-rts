@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "Widgets/GameButton.h"
 #include "Widgets/GameUIData.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/core/event/KeyboardEvent.h>
 #include <sgl/graphic/Font.h>
@@ -14,12 +15,14 @@
 #include <sgl/media/AudioPlayer.h>
 #include <sgl/sgui/ImageButton.h>
 #include <sgl/sgui/Label.h>
-#include <sgl/utilities/System.h>
 
 #include <sstream>
 
-namespace game
+// anonymous namespace for local "private" classes
+namespace
 {
+
+using namespace game;
 
 // ===== BUTTON =====
 class ButtonDialogEndMission : public GameButton
@@ -27,18 +30,17 @@ class ButtonDialogEndMission : public GameButton
 public:
     ButtonDialogEndMission(sgl::sgui::Widget * parent)
         : GameButton(SpriteFileDialogEndMission,
-        { IND_DIA_EM_BTN_NORMAL, IND_DIA_EM_BTN_DISABLED,
-          IND_DIA_EM_BTN_OVER, IND_DIA_EM_BTN_PUSHED, IND_DIA_EM_BTN_PUSHED },
+        { IND_DIA_EM_BTN_NORMAL, IND_DIA_EM_BTN_DISABLED, IND_DIA_EM_BTN_OVER,
+          IND_DIA_EM_BTN_PUSHED, IND_DIA_EM_BTN_PUSHED },
         { 0xc1e0f0ff, 0x5a6266ff, 0xd6e9f5ff, 0xadd6ebff, 0xadd6ebff },
         parent)
     {
         using namespace sgl;
 
-        const char * fileFont = "Lato-Regular.ttf";
         const int size = 24;
 
         auto fm = graphic::FontManager::Instance();
-        graphic::Font * fnt = fm->GetFont(fileFont, size, graphic::Font::NORMAL);
+        auto fnt = fm->GetFont(WidgetsConstants::FontFileButton, size, graphic::Font::NORMAL);
         SetLabelFont(fnt);
         SetLabel("CONTINUE");
 
@@ -61,6 +63,11 @@ public:
         player->PlaySound("UI/button_click-01.ogg");
     }
 };
+
+} // namespace
+
+namespace game
+{
 
 // ===== DIALOG =====
 DialogEndMission::DialogEndMission(int time, int territoryConquered, int enemiesKilled,
@@ -88,7 +95,7 @@ DialogEndMission::DialogEndMission(int time, int territoryConquered, int enemies
     mButton->SetPosition(buttonX, buttonY);
 
     // TITLE
-    auto font = fm->GetFont("Lato-Regular.ttf", 32, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 32, graphic::Font::NORMAL);
 
     sgui::Label * title = nullptr;
 
@@ -100,7 +107,7 @@ DialogEndMission::DialogEndMission(int time, int territoryConquered, int enemies
     const int titleX = (w - title->GetWidth()) / 2;
     const int titleY = 10;
     title->SetPosition(titleX, titleY);
-    title->SetColor(0xf1f3f4ff);
+    title->SetColor(WidgetsConstants::colorDialogTitle);
 
     // -- CONTENT --
     const int limitR = 720;
@@ -113,7 +120,7 @@ DialogEndMission::DialogEndMission(int time, int territoryConquered, int enemies
     int widgetX = marginL;
     int widgetY = marginT;
 
-    font = fm->GetFont("Lato-Regular.ttf", 24, graphic::Font::NORMAL);
+    font = fm->GetFont(WidgetsConstants::FontFileText, 24, graphic::Font::NORMAL);
 
     // TIME DEPLOYED
     auto label = new sgui::Label("TIME DEPLOYED", font, this);

@@ -1,6 +1,7 @@
 #include "Widgets/ButtonMainMenu.h"
 
 #include "Widgets/GameUIData.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
@@ -32,7 +33,7 @@ ButtonMainMenu::ButtonMainMenu(const char * text, sgl::sgui::Widget * parent)
             });
 
     auto fm = FontManager::Instance();
-    Font * font = fm->GetFont("Lato-Regular.ttf", 34, Font::NORMAL);
+    Font * font = fm->GetFont(WidgetsConstants::FontFileButton, 34, Font::NORMAL);
 
     SetLabelFont(font);
 

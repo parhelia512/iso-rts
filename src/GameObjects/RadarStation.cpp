@@ -9,32 +9,17 @@
 namespace game
 {
 
-RadarStation::RadarStation()
-    : Structure(TYPE_RADAR_STATION, CAT_GENERIC, 2, 2)
+RadarStation::RadarStation(const ObjectData & data)
+    : Structure(data)
 {
     SetCanBeConquered(true);
 
     SetImage();
-
-    SetVisibilityLevel(1);
 }
 
 void RadarStation::UpdateGraphics()
 {
     SetImage();
-
-    SetDefaultColors();
-}
-
-void RadarStation::OnLinkedChanged()
-{
-    Structure::OnLinkedChanged();
-
-    const bool linked = IsLinked();
-
-    // update object visibility level
-    const int maxVis = 15;
-    SetVisibilityLevel(maxVis * static_cast<int>(linked));
 }
 
 void RadarStation::SetImage()

@@ -6,8 +6,8 @@
 #include "GameObjects/LootBox.h"
 #include "Particles/DataParticleLootboxPrize.h"
 #include "Particles/UpdaterLootboxPrize.h"
-#include "Screens/ScreenGame.h"
 
+#include <sgl/graphic/ParticlesManager.h>
 #include <sgl/graphic/TextureManager.h>
 
 #include <cmath>
@@ -15,12 +15,14 @@
 namespace game
 {
 
-ResourceGenerator::ResourceGenerator(GameObjectTypeId type, int rows, int cols)
-    : Structure(type, CAT_RES_GENERATOR, rows, cols)
+ResourceGenerator::ResourceGenerator(const ObjectData & data)
+    : Structure(data)
 {
-    if(TYPE_RES_GEN_ENERGY == type || TYPE_RES_GEN_ENERGY_SOLAR == type)
+    if(ObjectData::TYPE_RES_GEN_ENERGY == data.GetType() ||
+       ObjectData::TYPE_RES_GEN_ENERGY_SOLAR == data.GetType())
         mResource = RES_ENERGY;
-    else if(TYPE_RES_GEN_MATERIAL == type || TYPE_RES_GEN_MATERIAL_EXTRACT == type)
+    else if(ObjectData::TYPE_RES_GEN_MATERIAL == data.GetType() ||
+            ObjectData::TYPE_RES_GEN_MATERIAL_EXTRACT == data.GetType())
         mResource = RES_MATERIAL1;
     else
     {
@@ -63,15 +65,16 @@ void ResourceGenerator::OnNewTurn(PlayerFaction faction)
     const GameObjectTypeId type = GetObjectType();
     unsigned int outputType;
 
-    if(type == GameObject::TYPE_RES_GEN_ENERGY || type == GameObject::TYPE_RES_GEN_ENERGY_SOLAR)
+    if(type == ObjectData::TYPE_RES_GEN_ENERGY || type == ObjectData::TYPE_RES_GEN_ENERGY_SOLAR)
         outputType = LootBox::LB_ENERGY;
-    else if(type == GameObject::TYPE_RES_GEN_MATERIAL || type == GameObject::TYPE_RES_GEN_MATERIAL_EXTRACT)
+    else if(type == ObjectData::TYPE_RES_GEN_MATERIAL || type == ObjectData::TYPE_RES_GEN_MATERIAL_EXTRACT)
         outputType = LootBox::LB_MATERIAL;
     else
         return ;
 
     // emit notification
-    auto pu = static_cast<UpdaterLootboxPrize *>(GetScreen()->GetParticleUpdater(PU_LOOTBOX_PRIZE));
+    auto partMan = GetParticlesManager();
+    auto pu = static_cast<UpdaterLootboxPrize *>(partMan->GetUpdater(PU_LOOTBOX_PRIZE));
 
     IsoObject * isoObj = GetIsoObject();
 
@@ -89,8 +92,6 @@ void ResourceGenerator::OnNewTurn(PlayerFaction faction)
 void ResourceGenerator::UpdateGraphics()
 {
     SetImage();
-
-    SetDefaultColors();
 }
 
 void ResourceGenerator::SetImage()
@@ -111,28 +112,28 @@ void ResourceGenerator::SetImage()
 
     const GameObjectTypeId type = GetObjectType();
 
-    if(type == TYPE_RES_GEN_ENERGY)
+    if(type == ObjectData::TYPE_RES_GEN_ENERGY)
     {
         if(faction != NO_FACTION && IsVisible())
             texId = ID_STRUCT_GEN_ENERGY_F1 + (faction * NUM_ENE_GEN_SPRITES_PER_FAC) + sel;
         else
             texId = ID_STRUCT_GEN_ENERGY + sel;
     }
-    else if(type == TYPE_RES_GEN_MATERIAL)
+    else if(type == ObjectData::TYPE_RES_GEN_MATERIAL)
     {
         if(faction != NO_FACTION && IsVisible())
             texId = ID_STRUCT_GEN_MATERIAL_F1 + (faction * NUM_MAT_GEN_SPRITES_PER_FAC) + sel;
         else
             texId = ID_STRUCT_GEN_MATERIAL + sel;
     }
-    else if(type == TYPE_RES_GEN_ENERGY_SOLAR)
+    else if(type == ObjectData::TYPE_RES_GEN_ENERGY_SOLAR)
     {
         if(faction != NO_FACTION && IsVisible())
             texId = ID_STRUCT_SOLAR_PANEL_F1 + (faction * NUM_SOLAR_PANEL_SPRITES_PER_FAC) + sel;
         else
             texId = ID_STRUCT_SOLAR_PANEL + sel;
     }
-    else if(type == TYPE_RES_GEN_MATERIAL_EXTRACT)
+    else if(type == ObjectData::TYPE_RES_GEN_MATERIAL_EXTRACT)
     {
         if(faction != NO_FACTION && IsVisible())
             texId = ID_MATERIAL_EXTRACTOR_F1 + (faction * NUM_MATERIAL_EXTRACTOR_SPRITES_PER_FAC) + sel;
@@ -148,13 +149,13 @@ void ResourceGenerator::UpdateOutput()
 {
     const GameObjectTypeId type = GetObjectType();
 
-    if(type == TYPE_RES_GEN_ENERGY)
+    if(type == ObjectData::TYPE_RES_GEN_ENERGY)
         mOutput = 50;
-    else if(type == TYPE_RES_GEN_MATERIAL)
+    else if(type == ObjectData::TYPE_RES_GEN_MATERIAL)
         mOutput = 25;
-    else if(type == TYPE_RES_GEN_ENERGY_SOLAR)
+    else if(type == ObjectData::TYPE_RES_GEN_ENERGY_SOLAR)
         mOutput = 15;
-    else if(type == TYPE_RES_GEN_MATERIAL_EXTRACT)
+    else if(type == ObjectData::TYPE_RES_GEN_MATERIAL_EXTRACT)
         mOutput = 10;
     // default
     else

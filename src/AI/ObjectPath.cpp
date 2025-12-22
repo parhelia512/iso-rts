@@ -7,7 +7,6 @@
 #include "IsoObject.h"
 #include "Player.h"
 #include "GameObjects/GameObject.h"
-#include "GameObjects/Unit.h"
 #include "Screens/ScreenGame.h"
 
 #include <cmath>
@@ -26,9 +25,7 @@ ObjectPath::ObjectPath(GameObject * obj, IsoMap * im, GameMap * gm, ScreenGame *
 bool ObjectPath::InitNextMove()
 {
     // not enough energy -> FAIL
-    // TODO remove type check if mObj is changed into mUnit like for other paths
-    if(mObj->GetObjectCategory() == GameObject::CAT_UNIT &&
-       !static_cast<Unit *>(mObj)->HasEnergyForActionStep(MOVE))
+    if(!mObj->HasEnergyForActionStep(MOVE))
         return Fail();
 
     // check if next destination is walkable
@@ -37,7 +34,7 @@ bool ObjectPath::InitNextMove()
     const unsigned int nextCol = nextInd % mIsoMap->GetNumCols();
     const GameMapCell & nextCell = mGameMap->GetCell(nextRow, nextCol);
 
-    if(!nextCell.walkable || nextCell.walkTarget)
+    if(!nextCell.walkable)
         return Fail();
 
     // set target for movement
@@ -67,9 +64,6 @@ bool ObjectPath::InitNextMove()
         mVelY = (mTargetY - mObjY) * mObj->GetSpeed();
     }
 
-    // mark next cell in game map
-    mGameMap->SetCellWalkTarget(nextInd, true);
-
     mState = MOVING;
 
     return true;
@@ -89,12 +83,6 @@ bool ObjectPath::Start()
 void ObjectPath::InstantAbort()
 {
     mState = ABORTED;
-
-    if(mNextCell < mCells.size())
-    {
-        const unsigned int nextInd = mCells[mNextCell];
-        mGameMap->SetCellWalkTarget(nextInd, false);
-    }
 }
 
 void ObjectPath::Update(float delta)
@@ -165,7 +153,7 @@ void ObjectPath::Update(float delta)
 
         // collect collectable object, if any
         if(targetCell.objTop != nullptr &&
-           targetCell.objTop->GetObjectCategory() == GameObject::CAT_COLLECTABLE)
+           targetCell.objTop->GetObjectCategory() == ObjectData::CAT_COLLECTABLE)
         {
             player->HandleCollectable(targetCell.objTop);
 
@@ -177,9 +165,8 @@ void ObjectPath::Update(float delta)
         mGameMap->AddPlayerObjVisibility(mObj, player);
         mGameMap->ApplyVisibility(player);
 
-        // TODO remove check if mObj is changed into mUnit like for other paths
-        if(mObj->GetObjectCategory() == GameObject::CAT_UNIT)
-            static_cast<Unit *>(mObj)->ActionStepCompleted(MOVE);
+        // set action step completed for energy and experience update
+        mObj->ActionStepCompleted(MOVE);
 
         // update cell counter
         ++mNextCell;
@@ -206,8 +193,9 @@ bool ObjectPath::Fail()
     {
         mState = FAILED;
 
-        // clear action data once the action is completed
-        mScreen->SetObjectActionFailed(mObj);
+        // clear action data once the action is completed - only for units
+        if(mObj->GetObjectCategory() == ObjectData::CAT_UNIT)
+            mScreen->SetObjectActionFailed(mObj);
     }
     else
         mState = FAILED;
@@ -221,8 +209,9 @@ bool ObjectPath::Finish()
     {
         mState = COMPLETED;
 
-        // clear action data once the action is completed
-        mScreen->SetObjectActionCompleted(mObj);
+        // clear action data once the action is completed - only for units
+        if(mObj->GetObjectCategory() == ObjectData::CAT_UNIT)
+            mScreen->SetObjectActionCompleted(mObj);
     }
     else
         mState = COMPLETED;

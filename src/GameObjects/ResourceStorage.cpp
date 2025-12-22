@@ -5,23 +5,24 @@
 #include "GameData.h"
 #include "IsoObject.h"
 #include "Player.h"
-#include "Screens/ScreenGame.h"
 
 #include <sgl/graphic/TextureManager.h>
+
+#include <cmath>
 
 namespace game
 {
 
-ResourceStorage::ResourceStorage(GameObjectTypeId type, int rows, int cols)
-    : Structure(type, CAT_RES_STORAGE, rows, cols)
+ResourceStorage::ResourceStorage(const ObjectData & data)
+    : Structure(data)
 {
-    if(TYPE_RES_STORAGE_BLOBS == type)
+    if(ObjectData::TYPE_RES_STORAGE_BLOBS == data.GetType())
         mResource = RES_BLOBS;
-    else if(TYPE_RES_STORAGE_DIAMONDS == type)
+    else if(ObjectData::TYPE_RES_STORAGE_DIAMONDS == data.GetType())
         mResource = RES_DIAMONDS;
-    else if(TYPE_RES_STORAGE_ENERGY == type)
+    else if(ObjectData::TYPE_RES_STORAGE_ENERGY == data.GetType())
         mResource = RES_ENERGY;
-    else if(TYPE_RES_STORAGE_MATERIAL == type)
+    else if(ObjectData::TYPE_RES_STORAGE_MATERIAL == data.GetType())
         mResource = RES_MATERIAL1;
     else
     {
@@ -31,9 +32,7 @@ ResourceStorage::ResourceStorage(GameObjectTypeId type, int rows, int cols)
 
     SetCanBeConquered(true);
 
-    // set capacity based on resource
-    const int capacities[NUM_RESOURCES] = { 500, 250, 150, 100 };
-    mCapacity = capacities[mResource];
+    UpdateCapacity();
 
     SetImage();
 }
@@ -41,8 +40,6 @@ ResourceStorage::ResourceStorage(GameObjectTypeId type, int rows, int cols)
 void ResourceStorage::UpdateGraphics()
 {
     SetImage();
-
-    SetDefaultColors();
 }
 
 void ResourceStorage::OnLinkedChanged()
@@ -62,8 +59,16 @@ void ResourceStorage::OnLinkedChanged()
         Player::Stat::BLOBS
     };
 
-    Player * p = GetScreen()->GetGame()->GetPlayerByFaction(GetFaction());
+    Player * p = GetOwner();
     p->SumResourceMax(statIds[mResource], diff);
+}
+
+void ResourceStorage::UpdateCapacity()
+{
+    const bool mainRes = RES_ENERGY == mResource || RES_MATERIAL1 == mResource;
+    const float maxCapacity = mainRes ? 2000.f : 1000.f;
+
+    mCapacity = std::roundf(maxCapacity * GetAttribute(OBJ_ATT_STORAGE) / MAX_STAV_VAL);
 }
 
 void ResourceStorage::SetImage()

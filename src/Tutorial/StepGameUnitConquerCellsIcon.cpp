@@ -12,43 +12,38 @@ namespace game
 {
 
 StepGameUnitConquerCellsIcon::StepGameUnitConquerCellsIcon(PanelObjectActions * panel)
-    : mPanelActions(panel)
+    : TutorialInfoStep(450, 150)
+    , mFocusArea(new FocusArea)
+    , mPanelActions(panel)
 {
-    // CLICK FILTER
-    mClickFilter = new PanelClickFilter;
-    mClickFilter->SetEnabled(false);
-
     // FOCUS
-    mFocusArea = new FocusArea;
     mFocusArea->SetCornersColor(colorTutorialFocusAction);
     mFocusArea->SetBlinking(true);
     mFocusArea->SetVisible(false);
 
     // INFO
-    mInfo = new PanelInfoTutorial(450, 150);
-    mInfo->SetEnabled(false);
-    mInfo->SetVisible(false);
-    mInfo->SetPosition(1100, 600);
+    auto info = GetPanelInfo();
 
-    mInfo->AddInfoEntry("Then click this button to set your unit's action to CELL CONQUEST.",
-                        colorTutorialTextAction, 0.f, false, false, [this, panel]
-                        {
-                            // FOCUS
-                            auto btn = panel->GetButton(PanelObjectActions::BTN_CONQUER_CELL);
+    info->SetPosition(1100, 600);
 
-                            const int padding = 10;
-                            const int fX = panel->GetX() + btn->GetX() - padding;
-                            const int fY = panel->GetY() + btn->GetY() - padding;
-                            const int fW = btn->GetWidth() + (padding * 2);
-                            const int fH = btn->GetHeight() + (padding * 2);
+    info->AddInfoEntry("Then click this button to set your unit's action to CELL CONQUEST.",
+                       colorTutorialTextAction, 0.f, false, false, [this, panel]
+                       {
+                           // FOCUS
+                           auto btn = panel->GetButton(PanelObjectActions::BTN_CONQUER_CELL);
 
-                            mFocusArea->SetScreenArea(fX, fY, fW, fH);
-                            mFocusArea->SetVisible(true);
+                           const int padding = 10;
+                           const int fX = panel->GetX() + btn->GetX() - padding;
+                           const int fY = panel->GetY() + btn->GetY() - padding;
+                           const int fW = btn->GetWidth() + (padding * 2);
+                           const int fH = btn->GetHeight() + (padding * 2);
 
-                            // CLICK FILTER
-                            mClickFilter->SetScreenClickableArea(fX, fY, fW, fH);
+                           mFocusArea->SetScreenArea(fX, fY, fW, fH);
+                           mFocusArea->SetVisible(true);
 
-                        });
+                           // CLICK FILTER
+                           GetClickFilter()->SetScreenClickableArea(fX, fY, fW, fH);
+                       });
 
     mClickId = panel->AddButtonFunction(PanelObjectActions::BTN_CONQUER_CELL, [this]
     {
@@ -60,22 +55,7 @@ StepGameUnitConquerCellsIcon::~StepGameUnitConquerCellsIcon()
 {
     mPanelActions->RemoveButtonFunction(PanelObjectActions::BTN_CONQUER_CELL, mClickId);
 
-    delete mClickFilter;
     delete mFocusArea;
-    delete mInfo;
-}
-
-void StepGameUnitConquerCellsIcon::OnStart()
-{
-    // CLICK FILTER
-    mClickFilter->SetEnabled(true);
-
-    // INFO
-    mInfo->SetEnabled(true);
-    mInfo->SetVisible(true);
-    mInfo->SetFocus();
-
-    mInfo->StartInfo();
 }
 
 } // namespace game

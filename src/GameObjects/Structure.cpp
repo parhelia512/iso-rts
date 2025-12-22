@@ -7,8 +7,8 @@
 namespace game
 {
 
-Structure::Structure(GameObjectTypeId type, GameObjectCategoryId cat, int rows, int cols)
-    : GameObject(type, cat, rows, cols)
+Structure::Structure(const ObjectData & data)
+    : GameObject(data)
     , mIconEnergy(new BlinkingIconEnergy)
 {
     SetStructure(true);
@@ -17,8 +17,10 @@ Structure::Structure(GameObjectTypeId type, GameObjectCategoryId cat, int rows, 
     HideIconEnergy();
 }
 
-Structure::~Structure()
+float Structure::GetTimeBuildUnit() const
 {
+    const float maxTime = 5.f;
+    return GetTime(maxTime, GetAttribute(OBJ_ATT_CONSTRUCTION));
 }
 
 void Structure::OnPositionChanged()

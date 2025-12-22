@@ -15,11 +15,7 @@
 namespace sgl
 {
     namespace ai { class Pathfinder; }
-    namespace graphic
-    {
-        class ParticlesManager;
-        class ParticlesUpdater;
-    }
+    namespace graphic { class ParticlesManager; }
 }
 
 namespace game
@@ -31,28 +27,24 @@ class ConquestIndicator;
 class GameHUD;
 class GameMap;
 class GameObject;
+class GameObjectsGroup;
 class HealingRangeIndicator;
 class Hospital;
 class IsoLayer;
 class IsoMap;
 class MiniMap;
+class MiniUnit;
 class MoveIndicator;
+class PathIndicator;
+class PathOverlay;
 class Player;
 class PlayerAI;
 class StructureIndicator;
-class TutorialManager;
 class Unit;
 class WallIndicator;
 
 enum PlayerFaction : unsigned int;
-
-enum ParticlesUpdaterId : unsigned int
-{
-    PU_DAMAGE,
-    PU_HEALING,
-    PU_LOOTBOX_PRIZE,
-    PU_SINGLE_LASER
-};
+enum TurnStage : unsigned int;
 
 class ScreenGame : public Screen
 {
@@ -74,17 +66,22 @@ public:
     void OnWindowMouseEntered(sgl::graphic::WindowEvent & event) override;
     void OnWindowMouseLeft(sgl::graphic::WindowEvent & event) override;
 
-    void ClearObjectAction(GameObject * obj);
+    void OnAutomaticMovesFinished();
+
+    void OnObjectDestroyed(GameObject * obj);
+
     void SetObjectActionCompleted(GameObject * obj);
     void SetObjectActionFailed(GameObject * obj);
 
-    sgl::graphic::ParticlesUpdater * GetParticleUpdater(ParticlesUpdaterId updaterId);
+    const sgl::graphic::ParticlesManager * GetParticlesManager() const;
 
     void ClearSelection(Player * player);
     void SelectObject(GameObject * obj, Player * player);
 
     void CenterCameraOverCell(int row, int col);
     void CenterCameraOverObject(GameObject * obj);
+
+    Player * GetActivePlayer() const;
 
     GameHUD * GetHUD() const;
 
@@ -99,7 +96,10 @@ public:
     void CollectMissionGoalReward(unsigned int index);
 
     // TURN SYSTEM
+    void SetLocalTurnStage(TurnStage ts);
     bool IsCurrentTurnLocal() const;
+
+    bool CanLocalPlayerInteract() const;
 
 private:
     void OnApplicationQuit(sgl::core::ApplicationEvent & event) override;
@@ -111,18 +111,19 @@ private:
     void CreateLayers();
 
     void CreateUI();
-
-    void CreateTutorial();
-    void UpdateTutorial(float delta);
+    void HideActionPanels();
 
     void LoadMapFile();
 
     void UpdateAI(float delta);
     void ExecuteAIAction(PlayerAI * ai);
 
+    void ClearObjectAction(GameObject * obj);
     void CancelObjectAction(GameObject * obj);
     void SetObjectActionDone(GameObject * obj, bool successful);
     void FinalizeObjectAction(const GameObjectAction & action, bool successful);
+
+    void CancelMiniUnitsGroupPath(GameObjectsGroup * group);
 
     void UpdateGameEnd();
     bool CheckIfGoalCompleted(MissionGoal & g);
@@ -134,6 +135,8 @@ private:
 
     int CellToIndex(const Cell2D & cell) const;
 
+    bool SetupNewMiniUnits(GameObjectTypeId type, GameObject * gen, GameObjectsGroup * group, Player * player,
+                           int squads, int elements, const std::function<void(bool)> & onDone = [](bool){});
     bool SetupNewUnit(GameObjectTypeId type, GameObject * gen, Player * player,
                       const std::function<void(bool)> & onDone = [](bool){});
     bool SetupStructureConquest(Unit * unit, const Cell2D & start, const Cell2D & end, Player * player,
@@ -155,12 +158,15 @@ private:
     void HandleUnitBuildStructureOnMouseUp(Unit * unit, const Cell2D & clickCell);
     void HandleUnitBuildWallOnMouseUp(Unit * unit, const Cell2D & clickCell);
 
+    void HandleMiniUnitSetTargetOnMouseUp(GameObject * obj, const Cell2D & clickCell);
+
     void HandleSelectionClick(sgl::core::MouseButtonEvent & event);
     void HandleActionClick(sgl::core::MouseButtonEvent & event);
 
     bool StartUnitBuildWall(Unit * unit);
 
-    void ShowActiveIndicators(Unit * unit, const Cell2D & cell);
+    void ShowActiveUnitIndicators(Unit * unit, const Cell2D & cell);
+    void ShowActiveMiniUnitIndicators(MiniUnit * mu, const Cell2D & cell);
     void ShowAttackIndicators(const GameObject * obj, int range);
     void ShowBuildStructureIndicator(Unit * unit, const Cell2D & currCell);
     void ShowBuildWallIndicator(Unit * unit, const Cell2D & dest);
@@ -170,9 +176,13 @@ private:
     void ClearCellOverlays();
     void ClearTempStructIndicator();
 
+    void UpdatePanelHit(const GameObject * attacker);
+
     void CenterCameraOverPlayerBase();
 
     void UpdateCurrentCell();
+
+    void AddObjectToMinimap(const Cell2D & cell, GameObjectTypeId type, PlayerFaction f);
 
     // MISSION GOALS
     void SetMissionRewards();
@@ -181,12 +191,20 @@ private:
 
     // TURN
     void EndTurn();
+    void InitLocalTurn();
+
+    void ReselectLastSelected();
 
     // SFX
     void PlayLocalActionErrorSFX(const Player * player);
 
+#ifdef DEV_MODE
+    void CreateEnemyInCurrentCell(GameObjectTypeId type);
+#endif
+
 private:
     friend class GameHUD;
+    friend class TutorialGameIntro;
 
     std::vector<Player *> mAiPlayers;
 
@@ -226,11 +244,17 @@ private:
     struct Cell2D mCurrCell;
     sgl::core::Pointd2D mMousePos;
 
-    // TUTORIAL
-    TutorialManager * mTutMan = nullptr;
+    // MAP OVERLAYS
+    PathOverlay * mPathOverlay = nullptr;
+
+    PathIndicator * mMiniUnitTargetIndicator = nullptr;
 
     // TURN MANAGEMENT
     Player * mLocalPlayer = nullptr;
+
+    GameObject * mLastSelected = nullptr;
+
+    TurnStage mTurnStage;
 
     int mActivePlayerIdx = 0;
 
@@ -249,6 +273,11 @@ inline void ScreenGame::SetObjectActionCompleted(GameObject * obj)
 inline void ScreenGame::SetObjectActionFailed(GameObject * obj)
 {
     SetObjectActionDone(obj, false);
+}
+
+inline const sgl::graphic::ParticlesManager * ScreenGame::GetParticlesManager() const
+{
+    return mPartMan;
 }
 
 inline GameHUD * ScreenGame::GetHUD() const { return mHUD; }

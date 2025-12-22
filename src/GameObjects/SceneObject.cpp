@@ -8,21 +8,20 @@
 namespace game
 {
 
-SceneObject::SceneObject(GameObjectTypeId type, GameObjectVariantId part, int rows, int cols)
-    : GameObject(type, CAT_SCENE_OBJ, rows, cols)
+SceneObject::SceneObject(const ObjectData & data, GameObjectVariantId part)
+    : GameObject(data)
 {
     SetStatic(true);
 
     mVariant = part;
 
     // set object health
-    float health = 1000.f;
-
-    if(TYPE_MOUNTAINS == type)
-        const float health = 10000.f;
-
-    SetMaxHealth(health);
-    SetHealth(health);
+    if(ObjectData::TYPE_MOUNTAINS == data.GetType())
+    {
+        // health
+        const float maxHealthValue = 5000.f;
+        UpdateMaxHealth(maxHealthValue);
+    }
 
     SetImage();
 }
@@ -50,12 +49,12 @@ void SceneObject::SetImage()
 
     const GameObjectTypeId type = GetObjectType();
 
-    if(type == TYPE_ROCKS)
+    if(type == ObjectData::TYPE_ROCKS)
     {
         const unsigned int spriteId = SpriteRocksId::ROCKS_ROW_END_L_1 + mVariant;
         tex = tm->GetSprite(SpriteRocksFile, spriteId);
     }
-    else if(type == TYPE_MOUNTAINS)
+    else if(type == ObjectData::TYPE_MOUNTAINS)
     {
         const int sel = static_cast<int>(IsSelected());
         const unsigned int spriteId = ID_SCENE_MOUNTAIN_L + mVariant + (sel * NUM_MOUNTAINS_SPRITES);

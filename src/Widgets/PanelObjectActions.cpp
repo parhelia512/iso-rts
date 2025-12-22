@@ -48,7 +48,14 @@ PanelObjectActions::PanelObjectActions(sgl::sgui::Widget * parent)
                                                       "Close the gate", this);
     mButtons[BTN_TRADE] = new ObjectActionButton(ObjectActionButton::TRADE, "T", KeyboardEvent::KEY_T,
                                                       "Trade your resources", this);
+    mButtons[BTN_SPAWN] = new ObjectActionButton(ObjectActionButton::SPAWN, "N", KeyboardEvent::KEY_N,
+                                                 "Spawn mini units", this);
+    mButtons[BTN_SET_TARGET] = new ObjectActionButton(ObjectActionButton::SET_TARGET, "T",
+                                                        KeyboardEvent::KEY_T, "Set target destination", this);
 
+    // keep these 2 last
+    mButtons[BTN_SELF_DESTROY] = new ObjectActionButton(ObjectActionButton::SELF_DESTROY, "E",
+                                                        KeyboardEvent::KEY_E, "Self destruction", this);
     mButtons[BTN_CANCEL] = new ObjectActionButton(ObjectActionButton::CANCEL, "X", KeyboardEvent::KEY_X,
                                                   "Cancel current action", this);
 }
@@ -75,12 +82,16 @@ void PanelObjectActions::SetObject(GameObject * obj)
     // ENABLE BUTTONS
     const GameObjectTypeId objType = mObj->GetObjectType();
 
-    if(objType == GameObject::TYPE_BASE)
+    // self destruction available for all, but base
+    if(objType != ObjectData::TYPE_BASE)
+        mButtons[BTN_SELF_DESTROY]->SetVisible(true);
+
+    if(objType == ObjectData::TYPE_BASE)
     {
         mButtons[BTN_MISSION_GOALS]->SetVisible(true);
         mButtons[BTN_BUILD_UNIT_BASE]->SetVisible(true);
     }
-    else if(mObj->GetObjectCategory() == GameObject::CAT_UNIT)
+    else if(mObj->GetObjectCategory() == ObjectData::CAT_UNIT)
     {
         auto unit = static_cast<Unit *>(mObj);
 
@@ -100,15 +111,22 @@ void PanelObjectActions::SetObject(GameObject * obj)
 
         if(unit->CanHeal())
             mButtons[BTN_HEAL_UNIT]->SetVisible(true);
+
+        if(unit->CanSpawn())
+            mButtons[BTN_SPAWN]->SetVisible(true);
     }
-    else if(objType == GameObject::TYPE_BARRACKS)
+    else if(mObj->GetObjectCategory() == ObjectData::CAT_MINI_UNIT)
+    {
+        mButtons[BTN_SET_TARGET]->SetVisible(true);
+    }
+    else if(objType == ObjectData::TYPE_BARRACKS)
     {
         if(obj->IsLinked())
             mButtons[BTN_BUILD_UNIT_BARRACKS]->SetVisible(true);
         else
             mButtons[BTN_CANCEL]->SetVisible(false);
     }
-    else if(objType == GameObject::TYPE_HOSPITAL)
+    else if(objType == ObjectData::TYPE_HOSPITAL)
     {
         if(obj->IsLinked())
         {
@@ -118,14 +136,21 @@ void PanelObjectActions::SetObject(GameObject * obj)
         else
             mButtons[BTN_CANCEL]->SetVisible(false);
     }
-    else if(objType == GameObject::TYPE_TRADING_POST)
+    else if(objType == ObjectData::TYPE_SPAWN_TOWER)
+    {
+        if(obj->IsLinked())
+            mButtons[BTN_SPAWN]->SetVisible(true);
+        else
+            mButtons[BTN_CANCEL]->SetVisible(false);
+    }
+    else if(objType == ObjectData::TYPE_TRADING_POST)
     {
         if(obj->IsLinked())
             mButtons[BTN_TRADE]->SetVisible(true);
         else
             mButtons[BTN_CANCEL]->SetVisible(false);
     }
-    else if(objType == GameObject::TYPE_WALL_GATE)
+    else if(objType == ObjectData::TYPE_WALL_GATE)
     {
         auto gate = static_cast<WallGate *>(mObj);
 

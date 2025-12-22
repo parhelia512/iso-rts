@@ -2,6 +2,7 @@
 
 #include "Widgets/GameSimpleTooltip.h"
 #include "Widgets/GameUIData.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
@@ -51,6 +52,9 @@ ObjectActionButton::ObjectActionButton(ActionIcon icon, const char * shortcut, i
         IND_BUTTON_ICON_CANCEL,
         IND_BUTTON_ICON_HEAL,
         IND_BUTTON_ICON_TRADE,
+        IND_BUTTON_ICON_SPAWN,
+        IND_BUTTON_ICON_SELF_DESTROY,
+        IND_BUTTON_ICON_SET_TARGET,
     };
 
     static_assert(NUM_ACTION_ICONS == (sizeof(texId) / sizeof(SpriteIdObjActionButton)),
@@ -61,7 +65,7 @@ ObjectActionButton::ObjectActionButton(ActionIcon icon, const char * shortcut, i
 
     // -- CREATE SHORTCUT TEXT --
     auto fm = FontManager::Instance();
-    auto font = fm->GetFont("Lato-Bold.ttf", 13, Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileShortcut, 13, Font::NORMAL);
     mShortcut = new Text(shortcut, font, true);
 
     RegisterRenderable(mShortcut);
@@ -69,7 +73,7 @@ ObjectActionButton::ObjectActionButton(ActionIcon icon, const char * shortcut, i
     // TOOLTIP
     auto tt = new GameSimpleTooltip(tooltip);
     SetTooltip(tt);
-    SetTooltipDelay(500);
+    SetTooltipDelay(WidgetsConstants::timeTooltipButtonDelay);
     SetTooltipShowingTime(2000);
 
     // set initial visual state

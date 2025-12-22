@@ -14,6 +14,7 @@
 #include "States/StatePlanetMap.h"
 #include "States/StateSettings.h"
 #include "States/StateTest.h"
+#include "Tutorial/TutorialManager.h"
 
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
@@ -38,11 +39,16 @@ namespace game
 {
 
 #ifdef DEV_MODE
+// this makes everything faster
 bool Game::GOD_MODE = false;
+
+// this allows to jump straight into a mission for quick testing
+bool Game::QUICK_START = false;
 #endif
 
 Game::Game(int argc, char * argv[])
     : sgl::core::Application(argc, argv)
+    , mTutMan(new TutorialManager)
     , mMapsReg(new MapsRegistry)
     , mObjsRegistry(new ObjectsDataRegistry)
     , mLocalFaction(NO_FACTION)
@@ -92,7 +98,7 @@ Game::Game(int argc, char * argv[])
     mStateMan->AddState(new StateSettings(this));
     mStateMan->AddState(new StateTest(this));
 
-    mStateMan->RequestNextActiveState(StateId::INIT);
+    mStateMan->SetInitialActiveState(StateId::INIT);
 
     // -- AUDIO --
     const int defVolumeMusic = 50;
@@ -111,9 +117,6 @@ Game::Game(int argc, char * argv[])
     mStage = sgui::Stage::Create();
     AddKeyboardListener(mStage);
     AddMouseListener(mStage);
-
-    // -- TUTORIAL --
-    mTutorialsState.resize(NUM_TUTORIALS, TS_TODO);
 }
 
 Game::~Game()
@@ -143,19 +146,16 @@ void Game::InitGameData()
     // -- MAPS --
     // PLANET 1
     mMapsReg->CreatePlanet(PLANET_1);
-    //               planetId, file, energy, material, diamonds, blobs, value, occupier, status
-    mMapsReg->AddMap(PLANET_1, "data/maps/80x80-01.map", 5, 4, 2, 2, 3, NO_FACTION, TER_ST_UNEXPLORED);
-    mMapsReg->AddMap(PLANET_1, "data/maps/40x40-01.map", 2, 2, 1, 1, 2, NO_FACTION, TER_ST_UNEXPLORED);
-    mMapsReg->AddMap(PLANET_1, "data/maps/60x60-01.map", 4, 4, 2, 2, 3, NO_FACTION, TER_ST_UNREACHABLE);
-    mMapsReg->AddMap(PLANET_1, "data/maps/20x20-empty.map", 1, 2, 1, 1, 1, NO_FACTION, TER_ST_UNREACHABLE);
-    mMapsReg->AddMap(PLANET_1, "data/maps/80x80-01.map", 5, 4, 2, 2, 3, NO_FACTION, TER_ST_UNREACHABLE);
-    mMapsReg->AddMap(PLANET_1, "data/maps/40x40-01.map", 2, 2, 1, 1, 2, NO_FACTION, TER_ST_UNREACHABLE);
-    mMapsReg->AddMap(PLANET_1, "data/maps/60x60-01.map", 4, 4, 2, 2, 3, NO_FACTION, TER_ST_UNREACHABLE);
-    mMapsReg->AddMap(PLANET_1, "data/maps/20x20-empty.map", 1, 2, 1, 1, 1, NO_FACTION, TER_ST_UNREACHABLE);
-    mMapsReg->AddMap(PLANET_1, "data/maps/20x20-empty.map", 1, 2, 1, 1, 1, NO_FACTION, TER_ST_UNREACHABLE);
-    mMapsReg->AddMap(PLANET_1, "data/maps/40x40-01.map", 2, 2, 1, 1, 2, NO_FACTION, TER_ST_UNREACHABLE);
-    mMapsReg->AddMap(PLANET_1, "data/maps/60x60-01.map", 4, 4, 2, 2, 3, NO_FACTION, TER_ST_UNEXPLORED);
-    mMapsReg->AddMap(PLANET_1, "data/maps/80x80-01.map", 5, 4, 2, 2, 3, NO_FACTION, TER_ST_UNEXPLORED);
+    //               planetId, file, occupier, status
+    mMapsReg->AddMap(PLANET_1, "data/maps/80x80-01.map", NO_FACTION, TER_ST_UNEXPLORED);
+    mMapsReg->AddMap(PLANET_1, "data/maps/40x40-01.map", NO_FACTION, TER_ST_UNEXPLORED);
+    mMapsReg->AddMap(PLANET_1, "data/maps/60x60-01.map", NO_FACTION, TER_ST_UNREACHABLE);
+    mMapsReg->AddMap(PLANET_1, "data/maps/20x20-empty.map", NO_FACTION, TER_ST_UNREACHABLE);
+    mMapsReg->AddMap(PLANET_1, "data/maps/80x80-01.map", NO_FACTION, TER_ST_UNREACHABLE);
+    mMapsReg->AddMap(PLANET_1, "data/maps/40x40-01.map", NO_FACTION, TER_ST_UNREACHABLE);
+    mMapsReg->AddMap(PLANET_1, "data/maps/60x60-01.map", NO_FACTION, TER_ST_UNREACHABLE);
+    mMapsReg->AddMap(PLANET_1, "data/maps/20x20-empty.map", NO_FACTION, TER_ST_UNREACHABLE);
+    mMapsReg->AddMap(PLANET_1, "data/maps/80x80-01.map", NO_FACTION, TER_ST_UNREACHABLE);
 }
 
 void Game::ClearGameData()
@@ -163,6 +163,22 @@ void Game::ClearGameData()
     mMapsReg->ClearData();
 
     ClearPlayers();
+}
+
+// -- mouse cursors --
+void Game::RegisterCursor(GameCursorId curId, sgl::graphic::Cursor * cursor)
+{
+    mCursors.emplace(curId, cursor);
+}
+
+void Game::SetCurrentCursor(GameCursorId curId)
+{
+    const auto it = mCursors.find(curId);
+
+    if(it == mCursors.end())
+        return ;
+
+    sgl::sgui::Stage::Instance()->SetCursor(it->second);
 }
 
 const std::string & Game::GetCurrentMapFile() const
@@ -256,20 +272,6 @@ void Game::RemoveOnSettingsChangedFunction(unsigned int fId)
         mOnSettingsChanged.erase(it);
 }
 
-TutorialState Game::GetTutorialState(TutorialId tut)
-{
-    if(tut < NUM_TUTORIALS)
-        return mTutorialsState[tut];
-    else
-        return TS_UNKNOWN;
-}
-
-void Game::SetTutorialState(TutorialId tut, TutorialState state)
-{
-    if(tut < NUM_TUTORIALS)
-        mTutorialsState[tut] = state;
-}
-
 void Game::NotifyOnSettingsChanged()
 {
     for(auto & it: mOnSettingsChanged)
@@ -280,15 +282,15 @@ void Game::Update(float delta)
 {
     mRenderer->Clear(mClearR, mClearG, mClearB, mClearA);
 
-    mStateMan->UpdateActive();
-
-    auto * state = static_cast<BaseGameState *>(mStateMan->GetActiveState());
-
-    state->Update(delta);
+    // UPDATE
+    mStateMan->Update(delta);
     mStage->Update(delta);
     mAudioMan->Update(delta);
 
+    // RENDER
+    auto * state = static_cast<BaseGameState *>(mStateMan->GetActiveState());
     state->Render();
+
     mStage->Render();
 
     mRenderer->Finalize();

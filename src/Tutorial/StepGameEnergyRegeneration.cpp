@@ -1,54 +1,30 @@
 #include "Tutorial/StepGameEnergyRegeneration.h"
 
 #include "Tutorial/TutorialConstants.h"
-#include "Widgets/Tutorial/PanelClickFilter.h"
 #include "Widgets/Tutorial/PanelInfoTutorial.h"
 
 namespace game
 {
 
 StepGameEnergyRegeneration::StepGameEnergyRegeneration()
+    : TutorialInfoStep(550, 325)
 {
-    // CLICK FILTER
-    mClickFilter = new PanelClickFilter;
-    mClickFilter->SetEnabled(false);
-
     // INFO
-    mInfo = new PanelInfoTutorial(550, 325);
-    mInfo->SetEnabled(false);
-    mInfo->SetVisible(false);
-    mInfo->SetPosition(1250, 600);
+    auto info = GetPanelInfo();
 
-    mInfo->AddInfoEntry("As you can see now all your faction energy is restored.",
-                        colorTutorialText, 5.f, true, false);
-    mInfo->AddInfoEntry("Your unit's energy is fully restored too, but it's not always the case.",
-                        colorTutorialText, 6.f, true, false);
-    mInfo->AddInfoEntry("The amount restored depends on its REGENERATION attribute and by how much "
-                        "there was left when you ended your turn.", colorTutorialText, 10.f, true, false);
+    info->SetPosition(1250, 600);
 
-    mInfo->SetFunctionOnFinished([this]
+    info->AddInfoEntry("As you can see now all your faction energy is restored.",
+                       colorTutorialText, 6.f, true, false);
+    info->AddInfoEntry("Your unit's energy is fully restored too, but it's not always the case.",
+                       colorTutorialText, 7.f, true, false);
+    info->AddInfoEntry("The amount restored depends on its REGENERATION attribute and by how much "
+                       "there was left when you ended your turn.", colorTutorialText, 11.f, true, false);
+
+    info->SetFunctionOnFinished([this]
     {
         SetDone();
     });
-}
-
-StepGameEnergyRegeneration::~StepGameEnergyRegeneration()
-{
-    delete mClickFilter;
-    delete mInfo;
-}
-
-void StepGameEnergyRegeneration::OnStart()
-{
-    // CLICK FILTER
-    mClickFilter->SetEnabled(true);
-
-    // INFO
-    mInfo->SetEnabled(true);
-    mInfo->SetVisible(true);
-    mInfo->SetFocus();
-
-    mInfo->StartInfo();
 }
 
 } // namespace game

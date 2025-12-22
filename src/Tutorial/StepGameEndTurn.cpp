@@ -13,44 +13,41 @@ namespace game
 {
 
 StepGameEndTurn::StepGameEndTurn(const PanelTurnControl * panel)
+    : TutorialInfoStep(550, 200)
+    , mFocusArea(new FocusArea)
 {
-    // CLICK FILTER
-    mClickFilter = new PanelClickFilter;
-    mClickFilter->SetEnabled(false);
 
     // FOCUS
-    mFocusArea = new FocusArea;
     mFocusArea->SetCornersColor(colorTutorialFocusElement);
     mFocusArea->SetVisible(false);
 
     // INFO
-    mInfo = new PanelInfoTutorial(550, 200);
-    mInfo->SetEnabled(false);
-    mInfo->SetVisible(false);
-    mInfo->SetPosition(1300, 650);
+    auto info = GetPanelInfo();
 
-    mInfo->AddInfoEntry("You can restore your energy by ending a turn and waiting for your "
-                        "opponents to finish theirs.", colorTutorialText, 9.f, true, false);
+    info->SetPosition(1300, 650);
 
-    mInfo->AddInfoEntry("Click this button to END THIS TURN, then wait your enemy's moves.",
-                        colorTutorialTextAction, 0.f, false, false, [this, panel]
-                        {
-                            // FOCUS
-                            auto btn = panel->GetButtonEndTurn();
-                            const int padding = 10;
-                            const int fX = panel->GetX() + btn->GetX() - padding;
-                            const int fY = panel->GetY() + btn->GetY() - padding;
-                            const int fW = btn->GetWidth() + (padding * 2);
-                            const int fH = btn->GetHeight() + (padding * 2);
+    info->AddInfoEntry("You can restore your energy by ending a turn and waiting for your "
+                       "opponents to finish theirs.", colorTutorialText, 10.f, true, false);
 
-                            mFocusArea->SetCornersColor(colorTutorialFocusAction);
-                            mFocusArea->SetBlinking(true);
-                            mFocusArea->SetScreenArea(fX, fY, fW, fH);
-                            mFocusArea->SetVisible(true);
+    info->AddInfoEntry("Click this button to END THIS TURN, then wait your enemy's moves.",
+                       colorTutorialTextAction, 0.f, false, false, [this, panel]
+                       {
+                           // FOCUS
+                           auto btn = panel->GetButtonEndTurn();
+                           const int padding = 10;
+                           const int fX = panel->GetX() + btn->GetX() - padding;
+                           const int fY = panel->GetY() + btn->GetY() - padding;
+                           const int fW = btn->GetWidth() + (padding * 2);
+                           const int fH = btn->GetHeight() + (padding * 2);
 
-                            // CLICK FILTER
-                            mClickFilter->SetScreenClickableArea(fX, fY, fW, fH);
-                        });
+                           mFocusArea->SetCornersColor(colorTutorialFocusAction);
+                           mFocusArea->SetBlinking(true);
+                           mFocusArea->SetScreenArea(fX, fY, fW, fH);
+                           mFocusArea->SetVisible(true);
+
+                           // CLICK FILTER
+                           GetClickFilter()->SetScreenClickableArea(fX, fY, fW, fH);
+                       });
 
     auto btn = panel->GetButtonEndTurn();
 
@@ -62,22 +59,7 @@ StepGameEndTurn::StepGameEndTurn(const PanelTurnControl * panel)
 
 StepGameEndTurn::~StepGameEndTurn()
 {
-    delete mClickFilter;
     delete mFocusArea;
-    delete mInfo;
-}
-
-void StepGameEndTurn::OnStart()
-{
-    // CLICK FILTER
-    mClickFilter->SetEnabled(true);
-
-    // INFO
-    mInfo->SetEnabled(true);
-    mInfo->SetVisible(true);
-    mInfo->SetFocus();
-
-    mInfo->StartInfo();
 }
 
 } // namespace game

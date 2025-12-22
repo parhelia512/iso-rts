@@ -33,15 +33,14 @@ PanelPlanetResources::PanelPlanetResources()
     SetSize(tex->GetWidth(), tex->GetHeight());
 
     // HEADER
-    const char * fileFont = "Lato-Regular.ttf";
     const unsigned int colorHeader = 0xe9f7fbcc;
     const int marginHeaderX = 20;
     const int marginHeaderY = 15;
 
-    graphic::Font * fnt = fm->GetFont(fileFont, WidgetsConstants::FontSizePlanetMapTitle,
-                                      graphic::Font::NORMAL);
+    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFilePanelTitle,
+                                      WidgetsConstants::FontSizePlanetMapTitle, graphic::Font::NORMAL);
     auto label = new sgui::Label("RESOURCES", fnt, this);
-    label->SetColor(colorHeader);
+    label->SetColor(WidgetsConstants::colorPanelTitle);
     label->SetPosition(marginHeaderX, marginHeaderY);
 
     // ICONS

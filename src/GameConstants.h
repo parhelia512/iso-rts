@@ -9,6 +9,11 @@ constexpr int MAX_UNITS_LEVEL = 2;
 constexpr int COST_UNIT_UPGRADE[] = { 1, 2 };
 
 constexpr float TIME_AI_MIN = 0.2f;
+constexpr float TIME_GOD_MODE = 0.25f;
+
+constexpr float TIME_AUTO_END_TURN = 2.f;
+
+constexpr float MAX_STAV_VAL = 10.f;
 
 constexpr unsigned int PLAYER_COLOR[] =
 {
@@ -16,6 +21,24 @@ constexpr unsigned int PLAYER_COLOR[] =
     0x57db62ff,
     0x57badbff,
     0xdb57dbff
+};
+
+enum AttackMode : unsigned int
+{
+    ATT_QUICK_SHOT,
+    ATT_AIMED_SHOT,
+    ATT_BURST_SHOT,
+
+    NUM_ATTACK_MODES
+};
+
+enum GameCursorId : unsigned int
+{
+    CURSOR_DEFAULT,
+
+    NUM_GAME_CURSORS,
+
+    CURSOR_NULL
 };
 
 enum MapLayers : unsigned int
@@ -47,6 +70,38 @@ enum MissionCategory : unsigned int
     MISSION_COMPLETED,
 
     MC_UNKNOWN
+};
+
+enum ObjAttId : unsigned int
+{
+    // GENERIC
+    OBJ_ATT_ENERGY,
+    OBJ_ATT_HEALTH,
+    OBJ_ATT_VIEW_RANGE,
+    OBJ_ATT_REGENERATION,
+    OBJ_ATT_RESISTANCE,
+    OBJ_ATT_SHIELD,
+
+    // UNIT ONLY
+    OBJ_ATT_SPEED,
+    OBJ_ATT_CONSTRUCTION,
+    OBJ_ATT_CONQUEST,
+    OBJ_ATT_HEALING_RANGE,
+    OBJ_ATT_HEALING_POWER,
+    OBJ_ATT_SPAWNING,
+
+    // STORAGE
+    OBJ_ATT_STORAGE,
+
+    // WEAPON
+    OBJ_ATT_ATTACK_ACCURACY,
+    OBJ_ATT_ATTACK_POWER,
+    OBJ_ATT_ATTACK_RANGE,
+
+    NUM_OBJ_ATTRIBUTES,
+
+    FIRST_WEAPON_ATTRIBUTE = OBJ_ATT_ATTACK_ACCURACY,
+    NUM_WEAPON_ATTRIBUTES = NUM_OBJ_ATTRIBUTES - FIRST_WEAPON_ATTRIBUTE,
 };
 
 enum PlayerFaction : unsigned int
@@ -87,6 +142,15 @@ enum TerritoryStatus : unsigned int
     TER_ST_UNKNOWN
 };
 
+enum ParticlesUpdaterId : unsigned int
+{
+    PU_DAMAGE,
+    PU_HEALING,
+    PU_HIT_POINTS,
+    PU_LOOTBOX_PRIZE,
+    PU_SINGLE_LASER
+};
+
 enum Planets : unsigned int
 {
     PLANET_1,
@@ -98,8 +162,8 @@ enum Planets : unsigned int
 
 enum TutorialId : unsigned int
 {
-    TUTORIAL_PLANET_MAP,
     TUTORIAL_MISSION_INTRO,
+    TUTORIAL_PLANET_MAP,
 
     NUM_TUTORIALS,
 
@@ -115,6 +179,16 @@ enum TutorialState : unsigned int
     NUM_TUTORIAL_STATES,
 
     TS_UNKNOWN
+};
+
+enum TurnStage : unsigned int
+{
+    TURN_STAGE_MINI_UNITS_ATTACK,
+    TURN_STAGE_MINI_UNITS_MOVE,
+    TURN_STAGE_PLAY,
+    TURN_STAGE_TOWERS_ATTACK,
+
+    NUM_TURN_STAGES
 };
 
 extern const char * FACTIONS_NAME[NUM_FACTIONS];

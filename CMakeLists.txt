@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5.1)
 
-project(virtualord LANGUAGES CXX VERSION 0.3.0)
+project(virtualord LANGUAGES CXX VERSION 0.4.0)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -93,10 +93,16 @@ add_executable(
     src/GameObjects/Hospital.cpp
     src/GameObjects/LootBox.h
     src/GameObjects/LootBox.cpp
+    src/GameObjects/MiniUnit.h
+    src/GameObjects/MiniUnit.cpp
+    src/GameObjects/MiniUnitsGroup.h
+    src/GameObjects/MiniUnitsGroup.cpp
     src/GameObjects/ObjectData.h
     src/GameObjects/ObjectData.cpp
     src/GameObjects/ObjectsDataRegistry.h
     src/GameObjects/ObjectsDataRegistry.cpp
+    src/GameObjects/GameObjectsGroup.h
+    src/GameObjects/GameObjectsGroup.cpp
     src/GameObjects/PracticeTarget.h
     src/GameObjects/PracticeTarget.cpp
     src/GameObjects/RadarStation.h
@@ -111,6 +117,8 @@ add_executable(
     src/GameObjects/ResourceStorage.cpp
     src/GameObjects/SceneObject.h
     src/GameObjects/SceneObject.cpp
+    src/GameObjects/SpawningTower.h
+    src/GameObjects/SpawningTower.cpp
     src/GameObjects/Structure.h
     src/GameObjects/Structure.cpp
     src/GameObjects/Temple.h
@@ -125,6 +133,12 @@ add_executable(
     src/GameObjects/Wall.cpp
     src/GameObjects/WallGate.h
     src/GameObjects/WallGate.cpp
+    src/GameObjectTools/Laser.h
+    src/GameObjectTools/Laser.cpp
+    src/GameObjectTools/Weapon.h
+    src/GameObjectTools/Weapon.cpp
+    src/GameObjectTools/WeaponData.h
+    src/GameObjectTools/WeaponData.cpp
     src/Indicators/AttackRangeIndicator.h
     src/Indicators/AttackRangeIndicator.cpp
     src/Indicators/ConquestIndicator.h
@@ -133,18 +147,25 @@ add_executable(
     src/Indicators/HealingRangeIndicator.cpp
     src/Indicators/MoveIndicator.h
     src/Indicators/MoveIndicator.cpp
+    src/Indicators/PathIndicator.h
+    src/Indicators/PathIndicator.cpp
+    src/Indicators/PathOverlay.h
+    src/Indicators/PathOverlay.cpp
     src/Indicators/StructureIndicator.h
     src/Indicators/StructureIndicator.cpp
     src/Indicators/WallIndicator.h
     src/Indicators/WallIndicator.cpp
     src/Particles/DataParticleDamage.h
     src/Particles/DataParticleHealing.h
+    src/Particles/DataParticleHitPoints.h
     src/Particles/DataParticleLootboxPrize.h
     src/Particles/DataParticleSingleLaser.h
     src/Particles/ParticleDamage.h
     src/Particles/ParticleDamage.cpp
     src/Particles/ParticleHealing.h
     src/Particles/ParticleHealing.cpp
+    src/Particles/ParticleHitPoints.h
+    src/Particles/ParticleHitPoints.cpp
     src/Particles/ParticleLootboxPrize.h
     src/Particles/ParticleLootboxPrize.cpp
     src/Particles/ParticleSingleLaser.h
@@ -153,6 +174,8 @@ add_executable(
     src/Particles/UpdaterDamage.cpp
     src/Particles/UpdaterHealing.h
     src/Particles/UpdaterHealing.cpp
+    src/Particles/UpdaterHitPoints.h
+    src/Particles/UpdaterHitPoints.cpp
     src/Particles/UpdaterLootboxPrize.h
     src/Particles/UpdaterLootboxPrize.cpp
     src/Particles/UpdaterSingleLaser.h
@@ -264,15 +287,29 @@ add_executable(
     src/Tutorial/StepPlanetMapSelectTerritory.cpp
     src/Tutorial/StepPlanetMapSendAI.h
     src/Tutorial/StepPlanetMapSendAI.cpp
+    src/Tutorial/Tutorial.h
+    src/Tutorial/Tutorial.cpp
     src/Tutorial/TutorialConstants.h
+    src/Tutorial/TutorialGameIntro.h
+    src/Tutorial/TutorialGameIntro.cpp
+    src/Tutorial/TutorialInfoStep.h
+    src/Tutorial/TutorialInfoStep.cpp
     src/Tutorial/TutorialManager.h
     src/Tutorial/TutorialManager.cpp
+    src/Tutorial/TutorialPlanetMap.h
+    src/Tutorial/TutorialPlanetMap.cpp
     src/Tutorial/TutorialStep.h
     src/Tutorial/TutorialStep.cpp
     src/Widgets/BlinkingIconEnergy.h
     src/Widgets/BlinkingIconEnergy.cpp
+    src/Widgets/ButtonDialogAction.h
+    src/Widgets/ButtonDialogAction.cpp
+    src/Widgets/ButtonDialogArrows.h
+    src/Widgets/ButtonDialogArrows.cpp
     src/Widgets/ButtonDialogBack.h
     src/Widgets/ButtonDialogBack.cpp
+    src/Widgets/ButtonDialogClose.h
+    src/Widgets/ButtonDialogClose.cpp
     src/Widgets/ButtonDialogContinue.h
     src/Widgets/ButtonDialogContinue.cpp
     src/Widgets/ButtonDialogSelect.h
@@ -285,6 +322,8 @@ add_executable(
     src/Widgets/ButtonMainMenuWishlist.cpp
     src/Widgets/ButtonMinimap.h
     src/Widgets/ButtonMinimap.cpp
+    src/Widgets/ButtonObjectActionOption.h
+    src/Widgets/ButtonObjectActionOption.cpp
     src/Widgets/ButtonPanelSelectedObject.h
     src/Widgets/ButtonPanelSelectedObject.cpp
     src/Widgets/ButtonPlanetMap.h
@@ -311,6 +350,8 @@ add_executable(
     src/Widgets/DialogMissionGoals.cpp
     src/Widgets/DialogNewElement.h
     src/Widgets/DialogNewElement.cpp
+    src/Widgets/DialogNewMiniUnitsSquad.h
+    src/Widgets/DialogNewMiniUnitsSquad.cpp
     src/Widgets/DialogObject.h
     src/Widgets/DialogObject.cpp
     src/Widgets/DialogSettings.h
@@ -339,14 +380,16 @@ add_executable(
     src/Widgets/ObjectActionButton.cpp
     src/Widgets/ObjectVisualAttribute.h
     src/Widgets/ObjectVisualAttribute.cpp
+    src/Widgets/PanelHit.h
+    src/Widgets/PanelHit.cpp
+    src/Widgets/PanelObjectActions.h
+    src/Widgets/PanelObjectActions.cpp
     src/Widgets/PanelPlanetActionConquer.h
     src/Widgets/PanelPlanetActionConquer.cpp
     src/Widgets/PanelPlanetActionConquerAI.h
     src/Widgets/PanelPlanetActionConquerAI.cpp
     src/Widgets/PanelPlanetActionExplore.h
     src/Widgets/PanelPlanetActionExplore.cpp
-    src/Widgets/PanelObjectActions.h
-    src/Widgets/PanelObjectActions.cpp
     src/Widgets/PanelPlanetActions.h
     src/Widgets/PanelPlanetActions.cpp
     src/Widgets/PanelPlanetInfo.h
@@ -357,6 +400,10 @@ add_executable(
     src/Widgets/PanelResources.cpp
     src/Widgets/PanelSelectedObject.h
     src/Widgets/PanelSelectedObject.cpp
+    src/Widgets/PanelSelfDestruction.h
+    src/Widgets/PanelSelfDestruction.cpp
+    src/Widgets/PanelShotType.h
+    src/Widgets/PanelShotType.cpp
     src/Widgets/PanelTurnControl.h
     src/Widgets/PanelTurnControl.cpp
     src/Widgets/PlanetMap.h
@@ -371,11 +418,12 @@ add_executable(
     src/Widgets/ResourceDisplay.cpp
     src/Widgets/ResourceTooltip.h
     src/Widgets/ResourceTooltip.cpp
+    src/Widgets/ScreenOverlay.h
+    src/Widgets/ScreenOverlay.cpp
     src/Widgets/SimpleResourceDisplay.h
     src/Widgets/SimpleResourceDisplay.cpp
     src/Widgets/WidgetsConstants.h
-    src/Widgets/UnitsSelector.h
-    src/Widgets/UnitsSelector.cpp
+    src/Widgets/WidgetsConstants.cpp
     src/Widgets/Test/TestComboBox.h
     src/Widgets/Test/TestComboBox.cpp
     src/Widgets/Test/TestSliderH.h

@@ -6,6 +6,7 @@
 #include "GameObjects/Unit.h"
 #include "Screens/ScreenGame.h"
 #include "Widgets/DigitsDisplay.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/core/event/KeyboardEvent.h>
 #include <sgl/graphic/Font.h>
@@ -56,10 +57,12 @@ ButtonQuickUnitSelection::ButtonQuickUnitSelection(int index, ScreenGame * sg, s
     , mScreenGame(sg)
     , mShortcutKey(KEYS[index])
 {
+    using namespace sgl;
+
     // create shortcut label
-    auto fm = sgl::graphic::FontManager::Instance();
-    auto fontShortcut = fm->GetFont("Lato-Regular.ttf", 12, sgl::graphic::Font::NORMAL);
-    mShortcut = new sgl::graphic::Text(KEYS_STR[index], fontShortcut);
+    auto fm = graphic::FontManager::Instance();
+    auto fontShortcut = fm->GetFont(WidgetsConstants::FontFileButton, 12, graphic::Font::NORMAL);
+    mShortcut = new graphic::Text(KEYS_STR[index], fontShortcut);
     RegisterRenderable(mShortcut);
 
     // handle button checked

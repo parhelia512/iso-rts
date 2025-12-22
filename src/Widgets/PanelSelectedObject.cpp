@@ -1,11 +1,13 @@
 #include "Widgets/PanelSelectedObject.h"
 
+#include "GameData.h"
 #include "GameUIData.h"
-#include "GameObjects/GameObject.h"
+#include "GameObjects/MiniUnit.h"
 #include "GameObjects/ObjectsDataRegistry.h"
 #include "Widgets/DigitsDisplay.h"
 #include "Widgets/GameSimpleTooltip.h"
 #include "Widgets/ProgressBarObjectVisualStat.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
@@ -21,8 +23,11 @@
 
 #include <cmath>
 
-namespace game
+// anonymous namespace for local "private" classes
+namespace
 {
+
+using namespace game;
 
 // ========== BUTTON CLOSE ==========
 class ButtonClosePanel : public sgl::sgui::ImageButton
@@ -100,7 +105,7 @@ public:
         const int sizeFont = 16;
         const unsigned int colorDigits = 0x70a9c2ff;
         const unsigned int colorZeros = 0x35677dff;
-        mDigits = new DigitsDisplay(3, sizeFont, "%", this);
+        mDigits = new DigitsDisplay(4, sizeFont, std::string(), this);
         mDigits->SetColorDigits(colorDigits);
         mDigits->SetColorZeros(colorZeros);
 
@@ -122,10 +127,9 @@ public:
             "Experience"
         };
 
-        const int ttDelay = 500;
         auto tt = new GameSimpleTooltip(tooltipText[type]);
         SetTooltip(tt);
-        SetTooltipDelay(ttDelay);
+        SetTooltipDelay(WidgetsConstants::timeTooltipButtonDelay);
     }
 
     void SetValue(float val, float max)
@@ -142,7 +146,7 @@ public:
         mIcon->SetColor(colorIcon);
 
         // DIGITS
-        mDigits->SetValue(perc);
+        mDigits->SetValue(val);
     }
 
 private:
@@ -204,11 +208,10 @@ public:
                 "Show the upgrade panel of this object"
             };
 
-        const int ttDelay = 500;
         const int ttTime = 3500;
         auto tt = new GameSimpleTooltip(tooltipText[f]);
         SetTooltip(tt);
-        SetTooltipDelay(ttDelay);
+        SetTooltipDelay(WidgetsConstants::timeTooltipButtonDelay);
         SetTooltipShowingTime(ttTime);
     }
 
@@ -249,8 +252,12 @@ private:
     sgl::sgui::Image * mIcon = nullptr;
 };
 
-// ========== PANEL ==========
+} // namespace
 
+namespace game
+{
+
+// ========== PANEL ==========
 PanelSelectedObject::PanelSelectedObject(const ObjectsDataRegistry * odr, sgl::sgui::Widget * parent)
     : sgl::sgui::Widget(parent)
     , mObjDataReg(odr)
@@ -289,24 +296,21 @@ PanelSelectedObject::PanelSelectedObject(const ObjectsDataRegistry * odr, sgl::s
     const int titleX = 180;
     const int titleY = 30;
 
-    const char * fileFontTile = "Lato-Bold.ttf";
-    const unsigned int colorTitle = 0xe9f7fbcc;
     const int sizeTitle = 16;
 
-    graphic::Font * fntTitle = fm->GetFont(fileFontTile, sizeTitle, graphic::Font::NORMAL);
+    auto fntTitle = fm->GetFont(WidgetsConstants::FontFilePanelTitle, sizeTitle, graphic::Font::NORMAL);
 
     mTitle = new sgui::TextArea(titleW, titleH, fntTitle, true, this);
-    mTitle->SetColor(colorTitle);
+    mTitle->SetColor(WidgetsConstants::colorPanelTitle);
     mTitle->setTextAlignmentHorizontal(sgui::TextArea::ALIGN_H_CENTER);
     mTitle->SetPosition(titleX, titleY);
 
     // LEVEL
     mBarLvl = new sgui::Image(this);
 
-    const int ttDelay = 500;
     auto tt = new GameSimpleTooltip("Experience level");
     mBarLvl->SetTooltip(tt);
-    mBarLvl->SetTooltipDelay(ttDelay);
+    mBarLvl->SetTooltipDelay(WidgetsConstants::timeTooltipButtonDelay);
 
     // STATS
     mStatEnergy = new ObjectVisualStat(ObjectVisualStat::VST_ENERGY, this);
@@ -377,6 +381,17 @@ void PanelSelectedObject::AddFunctionOnShowInfo(const std::function<void()> & f)
     mButtonShowInfo->AddOnClickFunction(f);
 }
 
+void PanelSelectedObject::ClearObject()
+{
+    if(nullptr == mObj)
+        return ;
+
+    mObj->RemoveFunctionOnValueChanged(mFuncValuesChangedId);
+    mFuncValuesChangedId = 0;
+
+    mObj = nullptr;
+}
+
 void PanelSelectedObject::SetObject(GameObject * obj)
 {
     using namespace sgl;
@@ -404,7 +419,7 @@ void PanelSelectedObject::SetObject(GameObject * obj)
     sgl::graphic::Texture * tex = nullptr;
 
     // TITLE
-    mTitle->SetText(GameObject::TITLES.at(type).c_str());
+    mTitle->SetText(ObjectData::TITLES.at(type).c_str());
 
     // BAR LEVEL
     const int maxLvl = 10;
@@ -420,7 +435,18 @@ void PanelSelectedObject::SetObject(GameObject * obj)
 
     // SET IMAGE
     const ObjectData & data = mObjDataReg->GetObjectData(type);
-    tex = tm->GetSprite(data.GetIconTexFile(), data.GetIconTexId(faction));
+
+    // MiniUnits are a special case as preview is based on num of elements
+    if(data.GetCategory() == ObjectData::CAT_MINI_UNIT)
+    {
+        const auto mu = static_cast<MiniUnit *>(obj);
+        const unsigned int texInd0 = data.GetIconTexId(faction);
+        const unsigned int texInd = texInd0 + NUM_MUNIT_SPRITES_PER_SQUAD * (mu->GetNumElements() - 1);
+
+        tex = tm->GetSprite(data.GetIconTexFile(), texInd);
+    }
+    else
+        tex = tm->GetSprite(data.GetIconTexFile(), data.GetIconTexId(faction));
 
     mImg->SetTexture(tex);
 
@@ -470,7 +496,7 @@ void PanelSelectedObject::SetObject(GameObject * obj)
     UpdateStats();
 
     // BUTTONS FUNCTION
-    const bool showAutoActions = obj->GetObjectCategory() == GameObject::CAT_UNIT;
+    const bool showAutoActions = obj->GetObjectCategory() == ObjectData::CAT_UNIT;
 
     mButtonAutoAttack->SetVisible(showAutoActions);
     mButtonAutoMove->SetVisible(showAutoActions);
@@ -500,9 +526,9 @@ void PanelSelectedObject::UpdateStats()
     const int maxExp = mObj->GetExperienceToNextLevel();
 
     // STAT BARS
-    mStatEnergy->SetValue(mObj->GetEnergy(), mObj->GetMaxEnergy());
-    mStatHealth->SetValue(mObj->GetHealth(), mObj->GetMaxHealth());
-    mStatExperience->SetValue(exp, maxExp);
+    static_cast<ObjectVisualStat *>(mStatEnergy)->SetValue(mObj->GetEnergy(), mObj->GetMaxEnergy());
+    static_cast<ObjectVisualStat *>(mStatHealth)->SetValue(mObj->GetHealth(), mObj->GetMaxHealth());
+    static_cast<ObjectVisualStat *>(mStatExperience)->SetValue(exp, maxExp);
 
     // INFO / UPGRADE BUTTON
     const bool showInfo = exp < maxExp;

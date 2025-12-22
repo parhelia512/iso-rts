@@ -10,26 +10,29 @@
 
 namespace
 {
-    constexpr float treeHealth = 40.f;
+    constexpr float maxTreeEnergy = 100.f;
+    constexpr float maxTreeHealth = 200.f;
 }
 
 namespace game
 {
 
-Trees::Trees(GameObjectVariantId var)
-    : GameObject(TYPE_TREES, CAT_SCENE_OBJ, 1, 1)
+Trees::Trees(const ObjectData & data, GameObjectVariantId var)
+    : GameObject(data)
 {
     mVariant = var;
 
     SetStatic(true);
 
     // health
-    SetMaxHealth(treeHealth);
-    SetHealth(treeHealth);
+    UpdateMaxHealth(maxTreeHealth);
+
+    // energy
+    UpdateMaxEnergy(maxTreeEnergy);
 
     // randomize turns for change
     const int minTurns = 10;
-    const int maxTurns = 40;
+    const int maxTurns = 30;
     sgl::utilities::UniformDistribution dis(minTurns, maxTurns);
     mTurnsToChange = dis.GetNextValue();
 
@@ -68,8 +71,11 @@ void Trees::OnNewTurn(PlayerFaction faction)
 
         SetImage();
 
-        SetMaxHealth(GetMaxHealth() + treeHealth);
-        SumHealth(treeHealth);
+        // health
+        UpdateMaxHealth(maxTreeHealth * mNumTrees);
+
+        // increase total energy
+        UpdateMaxEnergy(maxTreeEnergy * mNumTrees);
     }
     // spawn tree
     else
@@ -112,7 +118,7 @@ void Trees::SpawnTree(int r0, int c0)
     sgl::utilities::UniformDistribution dis(0, NUM_TREE1_VARIANTS - 1);
     const int variant = dis.GetNextValue();
 
-    gm->CreateObject(MapLayers::OBJECTS1, GameObject::TYPE_TREES, variant, NO_FACTION, r0, c0, false);
+    gm->CreateObject(MapLayers::OBJECTS1, ObjectData::TYPE_TREES, variant, NO_FACTION, r0, c0, false);
 
     // set cell type of new tree
     gm->SetCellType(r0, c0, TREES1);

@@ -1,16 +1,14 @@
 #pragma once
 
-#include "Tutorial/TutorialStep.h"
+#include "Tutorial/TutorialInfoStep.h"
 
 namespace game
 {
 
 class FocusArea;
-class PanelClickFilter;
-class PanelInfoTutorial;
 class PanelPlanetActions;
 
-class StepPlanetMapExploreTerritory : public TutorialStep
+class StepPlanetMapExploreTerritory : public TutorialInfoStep
 {
 public:
     StepPlanetMapExploreTerritory(PanelPlanetActions * panelActions);
@@ -20,8 +18,6 @@ public:
 
 private:
     FocusArea * mFocusArea = nullptr;
-    PanelClickFilter * mClickFilter = nullptr;
-    PanelInfoTutorial * mInfo = nullptr;
 };
 
 } // namespace game

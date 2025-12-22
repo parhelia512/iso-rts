@@ -9,19 +9,15 @@
 namespace game
 {
 
-Barracks::Barracks()
-    : Structure(GameObject::TYPE_BARRACKS, GameObject::CAT_GENERIC, 2, 2)
+Barracks::Barracks(const ObjectData & data)
+    : Structure(data)
 {
-    SetVisibilityLevel(4);
-
     SetImage();
 }
 
 void Barracks::UpdateGraphics()
 {
     SetImage();
-
-    SetDefaultColors();
 }
 
 void Barracks::SetImage()

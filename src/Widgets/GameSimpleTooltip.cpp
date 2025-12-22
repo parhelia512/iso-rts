@@ -1,6 +1,7 @@
 #include "GameSimpleTooltip.h"
 
-#include "GameUIData.h"
+#include "Widgets/GameUIData.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/graphic/GraphicConstants.h>
 #include <sgl/graphic/Font.h>
@@ -43,8 +44,8 @@ GameSimpleTooltip::GameSimpleTooltip(const char * text)
     mBgRight = new graphic::Image(tex);
     RegisterRenderable(mBgRight);
 
-    // TITLE
-    auto font = fm->GetFont("Lato-Regular.ttf", 16, graphic::Font::NORMAL);
+    // LABEL
+    auto font = fm->GetFont(WidgetsConstants::FontFileText, 16, graphic::Font::NORMAL);
     mLabel = new graphic::Text(text, font);
     mLabel->SetColor(0x98bbd9ff);
     RegisterRenderable(mLabel);

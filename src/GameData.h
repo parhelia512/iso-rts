@@ -56,7 +56,7 @@ enum SpriteCollectiblesId : unsigned int
 };
 
 // INDICATORS
-extern const char SpriteFileIndicators[];
+extern const char SpriteFileMapIndicators[];
 
 enum SpriteIdIndicators : unsigned int
 {
@@ -93,9 +93,7 @@ enum SpriteIdIndicators : unsigned int
     IND_CONQUEST_F3,
 
     // ATTACK RANGE INDICATOR
-    IND_ATTACK_F1,
-    IND_ATTACK_F2,
-    IND_ATTACK_F3,
+    IND_ATTACK_RANGE,
 
     // HEALING RANGE INDICATOR
     IND_RANGE_HEAL_F1,
@@ -144,6 +142,21 @@ enum SpriteIdIndicators : unsigned int
     IND_INF_AREA_CONN_R_F3,
     IND_INF_AREA_CONN_B_F3,
 
+    // PATH INDICATORS
+    ID_MIND_PATH_F1,
+    ID_MIND_PATH_DEST_F1,
+    ID_MIND_PATH_F2,
+    ID_MIND_PATH_DEST_F2,
+    ID_MIND_PATH_F3,
+    ID_MIND_PATH_DEST_F3,
+
+    // ICON RESOURCES COST
+    ID_MIND_ICON_ENERGY,
+    ID_MIND_ICON_MATERIAL,
+    ID_MIND_ICON_DIAMONDS,
+    ID_MIND_ICON_BLOBS,
+    ID_MIND_ICON_MONEY,
+
     // TOTAL
     NUM_IND_SPRITES,
     // SPECIAL
@@ -153,6 +166,88 @@ enum SpriteIdIndicators : unsigned int
     IND_WB_FIRST = IND_WB_HORIZONTAL_F1,
     IND_INF_AREA_FIRST = IND_INF_AREA_L_F1,
     NUM_INF_AREA_ELEMS = IND_INF_AREA_L_F2 - IND_INF_AREA_L_F1
+};
+
+// MINI UNITS
+extern const char SpriteFileMiniUnits[];
+
+enum SpriteIdMiniUnits : unsigned int
+{
+    // unit 1 - FACTION 1
+    SID_MUNIT_01_1X_F1,
+    SID_MUNIT_01_1X_F1_SEL,
+    SID_MUNIT_01_2X_F1,
+    SID_MUNIT_01_2X_F1_SEL,
+    SID_MUNIT_01_3X_F1,
+    SID_MUNIT_01_3X_F1_SEL,
+    SID_MUNIT_01_4X_F1,
+    SID_MUNIT_01_4X_F1_SEL,
+    SID_MUNIT_01_5X_F1,
+    SID_MUNIT_01_5X_F1_SEL,
+
+    // unit 1 - FACTION 2
+    SID_MUNIT_01_1X_F2,
+    SID_MUNIT_01_1X_F2_SEL,
+    SID_MUNIT_01_2X_F2,
+    SID_MUNIT_01_2X_F2_SEL,
+    SID_MUNIT_01_3X_F2,
+    SID_MUNIT_01_3X_F2_SEL,
+    SID_MUNIT_01_4X_F2,
+    SID_MUNIT_01_4X_F2_SEL,
+    SID_MUNIT_01_5X_F2,
+    SID_MUNIT_01_5X_F2_SEL,
+
+    // unit 1 - FACTION 3
+    SID_MUNIT_01_1X_F3,
+    SID_MUNIT_01_1X_F3_SEL,
+    SID_MUNIT_01_2X_F3,
+    SID_MUNIT_01_2X_F3_SEL,
+    SID_MUNIT_01_3X_F3,
+    SID_MUNIT_01_3X_F3_SEL,
+    SID_MUNIT_01_4X_F3,
+    SID_MUNIT_01_4X_F3_SEL,
+    SID_MUNIT_01_5X_F3,
+    SID_MUNIT_01_5X_F3_SEL,
+
+    // unit 2 - FACTION 1
+    SID_MUNIT_02_1X_F1,
+    SID_MUNIT_02_1X_F1_SEL,
+    SID_MUNIT_02_2X_F1,
+    SID_MUNIT_02_2X_F1_SEL,
+    SID_MUNIT_02_3X_F1,
+    SID_MUNIT_02_3X_F1_SEL,
+    SID_MUNIT_02_4X_F1,
+    SID_MUNIT_02_4X_F1_SEL,
+    SID_MUNIT_02_5X_F1,
+    SID_MUNIT_02_5X_F1_SEL,
+
+    // unit 2 - FACTION 2
+    SID_MUNIT_02_1X_F2,
+    SID_MUNIT_02_1X_F2_SEL,
+    SID_MUNIT_02_2X_F2,
+    SID_MUNIT_02_2X_F2_SEL,
+    SID_MUNIT_02_3X_F2,
+    SID_MUNIT_02_3X_F2_SEL,
+    SID_MUNIT_02_4X_F2,
+    SID_MUNIT_02_4X_F2_SEL,
+    SID_MUNIT_02_5X_F2,
+    SID_MUNIT_02_5X_F2_SEL,
+
+    // unit 2 - FACTION 3
+    SID_MUNIT_02_1X_F3,
+    SID_MUNIT_02_1X_F3_SEL,
+    SID_MUNIT_02_2X_F3,
+    SID_MUNIT_02_2X_F3_SEL,
+    SID_MUNIT_02_3X_F3,
+    SID_MUNIT_02_3X_F3_SEL,
+    SID_MUNIT_02_4X_F3,
+    SID_MUNIT_02_4X_F3_SEL,
+    SID_MUNIT_02_5X_F3,
+    SID_MUNIT_02_5X_F3_SEL,
+
+    // 2 sprites per unit squad (1-5 elements): unselected and selected
+    NUM_MUNIT_SPRITES_PER_SQUAD = 2,
+    NUM_MUNIT_SPRITES_PER_FACTION = SID_MUNIT_01_1X_F2 - SID_MUNIT_01_1X_F1,
 };
 
 // ROCKS
@@ -417,8 +512,18 @@ enum SpriteIdStructures : unsigned int
     ID_STRUCT_TRADING_POST_F2_SEL,
     ID_STRUCT_TRADING_POST_F3,
     ID_STRUCT_TRADING_POST_F3_SEL,
+    // SPAWNING TOWER
+    ID_STRUCT_SPAWN_TOWER_F1,
+    ID_STRUCT_SPAWN_TOWER_F1_SEL,
+    ID_STRUCT_SPAWN_TOWER_F2,
+    ID_STRUCT_SPAWN_TOWER_F2_SEL,
+    ID_STRUCT_SPAWN_TOWER_F3,
+    ID_STRUCT_SPAWN_TOWER_F3_SEL,
+    ID_STRUCT_SPAWN_TOWER,
+    ID_STRUCT_SPAWN_TOWER_SEL,
 
     // special values
+    NUM_DEFAULT_SPRITES_PER_FAC = 2,
     NUM_BARRACKS_SPRITES_PER_FAC = 2,
     NUM_BASE_SPRITES_PER_FAC = 2,
     NUM_BUNKER_SPRITES_PER_FAC = 2,
@@ -565,6 +670,22 @@ enum SpriteIdUnits : unsigned int
     SPR_UNIT_05_F2_SEL,
     SPR_UNIT_05_F3,
     SPR_UNIT_05_F3_SEL,
+
+    // unit 6
+    SPR_UNIT_06_F1,
+    SPR_UNIT_06_F1_SEL,
+    SPR_UNIT_06_F2,
+    SPR_UNIT_06_F2_SEL,
+    SPR_UNIT_06_F3,
+    SPR_UNIT_06_F3_SEL,
+
+    // unit 7
+    SPR_UNIT_07_F1,
+    SPR_UNIT_07_F1_SEL,
+    SPR_UNIT_07_F2,
+    SPR_UNIT_07_F2_SEL,
+    SPR_UNIT_07_F3,
+    SPR_UNIT_07_F3_SEL,
 
     // 2 sprites per unit: unselected and selected
     NUM_UNIT_SPRITES_PER_FACTION = 2,

@@ -15,14 +15,12 @@
 namespace game
 {
 
-Temple::Temple()
-    : Structure(GameObject::TYPE_TEMPLE, GameObject::CAT_GENERIC, 3, 3)
+Temple::Temple(const ObjectData & data)
+    : Structure(data)
     , mOnDone([]{})
     , mExplorer(NO_FACTION)
 {
     SetCanBeConquered(true);
-
-    SetVisibilityLevel(4);
 
     DefineMaxValues();
 

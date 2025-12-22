@@ -16,8 +16,7 @@ class MapsRegistry
 public:
     bool CreatePlanet(unsigned int planetId);
 
-    bool AddMap(unsigned int planetId, const std::string & file, int energy,
-                int material, int diamonds, int blobs, int value,
+    bool AddMap(unsigned int planetId, const std::string & file,
                 PlayerFaction occupier, TerritoryStatus status);
     bool AddUnavailableMap(unsigned int planetId);
 

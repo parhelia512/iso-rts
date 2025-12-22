@@ -21,6 +21,7 @@ void ParticleSingleLaser::SetData(const DataParticleSingleLaser & data)
     mGameMap = data.map;
     mTarget = data.target;
     mDamage = data.damage;
+    mFatal = data.fatal;
 }
 
 void ParticleSingleLaser::SetStartAndTarget(int x0, int y0, int tx, int ty)
@@ -122,8 +123,10 @@ void ParticleSingleLaser::OnDone()
     if(!mGameMap->HasObject(mTarget))
         return ;
 
-    // TODO check hit box
-    mTarget->Hit(mDamage, mShooter);
+    if(mDamage > 0.f)
+        mTarget->Hit(mDamage, mShooter, mFatal);
+    else
+        mTarget->MissHit();
 }
 
 } // namespace game

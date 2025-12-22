@@ -10,6 +10,7 @@
 #include "GameObjects/Base.h"
 #include "GameObjects/Blobs.h"
 #include "GameObjects/Diamonds.h"
+#include "GameObjects/GameObjectsGroup.h"
 #include "GameObjects/LootBox.h"
 #include "GameObjects/ResourceGenerator.h"
 #include "GameObjects/Structure.h"
@@ -353,17 +354,17 @@ void Player::HandleCollectable(GameObject * obj)
     const GameObjectTypeId type = obj->GetObjectType();
 
     // DIAMONDS
-    if(type == GameObject::TYPE_DIAMONDS)
+    if(type == ObjectData::TYPE_DIAMONDS)
     {
         auto d = static_cast<Diamonds *>(obj);
         mStats[Stat::DIAMONDS].SumValue(d->GetNum());
     }
-    else if(type == GameObject::TYPE_BLOBS)
+    else if(type == ObjectData::TYPE_BLOBS)
     {
         auto d = static_cast<Blobs *>(obj);
         mStats[Stat::BLOBS].SumValue(d->GetNum());
     }
-    else if(type == GameObject::TYPE_LOOTBOX)
+    else if(type == ObjectData::TYPE_LOOTBOX)
     {
         auto lb = static_cast<LootBox *>(obj);
         auto type = static_cast<Player::Stat>(lb->GetPrizeType());
@@ -494,15 +495,35 @@ bool Player::IsUnitAvailable(GameObjectTypeId type) const
     return false;
 }
 
+void Player::AddAvailableMiniUnit(GameObjectTypeId type)
+{
+    mAvailableMiniUnits.emplace_back(type);
+}
+
+bool Player::IsMiniUnitAvailable(GameObjectTypeId type) const
+{
+    for(const GameObjectTypeId t : mAvailableMiniUnits)
+    {
+        if(t == type)
+            return true;
+    }
+
+    return false;
+}
+
 void Player::ClearSelectedObject()
 {
     if(nullptr == mSelObj)
         return ;
 
-    mSelObj->SetSelected(false);
+    auto og = mSelObj->GetGroup();
 
-    if(mSelObj->GetObjectCategory() == GameObject::CAT_UNIT)
-        static_cast<Unit *>(mSelObj)->SetActiveAction(GameObjectActionType::IDLE);
+    // in case object is part of a group -> deselect all members
+    if(og != nullptr)
+        og->SetSelected(false);
+    // standard single object -> deselect
+    else
+        mSelObj->SetSelected(false);
 
     mSelObj = nullptr;
 }
@@ -514,10 +535,24 @@ void Player::SetSelectedObject(GameObject * obj)
 
     mSelObj = obj;
 
-    // reset active action
-    mSelObj->SetActiveActionToDefault();
+    auto og = mSelObj->GetGroup();
 
-    mSelObj->SetSelected(true);
+    // in case object is part of a group -> select all members
+    if(og != nullptr)
+    {
+        og->DoForAll([](GameObject * o)
+        {
+            o->SetActiveActionToDefault();
+            o->SetSelected(true);
+        });
+    }
+    // standard single object -> select
+    else
+    {
+        // reset active action
+        mSelObj->SetActiveActionToDefault();
+        mSelObj->SetSelected(true);
+    }
 }
 
 void Player::AddResourceGenerator(ResourceGenerator * gen)

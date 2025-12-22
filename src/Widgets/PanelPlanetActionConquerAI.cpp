@@ -17,9 +17,7 @@
 
 namespace
 {
-    constexpr unsigned int textColor = 0x80a2b3ff;
     constexpr int textSize = 18;
-    const char * fileFont = "Lato-Regular.ttf";
 }
 
 namespace game
@@ -46,12 +44,10 @@ PanelPlanetActionConquerAI::PanelPlanetActionConquerAI(Player * player, int mone
     SetSize(tex->GetWidth(), tex->GetHeight());
 
     // TITLE
-    const unsigned int colorTitle = 0xe9f7fbcc;
-
-    graphic::Font * fnt = fm->GetFont(fileFont, WidgetsConstants::FontSizePlanetMapTitle,
-                                      graphic::Font::NORMAL);
+    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFilePanelTitle,
+                                      WidgetsConstants::FontSizePlanetMapTitle, graphic::Font::NORMAL);
     mTitle = new graphic::Text("SEND AI", fnt);
-    mTitle->SetColor(colorTitle);
+    mTitle->SetColor(WidgetsConstants::colorPanelTitle);
     RegisterRenderable(mTitle);
 
     // CONTENT
@@ -137,7 +133,7 @@ void PanelPlanetActionConquerAI::CreateContentStart(int money, int energy, int m
     const int w = GetWidth();
 
     // DESCRIPTION
-    graphic::Font * fnt = fm->GetFont(fileFont, textSize, graphic::Font::NORMAL);
+    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFileText, textSize, graphic::Font::NORMAL);
 
     const int marginL = 20;
     const int marginR = 20;
@@ -146,7 +142,7 @@ void PanelPlanetActionConquerAI::CreateContentStart(int money, int energy, int m
     const char * txt = "Send an AI general to conquer the territory.\n\n"
                        "This will cost you:";
     auto text = new sgui::TextArea(contW, contH, txt, fnt, false, mContentStart);
-    text->SetColor(textColor);
+    text->SetColor(WidgetsConstants::colorPanelText);
 
     // COSTS
     auto contCosts = new sgui::Widget(mContentStart);
@@ -223,7 +219,7 @@ void PanelPlanetActionConquerAI::CreateContentFailure()
     const int w = GetWidth();
 
     // DESCRIPTION
-    graphic::Font * fnt = fm->GetFont(fileFont, textSize, graphic::Font::NORMAL);
+    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFileText, textSize, graphic::Font::NORMAL);
 
     const int marginL = 20;
     const int marginR = 20;
@@ -233,7 +229,7 @@ void PanelPlanetActionConquerAI::CreateContentFailure()
                        "but the conquest failed.\n\n"
                        "Your enemy has prevailed.";
     auto text = new sgui::TextArea(contW, contH, txt, fnt, false, mContentFailure);
-    text->SetColor(textColor);
+    text->SetColor(WidgetsConstants::colorPanelText);
 }
 
 void PanelPlanetActionConquerAI::CreateContentSuccess()
@@ -247,7 +243,7 @@ void PanelPlanetActionConquerAI::CreateContentSuccess()
     const int w = GetWidth();
 
     // DESCRIPTION
-    graphic::Font * fnt = fm->GetFont(fileFont, textSize, graphic::Font::NORMAL);
+    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFileText, textSize, graphic::Font::NORMAL);
 
     const int marginL = 20;
     const int marginR = 20;
@@ -257,7 +253,7 @@ void PanelPlanetActionConquerAI::CreateContentSuccess()
                        "the conquest was successful!\n\n"
                        "Your resources have been replenished.";
     auto text = new sgui::TextArea(contW, contH, txt, fnt, false, mContentSuccess);
-    text->SetColor(textColor);
+    text->SetColor(WidgetsConstants::colorPanelText);
 }
 
 void PanelPlanetActionConquerAI::HandlePositionChanged()
@@ -274,7 +270,7 @@ void PanelPlanetActionConquerAI::UpdatePositions()
 
     const int marginL = 20;
     const int marginT = 15;
-    const int marginTextT = 5;
+    const int marginTextT = 20;
 
     int x;
     int y;

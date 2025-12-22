@@ -41,13 +41,18 @@ void IsoLayer::UpdateSize(bool force)
     mRenderList.clear();
 }
 
+bool IsoLayer::HasObject(IsoObject * obj) const
+{
+    return std::find(mObjectsList.begin(), mObjectsList.end(), obj) != mObjectsList.end();
+}
+
 /**
  * @brief Checks if a cell contains an object.
  * @param r Row index, starting from 0
  * @param c Col index, starting from 0
  * @return TRUE if cell contains an object, FALSE otherwise
  */
-bool IsoLayer::ContainsObject(unsigned int r, unsigned int c) const
+bool IsoLayer::HasObject(unsigned int r, unsigned int c) const
 {
     const unsigned int rows = mMap->GetNumRows();
     const unsigned int cols = mMap->GetNumCols();
@@ -134,6 +139,11 @@ void IsoLayer::ClearObject(unsigned int r, unsigned int c)
         return ;
 
     ClearObject(index);
+}
+
+bool IsoLayer::MoveObject(IsoObject * obj, unsigned int r, unsigned int c, bool updatePosition)
+{
+    return MoveObject(obj->GetRow(), obj->GetCol(), r, c, updatePosition);
 }
 
 /**

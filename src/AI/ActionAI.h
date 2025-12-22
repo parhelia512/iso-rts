@@ -37,6 +37,8 @@ struct ActionAI
     AIActionType type = AIA_NOP;
     int priority = 0;
 
+    virtual ~ActionAI() {};
+
     const char * GetTypeStr() const;
 };
 

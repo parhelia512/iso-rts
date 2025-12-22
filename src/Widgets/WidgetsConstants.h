@@ -6,13 +6,44 @@ namespace game
 class WidgetsConstants
 {
 public:
-    static constexpr unsigned int colorPlanetMapHeader = 0xb0c5cfff;
-    static constexpr unsigned int colorPlanetMapData = 0x80a2b3ff;
-    static constexpr unsigned int colorPlanetMapEnoughRes = 0x85cc85ff;
-    static constexpr unsigned int colorPlanetMapLackRes = 0xcc8b85ff;
-    static constexpr int FontSizePlanetMapTitle = 28;
-    static constexpr int FontSizePlanetMapHeader = 24;
-    static constexpr int FontSizePlanetMapText = 22;
+    // COLORS
+    static const unsigned int colorPlanetMapEnoughRes;
+    static const unsigned int colorPlanetMapLackRes;
+    static const unsigned int colorDialogHeader1;
+    static const unsigned int colorDialogHeader2;
+    static const unsigned int colorDialogBad;
+    static const unsigned int colorDialogGood;
+    static const unsigned int colorDialogIcon;
+    static const unsigned int colorDialogText;
+    static const unsigned int colorDialogTitle;
+    static const unsigned int colorPanelBad;
+    static const unsigned int colorPanelGood;
+    static const unsigned int colorPanelHeader;
+    static const unsigned int colorPanelText;
+    static const unsigned int colorPanelTitle;
+    static const unsigned int colorPanelWarning;
+    static const unsigned int colorShortcut;
+    static const unsigned int colorShortcutDisabled;
+    static const unsigned int colorTooltipTitle;
+
+    // FONT FILES
+    static const char * FontFileButton;
+    static const char * FontFileHeader;
+    static const char * FontFileShortcut;
+    static const char * FontFileStrongText;
+    static const char * FontFileText;
+    static const char * FontFileDialogTitle;
+    static const char * FontFilePanelHeader;
+    static const char * FontFilePanelText;
+    static const char * FontFilePanelTitle;
+
+    // FONT SIZES
+    static const int FontSizePlanetMapTitle;
+    static const int FontSizePlanetMapHeader;
+    static const int FontSizePlanetMapText;
+
+    // TIMES
+    static const int timeTooltipButtonDelay;
 };
 
 } // namespace game

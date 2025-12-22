@@ -37,7 +37,7 @@ void MoveIndicator::SetIndicatorType(IndicatorType type)
 
     // update image of indicator and text color of cost
     auto tm = TextureManager::Instance();
-    Texture * tex = tm->GetSprite(SpriteFileIndicators, IND_MOVE);
+    Texture * tex = tm->GetSprite(SpriteFileMapIndicators, IND_MOVE);
 
     if(NO_VIS_CELL == mType)
     {

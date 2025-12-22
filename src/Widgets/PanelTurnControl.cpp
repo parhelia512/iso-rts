@@ -5,6 +5,7 @@
 #include "Widgets/GameSimpleTooltip.h"
 #include "Widgets/GameUIData.h"
 #include "Widgets/ProgressBarTurnEnergy.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/core/event/KeyboardEvent.h>
 #include <sgl/graphic/Font.h>
@@ -20,8 +21,11 @@
 
 #include <cmath>
 
-namespace game
+// anonymous namespace for local "private" classes
+namespace
 {
+
+using namespace game;
 
 // ========== BUTTON END TURN ==========
 class ButtonEndTurn : public sgl::sgui::ImageButton
@@ -29,21 +33,22 @@ class ButtonEndTurn : public sgl::sgui::ImageButton
 public:
     ButtonEndTurn(sgl::sgui::Widget * parent)
         : sgl::sgui::ImageButton({
-                                     ID_TURN_CONTROL_BUTTON_NORMAL,
-                                     ID_TURN_CONTROL_BUTTON_DISABLED,
-                                     ID_TURN_CONTROL_BUTTON_OVER,
-                                     ID_TURN_CONTROL_BUTTON_PUSHED,
-                                     ID_TURN_CONTROL_BUTTON_NORMAL
+                                    ID_TURN_CONTROL_BUTTON_NORMAL,
+                                    ID_TURN_CONTROL_BUTTON_DISABLED,
+                                    ID_TURN_CONTROL_BUTTON_OVER,
+                                    ID_TURN_CONTROL_BUTTON_PUSHED,
+                                    ID_TURN_CONTROL_BUTTON_NORMAL
                                  }, SpriteFilePanelTurnControl, parent)
     {
+        using namespace sgl;
+
         // tooltip
-        const int ttDelay = 500;
         auto tt = new GameSimpleTooltip("End your turn");
         SetTooltip(tt);
-        SetTooltipDelay(ttDelay);
+        SetTooltipDelay(WidgetsConstants::timeTooltipButtonDelay);
 
         // shortcut
-        SetShortcutKey(sgl::core::KeyboardEvent::KEY_BACKSPACE);
+        SetShortcutKey(core::KeyboardEvent::KEY_SPACE, core::KeyboardEvent::MOD_SHIFT);
     }
 
     void HandleMouseOver() override
@@ -62,6 +67,11 @@ public:
         player->PlaySound("UI/button_over-01.ogg");
     }
 };
+
+} // namespace
+
+namespace game
+{
 
 // ========== PANEL ==========
 PanelTurnControl::PanelTurnControl(Player * player, sgl::sgui::Widget * parent)
@@ -109,10 +119,9 @@ PanelTurnControl::PanelTurnControl(Player * player, sgl::sgui::Widget * parent)
     mButtonEndTurn = new ButtonEndTurn(this);
 
     // TEXT
-    const char * fontFile = "Lato-Regular.ttf";
     const int fontSize = 28;
     const unsigned int colorText = 0x76a7bcff;
-    graphic::Font * font = fm->GetFont(fontFile, fontSize, graphic::Font::NORMAL);
+    graphic::Font * font = fm->GetFont(WidgetsConstants::FontFileText, fontSize, graphic::Font::NORMAL);
 
     mText = new sgui::Label(font, this);
     mText->SetColor(colorText);

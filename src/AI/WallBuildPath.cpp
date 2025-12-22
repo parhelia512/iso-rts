@@ -100,17 +100,9 @@ bool WallBuildPath::InitNextBuild()
     // clear indicator before starting construction
     layerOverlay->ClearObject(mIndicators[mNextCell - 1]);
 
-    // TODO get conquer time from unit
-    constexpr float TIME_BUILD = 0.1f;
-
-#ifdef DEV_MODE
-    float timeBuild = Game::GOD_MODE ? 0.1f : TIME_BUILD;
-#else
-    float timeBuild = TIME_BUILD;
-#endif
-
     GameHUD * HUD = mScreen->GetHUD();
-    mProgressBar = HUD->CreateProgressBarInCell(nextCell, timeBuild, player->GetFaction());
+    mProgressBar = HUD->CreateProgressBarInCell(nextCell, mUnit->GetTimeBuildWall(),
+                                                player->GetFaction());
 
     mProgressBar->AddFunctionOnCompleted([this, nextCell, player, layerOverlay]
     {
@@ -146,7 +138,7 @@ bool WallBuildPath::InitNextMove()
     const GameMapCell & nextCell = mGameMap->GetCell(mTargetRow, mTargetCol);
 
     // next cell not walkable -> FAIL
-    if(!nextCell.walkable || nextCell.walkTarget)
+    if(!nextCell.walkable)
         return Fail();
 
     const IsoObject * isoObj = mUnit->GetIsoObject();
@@ -161,8 +153,6 @@ bool WallBuildPath::InitNextMove()
 
     mVelX = (mTargetX - mObjX) * mUnit->GetSpeed();
     mVelY = (mTargetY - mObjY) * mUnit->GetSpeed();
-
-    mGameMap->SetCellWalkTarget(nextInd, true);
 
     mState = MOVING;
 
@@ -233,7 +223,7 @@ void WallBuildPath::UpdateMove(float delta)
 
         // collect collectable object, if any
         if(targetCell.objTop != nullptr &&
-           targetCell.objTop->GetObjectCategory() == GameObject::CAT_COLLECTABLE)
+           targetCell.objTop->GetObjectCategory() == ObjectData::CAT_COLLECTABLE)
         {
             player->HandleCollectable(targetCell.objTop);
 

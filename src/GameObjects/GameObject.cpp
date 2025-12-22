@@ -7,273 +7,114 @@
 #include "GameMapCell.h"
 #include "IsoObject.h"
 #include "Player.h"
+#include "GameObjects/GameObjectsGroup.h"
+#include "GameObjectTools/Weapon.h"
+#include "GameObjectTools/WeaponData.h"
 #include "Particles/DataParticleDamage.h"
+#include "Particles/DataParticleHitPoints.h"
 #include "Particles/UpdaterDamage.h"
+#include "Particles/UpdaterHitPoints.h"
 #include "Screens/ScreenGame.h"
 
 #include <sgl/core/Math.h>
+#include <sgl/graphic/ParticlesManager.h>
 #include <sgl/graphic/TextureManager.h>
 #include <sgl/utilities/UniformDistribution.h>
 
+#include <cstdlib>
+
+namespace
+{
+const float minDelta = 0.01f;
+
+const float defMaxEnergy = 250.f;
+const float defMaxHealth = 1000.f;
+const float defMaxVisibility = 10.f;
+const float defMaxVisibilityLinked = 20.f;
+}
+
 namespace game
 {
-
-using h = std::hash<std::string>;
 
 const unsigned int GameObject::COLOR_FOW = 0x555555FF;
 const unsigned int GameObject::COLOR_VIS = 0xFFFFFFFF;
 
 unsigned int GameObject::counter = 0;
 
-const float GameObject::ACTION_COSTS[NUM_OBJ_ACTIONS] =
-{
-    0.f,        // IDLE
-    10.f,       // BUILD_UNIT
-    5.f,        // MOVE
-    10.f,       // CONQUER_CELL
-    20.f,       // CONQUER_STRUCTURE
-    2.f,        // ATTACK
-    30.f,       // BUILD_STRUCTURE
-    10.f,       // BUILD_WALL
-    5.f,        // HEAL
-    1.f         // TOGGLE_GATE
-};
-
-const int GameObject::ACTION_EXPERIENCE[NUM_OBJ_ACTIONS] =
-{
-    0,      // IDLE
-    10,     // BUILD_UNIT
-    1,      // MOVE
-    2,      // CONQUER_CELL
-    5,      // CONQUER_STRUCTURE
-    1,      // ATTACK
-    5,      // BUILD_STRUCTURE
-    2,      // BUILD_WALL
-    2,      // HEAL
-    1,      // TOGGLE_GATE
-};
-
-// -- OBJECT TYPE --
-const std::string GameObject::TYPE_STR_BARRACKS("BARRACKS");
-const std::string GameObject::TYPE_STR_BASE("BASE");
-const std::string GameObject::TYPE_STR_BASE_SPOT("BASE_SPOT");
-const std::string GameObject::TYPE_STR_BLOBS("BLOBS");
-const std::string GameObject::TYPE_STR_BUNKER("BUNKER");
-const std::string GameObject::TYPE_STR_DEFENSIVE_TOWER("DEF_TOWER");
-const std::string GameObject::TYPE_STR_DIAMONDS("DIAMONDS");
-const std::string GameObject::TYPE_STR_HOSPITAL("HOSPITAL");
-const std::string GameObject::TYPE_STR_LOOTBOX("LOOTBOX");
-const std::string GameObject::TYPE_STR_MOUNTAINS("MOUNTAINS");
-const std::string GameObject::TYPE_STR_PRACTICE_TARGET("TARGET");
-const std::string GameObject::TYPE_STR_RADAR_STATION("RADAR_STATION");
-const std::string GameObject::TYPE_STR_RADAR_TOWER("RADAR_TOWER");
-const std::string GameObject::TYPE_STR_RESEARCH_CENTER("RESEARCH_CENTER");
-const std::string GameObject::TYPE_STR_RES_GEN_ENERGY("RESGEN_ENER");
-const std::string GameObject::TYPE_STR_RES_GEN_ENERGY_SOLAR("RESGEN_SOLAR");
-const std::string GameObject::TYPE_STR_RES_GEN_MATERIAL("RESGEN_MAT");
-const std::string GameObject::TYPE_STR_RES_GEN_MATERIAL_EXTRACT("RESGEN_MAT_EXT");
-const std::string GameObject::TYPE_STR_RES_STORAGE_BLOBS("RESSTOR_BLOBS");
-const std::string GameObject::TYPE_STR_RES_STORAGE_DIAMONDS("RESSTOR_DIAM");
-const std::string GameObject::TYPE_STR_RES_STORAGE_ENERGY("RESSTOR_ENER");
-const std::string GameObject::TYPE_STR_RES_STORAGE_MATERIAL("RESSTOR_MAT");
-const std::string GameObject::TYPE_STR_ROCKS("ROCKS");
-const std::string GameObject::TYPE_STR_TEMPLE("TEMPLE");
-const std::string GameObject::TYPE_STR_TRADING_POST("TRADING_POST");
-const std::string GameObject::TYPE_STR_TREES("TREES");
-const std::string GameObject::TYPE_STR_UNIT_MEDIC1("UNIT_MEDIC1");
-const std::string GameObject::TYPE_STR_UNIT_SCOUT1("UNIT_SCOUT1");
-const std::string GameObject::TYPE_STR_UNIT_SOLDIER1("UNIT_SOLDIER1");
-const std::string GameObject::TYPE_STR_UNIT_SOLDIER2("UNIT_SOLDIER2");
-const std::string GameObject::TYPE_STR_UNIT_WORKER1("UNIT_WORKER1");
-const std::string GameObject::TYPE_STR_WALL("WALL");
-const std::string GameObject::TYPE_STR_WALL_GATE("WALL_GATE");
-
-const GameObjectTypeId GameObject::TYPE_NULL = 0;
-
-const GameObjectTypeId GameObject::TYPE_BARRACKS = h{}(TYPE_STR_BARRACKS);
-const GameObjectTypeId GameObject::TYPE_BASE = h{}(TYPE_STR_BASE);
-const GameObjectTypeId GameObject::TYPE_BASE_SPOT = h{}(TYPE_STR_BASE_SPOT);
-const GameObjectTypeId GameObject::TYPE_BLOBS = h{}(TYPE_STR_BLOBS);
-const GameObjectTypeId GameObject::TYPE_BUNKER = h{}(TYPE_STR_BUNKER);
-const GameObjectTypeId GameObject::TYPE_DEFENSIVE_TOWER = h{}(TYPE_STR_DEFENSIVE_TOWER);
-const GameObjectTypeId GameObject::TYPE_DIAMONDS = h{}(TYPE_STR_DIAMONDS);
-const GameObjectTypeId GameObject::TYPE_HOSPITAL = h{}(TYPE_STR_HOSPITAL);
-const GameObjectTypeId GameObject::TYPE_LOOTBOX = h{}(TYPE_STR_LOOTBOX);
-const GameObjectTypeId GameObject::TYPE_MOUNTAINS = h{}(TYPE_STR_MOUNTAINS);
-const GameObjectTypeId GameObject::TYPE_PRACTICE_TARGET = h{}(TYPE_STR_PRACTICE_TARGET);
-const GameObjectTypeId GameObject::TYPE_RADAR_STATION = h{}(TYPE_STR_RADAR_STATION);
-const GameObjectTypeId GameObject::TYPE_RADAR_TOWER = h{}(TYPE_STR_RADAR_TOWER);
-const GameObjectTypeId GameObject::TYPE_RESEARCH_CENTER = h{}(TYPE_STR_RESEARCH_CENTER);
-const GameObjectTypeId GameObject::TYPE_RES_GEN_ENERGY = h{}(TYPE_STR_RES_GEN_ENERGY);
-const GameObjectTypeId GameObject::TYPE_RES_GEN_ENERGY_SOLAR = h{}(TYPE_STR_RES_GEN_ENERGY_SOLAR);
-const GameObjectTypeId GameObject::TYPE_RES_GEN_MATERIAL = h{}(TYPE_STR_RES_GEN_MATERIAL);
-const GameObjectTypeId GameObject::TYPE_RES_GEN_MATERIAL_EXTRACT = h{}(TYPE_STR_RES_GEN_MATERIAL_EXTRACT);
-const GameObjectTypeId GameObject::TYPE_RES_STORAGE_BLOBS = h{}(TYPE_STR_RES_STORAGE_BLOBS);
-const GameObjectTypeId GameObject::TYPE_RES_STORAGE_DIAMONDS = h{}(TYPE_STR_RES_STORAGE_DIAMONDS);
-const GameObjectTypeId GameObject::TYPE_RES_STORAGE_ENERGY = h{}(TYPE_STR_RES_STORAGE_ENERGY);
-const GameObjectTypeId GameObject::TYPE_RES_STORAGE_MATERIAL = h{}(TYPE_STR_RES_STORAGE_MATERIAL);
-const GameObjectTypeId GameObject::TYPE_ROCKS = h{}(TYPE_STR_ROCKS);
-const GameObjectTypeId GameObject::TYPE_TEMPLE = h{}(TYPE_STR_TEMPLE);
-const GameObjectTypeId GameObject::TYPE_TRADING_POST = h{}(TYPE_STR_TRADING_POST);
-const GameObjectTypeId GameObject::TYPE_TREES = h{}(TYPE_STR_TREES);
-const GameObjectTypeId GameObject::TYPE_UNIT_MEDIC1 = h{}(TYPE_STR_UNIT_MEDIC1);
-const GameObjectTypeId GameObject::TYPE_UNIT_SCOUT1 = h{}(TYPE_STR_UNIT_SCOUT1);
-const GameObjectTypeId GameObject::TYPE_UNIT_SOLDIER1 = h{}(TYPE_STR_UNIT_SOLDIER1);
-const GameObjectTypeId GameObject::TYPE_UNIT_SOLDIER2 = h{}(TYPE_STR_UNIT_SOLDIER2);
-const GameObjectTypeId GameObject::TYPE_UNIT_WORKER1 = h{}(TYPE_STR_UNIT_WORKER1);
-const GameObjectTypeId GameObject::TYPE_WALL = h{}(TYPE_STR_WALL);
-const GameObjectTypeId GameObject::TYPE_WALL_GATE = h{}(TYPE_STR_WALL_GATE);
-
-const std::unordered_map<GameObjectTypeId, std::string> GameObject::TYPE_STR_MAP =
-{
-    { GameObject::TYPE_BARRACKS, TYPE_STR_BARRACKS},
-    { GameObject::TYPE_BASE, TYPE_STR_BASE},
-    { GameObject::TYPE_BASE_SPOT, TYPE_STR_BASE_SPOT},
-    { GameObject::TYPE_BUNKER, TYPE_STR_BUNKER},
-    { GameObject::TYPE_DEFENSIVE_TOWER, TYPE_STR_DEFENSIVE_TOWER },
-    { GameObject::TYPE_HOSPITAL, TYPE_STR_HOSPITAL },
-    { GameObject::TYPE_LOOTBOX, TYPE_STR_LOOTBOX },
-    { GameObject::TYPE_MOUNTAINS, TYPE_STR_MOUNTAINS },
-    { GameObject::TYPE_PRACTICE_TARGET, TYPE_STR_PRACTICE_TARGET },
-    { GameObject::TYPE_RADAR_STATION, TYPE_STR_RADAR_STATION },
-    { GameObject::TYPE_RADAR_TOWER, TYPE_STR_RADAR_TOWER },
-    { GameObject::TYPE_RESEARCH_CENTER, TYPE_STR_RESEARCH_CENTER },
-    { GameObject::TYPE_RES_GEN_ENERGY, TYPE_STR_RES_GEN_ENERGY },
-    { GameObject::TYPE_RES_GEN_ENERGY_SOLAR, TYPE_STR_RES_GEN_ENERGY_SOLAR },
-    { GameObject::TYPE_RES_GEN_MATERIAL, TYPE_STR_RES_GEN_MATERIAL },
-    { GameObject::TYPE_RES_GEN_MATERIAL_EXTRACT, TYPE_STR_RES_GEN_MATERIAL_EXTRACT },
-    { GameObject::TYPE_RES_STORAGE_BLOBS, TYPE_STR_RES_STORAGE_BLOBS },
-    { GameObject::TYPE_RES_STORAGE_DIAMONDS, TYPE_STR_RES_STORAGE_DIAMONDS },
-    { GameObject::TYPE_RES_STORAGE_ENERGY, TYPE_STR_RES_STORAGE_ENERGY },
-    { GameObject::TYPE_RES_STORAGE_MATERIAL, TYPE_STR_RES_STORAGE_MATERIAL },
-    { GameObject::TYPE_ROCKS, TYPE_STR_ROCKS },
-    { GameObject::TYPE_TEMPLE, TYPE_STR_TEMPLE },
-    { GameObject::TYPE_TREES, TYPE_STR_TREES },
-    { GameObject::TYPE_TRADING_POST, TYPE_STR_TRADING_POST },
-    { GameObject::TYPE_UNIT_MEDIC1, TYPE_STR_UNIT_MEDIC1 },
-    { GameObject::TYPE_UNIT_SCOUT1, TYPE_STR_UNIT_SCOUT1 },
-    { GameObject::TYPE_UNIT_SOLDIER1, TYPE_STR_UNIT_SOLDIER1 },
-    { GameObject::TYPE_UNIT_SOLDIER2, TYPE_STR_UNIT_SOLDIER2 },
-    { GameObject::TYPE_UNIT_WORKER1, TYPE_STR_UNIT_WORKER1 },
-    { GameObject::TYPE_WALL, TYPE_STR_WALL },
-    { GameObject::TYPE_WALL_GATE, TYPE_STR_WALL_GATE }
-};
-
-std::string GameObject::GetObjectTypeStr(const GameObjectTypeId type)
-{
-    static const std::string noStr;
-
-    auto it = TYPE_STR_MAP.find(type);
-
-    if(it != TYPE_STR_MAP.end())
-        return it->second;
-    else
-        return noStr;
-}
-
-const std::unordered_map<GameObjectTypeId, std::string> GameObject::TITLES =
-{
-    { GameObject::TYPE_BARRACKS, "BARRACKS"},
-    { GameObject::TYPE_BASE, "BASE"},
-    { GameObject::TYPE_BASE_SPOT, "BASE SPOT"},
-    { GameObject::TYPE_BUNKER, "BUNKER"},
-    { GameObject::TYPE_DEFENSIVE_TOWER, "DEFENSIVE TOWER"},
-    { GameObject::TYPE_HOSPITAL, "HOSPITAL"},
-    { GameObject::TYPE_LOOTBOX, "LOOT BOX"},
-    { GameObject::TYPE_MOUNTAINS, "MOUNTAINS"},
-    { GameObject::TYPE_PRACTICE_TARGET, "PRACTICE TARGET"},
-    { GameObject::TYPE_RADAR_STATION, "RADAR STATION"},
-    { GameObject::TYPE_RADAR_TOWER, "RADAR TOWER"},
-    { GameObject::TYPE_RESEARCH_CENTER, "RESEARCH CENTER"},
-    { GameObject::TYPE_RES_GEN_ENERGY, "ENERGY GENERATOR"},
-    { GameObject::TYPE_RES_GEN_ENERGY_SOLAR, "SOLAR PANELS"},
-    { GameObject::TYPE_RES_GEN_MATERIAL, "MATERIAL GENERATOR"},
-    { GameObject::TYPE_RES_GEN_MATERIAL_EXTRACT, "MATERIAL EXTRACTOR"},
-    { GameObject::TYPE_RES_STORAGE_BLOBS, "BLOBS STORAGE"},
-    { GameObject::TYPE_RES_STORAGE_DIAMONDS, "DIAMONDS STORAGE"},
-    { GameObject::TYPE_RES_STORAGE_ENERGY, "ENERGY STORAGE"},
-    { GameObject::TYPE_RES_STORAGE_MATERIAL, "MATERIAL STORAGE"},
-    { GameObject::TYPE_ROCKS, "ROCKS"},
-    { GameObject::TYPE_TEMPLE, "TEMPLE"},
-    { GameObject::TYPE_TRADING_POST, "TRADING POST"},
-    { GameObject::TYPE_TREES, "TREES"},
-    { GameObject::TYPE_UNIT_MEDIC1, "MEDIC"},
-    { GameObject::TYPE_UNIT_SCOUT1, "SCOUT"},
-    { GameObject::TYPE_UNIT_SOLDIER1, "SOLDIER"},
-    { GameObject::TYPE_UNIT_SOLDIER2, "SOLDIER"},
-    { GameObject::TYPE_UNIT_WORKER1, "WORKER"},
-    { GameObject::TYPE_WALL, "WALL"},
-    { GameObject::TYPE_WALL_GATE, "GATE"}
-};
-
-const std::unordered_map<GameObjectTypeId, std::string> GameObject::DESCRIPTIONS =
-{
-    { GameObject::TYPE_BARRACKS, "A structure that creates soldier units."},
-    { GameObject::TYPE_BASE, "A control center. It can create worker units."
-                             "You need to defend it if you don't want to lose a territory."},
-    { GameObject::TYPE_BASE_SPOT, "This represents where a faction base will be placed. "
-                                  "Numbers identify the factions in a map."},
-    { GameObject::TYPE_BUNKER, "A simple defense structure."},
-    { GameObject::TYPE_DEFENSIVE_TOWER, "A basic defensive tower."},
-    { GameObject::TYPE_HOSPITAL, "A structure that creates medics and that can heal units."},
-    { GameObject::TYPE_LOOTBOX, "A loot box that can be collected by a unit to obtain various resources."},
-    { GameObject::TYPE_MOUNTAINS, "Some mountains"},
-    { GameObject::TYPE_PRACTICE_TARGET, "A practice target.\nIt can be used to train your units "
-                                        "and to improve their attack skills."},
-    { GameObject::TYPE_RADAR_STATION, "A powerful radar that can show a big portion of the map."},
-    { GameObject::TYPE_RADAR_TOWER, "A compact radar that can show a small portion of the map."},
-    { GameObject::TYPE_RESEARCH_CENTER, "A building that will allow you to research and to develop new technologies and improvements."},
-    { GameObject::TYPE_RES_GEN_ENERGY, "A generator of energy.\nConnect it to your base to produce energy."},
-    { GameObject::TYPE_RES_GEN_ENERGY_SOLAR, "A solar panel.\nConnect it to your base to produce energy."},
-    { GameObject::TYPE_RES_GEN_MATERIAL, "A generator of material.\nConnect it to your base to mine material."},
-    { GameObject::TYPE_RES_GEN_MATERIAL_EXTRACT, "A mine that can extract material from the ground.\n"
-                                                 "Connect it to your base to produce material."},
-    { GameObject::TYPE_RES_STORAGE_BLOBS, "Storage unit that can contain 100 units of blobs."},
-    { GameObject::TYPE_RES_STORAGE_DIAMONDS, "Storage unit that can contain 150 units of diamonds."},
-    { GameObject::TYPE_RES_STORAGE_ENERGY, "Storage unit that can contain 500 units of energy."},
-    { GameObject::TYPE_RES_STORAGE_MATERIAL, "Storage unit that can contain 250 units of material."},
-    { GameObject::TYPE_ROCKS, "Some rocks."},
-    { GameObject::TYPE_TEMPLE, "An ancient temple that can be explored."},
-    { GameObject::TYPE_TREES, "A single tree which will slowly grow into a forest."},
-    { GameObject::TYPE_TRADING_POST, "This structure allows you to buy and to sell resources."},
-    { GameObject::TYPE_UNIT_MEDIC1, "This unit is specialized in healing other units.\nIt's a bit slow, but effective."},
-    { GameObject::TYPE_UNIT_SCOUT1, "A light and fast unit ideal for exploring, but not for fighting."},
-    { GameObject::TYPE_UNIT_SOLDIER1, "A basic soldier unit.\nUseful for defense and exploration."},
-    { GameObject::TYPE_UNIT_SOLDIER2, "A slow, but versatile unit."},
-    { GameObject::TYPE_UNIT_WORKER1, "A basic worker unit.\nIt is specialized in construction and conquest."},
-    { GameObject::TYPE_WALL, "A defensive wall."},
-    { GameObject::TYPE_WALL_GATE, "A gate that can be controlled to open a passage through a defensive wall."}
-};
-
-// -- OBJECT CATEGORY --
-const GameObjectCategoryId GameObject::CAT_NULL = 0;
-
-const GameObjectCategoryId GameObject::CAT_COLLECTABLE = h{}("COLLECTABLE");
-const GameObjectCategoryId GameObject::CAT_GENERIC = h{}("GENERIC");
-const GameObjectCategoryId GameObject::CAT_RES_GENERATOR = h{}("RES_GEN");
-const GameObjectCategoryId GameObject::CAT_RES_STORAGE = h{}("RES_STORAGE");
-const GameObjectCategoryId GameObject::CAT_SCENE_OBJ = h{}("SCENE_OBJ");
-const GameObjectCategoryId GameObject::CAT_UNIT = h{}("UNIT");
-
 // -- OBJECT VARIANT --
 const GameObjectVariantId GameObject::VAR_0 = 0;
 
 // -- CONSTRUCTOR & DESTRUCTOR --
-GameObject::GameObject(GameObjectTypeId type, GameObjectCategoryId cat, int rows, int cols)
-    : mIsoObj(new IsoObject(rows, cols))
+GameObject::GameObject(const ObjectData & data)
+    : mAttributes(data.GetAttributes())
+    , mIsoObj(new IsoObject(data.GetRows(), data.GetCols()))
     , mObjId(++counter)
+    , mType(data.GetType())
+    , mCategory(data.GetCategory())
     , mFaction(NO_FACTION)
-    , mType(type)
-    , mCategory(cat)
-    , mRows(rows)
-    , mCols(cols)
+    , mRows(data.GetRows())
+    , mCols(data.GetCols())
 {
-    // default colors to mark objects that haven't set any
-    mObjColors.push_back(0xFFFFFFFF);
-    mObjColors.push_back(0xFF00FFFF);
+    // handle special case of Base which is always considered connected (to itself)
+    // this avoids to call SetLinked to avoid virtual methods
+    if(ObjectData::TYPE_BASE == mType)
+        mLinked = true;
+
+    // init colors for NO FACTION
+    SetDefaultColors();
+
+    // update data based on attributes
+    UpdateMaxEnergy(defMaxEnergy);
+
+    UpdateMaxHealth(defMaxHealth);
+
+    UpdateRegenerationPower();
+
+    UpdateVisibilityLevel(defMaxVisibility, defMaxVisibilityLinked);
 }
 
-GameObject::~GameObject() { delete mIsoObj; }
+GameObject::~GameObject()
+{
+    delete mIsoObj;
+
+    ClearGroup();
+}
+
+// GROUP
+void GameObject::SetGroup(GameObjectsGroup * g)
+{
+    // always clear current group
+    ClearGroup();
+
+    // but exit if g is NULL
+    if(nullptr == g)
+        return ;
+
+    mGroup = g;
+    mGroup->AddObject(this);
+}
+
+void GameObject::ClearGroup()
+{
+    if(nullptr == mGroup)
+        return ;
+
+    mGroup->RemoveObject(this);
+
+    mGroup = nullptr;
+}
+
+void GameObject::SetOwner(Player * p)
+{
+    if(p == mOwner)
+        return ;
+
+    mOwner = p;
+
+    mFaction = mOwner->GetFaction();
+
+    OnFactionChanged();
+}
 
 void GameObject::OnPositionChanged() { }
 
@@ -318,28 +159,32 @@ int GameObject::GetCol0() const { return mCell->col; }
 int GameObject::GetRow1() const { return 1 + mCell->row - mRows; }
 int GameObject::GetCol1() const { return 1 + mCell->col - mCols; }
 
-bool GameObject::IsFactionLocal() const
+// NOTE this should only be used in the Map Editor
+// for the game use SetOwner
+bool GameObject::SetFaction(PlayerFaction f)
 {
-    if(nullptr == mScreen)
+    // can't set the faction if an owner is already set
+    if(mOwner != nullptr)
         return false;
 
-    Player * p = mScreen->GetGame()->GetPlayerByFaction(mFaction);
-
-    return p != nullptr && p->IsLocal();
-}
-
-void GameObject::SetFaction(PlayerFaction f)
-{
-    if(f == mFaction)
-        return ;
+    // nothing to do
+    if(mFaction == f)
+        return true;
 
     mFaction = f;
 
     OnFactionChanged();
 
-    UpdateGraphics();
+    return true;
 }
 
+bool GameObject::IsFactionLocal() const
+{
+    if(mOwner != nullptr)
+        return mOwner->IsLocal();
+    else
+        return false;
+}
 
 void GameObject::SetObjectVariant(GameObjectVariantId var)
 {
@@ -353,26 +198,7 @@ void GameObject::SetObjectVariant(GameObjectVariantId var)
 
 bool GameObject::IsHealthMax() const
 {
-    const float delta = 0.01f;
-    return  mHealth >= mMaxHealth || (mMaxHealth - mHealth) < delta;
-}
-
-void GameObject::SetHealth(float val)
-{
-    const float minDelta = 0.01f;
-    const float oldH = mHealth;
-
-    mHealth = val;
-
-    if(mHealth > mMaxHealth || (mMaxHealth - mHealth) < minDelta)
-        mHealth = mMaxHealth;
-    else if(mHealth < 0.f)
-        mHealth = 0.f;
-
-    const float diff = std::fabs(mHealth - oldH);
-
-    if(diff > minDelta)
-        NotifyValueChanged();
+    return  mHealth >= mMaxHealth || (mMaxHealth - mHealth) < minDelta;
 }
 
 void GameObject::SumHealth(float val)
@@ -382,31 +208,7 @@ void GameObject::SumHealth(float val)
 
 bool GameObject::IsEnergyMax() const
 {
-    const float delta = 0.01f;
-    return  mEnergy >= mMaxEnergy || (mMaxEnergy - mEnergy) < delta;
-}
-
-void GameObject::SetEnergy(float val)
-{
-    const float minDelta = 0.01f;
-    const float oldEn = mEnergy;
-
-    mEnergy = val;
-
-    if(mEnergy > mMaxEnergy || (mMaxEnergy - mEnergy) < minDelta)
-        mEnergy = mMaxEnergy;
-    else if(mEnergy < 0.f)
-        mEnergy = 0.f;
-
-#ifdef DEV_MODE
-    if(Game::GOD_MODE && IsFactionLocal())
-        mEnergy = val;
-#endif
-
-    const float diff = std::fabs(mEnergy - oldEn);
-
-    if(diff > minDelta)
-        NotifyValueChanged();
+    return  mEnergy >= mMaxEnergy || (mMaxEnergy - mEnergy) < minDelta;
 }
 
 void GameObject::SumEnergy(float val)
@@ -418,14 +220,12 @@ bool GameObject::HasEnergyForActionStep(GameObjectActionType action) const
 {
     if(action < NUM_OBJ_ACTIONS)
     {
-        const float cost = ACTION_COSTS[action];
+        const float cost = (ATTACK == action) ? mWeapon->GetCostEnergy() :
+                           GetActionEnergyCost(action);
 
-        if(mFaction != NO_FACTION)
-        {
-            Player * p = mScreen->GetGame()->GetPlayerByFaction(mFaction);
-
-            return GetEnergy() >= cost && p->GetTurnEnergy() >= cost;
-        }
+        // turn energy is only valid for units
+        if(mOwner != nullptr && mCategory == ObjectData::CAT_UNIT)
+            return GetEnergy() >= cost && mOwner->GetTurnEnergy() >= cost;
         else
             return GetEnergy() >= cost;
     }
@@ -435,22 +235,20 @@ bool GameObject::HasEnergyForActionStep(GameObjectActionType action) const
 
 void GameObject::ActionStepCompleted(GameObjectActionType action)
 {
-    if(action < NUM_OBJ_ACTIONS)
-    {
-        // ENERGY
-        const float costEnergy = -ACTION_COSTS[action];
+    if(action >= NUM_OBJ_ACTIONS)
+        return ;
 
-        SumEnergy(costEnergy);
+    // ENERGY
+    const float costEnergy = -GetActionEnergyCost(action);
 
-        if(mFaction != NO_FACTION)
-        {
-            Player * p = mScreen->GetGame()->GetPlayerByFaction(mFaction);
-            p->SumTurnEnergy(costEnergy);
-        }
+    SumEnergy(costEnergy);
 
-        // EXPERIENCE
-        SumExperience(ACTION_EXPERIENCE[action]);
-    }
+    // turn energy is only valid for units
+    if(mOwner != nullptr && mCategory == ObjectData::CAT_UNIT)
+        mOwner->SumTurnEnergy(costEnergy);
+
+    // EXPERIENCE
+    SumExperience(GetActionExperienceGain(action));
 }
 
 void GameObject::SetExperience(int val)
@@ -489,6 +287,13 @@ void GameObject::RemoveFunctionOnValueChanged(unsigned int fId)
         mOnValueChanged.erase(it);
 }
 
+int GameObject::GetAttribute(ObjAttId attID) const
+{
+    const auto it = mAttributes.find(attID);
+
+    return (it != mAttributes.end()) ? it->second : 0;
+}
+
 float GameObject::GetSpeed() const
 {
 #ifdef DEV_MODE
@@ -499,13 +304,156 @@ float GameObject::GetSpeed() const
     return mSpeed;
 }
 
-void GameObject::Hit(float damage, PlayerFaction attacker)
+void GameObject::SetWeapon(Weapon * w)
 {
-    using namespace sgl::graphic;
+    mWeapon = w;
+
+    // copy attributes from weapon to object
+    const std::unordered_map<ObjAttId, int> & wAtt = w->GetAttributes();
+
+    for(auto wIt = wAtt.begin(); wIt != wAtt.end(); ++wIt)
+    {
+        auto objIt = mAttributes.find(wIt->first);
+
+        // attribute alredy set -> update it
+        if(objIt != mAttributes.end())
+            objIt->second = wIt->second;
+        // attribute not set yet -> create it
+        else
+            mAttributes.emplace(wIt->first, wIt->second);
+    }
+}
+
+void GameObject::SetAttackMode(AttackMode am)
+{
+    if(mWeapon != nullptr)
+        mWeapon->SetAttackMode(am);
+}
+
+void GameObject::FindAndSetEnemyTarget()
+{
+    if(mWeapon == nullptr)
+        return ;
+
+    auto gm = GetGameMap();
+
+    const std::vector<GameMapCell> & cells = gm->GetCells();
+    const int mapRows = gm->GetNumRows();
+    const int mapCols = gm->GetNumCols();
+
+    const int cr = GetRow0();
+    const int cc = GetCol0();
+
+    const int rad = mWeapon->GetRange();
+    const int r0 = cr >= rad ? cr - rad : 0;
+    const int r1 = cr + rad < mapRows ? cr + rad + 1 : mapRows;
+    const int c0 = cc >= rad ? cc - rad : 0;
+    const int c1 = cc + rad < mapCols ? cc + rad + 1 : mapCols;
+
+    GameObject * target = nullptr;
+    int minDist = mapRows + mapCols;
+
+    for(int r = r0; r < r1; ++r)
+    {
+        const int ind0 = r * mapCols;
+
+        for(int c = c0; c < c1; ++c)
+        {
+            const int ind = ind0 + c;
+            const GameMapCell & cell = cells[ind];
+
+            // prioritize object on top
+            GameObject * obj = cell.objTop != nullptr ? cell.objTop : cell.objBottom;
+
+            // enemy found
+            if(obj != nullptr && obj->GetFaction() != mFaction && obj->GetFaction() != NO_FACTION)
+            {
+                const int dist = std::abs(cr - r) + std::abs(cc - c);
+
+                // enemy is closer than others
+                if(dist < minDist)
+                {
+                    minDist = dist;
+                    target = cell.objTop != nullptr ? cell.objTop : cell.objBottom;
+                }
+            }
+        }
+    }
+
+    if(target != nullptr)
+        mWeapon->SetTarget(target);
+    else
+        mWeapon->ClearTarget();
+}
+
+bool GameObject::HasEnemyInRange()
+{
+    if(mWeapon == nullptr)
+        return false;
+
+    auto gm = GetGameMap();
+
+    const std::vector<GameMapCell> & cells = gm->GetCells();
+    const int mapRows = gm->GetNumRows();
+    const int mapCols = gm->GetNumCols();
+
+    const int cr = GetRow0();
+    const int cc = GetCol0();
+
+    const int rad = mWeapon->GetRange();
+    const int r0 = cr >= rad ? cr - rad : 0;
+    const int r1 = cr + rad < mapRows ? cr + rad + 1 : mapRows;
+    const int c0 = cc >= rad ? cc - rad : 0;
+    const int c1 = cc + rad < mapCols ? cc + rad + 1 : mapCols;
+
+    for(int r = r0; r < r1; ++r)
+    {
+        const int ind0 = r * mapCols;
+
+        for(int c = c0; c < c1; ++c)
+        {
+            const int ind = ind0 + c;
+            const GameMapCell & cell = cells[ind];
+
+            // prioritize object on top
+            GameObject * obj = cell.objTop != nullptr ? cell.objTop : cell.objBottom;
+
+            // enemy found
+            if(obj != nullptr && obj->GetFaction() != mFaction && obj->GetFaction() != NO_FACTION)
+                return true;
+        }
+    }
+
+    return false;
+}
+
+void GameObject::Hit(float damage, GameObject * attacker, bool fatal)
+{
+    using namespace sgl;
+
+    // already destroyed -> do nothing
+    if(IsDestroyed())
+        return ;
+
+    // fatal hit
+    if(fatal)
+        damage = GetMaxHealth();
+    // standard hit
+    else
+    {
+        // damage is influnced by object's resistance
+        const float fixedW = 0.5f;
+        const float variableW = 1.f - fixedW;
+        const float variableDamage = 1.f - (GetAttribute(OBJ_ATT_RESISTANCE) / MAX_STAV_VAL);
+
+        damage = damage * fixedW + (damage * variableW * variableDamage);
+    }
+
+    damage = std::roundf(damage);
 
     SumHealth(-damage);
 
-    const int numPart0 = 20 * mRows * mCols;
+    const int numPart0 = 30 * mRows * mCols;
     int numPart = numPart0;
 
     const int maxQuad = 4;
@@ -518,9 +466,12 @@ void GameObject::Hit(float damage, PlayerFaction attacker)
     if(mHealth > 0.f)
     {
         const int quad0 = 0;
-        sgl::utilities::UniformDistribution genQuad(quad0, maxQuad - 1);
+        utilities::UniformDistribution genQuad(quad0, maxQuad - 1);
 
         ang0 += angInc * genQuad.GetNextValue();
+
+        const int partDestroyedMult = 2;
+        numPart *= partDestroyedMult;
     }
     // hit and destroyed -> use all quadrants
     else
@@ -532,20 +483,24 @@ void GameObject::Hit(float damage, PlayerFaction attacker)
 
         // record stats for players
         // NOTE register kills only when destroying enemies
-        if(mFaction != NO_FACTION)
-            mGameMap->RegisterEnemyKill(attacker);
+        if(mOwner != nullptr)
+        {
+            if(attacker != nullptr)
+                mGameMap->RegisterEnemyKill(attacker);
 
-        mGameMap->RegisterCasualty(mFaction);
+            mGameMap->RegisterCasualty(GetFaction());
+        }
     }
 
     float ang1 = ang0 + angInc;
 
     const int numPartQuad = numPart / numQuad;
 
-    auto pu = static_cast<UpdaterDamage *>(GetScreen()->GetParticleUpdater(PU_DAMAGE));
+    auto partMan = GetParticlesManager();
+    auto pu = static_cast<UpdaterDamage *>(partMan->GetUpdater(PU_DAMAGE));
 
     const unsigned int texInd = SpriteIdParticles::ID_PART_RECT_4x4;
-    Texture * tex = TextureManager::Instance()->GetSprite(SpriteFileParticles, texInd);
+    auto tex = graphic::TextureManager::Instance()->GetSprite(SpriteFileParticles, texInd);
 
     IsoObject * isoObj = GetIsoObject();
     const float objXC = isoObj->GetX() + isoObj->GetWidth() * 0.5f;
@@ -554,34 +509,33 @@ void GameObject::Hit(float damage, PlayerFaction attacker)
     // random generator of rotation angle
     const int minRot = 0;
     const int maxRot = 360;
-    sgl::utilities::UniformDistribution genRot(minRot, maxRot);
+    utilities::UniformDistribution genRot(minRot, maxRot);
 
     // random generator for velocity direction
-    sgl::utilities::UniformDistribution genVel(static_cast<int>(ang0), static_cast<int>(ang1));
+    utilities::UniformDistribution genVel(static_cast<int>(ang0), static_cast<int>(ang1));
 
     const float deg2rad = sgl::core::Math::PIf / 180.f;
 
     // random generator for speed
     const int minSpeed = 100;
     const int maxSpeed = 300;
-
-    sgl::utilities::UniformDistribution genSpeed(minSpeed, maxSpeed);
+    utilities::UniformDistribution genSpeed(minSpeed, maxSpeed);
 
     // random generator for decay speed
-    const int minDecSpeed = 250;
-    const int maxDecSpeed = 500;
-    sgl::utilities::UniformDistribution genDecSpeed(minDecSpeed, maxDecSpeed);
+    const int minDecSpeed = 200;
+    const int maxDecSpeed = 400;
+    utilities::UniformDistribution genDecSpeed(minDecSpeed, maxDecSpeed);
 
     // random generator for scale
     const int minScale = 1;
     const int maxScale = 2;
-    sgl::utilities::UniformDistribution genScale(minScale, maxScale);
+    utilities::UniformDistribution genScale(minScale, maxScale);
 
     // random generator for color
     const int color0 = 0;
     const int colorN = mObjColors.size() - 1;
 
-    sgl::utilities::UniformDistribution genColor(color0, colorN);
+    utilities::UniformDistribution genColor(color0, colorN);
 
     for(int q = 0; q < numQuad; ++q)
     {
@@ -611,20 +565,223 @@ void GameObject::Hit(float damage, PlayerFaction attacker)
 
         genVel.SetParameters(static_cast<int>(ang0), static_cast<int>(ang1));
     }
+
+    // -- HIT POINTS --
+    // random generator for X position
+    const int maxXDeltaHP = isoObj->GetWidth() * 0.25;
+    const int minXDeltaHP = -maxXDeltaHP;
+
+    utilities::UniformDistribution genPosHP(minXDeltaHP, maxXDeltaHP);
+
+    const float posXHP = objXC + genPosHP.GetNextValue();
+    const float posYHP = objYC - (isoObj->GetHeight() * 0.25f);
+
+    const float speedHP = 75.f;
+    const float decaySpeedHP = 50.f;
+    const float maxDistHP = 50.f;
+
+    auto puHP = static_cast<UpdaterHitPoints *>(partMan->GetUpdater(PU_HIT_POINTS));
+
+    DataParticleHitPoints dataHP(damage, posXHP, posYHP, speedHP, decaySpeedHP, maxDistHP, fatal);
+    puHP->AddParticle(dataHP);
 }
+
+void GameObject::MissHit()
+{
+    auto partMan = GetParticlesManager();
+    auto pu = static_cast<UpdaterDamage *>(partMan->GetUpdater(PU_DAMAGE));
+
+    IsoObject * isoObj = GetIsoObject();
+    const float posX = isoObj->GetX() + isoObj->GetWidth() * 0.5f;
+    const float posY = isoObj->GetY();
+
+    const float speedHP = 75.f;
+    const float decaySpeedHP = 50.f;
+    const float maxDistHP = 50.f;
+
+    auto puHP = static_cast<UpdaterHitPoints *>(partMan->GetUpdater(PU_HIT_POINTS));
+
+    DataParticleHitPoints dataHP(posX, posY, speedHP, decaySpeedHP, maxDistHP);
+    puHP->AddParticle(dataHP);
+}
+
+void GameObject::SelfDestroy() { Hit(0.f, nullptr, true); }
 
 void GameObject::SetActiveActionToDefault() { mActiveAction = IDLE; }
 
 void GameObject::OnNewTurn(PlayerFaction faction)
 {
-    if(mFaction == faction)
+    if(GetFaction() == faction)
         RestoreTurnEnergy();
 }
 
 void GameObject::Update(float) { }
 
-void GameObject::OnFactionChanged() { }
-void GameObject::OnLinkedChanged() { }
+void GameObject::OnFactionChanged()
+{
+    SetDefaultColors();
+    UpdateGraphics();
+}
+
+void GameObject::OnLinkedChanged()
+{
+    UpdateVisibilityLevel(defMaxVisibility, defMaxVisibilityLinked);
+}
+
+void GameObject::NotifyValueChanged()
+{
+    for(const auto & it : mOnValueChanged)
+        it.second();
+}
+
+float GameObject::GetTime(float maxTime, float attribute) const
+{
+#ifdef DEV_MODE
+    if(Game::GOD_MODE)
+        return TIME_GOD_MODE;
+#endif
+
+    // special time for invisible AI
+    if(mOwner != nullptr && !mOwner->IsLocal() && !GetGameMap()->IsObjectVisibleToLocalPlayer(this))
+        return TIME_AI_MIN;
+
+    const float baseTime = 0.25f;
+
+    return baseTime + maxTime - (maxTime * attribute / MAX_STAV_VAL);
+}
+
+void GameObject::UpdateVisibilityLevel(float maxVal, float maxValLinked)
+{
+    const float maxVisibility = IsLinked() ? maxValLinked : maxVal;
+
+    mVisLevel = std::roundf(maxVisibility * GetAttribute(OBJ_ATT_VIEW_RANGE) / MAX_STAV_VAL);
+}
+
+void GameObject::UpdateMaxEnergy(float maxVal)
+{
+    const float maxEnergy = std::roundf(maxVal * GetAttribute(OBJ_ATT_ENERGY) / MAX_STAV_VAL);
+    const float diff = maxEnergy - mEnergy;
+
+    SetMaxEnergy(maxEnergy);
+    SumEnergy(diff);
+}
+
+void GameObject::UpdateMaxHealth(float maxVal)
+{
+    const float maxHealth = std::roundf(maxVal * GetAttribute(OBJ_ATT_HEALTH) / MAX_STAV_VAL);
+    const float diff = maxHealth - mHealth;
+
+    SetMaxHealth(maxHealth);
+    SumHealth(diff);
+}
+
+void GameObject::UpdateRegenerationPower()
+{
+    const float reg = GetAttribute(OBJ_ATT_REGENERATION) / MAX_STAV_VAL;
+    SetRegenerationPower(reg);
+}
+
+float GameObject::GetActionEnergyCost(GameObjectActionType action) const
+{
+    if(ATTACK == action)
+        return mWeapon->GetCostEnergyPerShot();
+
+    constexpr float ACTION_COSTS[NUM_OBJ_ACTIONS] =
+    {
+        0.f,        // IDLE
+        10.f,       // BUILD_UNIT
+        0.f,        // SET_TARGET
+        5.f,        // MOVE
+        10.f,       // CONQUER_CELL
+        20.f,       // CONQUER_STRUCTURE
+        0.f,        // ATTACK
+        30.f,       // BUILD_STRUCTURE
+        10.f,       // BUILD_WALL
+        5.f,        // HEAL
+        4.f,        // SPAWN
+        1.f,        // TOGGLE_GATE
+        0.f,        // SELF_DESTRUCTION
+    };
+
+    return ACTION_COSTS[action];
+}
+
+float GameObject::GetActionExperienceGain(GameObjectActionType action) const
+{
+    constexpr int ACTION_EXPERIENCE[NUM_OBJ_ACTIONS] =
+    {
+        0,      // IDLE
+        10,     // BUILD_UNIT
+        0,      // SET_TARGET
+        1,      // MOVE
+        2,      // CONQUER_CELL
+        5,      // CONQUER_STRUCTURE
+        1,      // ATTACK
+        5,      // BUILD_STRUCTURE
+        2,      // BUILD_WALL
+        2,      // HEAL
+        5,      // SPAWN
+        1,      // TOGGLE_GATE
+        0,      // SELF_DESTRUCTION
+    };
+
+    return ACTION_EXPERIENCE[action];
+}
+
+void GameObject::SetEnergy(float val)
+{
+    const float oldEn = mEnergy;
+
+    mEnergy = val;
+
+    if(mEnergy > mMaxEnergy || (mMaxEnergy - mEnergy) < minDelta)
+        mEnergy = mMaxEnergy;
+    else if(mEnergy < 0.f)
+        mEnergy = 0.f;
+
+#ifdef DEV_MODE
+    if(Game::GOD_MODE && IsFactionLocal())
+        mEnergy = val;
+#endif
+
+    const float diff = std::fabs(mEnergy - oldEn);
+
+    if(diff > minDelta)
+        NotifyValueChanged();
+}
+
+void GameObject::SetHealth(float val)
+{
+    const float oldH = mHealth;
+
+    mHealth = val;
+
+    if(mHealth > mMaxHealth || (mMaxHealth - mHealth) < minDelta)
+        mHealth = mMaxHealth;
+    else if(mHealth < 0.f)
+        mHealth = 0.f;
+
+    const float diff = std::fabs(mHealth - oldH);
+
+    if(diff > minDelta)
+        NotifyValueChanged();
+}
+
+void GameObject::RestoreTurnEnergy()
+{
+    const float basePerc = 0.5f;
+    const float baseEnergy = mMaxEnergy * basePerc;
+    const float newEnergy = (mMaxEnergy - baseEnergy) * mEnergyRegPower;
+    const float prevEnergy = mEnergy * mEnergyRegPower;
+    const float energy = std::roundf(baseEnergy + prevEnergy + newEnergy);
+
+    SumEnergy(energy);
+
+#ifdef DEV_MODE
+    if(Game::GOD_MODE && IsFactionLocal())
+        SetEnergy(mMaxEnergy * 5);
+#endif
+}
 
 void GameObject::SetDefaultColors()
 {
@@ -632,7 +789,7 @@ void GameObject::SetDefaultColors()
     mObjColors.clear();
 
     // assign new colors based on faction
-    switch(mFaction)
+    switch(GetFaction())
     {
         case FACTION_1:
             mObjColors.push_back(0xd9938cff);
@@ -671,28 +828,6 @@ void GameObject::SetDefaultColors()
             mObjColors.push_back(0x595959ff);
         break;
     }
-}
-
-void GameObject::NotifyValueChanged()
-{
-    for(const auto & it : mOnValueChanged)
-        it.second();
-}
-
-void GameObject::RestoreTurnEnergy()
-{
-    const float basePerc = 0.5f;
-    const float baseEnergy = mMaxEnergy * basePerc;
-    const float newEnergy = (mMaxEnergy - baseEnergy) * mEnergyRegPower;
-    const float prevEnergy = mEnergy * mEnergyRegPower;
-    const float energy = std::roundf(baseEnergy + prevEnergy + newEnergy);
-
-    SumEnergy(energy);
-
-#ifdef DEV_MODE
-    if(Game::GOD_MODE && IsFactionLocal())
-        SetEnergy(mMaxEnergy * 5);
-#endif
 }
 
 } // namespace game

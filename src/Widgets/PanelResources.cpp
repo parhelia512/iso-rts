@@ -8,7 +8,7 @@
 #include "Widgets/ResourceDisplay.h"
 #include "Widgets/ResourceTooltip.h"
 #include "Widgets/SimpleResourceDisplay.h"
-
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/graphic/Image.h>
 #include <sgl/graphic/Texture.h>
@@ -270,10 +270,8 @@ void PanelResources::AssignSimpleTooltip(sgl::sgui::Widget * target, const char 
 
 void PanelResources::SetTooltip(sgl::sgui::Widget * tt, sgl::sgui::Widget * target, int showingMs)
 {
-    const int delayMs = 500;
-
     target->SetTooltip(tt);
-    target->SetTooltipDelay(delayMs);
+    target->SetTooltipDelay(WidgetsConstants::timeTooltipButtonDelay);
     target->SetTooltipShowingTime(showingMs);
 }
 

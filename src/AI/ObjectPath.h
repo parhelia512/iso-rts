@@ -31,10 +31,16 @@ public:
     GameObject * GetObject() const;
 
     PathState GetState() const;
+    bool IsTerminated() const;
 
     float GetPathCost() const;
 
-    void SetPathCells(const std::vector<unsigned int> & cells);
+    // CURRENT PATH
+    // NOTE path is expected to include start position
+    const std::vector<unsigned int> & GetPath() const;
+    void SetPath(const std::vector<unsigned int> & cells);
+
+    unsigned int GetLastStepDone() const;
 
     bool HasStarted() const;
     bool Start();
@@ -82,11 +88,26 @@ inline GameObject * ObjectPath::GetObject() const { return mObj; }
 
 inline ObjectPath::PathState ObjectPath::GetState() const { return mState; }
 
+inline bool ObjectPath::IsTerminated() const
+{
+    return mState == COMPLETED || mState == ABORTED || mState == FAILED;
+}
+
+inline unsigned int ObjectPath::GetLastStepDone() const
+{
+    if(mNextCell > 0)
+        return mNextCell - 1;
+    else
+        return 0;
+}
+
 inline bool ObjectPath::HasStarted() const { return mState != READY; }
 
 inline float ObjectPath::GetPathCost() const { return mCost; }
 
-inline void ObjectPath::SetPathCells(const std::vector<unsigned int> & cells)
+inline const std::vector<unsigned int> & ObjectPath::GetPath() const { return mCells; }
+
+inline void ObjectPath::SetPath(const std::vector<unsigned int> & cells)
 {
     mCells = cells;
     UpdatePathCost();

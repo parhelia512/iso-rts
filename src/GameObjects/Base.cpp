@@ -7,21 +7,18 @@
 #include "GameObjects/LootBox.h"
 #include "Particles/DataParticleLootboxPrize.h"
 #include "Particles/UpdaterLootboxPrize.h"
-#include "Screens/ScreenGame.h"
 
+#include <sgl/graphic/ParticlesManager.h>
 #include <sgl/graphic/TextureManager.h>
 
 namespace game
 {
 
-Base::Base()
-    : Structure(GameObject::TYPE_BASE, GameObject::CAT_GENERIC, 3, 3)
+Base::Base(const ObjectData & data)
+    : Structure(data)
     , mOutputEnergy(15)
     , mOutputMaterial(5)
 {
-    SetVisibilityLevel(6);
-    // base is linked to itself
-    SetLinked(true);
 }
 
 void Base::OnNewTurn(PlayerFaction faction)
@@ -39,7 +36,8 @@ void Base::OnNewTurn(PlayerFaction faction)
         return ;
 
     // emit notification
-    auto pu = static_cast<UpdaterLootboxPrize *>(GetScreen()->GetParticleUpdater(PU_LOOTBOX_PRIZE));
+    auto partMan = GetParticlesManager();
+    auto pu = static_cast<UpdaterLootboxPrize *>(partMan->GetUpdater(PU_LOOTBOX_PRIZE));
 
     IsoObject * isoObj = GetIsoObject();
 
@@ -67,8 +65,6 @@ void Base::OnNewTurn(PlayerFaction faction)
 void Base::UpdateGraphics()
 {
     SetImage();
-
-    SetDefaultColors();
 }
 
 void Base::SetImage()

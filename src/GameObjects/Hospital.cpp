@@ -9,6 +9,7 @@
 #include "Particles/UpdaterHealing.h"
 #include "Screens/ScreenGame.h"
 
+#include <sgl/graphic/ParticlesManager.h>
 #include <sgl/graphic/Texture.h>
 #include <sgl/graphic/TextureManager.h>
 
@@ -20,18 +21,14 @@ const int HealRanges[maxAttVals] = { 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6 };
 const float HealPowers[maxAttVals] = { 0.f, 1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f, 8.f, 9.f, 10.f };
 
 Hospital::Hospital(const ObjectData & data)
-    : Structure(GameObject::TYPE_HOSPITAL, GameObject::CAT_GENERIC, 2, 2)
+    : Structure(data)
 {
     // SET ATTRIBUTES values in range [1-10]
-    const auto & atts = data.GetAttributes();
-
     // set healing range converting attribute
-    mRangeHealing = HealRanges[atts[OBJ_ATT_HEALING]];
+    mRangeHealing = HealRanges[data.GetAttribute(OBJ_ATT_HEALING_RANGE)];
 
     // set healing power converting attribute
-    mHealingPower = HealPowers[atts[OBJ_ATT_HEALING]];
-
-    SetVisibilityLevel(4);
+    mHealingPower = HealPowers[data.GetAttribute(OBJ_ATT_HEALING_POWER)];
 
     SetImage();
 }
@@ -53,7 +50,7 @@ bool Hospital::IsTargetHealingInRange(GameObject * obj) const
 bool Hospital::SetTargetHealing(GameObject * obj)
 {
     if(nullptr == obj || !IsTargetHealingInRange(obj) || !obj->IsVisible() ||
-       obj == this || obj->GetObjectCategory() != GameObject::CAT_UNIT ||
+       obj == this || obj->GetObjectCategory() != ObjectData::CAT_UNIT ||
        obj->IsHealthMax())
         return false;
 
@@ -73,8 +70,6 @@ void Hospital::Update(float delta)
 void Hospital::UpdateGraphics()
 {
     SetImage();
-
-    SetDefaultColors();
 }
 
 void Hospital::SetImage()
@@ -162,7 +157,8 @@ void Hospital::Heal()
     // consume energy
     ActionStepCompleted(HEAL);
 
-    auto pu = static_cast<UpdaterHealing *>(GetScreen()->GetParticleUpdater(PU_HEALING));
+    auto partMan = GetParticlesManager();
+    auto pu = static_cast<UpdaterHealing *>(partMan->GetUpdater(PU_HEALING));
 
     const unsigned int texInd = SpriteIdUnitsParticles::IND_UPAR_HEAL_F1 + faction;
     Texture * tex = TextureManager::Instance()->GetSprite(SpriteFileUnitsParticles, texInd);

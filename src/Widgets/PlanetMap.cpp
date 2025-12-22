@@ -12,8 +12,11 @@
 #include <sgl/sgui/AbstractButton.h>
 #include <sgl/sgui/AbstractButtonsGroup.h>
 
-namespace game
+// anonymous namespace for local "private" classes
+namespace
 {
+
+using namespace game;
 
 // ===== BUTTON MISSION =====
 class ButtonMission : public sgl::sgui::AbstractButton
@@ -29,6 +32,15 @@ public:
 
         InitState(NORMAL);
         UpdateGraphics(NORMAL);
+    }
+
+    void SetMain(bool main)
+    {
+        if(main != mMain)
+        {
+            mMain = main;
+            UpdateGraphics(GetState());
+        }
     }
 
     void SetFaction(PlayerFaction faction)
@@ -99,8 +111,9 @@ private:
         if(TER_ST_OCCUPIED == mTerritoryStatus || TER_ST_OCCUPIED_UNEXPLORED == mTerritoryStatus)
         {
             const int idPerFaction = 2;
+            const int spriteId0 = mMain ? IND_PM_MAIN_CELL_F1 : IND_PM_CELL_F1;
             const int spriteId = IND_PM_CELL_F1 + (mFaction * idPerFaction) +
-                    static_cast<int>(IsChecked());
+                                 static_cast<int>(IsChecked());
 
             tex = tm->GetSprite(SpriteFilePlanetMap, spriteId);
         }
@@ -116,7 +129,19 @@ private:
                 IND_PM_CELL_UNEXPLORED_SEL
             };
 
-            tex = tm->GetSprite(SpriteFilePlanetMap, texId[state]);
+            const unsigned int texIdM[NUM_VISUAL_STATES] =
+            {
+                IND_PM_MAIN_CELL_UNEXPLORED,
+                IND_PM_MAIN_CELL_DISABLED,
+                IND_PM_MAIN_CELL_UNEXPLORED_SEL,
+                IND_PM_MAIN_CELL_UNEXPLORED_SEL,
+                IND_PM_MAIN_CELL_UNEXPLORED_SEL
+            };
+
+            if(mMain)
+                tex = tm->GetSprite(SpriteFilePlanetMap, texIdM[state]);
+            else
+                tex = tm->GetSprite(SpriteFilePlanetMap, texId[state]);
         }
         // explored and free or unrechable (which will be disabled)
         else
@@ -130,7 +155,19 @@ private:
                 IND_PM_CELL_SELECTED
             };
 
-            tex = tm->GetSprite(SpriteFilePlanetMap, texId[state]);
+            const unsigned int texIdM[NUM_VISUAL_STATES] =
+            {
+                IND_PM_MAIN_CELL_EXPLORED,
+                IND_PM_MAIN_CELL_DISABLED,
+                IND_PM_MAIN_CELL_SELECTED,
+                IND_PM_MAIN_CELL_SELECTED,
+                IND_PM_MAIN_CELL_SELECTED
+            };
+
+            if(mMain)
+                tex = tm->GetSprite(SpriteFilePlanetMap, texIdM[state]);
+            else
+                tex = tm->GetSprite(SpriteFilePlanetMap, texId[state]);
         }
 
         mBody->SetTexture(tex);
@@ -151,7 +188,14 @@ private:
 
      PlayerFaction mFaction = NO_FACTION;
      TerritoryStatus mTerritoryStatus = TER_ST_UNKNOWN;
+
+     bool mMain = false;
 };
+
+} // namespace
+
+namespace game
+{
 
 // ===== PLANET MAP =====
 PlanetMap::PlanetMap()
@@ -171,21 +215,19 @@ PlanetMap::PlanetMap()
     // CREATE BUTTONS MISSION
     const core::Pointd2D buttonsPos[MAX_MISSIONS] =
     {
-        { 199, 94 },
-        { 519, 94 },
-        { 279, 232 },
-        { 439, 232 },
-        { 39, 371 },
-        { 199, 371 },
-        { 519, 371 },
-        { 679, 371 },
-        { 279, 510 },
-        { 439, 510 },
-        { 199, 649 },
-        { 519, 649 }
+        { 314, 60 },
+        { 314, 578 },
+        { 115, 146 },
+        { 513, 146 },
+        { 115, 492 },
+        { 513, 492 },
+        { 115, 319 },
+        { 513, 319 },
+        { 302, 309 },
     };
 
     mButtonsMission = new sgui::AbstractButtonsGroup;
+    ButtonMission * mainBtn = nullptr;
 
     for(int i = 0; i < MAX_MISSIONS; ++i)
     {
@@ -193,7 +235,11 @@ PlanetMap::PlanetMap()
         btn->SetPosition(buttonsPos[i].x, buttonsPos[i].y);
 
         mButtonsMission->AddButton(btn);
+
+        mainBtn = btn;
     }
+
+    mainBtn->SetMain(true);
 }
 
 PlanetMap::~PlanetMap()

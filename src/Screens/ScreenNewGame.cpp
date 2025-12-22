@@ -20,12 +20,12 @@ ScreenNewGame::ScreenNewGame(Game * game)
     , mGame(game)
     , mDiff(Difficulty::EASY)
 {
-    const int MAX_UNITS0 = 4;
-    const int startEnergy = 800;
-    const int startMaterial = 250;
+    const int MAX_UNITS0 = 6;
+    const int startEnergy = 1000;
+    const int startMaterial = 500;
     const int startMoney = 1000;
     const int startDiamonds = 10;
-    const int startBlobs = 5;
+    const int startBlobs = 10;
 
     // create human player
     const PlayerFaction pf = game->GetLocalPlayerFaction();
@@ -34,30 +34,36 @@ ScreenNewGame::ScreenNewGame(Game * game)
     p->SetMaxUnits(MAX_UNITS0);
 
     // assign initial available structures
-    p->AddAvailableStructure(GameObject::TYPE_BARRACKS);
-    p->AddAvailableStructure(GameObject::TYPE_BUNKER);
-    p->AddAvailableStructure(GameObject::TYPE_DEFENSIVE_TOWER);
-    p->AddAvailableStructure(GameObject::TYPE_HOSPITAL);
-    p->AddAvailableStructure(GameObject::TYPE_PRACTICE_TARGET);
-    p->AddAvailableStructure(GameObject::TYPE_RADAR_STATION);
-    p->AddAvailableStructure(GameObject::TYPE_RADAR_TOWER);
-    p->AddAvailableStructure(GameObject::TYPE_RESEARCH_CENTER);
-    p->AddAvailableStructure(GameObject::TYPE_RES_GEN_ENERGY_SOLAR);
-    p->AddAvailableStructure(GameObject::TYPE_RES_GEN_MATERIAL_EXTRACT);
-    p->AddAvailableStructure(GameObject::TYPE_RES_STORAGE_BLOBS);
-    p->AddAvailableStructure(GameObject::TYPE_RES_STORAGE_DIAMONDS);
-    p->AddAvailableStructure(GameObject::TYPE_RES_STORAGE_ENERGY);
-    p->AddAvailableStructure(GameObject::TYPE_RES_STORAGE_MATERIAL);
-    p->AddAvailableStructure(GameObject::TYPE_TRADING_POST);
-    p->AddAvailableStructure(GameObject::TYPE_WALL_GATE);
+    p->AddAvailableStructure(ObjectData::TYPE_BARRACKS);
+    p->AddAvailableStructure(ObjectData::TYPE_BUNKER);
+    p->AddAvailableStructure(ObjectData::TYPE_DEFENSIVE_TOWER);
+    p->AddAvailableStructure(ObjectData::TYPE_HOSPITAL);
+    p->AddAvailableStructure(ObjectData::TYPE_PRACTICE_TARGET);
+    p->AddAvailableStructure(ObjectData::TYPE_RADAR_STATION);
+    p->AddAvailableStructure(ObjectData::TYPE_RADAR_TOWER);
+    p->AddAvailableStructure(ObjectData::TYPE_RESEARCH_CENTER);
+    p->AddAvailableStructure(ObjectData::TYPE_RES_GEN_ENERGY_SOLAR);
+    p->AddAvailableStructure(ObjectData::TYPE_RES_GEN_MATERIAL_EXTRACT);
+    p->AddAvailableStructure(ObjectData::TYPE_RES_STORAGE_BLOBS);
+    p->AddAvailableStructure(ObjectData::TYPE_RES_STORAGE_DIAMONDS);
+    p->AddAvailableStructure(ObjectData::TYPE_RES_STORAGE_ENERGY);
+    p->AddAvailableStructure(ObjectData::TYPE_RES_STORAGE_MATERIAL);
+    p->AddAvailableStructure(ObjectData::TYPE_SPAWN_TOWER);
+    p->AddAvailableStructure(ObjectData::TYPE_TRADING_POST);
+    p->AddAvailableStructure(ObjectData::TYPE_WALL_GATE);
 
     // assign initial available units
-    p->AddAvailableUnit(GameObject::TYPE_UNIT_WORKER1);
-    p->AddAvailableUnit(GameObject::TYPE_UNIT_SOLDIER1);
-    // TODO temporary for testing. In the future start only with 2 types
-    p->AddAvailableUnit(GameObject::TYPE_UNIT_SCOUT1);
-    p->AddAvailableUnit(GameObject::TYPE_UNIT_SOLDIER2);
-    p->AddAvailableUnit(GameObject::TYPE_UNIT_MEDIC1);
+    p->AddAvailableUnit(ObjectData::TYPE_UNIT_WORKER1);
+    p->AddAvailableUnit(ObjectData::TYPE_UNIT_SOLDIER1);
+    p->AddAvailableUnit(ObjectData::TYPE_UNIT_SPAWNER1);
+    p->AddAvailableUnit(ObjectData::TYPE_UNIT_SPAWNER2);
+    p->AddAvailableUnit(ObjectData::TYPE_UNIT_SCOUT1);
+    p->AddAvailableUnit(ObjectData::TYPE_UNIT_SOLDIER2);
+    p->AddAvailableUnit(ObjectData::TYPE_UNIT_MEDIC1);
+
+    // assign initial available mini units
+    p->AddAvailableMiniUnit(ObjectData::TYPE_MINI_UNIT1);
+    p->AddAvailableMiniUnit(ObjectData::TYPE_MINI_UNIT2);
 
     // assign initial resources
     p->SetResource(Player::Stat::BLOBS, startBlobs);
@@ -94,30 +100,29 @@ ScreenNewGame::ScreenNewGame(Game * game)
         p->SetAI(ai);
 
         // assign initial available structures
-        p->AddAvailableStructure(GameObject::TYPE_BARRACKS);
-        p->AddAvailableStructure(GameObject::TYPE_BUNKER);
-        p->AddAvailableStructure(GameObject::TYPE_DEFENSIVE_TOWER);
-        p->AddAvailableStructure(GameObject::TYPE_HOSPITAL);
-        p->AddAvailableStructure(GameObject::TYPE_PRACTICE_TARGET);
-        p->AddAvailableStructure(GameObject::TYPE_RADAR_STATION);
-        p->AddAvailableStructure(GameObject::TYPE_RADAR_TOWER);
-        p->AddAvailableStructure(GameObject::TYPE_RESEARCH_CENTER);
-        p->AddAvailableStructure(GameObject::TYPE_RES_GEN_ENERGY_SOLAR);
-        p->AddAvailableStructure(GameObject::TYPE_RES_GEN_MATERIAL_EXTRACT);
-        p->AddAvailableStructure(GameObject::TYPE_RES_STORAGE_BLOBS);
-        p->AddAvailableStructure(GameObject::TYPE_RES_STORAGE_DIAMONDS);
-        p->AddAvailableStructure(GameObject::TYPE_RES_STORAGE_ENERGY);
-        p->AddAvailableStructure(GameObject::TYPE_RES_STORAGE_MATERIAL);
-        p->AddAvailableStructure(GameObject::TYPE_TRADING_POST);
-        p->AddAvailableStructure(GameObject::TYPE_WALL_GATE);
+        p->AddAvailableStructure(ObjectData::TYPE_BARRACKS);
+        p->AddAvailableStructure(ObjectData::TYPE_BUNKER);
+        p->AddAvailableStructure(ObjectData::TYPE_DEFENSIVE_TOWER);
+        p->AddAvailableStructure(ObjectData::TYPE_HOSPITAL);
+        p->AddAvailableStructure(ObjectData::TYPE_PRACTICE_TARGET);
+        p->AddAvailableStructure(ObjectData::TYPE_RADAR_STATION);
+        p->AddAvailableStructure(ObjectData::TYPE_RADAR_TOWER);
+        p->AddAvailableStructure(ObjectData::TYPE_RESEARCH_CENTER);
+        p->AddAvailableStructure(ObjectData::TYPE_RES_GEN_ENERGY_SOLAR);
+        p->AddAvailableStructure(ObjectData::TYPE_RES_GEN_MATERIAL_EXTRACT);
+        p->AddAvailableStructure(ObjectData::TYPE_RES_STORAGE_BLOBS);
+        p->AddAvailableStructure(ObjectData::TYPE_RES_STORAGE_DIAMONDS);
+        p->AddAvailableStructure(ObjectData::TYPE_RES_STORAGE_ENERGY);
+        p->AddAvailableStructure(ObjectData::TYPE_RES_STORAGE_MATERIAL);
+        p->AddAvailableStructure(ObjectData::TYPE_TRADING_POST);
+        p->AddAvailableStructure(ObjectData::TYPE_WALL_GATE);
 
         // assign initial available units
-        p->AddAvailableUnit(GameObject::TYPE_UNIT_WORKER1);
-        p->AddAvailableUnit(GameObject::TYPE_UNIT_SOLDIER1);
-        // TODO temporary for testing. In the future start only with 2 types
-        p->AddAvailableUnit(GameObject::TYPE_UNIT_SCOUT1);
-        p->AddAvailableUnit(GameObject::TYPE_UNIT_SOLDIER2);
-        p->AddAvailableUnit(GameObject::TYPE_UNIT_MEDIC1);
+        p->AddAvailableUnit(ObjectData::TYPE_UNIT_WORKER1);
+        p->AddAvailableUnit(ObjectData::TYPE_UNIT_SOLDIER1);
+        p->AddAvailableUnit(ObjectData::TYPE_UNIT_SCOUT1);
+        p->AddAvailableUnit(ObjectData::TYPE_UNIT_SOLDIER2);
+        p->AddAvailableUnit(ObjectData::TYPE_UNIT_MEDIC1);
 
         // assign initial resources
         p->SetResource(Player::Stat::BLOBS, startBlobs);
@@ -134,6 +139,14 @@ ScreenNewGame::ScreenNewGame(Game * game)
 
     // set game difficulty
     game->SetDifficulty(mDiff);
+
+#ifdef DEV_MODE
+    if(Game::QUICK_START)
+    {
+        game->RequestNextActiveState(StateId::GAME);
+        return ;
+    }
+#endif
 
     // move to game
     game->RequestNextActiveState(StateId::PLANET_MAP);

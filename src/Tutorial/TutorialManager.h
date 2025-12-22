@@ -1,44 +1,46 @@
 #pragma once
 
-#include <deque>
+#include <vector>
 
 namespace game
 {
 
-class TutorialStep;
+class Screen;
+class Tutorial;
+
+enum TutorialId : unsigned int;
+enum TutorialState : unsigned int;
 
 class TutorialManager
 {
 public:
-    void AddStep(TutorialStep * step);
+    TutorialManager();
+    ~TutorialManager();
 
-    void Start();
+    TutorialState GetTutorialState(TutorialId tut);
+
+    // -- ACTIVE TUTORIAL --
+    bool CreateTutorial(TutorialId tutId, Screen * screen);
+    void StartTutorial();
+    void AbortTutorial();
+    void SetTutorialPause(bool paused);
+
+    const Tutorial * GetTutorial() const;
+    bool HasActiveTutorial() const;
 
     void Update(float delta);
 
-    unsigned int GetNumStepsAtStart() const;
-    unsigned int GetNumStepsTodo() const;
-    unsigned int GetNumStepsDone() const;
-    bool AreAllStepsDone() const;
+private:
+    void SetTutorialState(TutorialId tut, TutorialState state);
 
 private:
-    void FinalizeStep();
-    void StartNextStep();
+    std::vector<TutorialState> mTutorialsState;
 
-private:
-    std::deque<TutorialStep *> mSteps;
-
-    TutorialStep * mCurrStep = nullptr;
-
-    unsigned int mStepsAtStart = 0;
-    unsigned int mStepsDone = 0;
+    Tutorial * mActiveTutorial = nullptr;
 };
 
-inline void TutorialManager::AddStep(TutorialStep * step) { mSteps.push_back(step); }
+inline const Tutorial * TutorialManager::GetTutorial() const { return mActiveTutorial; }
 
-inline unsigned int TutorialManager::GetNumStepsAtStart() const { return mStepsAtStart; }
-inline unsigned int TutorialManager::GetNumStepsTodo() const { return mSteps.size(); }
-inline unsigned int TutorialManager::GetNumStepsDone() const { return mStepsDone; }
-inline bool TutorialManager::AreAllStepsDone() const { return mStepsDone == mStepsAtStart; }
+inline bool TutorialManager::HasActiveTutorial() const { return mActiveTutorial != nullptr; }
 
 } // namespace game

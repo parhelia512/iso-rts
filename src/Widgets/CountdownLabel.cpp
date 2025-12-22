@@ -1,5 +1,7 @@
 #include "Widgets/CountdownLabel.h"
 
+#include "Widgets/WidgetsConstants.h"
+
 #include <sgl/graphic/Camera.h>
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
@@ -54,7 +56,8 @@ void CountdownLabel::UpdateDigits()
     const unsigned int colors[] = { 0xd98c8cff, 0x8cd98cff, 0x8cccd9ff };
 
     auto fm = graphic::FontManager::Instance();
-    graphic::Font * font = fm->GetFont("Lato-Bold.ttf", fontSize, graphic::Font::NORMAL);
+    graphic::Font * font = fm->GetFont(WidgetsConstants::FontFileStrongText, fontSize,
+                                       graphic::Font::NORMAL);
 
     mTxt = new graphic::Text(ss.str().c_str(), font);
     mTxt->SetColor(colors[mFaction]);

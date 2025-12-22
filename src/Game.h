@@ -5,12 +5,14 @@
 #include <functional>
 #include <map>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace sgl
 {
     namespace graphic
     {
+        class Cursor;
         class Font;
         class Renderer;
         class Window;
@@ -29,13 +31,13 @@ namespace game
 class MapsRegistry;
 class ObjectsDataRegistry;
 class Player;
+class TutorialManager;
 
+enum GameCursorId : unsigned int;
 enum Planets : unsigned int;
 enum PlayerFaction : unsigned int;
 enum ResourceType : unsigned int;
 enum StateId : int;
-enum TutorialId : unsigned int;
-enum TutorialState : unsigned int;
 
 enum Difficulty : unsigned int
 {
@@ -51,6 +53,8 @@ class Game : public sgl::core::Application
 #ifdef DEV_MODE
 public:
     static bool GOD_MODE;
+
+    static bool QUICK_START;
 #endif
 
 public:
@@ -59,6 +63,10 @@ public:
 
     void InitGameData();
     void ClearGameData();
+
+    // -- mouse cursors --
+    void RegisterCursor(GameCursorId curId, sgl::graphic::Cursor * cursor);
+    void SetCurrentCursor(GameCursorId curId);
 
     const std::string & GetCurrentMapFile() const;
     unsigned int GetCurrentTerritory() const;
@@ -110,9 +118,7 @@ public:
     unsigned int AddOnSettingsChangedFunction(const std::function<void()> & f);
     void RemoveOnSettingsChangedFunction(unsigned int fId);
 
-    // -- tutorial --
-    TutorialState GetTutorialState(TutorialId tut);
-    void SetTutorialState(TutorialId tut, TutorialState state);
+    TutorialManager * GetTutorialManager() const;
 
 private:
     void NotifyOnSettingsChanged();
@@ -124,7 +130,7 @@ private:
 
     std::map<unsigned int, std::function<void()>> mOnSettingsChanged;
 
-    std::vector<TutorialState> mTutorialsState;
+    std::unordered_map<GameCursorId, sgl::graphic::Cursor *> mCursors;
 
     sgl::graphic::Renderer * mRenderer = nullptr;
     sgl::graphic::Window * mWin = nullptr;
@@ -134,6 +140,8 @@ private:
     sgl::sgui::Stage * mStage = nullptr;
 
     sgl::media::AudioManager * mAudioMan = nullptr;
+
+    TutorialManager * mTutMan = nullptr;
 
     MapsRegistry * mMapsReg = nullptr;
     ObjectsDataRegistry * mObjsRegistry = nullptr;
@@ -149,7 +157,7 @@ private:
     // SETTINGS
     int mMapDraggingSpeed = 5;
     int mMapScrollingSpeed = 6;
-    int mMapDragging = true;
+    bool mMapDragging = true;
     bool mMapScrollingOnEdges = true;
     bool mAutoEndTurn = true;
     bool mTutorialEnabled = true;
@@ -243,5 +251,7 @@ inline void Game::SetAutoEndTurn(bool val)
 
 inline bool Game::IsTutorialEnabled() const { return mTutorialEnabled; }
 inline void Game::SetTutorialEnabled(bool val) { mTutorialEnabled = val; }
+
+inline TutorialManager * Game::GetTutorialManager() const { return mTutMan; }
 
 } // namespace game

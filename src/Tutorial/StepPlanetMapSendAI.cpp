@@ -3,7 +3,6 @@
 #include "Tutorial/TutorialConstants.h"
 #include "Widgets/PanelPlanetActions.h"
 #include "Widgets/Tutorial/FocusArea.h"
-#include "Widgets/Tutorial/PanelClickFilter.h"
 #include "Widgets/Tutorial/PanelInfoTutorial.h"
 
 #include <sgl/sgui/AbstractButton.h>
@@ -12,11 +11,9 @@ namespace game
 {
 
 StepPlanetMapSendAI::StepPlanetMapSendAI(PanelPlanetActions * panel)
+    : TutorialInfoStep(infoPlanetMapW, infoPlanetMapH)
+    , mFocusArea(new FocusArea)
 {
-    // CLICK FILTER
-    mClickFilter = new PanelClickFilter;
-    mClickFilter->SetEnabled(false);
-
     // FOCUS
     auto btn = panel->GetButton(PanelPlanetActions::SEND_AI);
 
@@ -32,22 +29,21 @@ StepPlanetMapSendAI::StepPlanetMapSendAI(PanelPlanetActions * panel)
     mFocusArea->SetVisible(false);
 
     // INFO
-    mInfo = new PanelInfoTutorial(infoPlanetMapW, infoPlanetMapH);
-    mInfo->SetEnabled(false);
-    mInfo->SetVisible(false);
-    mInfo->SetPosition(infoPlanetMapX, infoPlanetMapY);
+    auto info = GetPanelInfo();
 
-    mInfo->AddInfoEntry("Now that this territory is explored you can decide if you want to conquer it or not.",
-                        colorTutorialText, 6.f, true, true);
-    mInfo->AddInfoEntry("You can send an AI general to do the job for you, but it will cost you many "
-                        "resources and victory is not guaranteed.",
-                        colorTutorialText, 7.f, true, true, [this]
-                        {
-                            mFocusArea->SetBlinking(true);
-                            mFocusArea->SetVisible(true);
-                        });
+    info->SetPosition(infoPlanetMapX, infoPlanetMapY);
 
-    mInfo->SetFunctionOnFinished([this]
+    info->AddInfoEntry("Now that this territory is explored you can decide if you want to conquer it or not.",
+                       colorTutorialText, 7.f, true, true);
+    info->AddInfoEntry("You can send an AI general to do the job for you, but it will cost you many "
+                       "resources and victory is not guaranteed.",
+                       colorTutorialText, 8.f, true, true, [this]
+                       {
+                           mFocusArea->SetBlinking(true);
+                           mFocusArea->SetVisible(true);
+                       });
+
+    info->SetFunctionOnFinished([this]
     {
         SetDone();
     });
@@ -55,22 +51,7 @@ StepPlanetMapSendAI::StepPlanetMapSendAI(PanelPlanetActions * panel)
 
 StepPlanetMapSendAI::~StepPlanetMapSendAI()
 {
-    delete mClickFilter;
     delete mFocusArea;
-    delete mInfo;
-}
-
-void StepPlanetMapSendAI::OnStart()
-{
-    // CLICK FILTER
-    mClickFilter->SetEnabled(true);
-
-    // INFO
-    mInfo->SetEnabled(true);
-    mInfo->SetVisible(true);
-    mInfo->SetFocus();
-
-    mInfo->StartInfo();
 }
 
 } // namespace game

@@ -22,7 +22,7 @@ public:
     };
 
 public:
-    LootBox();
+    LootBox(const ObjectData & data);
 
     int GetPrizeQuantity() const;
     Prize GetPrizeType() const;

@@ -1,6 +1,7 @@
 #include "ResourceTooltip.h"
 
-#include "GameUIData.h"
+#include "Widgets/GameUIData.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
@@ -22,9 +23,6 @@ ResourceTooltip::ResourceTooltip(const char * title)
     auto fm = graphic::FontManager::Instance();
     auto tm = graphic::TextureManager::Instance();
 
-    const int marginL = 40;
-    const int marginT = 8;
-
     // BACKGROUND
     graphic::Texture * tex = tm->GetSprite(SpriteFileTooltips, IND_TOOLTIP_RES_BAR_BG);
 
@@ -34,26 +32,28 @@ ResourceTooltip::ResourceTooltip(const char * title)
     SetSize(mBg->GetWidth(), mBg->GetHeight());
 
     // TITLE
-    auto font = fm->GetFont("Lato-Regular.ttf", 18, graphic::Font::NORMAL);
-    mTitle = new graphic::Text(title, font);
-    mTitle->SetColor(0xd6e7f5ff);
+    auto fontTitle = fm->GetFont(WidgetsConstants::FontFilePanelTitle, 18, graphic::Font::NORMAL);
+    mTitle = new graphic::Text(title, fontTitle);
+    mTitle->SetColor(WidgetsConstants::colorTooltipTitle);
     RegisterRenderable(mTitle);
 
     // LABELS
-    mLabelIn = new sgui::Label(font, this);
+    auto fontLabel = fm->GetFont(WidgetsConstants::FontFileText, 18, graphic::Font::NORMAL);
+
+    mLabelIn = new sgui::Label(fontLabel, this);
     mLabelIn->SetColor(colorLabels);
 
-    mLabelOut = new sgui::Label(font, this);
+    mLabelOut = new sgui::Label(fontLabel, this);
     mLabelOut->SetColor(colorLabels);
 
-    mLabelTot = new sgui::Label(font, this);
+    mLabelTot = new sgui::Label(fontLabel, this);
     mLabelTot->SetColor(colorLabels);
 
     // init labels
     SetValues(0, 0);
 }
 
-void ResourceTooltip::SetValues(unsigned int resIn, unsigned int resOut)
+void ResourceTooltip::SetValues(int resIn, int resOut)
 {
     if(resIn == mIn && resOut == mOut)
         return ;
@@ -114,7 +114,6 @@ void ResourceTooltip::SetPositions()
     const int x0 = GetScreenX();
     const int y0 = GetScreenY();
     const int w = GetWidth();
-    const int h = GetHeight();
 
     // BACKGROUND
     mBg->SetPosition(x0, y0);

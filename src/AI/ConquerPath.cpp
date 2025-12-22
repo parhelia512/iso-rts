@@ -147,20 +147,9 @@ bool ConquerPath::InitNextConquest()
 
     mGameMap->StartConquerCell(nextCell, player);
 
-    // TODO get conquer time from unit
-    constexpr float TIME_CONQ_CELL = 1.f;
-
-#ifdef DEV_MODE
-    float timeConquest = Game::GOD_MODE ? 0.1f : TIME_CONQ_CELL;
-#else
-    float timeConquest = TIME_CONQ_CELL;
-#endif
-
-    if(!player->IsLocal() && !mGameMap->IsCellVisibleToLocalPlayer(nextInd))
-        timeConquest = TIME_AI_MIN;
-
     GameHUD * HUD = mScreen->GetHUD();
-    mProgressBar = HUD->CreateProgressBarInCell(nextCell, timeConquest, player->GetFaction());
+    mProgressBar = HUD->CreateProgressBarInCell(nextCell, mUnit->GetTimeConquestCell(),
+                                                player->GetFaction());
 
     mProgressBar->AddFunctionOnCompleted([this, nextCell, player, layerOverlay]
     {
@@ -200,7 +189,7 @@ bool ConquerPath::InitNextMove()
     const GameMapCell & nextCell = mGameMap->GetCell(nextRow, nextCol);
 
     // next cell not walkable -> FAIL
-    if(!nextCell.walkable || nextCell.walkTarget)
+    if(!nextCell.walkable)
         return Fail();
 
     const IsoObject * isoObj = mUnit->GetIsoObject();
@@ -228,8 +217,6 @@ bool ConquerPath::InitNextMove()
         mVelX = (mTargetX - mObjX) * mUnit->GetSpeed();
         mVelY = (mTargetY - mObjY) * mUnit->GetSpeed();
     }
-
-    mGameMap->SetCellWalkTarget(nextInd, true);
 
     mState = MOVING;
 
@@ -304,7 +291,7 @@ void ConquerPath::UpdateMove(float delta)
 
         // collect collectable object, if any
         if(targetCell.objTop != nullptr &&
-           targetCell.objTop->GetObjectCategory() == GameObject::CAT_COLLECTABLE)
+           targetCell.objTop->GetObjectCategory() == ObjectData::CAT_COLLECTABLE)
         {
             player->HandleCollectable(targetCell.objTop);
 

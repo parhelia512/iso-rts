@@ -1,9 +1,10 @@
 #include "Widgets/DialogSettings.h"
 
 #include "Game.h"
+#include "Widgets/ButtonPanelTab.h"
 #include "Widgets/GameSliderH.h"
 #include "Widgets/GameUIData.h"
-#include "Widgets/ButtonPanelTab.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/core/event/KeyboardEvent.h>
 #include <sgl/graphic/Font.h>
@@ -27,22 +28,25 @@
 #include <iostream>
 #include <sstream>
 
+// anonymous namespace for local "private" classes
 namespace
 {
-    constexpr unsigned int colorTxt = 0x73a6bfff;
-    constexpr unsigned int colorTxtSlider = 0xadc2ccff;
-    constexpr unsigned int sizeTxt = 22;
-    const char * fontTxt = "Lato-Regular.ttf";
 
-    constexpr int blockSettingW = 500;
-    constexpr int blockSettingH = 100;
+using namespace game;
 
-    constexpr int contX0 = 30;
-    constexpr int contY0 = 40;
-}
+constexpr unsigned int colorTxt = 0x73a6bfff;
+constexpr unsigned int colorTxtSlider = 0xadc2ccff;
+constexpr unsigned int sizeTxt = 22;
 
-namespace game
-{
+constexpr int blockSettingW = 500;
+constexpr int blockSettingH = 100;
+
+constexpr int contX0 = 30;
+constexpr int contY0 = 40;
+
+constexpr int minResW = 1024;
+constexpr float minResRatio = 1.25f;
+
 // ====== BUTTON CLOSE =====
 class ButtonCloseSettings : public sgl::sgui::ImageButton
 {
@@ -88,8 +92,10 @@ public:
         using namespace sgl::graphic;
 
         auto fm = FontManager::Instance();
-        Font * font = fm->GetFont("Lato-Regular.ttf", 20, Font::NORMAL);
+        auto font = fm->GetFont(WidgetsConstants::FontFileText, 20, Font::NORMAL);
         SetLabelFont(font);
+
+        SetGraphics(sgl::sgui::AbstractButton::NORMAL);
     }
 
 private:
@@ -103,7 +109,12 @@ private:
 
     void OnStateChanged(sgl::sgui::AbstractButton::VisualState state) override
     {
-        using namespace sgl::graphic;
+        SetGraphics(state);
+    }
+
+    void SetGraphics(sgl::sgui::AbstractButton::VisualState state)
+    {
+        using namespace sgl;
 
         // BODY
         const unsigned int texIds[NUM_VISUAL_STATES] =
@@ -115,8 +126,8 @@ private:
             IND_SET_CB_NORMAL,
         };
 
-        auto tm = TextureManager::Instance();
-        Texture * tex = tm->GetSprite(SpriteFileSettings, texIds[state]);
+        auto tm = graphic::TextureManager::Instance();
+        graphic::Texture * tex = tm->GetSprite(SpriteFileSettings, texIds[state]);
         SetBodyTexture(tex);
 
         // TEXT
@@ -129,7 +140,7 @@ private:
             0xd7eaf4ff
         };
 
-       SetLabelColor(txtColors[state]);
+        SetLabelColor(txtColors[state]);
     }
 };
 
@@ -147,7 +158,7 @@ public:
 
         // TEXT LABEL
         auto fm = FontManager::Instance();
-        Font * font = fm->GetFont("Lato-Regular.ttf", 20, Font::NORMAL);
+        auto font = fm->GetFont(WidgetsConstants::FontFileText, 20, Font::NORMAL);
         mText = new Text(txt, font, true);
         RegisterRenderable(mText);
 
@@ -400,6 +411,11 @@ private:
     sgl::graphic::Image * mImgBot = nullptr;
 };
 
+} // namespace
+
+namespace game
+{
+
 // ====== SCREEN SETTINGS ======
 DialogSettings::DialogSettings(Game * game)
     : mGame(game)
@@ -408,11 +424,9 @@ DialogSettings::DialogSettings(Game * game)
 
     auto fm = graphic::FontManager::Instance();
     auto tm = graphic::TextureManager::Instance();
-    graphic::Font * font;
-    graphic::Texture * tex;
 
     // MAIN PANEL
-    tex = tm->GetSprite(SpriteFileSettings, IND_SET_PANEL);
+    auto tex = tm->GetSprite(SpriteFileSettings, IND_SET_PANEL);
     mBg = new graphic::Image(tex);
     RegisterRenderable(mBg);
 
@@ -430,11 +444,10 @@ DialogSettings::DialogSettings(Game * game)
     mButtonBack->SetX(GetWidth() - mButtonBack->GetWidth());
 
     // TITLE
-    const unsigned int colorTitle = 0xe6eef2ff;
-    font = fm->GetFont("Lato-Regular.ttf", 30, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 30, graphic::Font::NORMAL);
     auto labelTitle = new sgui::Label("SETTINGS", font, this);
 
-    labelTitle->SetColor(colorTitle);
+    labelTitle->SetColor(WidgetsConstants::colorDialogTitle);
     labelTitle->SetPosition(marginContLeft, marginContTop);
 
     // BUTTONS PANEL
@@ -526,7 +539,7 @@ void DialogSettings::CreatePanelGame(sgl::sgui::Widget * parent)
     int y = contY0;
 
     auto fm = graphic::FontManager::Instance();
-    graphic::Font * font = fm->GetFont(fontTxt, sizeTxt, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileText, sizeTxt, graphic::Font::NORMAL);
 
     auto tm = graphic::TextureManager::Instance();
 
@@ -682,7 +695,7 @@ void DialogSettings::CreatePanelAudio(sgl::sgui::Widget *parent)
     int y = contY0;
 
     auto fm = graphic::FontManager::Instance();
-    graphic::Font * font = fm->GetFont(fontTxt, sizeTxt, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileText, sizeTxt, graphic::Font::NORMAL);
 
     auto am = media::AudioManager::Instance();
     auto ap = am->GetPlayer();
@@ -813,7 +826,7 @@ void DialogSettings::CreatePanelVideo(sgl::sgui::Widget * parent)
     int y = contY0;
 
     auto fm = graphic::FontManager::Instance();
-    graphic::Font * font = fm->GetFont(fontTxt, sizeTxt, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileText, sizeTxt, graphic::Font::NORMAL);
 
     // RESOLUTION
     auto label = new sgui::Label("RESOLUTION", font, panel);
@@ -832,14 +845,12 @@ void DialogSettings::CreatePanelVideo(sgl::sgui::Widget * parent)
     {
         for(int m = 0; m < win->GetNumDisplayModes(d); ++m)
         {
-            graphic::DisplayMode dm = win->GetDisplayMode(d, m);
+            const graphic::DisplayMode dm = win->GetDisplayMode(d, m);
 
             // display requirements
-            const int minW = 1280;
-            const float minRatio = 1.6f;
             const float ratio = static_cast<float>(dm.width) / static_cast<float>(dm.height);
 
-            if(ratio < minRatio || dm.width < minW)
+            if(ratio < minResRatio || dm.width < minResW)
                 continue ;
 
             /// add combo item
@@ -852,6 +863,19 @@ void DialogSettings::CreatePanelVideo(sgl::sgui::Widget * parent)
                 currIndex = validModes;
 
             ++validModes;
+        }
+
+        // fallback to first resolution if no good one is found
+        if(0 == validModes)
+        {
+            const graphic::DisplayMode dm = win->GetDisplayMode(d, 0);
+
+            /// add combo item
+            std::ostringstream oss;
+            oss << dm.width << "x" << dm.height << " @ " << dm.refresh << "Hz";
+            mComboRes->AddItem(new ComboBoxItemResolution(d, 0, oss.str().c_str()));
+
+            currIndex = 0;
         }
 
         mComboRes->SetActiveItem(currIndex);
@@ -938,14 +962,12 @@ void DialogSettings::UpdateCurrentResolution()
     {
         for(int m = 0; m < win->GetNumDisplayModes(d); ++m)
         {
-            graphic::DisplayMode dm = win->GetDisplayMode(d, m);
+            const graphic::DisplayMode dm = win->GetDisplayMode(d, m);
 
             // display requirements
-            const int minW = 1280;
-            const float minRatio = 1.6f;
             const float ratio = static_cast<float>(dm.width) / static_cast<float>(dm.height);
 
-            if(ratio < minRatio || dm.width < minW)
+            if(ratio < minResRatio || dm.width < minResW)
                 continue ;
 
             // record current mode
@@ -954,6 +976,10 @@ void DialogSettings::UpdateCurrentResolution()
 
             ++validModes;
         }
+
+        // fallback to first resolution if no good one is found
+        if(0 == validModes)
+            currIndex = 0;
 
         mComboRes->SetActiveItem(currIndex);
 

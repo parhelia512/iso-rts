@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Tutorial/TutorialStep.h"
+#include "Tutorial/TutorialInfoStep.h"
 
 
 namespace game
@@ -8,10 +8,8 @@ namespace game
 
 class FocusArea;
 class GameHUD;
-class PanelClickFilter;
-class PanelInfoTutorial;
 
-class StepGameMissionGoalsDialog : public TutorialStep
+class StepGameMissionGoalsDialog : public TutorialInfoStep
 {
 public:
     StepGameMissionGoalsDialog(GameHUD * HUD);
@@ -21,8 +19,6 @@ public:
 
 private:
     FocusArea * mFocusArea = nullptr;
-    PanelClickFilter * mClickFilter = nullptr;
-    PanelInfoTutorial * mInfo = nullptr;
 
     GameHUD * mHUD = nullptr;
 };

@@ -11,6 +11,7 @@ namespace sgl
 namespace game
 {
 
+class DialogExit;
 class PanelResources;
 class PanelPlanetActionConquer;
 class PanelPlanetActionConquerAI;
@@ -19,7 +20,6 @@ class PanelPlanetActions;
 class PanelPlanetInfo;
 class PanelPlanetResources;
 class PlanetMap;
-class TutorialManager;
 
 class ScreenPlanetMap : public Screen
 {
@@ -27,12 +27,14 @@ public:
     ScreenPlanetMap(Game * game);
     ~ScreenPlanetMap();
 
+    void OnKeyUp(sgl::core::KeyboardEvent & event) override;
+
     void Update(float delta) override;
     void Render() override;
 
-private:
-    void CreateTutorial();
+    void SetPause(bool paused);
 
+private:
     void SetPlanetName(const char * name);
     void SetDate(const char * date);
 
@@ -42,7 +44,11 @@ private:
 
     void UpdatePlanetButtons();
 
+    void ShowDialogExit();
+
 private:
+    friend class TutorialPlanetMap;
+
     sgl::graphic::Image * mBg = nullptr;
 
     PanelResources * mPanelPlayerRes = nullptr;
@@ -58,8 +64,9 @@ private:
 
     PlanetMap * mPlanet = nullptr;
 
-    // TUTORIAL
-    TutorialManager * mTutMan = nullptr;
+    DialogExit * mDialogExit = nullptr;
+
+    bool mPaused = false;
 };
 
 } // namespace game

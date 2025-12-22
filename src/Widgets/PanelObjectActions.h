@@ -20,7 +20,7 @@ class ObjectActionButton;
 class PanelObjectActions : public sgl::sgui::Widget
 {
 public:
-    enum Button
+    enum Button : unsigned int
     {
         BTN_BUILD_UNIT_BARRACKS,
         BTN_BUILD_UNIT_BASE,
@@ -37,6 +37,11 @@ public:
         BTN_OPEN_GATE,
         BTN_CLOSE_GATE,
         BTN_TRADE,
+        BTN_SPAWN,
+        BTN_SET_TARGET,
+
+        // keep these 2 last
+        BTN_SELF_DESTROY,
         BTN_CANCEL,
 
         NUM_BUTTONS

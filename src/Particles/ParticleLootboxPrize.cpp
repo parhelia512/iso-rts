@@ -75,6 +75,7 @@ void ParticleLootboxPrize::SetData(const DataParticleLootboxPrize & data)
     mIcon->SetColor(color);
 
     // TEXT
+    const unsigned int colorText = 0xeff0f5ff;
     const int fontSize = 20;
     auto fm = graphic::FontManager::Instance();
     graphic::Font * font = fm->GetFont("Lato-Bold.ttf", fontSize, graphic::Font::NORMAL);
@@ -82,7 +83,7 @@ void ParticleLootboxPrize::SetData(const DataParticleLootboxPrize & data)
     std::ostringstream ss;
     ss << "+" << data.quantity;
     mTxt = new graphic::Text(ss.str().c_str(), font);
-    mTxt->SetColor(color);
+    mTxt->SetColor(colorText);
 
     SetStart(data.x0, data.y0);
 }

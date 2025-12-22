@@ -6,6 +6,7 @@
 #include "Widgets/GameButton.h"
 #include "Widgets/GameSliderH.h"
 #include "Widgets/GameUIData.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
@@ -20,8 +21,11 @@
 
 #include <sstream>
 
-namespace game
+// anonymous namespace for local "private" classes
+namespace
 {
+
+using namespace game;
 
 // ===== BUTTON =====
 class ButtonExploreTemple : public GameButton
@@ -29,18 +33,17 @@ class ButtonExploreTemple : public GameButton
 public:
     ButtonExploreTemple(sgl::sgui::Widget * parent)
         : GameButton(SpriteFileDialogExploreTemple,
-        { ID_DLG_EXTM_BTN_NORMAL, ID_DLG_EXTM_BTN_DISABLED,
-          ID_DLG_EXTM_BTN_OVER, ID_DLG_EXTM_BTN_PUSHED, ID_DLG_EXTM_BTN_PUSHED },
-        { 0xc3dfeeff, 0x5a6266ff, 0xebf4f9ff, 0xc3dfeeff, 0xc3dfeeff },
-        parent)
+                     { ID_DLG_EXTM_BTN_NORMAL, ID_DLG_EXTM_BTN_DISABLED,
+                      ID_DLG_EXTM_BTN_OVER, ID_DLG_EXTM_BTN_PUSHED, ID_DLG_EXTM_BTN_PUSHED },
+                     { 0xc3dfeeff, 0x5a6266ff, 0xebf4f9ff, 0xc3dfeeff, 0xc3dfeeff },
+                     parent)
     {
         using namespace sgl;
 
-        const char * fileFont = "Lato-Regular.ttf";
         const int size = 22;
 
         auto fm = graphic::FontManager::Instance();
-        graphic::Font * fnt = fm->GetFont(fileFont, size, graphic::Font::NORMAL);
+        auto fnt = fm->GetFont(WidgetsConstants::FontFileButton, size, graphic::Font::NORMAL);
         SetLabelFont(fnt);
     }
 
@@ -61,6 +64,11 @@ public:
     }
 };
 
+} // namespace
+
+namespace game
+{
+
 // ===== DIALOG EXPLORE TEMPLE =====
 const int marginSide = 40;
 const int marginButtonsB = 20;
@@ -74,9 +82,7 @@ DialogExploreTemple::DialogExploreTemple(Player * player, Temple * temple)
     auto fm = graphic::FontManager::Instance();
     auto tm = graphic::TextureManager::Instance();
 
-    const char * headerFontFile = "Lato-Regular.ttf";
     const int headerFontSize = 22;
-    const char * labelFontFile = "Lato-Regular.ttf";
     const unsigned int colorHeader = 0x9dcbe2ff;
     const unsigned int colorLabel = 0x70a7c2ff;
 
@@ -90,14 +96,14 @@ DialogExploreTemple::DialogExploreTemple(Player * player, Temple * temple)
     SetSize(w, h);
 
     // TITLE
-    auto fontTitle = fm->GetFont("Lato-Regular.ttf", 32, graphic::Font::NORMAL);
+    auto fontTitle = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 32, graphic::Font::NORMAL);
 
     sgui::Label * title = new sgui::Label("EXPLORE ABANDONED TEMPLE", fontTitle, this);
 
     const int titleX = (w - title->GetWidth()) / 2;
     const int titleY = 10;
     title->SetPosition(titleX, titleY);
-    title->SetColor(0xf1f3f4ff);
+    title->SetColor(WidgetsConstants::colorDialogTitle);
 
     // HORIZ BAR 1
     tex = tm->GetSprite(SpriteFileDialogExploreTemple, ID_DLG_EXTM_LINE_H);
@@ -123,8 +129,8 @@ DialogExploreTemple::DialogExploreTemple(Player * player, Temple * temple)
     graphic::Texture * texSliderBar = tm->GetSprite(SpriteFileDialogExploreTemple, ID_DLG_EXTM_SLIDER_BAR);
     graphic::Texture * texSliderBtn = tm->GetSprite(SpriteFileDialogExploreTemple, ID_DLG_EXTM_SLIDER_BTN);
 
-    auto fontHeader = fm->GetFont(headerFontFile, headerFontSize, graphic::Font::NORMAL);
-    auto fontLabel = fm->GetFont(labelFontFile, sliderLabelFontSize, graphic::Font::NORMAL);
+    auto fontHeader = fm->GetFont(WidgetsConstants::FontFileHeader, headerFontSize, graphic::Font::NORMAL);
+    auto fontLabel = fm->GetFont(WidgetsConstants::FontFileText, sliderLabelFontSize, graphic::Font::NORMAL);
 
     // HEADER INVEST
     mHeaderInvest = new graphic::Text("INVEST RESOURCES", fontHeader);
@@ -384,16 +390,14 @@ DialogExploreTempleOutcome::DialogExploreTempleOutcome(Player * player, Temple *
     auto fm = graphic::FontManager::Instance();
     auto tm = graphic::TextureManager::Instance();
 
-    const char * headerFontFile = "Lato-Regular.ttf";
     const int headerFontSize = 22;
-    const char * labelFontFile = "Lato-Regular.ttf";
     const int labelFontSize = 22;
     const unsigned int colorHeader = 0x9dcbe2ff;
     const unsigned int colorLabel = 0x70a7c2ff;
 
     const int marginPanel1V = 85;
 
-    auto fontLabel = fm->GetFont(labelFontFile, labelFontSize, graphic::Font::NORMAL);
+    auto fontLabel = fm->GetFont(WidgetsConstants::FontFileText, labelFontSize, graphic::Font::NORMAL);
 
     const Temple::ExplorationOutcomeCategory oc = temple->GetExplorationOutcomeCategory();
 
@@ -407,14 +411,14 @@ DialogExploreTempleOutcome::DialogExploreTempleOutcome(Player * player, Temple *
     SetSize(w, h);
 
     // TITLE
-    auto fontTitle = fm->GetFont("Lato-Regular.ttf", 32, graphic::Font::NORMAL);
+    auto fontTitle = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 32, graphic::Font::NORMAL);
 
     sgui::Label * title = new sgui::Label("TEMPLE EXPLORATION OUTCOME", fontTitle, this);
 
     const int titleX = (w - title->GetWidth()) / 2;
     const int titleY = 10;
     title->SetPosition(titleX, titleY);
-    title->SetColor(0xf1f3f4ff);
+    title->SetColor(WidgetsConstants::colorDialogTitle);
 
     // EXPLANATION
     const int descAreaW = w - (marginSide * 2);
@@ -457,7 +461,7 @@ DialogExploreTempleOutcome::DialogExploreTempleOutcome(Player * player, Temple *
         mBtnOutcome2 = new ButtonExploreTemple(this);
 
         // -- HEADER --
-        auto fontHeader = fm->GetFont(headerFontFile, headerFontSize, graphic::Font::NORMAL);
+        auto fontHeader = fm->GetFont(WidgetsConstants::FontFileHeader, headerFontSize, graphic::Font::NORMAL);
 
         // -- OUTCOME TEXT --
         const int outcAreaW = w / 2 - (marginSide * 2);

@@ -10,6 +10,11 @@
 #include <unordered_set>
 #include <vector>
 
+namespace sgl
+{
+    namespace ai { class Pathfinder; }
+}
+
 namespace game
 {
 
@@ -19,6 +24,9 @@ class ControlMap;
 class Game;
 class GameObject;
 class IsoMap;
+class GameObject;
+class MiniUnit;
+class MiniUnitsGroup;
 class ObjectData;
 class ObjectPath;
 class Player;
@@ -26,6 +34,7 @@ class ScreenGame;
 class Temple;
 class Unit;
 class WallBuildPath;
+class WeaponData;
 
 struct Cell2D;
 struct GameMapCell;
@@ -59,7 +68,6 @@ public:
 
     void SetCellWalkable(unsigned int cellInd, bool val);
     void SetCellWalkable(unsigned int r, unsigned int c, bool val);
-    void SetCellWalkTarget(unsigned int cellInd, bool val);
     void SetCellType(unsigned int r, unsigned int c, CellTypes type);
     void SetCellType(unsigned int ind, CellTypes type);
     void UpdateCellType(unsigned int ind, const GameMapCell & cell);
@@ -95,7 +103,7 @@ public:
     bool RemoveAndDestroyObject(GameObject * obj);
 
     // player stats
-    void RegisterEnemyKill(PlayerFaction killer);
+    void RegisterEnemyKill(GameObject * killer);
     void RegisterCasualty(PlayerFaction killed);
     unsigned int GetEnemiesKilled(PlayerFaction killer) const;
     unsigned int GetCasualties(PlayerFaction faction) const;
@@ -136,9 +144,22 @@ public:
 
     // unit create
     bool CanCreateUnit(GameObjectTypeId ut, GameObject * gen, Player * player);
-    Cell2D GetNewUnitDestination(GameObject * gen);
+    Cell2D GetNewUnitDestination(GameObject * gen) const;
     void StartCreateUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & dest, Player * player);
-    void CreateUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & dest, Player * player);
+    Unit * CreateUnit(GameObjectTypeId ut, const Cell2D & dest, Player * player);
+
+    // mini units
+    bool CanCreateMiniUnit(GameObjectTypeId ut, GameObject * gen, int elements, Player * player);
+    GameObject * CreateMiniUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & dest,
+                                int elements, Player * player);
+    Cell2D GetNewMiniUnitDestination(const Cell2D & genCell) const;
+
+    MiniUnitsGroup * CreateMiniUnitsGroup(PlayerFaction faction);
+
+    bool IsDoingAutomaticMoves() const;
+
+    // damage
+    void DamageArea(const Cell2D & srcBR, const Cell2D & srcTL, int radius, float maxDamage);
 
     // move units
     bool CanUnitMove(const Cell2D & start, const Cell2D & end, Player * player) const;
@@ -161,11 +182,12 @@ public:
     bool MoveObjectDown(GameObject * obj);
     bool MoveObjectUp(GameObject * obj);
 
-    unsigned int GetNumRows() const;
-    unsigned int GetNumCols() const;
+    unsigned int GetNumRows() const override;
+    unsigned int GetNumCols() const override;
 
     int ApproxDistance(const Cell2D & c1, const Cell2D & c2) const;
     int ApproxDistance(const GameObject * obj1, const GameObject * obj2) const;
+    int Distance(const GameObject * obj1, const GameObject * obj2) const;
     bool FindClosestCellConnectedToObject(const GameObject * obj, const Cell2D start, Cell2D & end);
     bool FindClosestLinkedCell(PlayerFaction faction, const Cell2D start, Cell2D & linked);
     bool FindFreeArea(const Cell2D & start, int rows, int cols, int maxRadius, Cell2D & target);
@@ -217,11 +239,30 @@ private:
     void UpdateConquerPaths(float delta);
     void UpdateWallBuildPaths(float delta);
     void UpdateObjectsToAdd();
-
     void UpdateWalls(const Cell2D & center);
     void UpdateWall(const Cell2D & cell);
 
     const ObjectData & GetObjectData(GameObjectTypeId t) const;
+    const WeaponData & GetWeaponData(WeaponType t) const;
+
+    void AssignWeaponToObject(WeaponType wt, GameObject * obj);
+
+    // mini units
+    void DeleteEmptyMiniUnitsGroups();
+    void InitMiniUnitsGroupsReadyToMove(PlayerFaction faction);
+    void SetNextMiniUnitsGroupToMove();
+    bool StartMiniUnitGroupMove();
+    void ContinueMiniUnitGroupMove(const ObjectPath * prevOP);
+    void ClearMiniUnitsGroupMoveCompleted(bool finished);
+    void ClearMiniUnitsGroupMoveFailed();
+    void ClearMovingMiniUnitsGroup();
+
+    void InitMiniUnitsReadyToAttack(PlayerFaction faction);
+    void UpdateMiniUnitsAttacking(float delta);
+
+    // auto-attacking structures
+    void InitStructuresReadyToAttack();
+    void UpdateStructuresAttacking(float delta);
 
 private:
     struct ObjectToAdd
@@ -246,8 +287,19 @@ private:
     std::unordered_set<const GameObject *> mObjectsSet;
     std::vector<CollectableGenerator *> mCollGen;
     std::vector<ObjectPath *> mPaths;
+    std::vector<ObjectPath *> mPathsToAdd;
     std::vector<ConquerPath *> mConquerPaths;
     std::vector<WallBuildPath *> mWallBuildPaths;
+
+    std::vector<MiniUnitsGroup *> mMiniUnitsGroups;
+    std::vector<MiniUnitsGroup *> mMiniUnitsGroupsToMove;
+    std::vector<MiniUnit *> mMiniUnitsAttacking;
+
+    std::vector<GameObject *> mStructuresAttacking;
+
+    float mTimerAutoAttacking = 0.f;
+
+    sgl::ai::Pathfinder * mPathfinder = nullptr;
 
     ControlMap * mControlMap = nullptr;
 
@@ -312,11 +364,6 @@ inline void GameMap::SetCellWalkable(unsigned int r, unsigned int c, bool val)
     SetCellWalkable(ind, val);
 }
 
-inline void GameMap::SetCellWalkTarget(unsigned int cellInd, bool val)
-{
-    mCells[cellInd].walkTarget = val;
-}
-
 inline void GameMap::SetCellType(unsigned int r, unsigned int c, CellTypes type)
 {
     const unsigned int ind = r * mCols + c;
@@ -364,10 +411,15 @@ inline void GameMap::SetCellChanging(unsigned int r, unsigned int c, bool changi
         mCells[r * mCols + c].changing = changing;
 }
 
-inline void GameMap::RegisterEnemyKill(PlayerFaction killer) { ++mEnemiesKilled[killer]; }
 inline void GameMap::RegisterCasualty(PlayerFaction killed) { ++mCasualties[killed]; }
 inline unsigned int GameMap::GetEnemiesKilled(PlayerFaction killer) const { return mEnemiesKilled.at(killer); }
 inline unsigned int GameMap::GetCasualties(PlayerFaction faction) const { return mCasualties.at(faction); }
+
+inline bool GameMap::IsDoingAutomaticMoves() const
+{
+    return !mMiniUnitsGroupsToMove.empty() || !mMiniUnitsAttacking.empty() ||
+           !mStructuresAttacking.empty();
+}
 
 /**
  * @brief Gets a GameMapCell object from the map. No boundaries check is done.

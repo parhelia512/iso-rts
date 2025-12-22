@@ -1,6 +1,7 @@
 #include "Widgets/ButtonMainMenuWishlist.h"
 
 #include "Widgets/GameUIData.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/graphic/Camera.h>
 #include <sgl/graphic/Font.h>
@@ -40,7 +41,7 @@ ButtonMainMenuWishlist::ButtonMainMenuWishlist(sgl::sgui::Widget * parent)
     // TEXT LABEL
     // TODO use setLabel after adding support for icon to PushButton
     auto fm = FontManager::Instance();
-    Font * font = fm->GetFont("Lato-Regular.ttf", 18, Font::NORMAL);
+    Font * font = fm->GetFont(WidgetsConstants::FontFileButton, 18, Font::NORMAL);
     mText = new Text("WISHLIST NOW", font, true);
     RegisterRenderable(mText);
 

@@ -12,6 +12,8 @@
 #include "AI/ObjectPath.h"
 #include "AI/PlayerAI.h"
 #include "AI/WallBuildPath.h"
+#include "GameObjectTools/Laser.h"
+#include "GameObjectTools/WeaponData.h"
 #include "GameObjects/Barracks.h"
 #include "GameObjects/Base.h"
 #include "GameObjects/Blobs.h"
@@ -22,6 +24,8 @@
 #include "GameObjects/DiamondsGenerator.h"
 #include "GameObjects/Hospital.h"
 #include "GameObjects/LootBox.h"
+#include "GameObjects/MiniUnit.h"
+#include "GameObjects/MiniUnitsGroup.h"
 #include "GameObjects/ObjectData.h"
 #include "GameObjects/ObjectsDataRegistry.h"
 #include "GameObjects/PracticeTarget.h"
@@ -31,6 +35,7 @@
 #include "GameObjects/ResourceGenerator.h"
 #include "GameObjects/ResourceStorage.h"
 #include "GameObjects/SceneObject.h"
+#include "GameObjects/SpawningTower.h"
 #include "GameObjects/Temple.h"
 #include "GameObjects/TradingPost.h"
 #include "GameObjects/Trees.h"
@@ -40,9 +45,18 @@
 #include "Screens/ScreenGame.h"
 #include "Widgets/MiniMap.h"
 
+#include <sgl/ai/Pathfinder.h>
+#include <sgl/media/AudioManager.h>
+#include <sgl/media/AudioPlayer.h>
+
 #include <algorithm>
 #include <cmath>
 #include <iostream>
+
+namespace
+{
+const float timeAutoAttackDelay = 0.50f;
+}
 
 namespace game
 {
@@ -70,14 +84,22 @@ GameMap::GameMap(Game * game, ScreenGame * sg, IsoMap * isoMap)
     mCasualties[FACTION_2] = 0;
     mCasualties[FACTION_3] = 0;
     mCasualties[NO_FACTION] = 0;
+
+    // PATHFINDER
+    mPathfinder = new sgl::ai::Pathfinder;
 }
 
 GameMap::~GameMap()
 {
+    delete mPathfinder;
+
     delete mControlMap;
 
     for(GameObject * obj : mObjects)
         delete obj;
+
+    for(MiniUnitsGroup * g : mMiniUnitsGroups)
+        delete g;
 
     for(CollectableGenerator * cg : mCollGen)
         delete cg;
@@ -211,6 +233,9 @@ void GameMap::SetSize(unsigned int rows, unsigned int cols)
 
     // init control map
     mControlMap->SetSize(rows, cols);
+
+    // finish init of pathfinder
+    mPathfinder->SetMap(this);
 }
 
 void GameMap::CreateCollectableGenerator(unsigned int r, unsigned int c, ResourceType type)
@@ -386,8 +411,10 @@ void GameMap::CreateObjectFromFile(unsigned int layerId, GameObjectTypeId type, 
 {
     const auto pf = static_cast<PlayerFaction>(faction);
 
-    if(GameObject::TYPE_UNIT_SCOUT1 == type || GameObject::TYPE_UNIT_SOLDIER1 == type ||
-       GameObject::TYPE_UNIT_SOLDIER2 == type || GameObject::TYPE_UNIT_WORKER1 == type)
+    if(ObjectData::TYPE_UNIT_MEDIC1 == type || ObjectData::TYPE_UNIT_SCOUT1 == type ||
+       ObjectData::TYPE_UNIT_SOLDIER1 == type || ObjectData::TYPE_UNIT_SOLDIER2 == type ||
+       ObjectData::TYPE_UNIT_SPAWNER1 == type || ObjectData::TYPE_UNIT_SPAWNER2 == type ||
+       ObjectData::TYPE_UNIT_WORKER1 == type)
     {
         Player * owner =  mGame->GetPlayerByFaction(pf);
 
@@ -396,7 +423,7 @@ void GameMap::CreateObjectFromFile(unsigned int layerId, GameObjectTypeId type, 
 
         const Cell2D dest(r0, c0);
 
-        CreateUnit(type, nullptr, dest, owner);
+        CreateUnit(type, dest, owner);
     }
     else
         CreateObject(layerId, type, variant, pf, r0, c0, true);
@@ -434,63 +461,70 @@ GameObject * GameMap::CreateObject(unsigned int layerId, GameObjectTypeId type,
     if(gcell.objTop)
         return nullptr;
 
+    auto pm = mScreenGame->GetParticlesManager();
+
     // create game object
     o2a.obj = nullptr;
     o2a.owner = mGame->GetPlayerByFaction(faction);
 
-    if(GameObject::TYPE_MOUNTAINS == type ||
-       GameObject::TYPE_ROCKS == type)
-        o2a.obj = new SceneObject(type, variant, rows, cols);
-    else if(GameObject::TYPE_RES_GEN_ENERGY == type ||
-       GameObject::TYPE_RES_GEN_MATERIAL == type ||
-       GameObject::TYPE_RES_GEN_ENERGY_SOLAR == type ||
-       GameObject::TYPE_RES_GEN_MATERIAL_EXTRACT == type)
-        o2a.obj = new ResourceGenerator(type, rows, cols);
-    else if(GameObject::TYPE_RES_STORAGE_BLOBS == type ||
-            GameObject::TYPE_RES_STORAGE_DIAMONDS == type ||
-            GameObject::TYPE_RES_STORAGE_ENERGY == type ||
-            GameObject::TYPE_RES_STORAGE_MATERIAL == type)
-        o2a.obj = new ResourceStorage(type, rows, cols);
-    else if(GameObject::TYPE_DIAMONDS == type)
-        o2a.obj = new Diamonds;
-    else if(GameObject::TYPE_BLOBS == type)
-        o2a.obj  = new Blobs;
-    else if(GameObject::TYPE_TREES == type)
-        o2a.obj  = new Trees(variant);
-    else if(GameObject::TYPE_RADAR_STATION == type)
-        o2a.obj = new RadarStation;
-    else if(GameObject::TYPE_RADAR_TOWER == type)
-        o2a.obj = new RadarTower;
-    else if(GameObject::TYPE_BARRACKS == type)
-        o2a.obj = new Barracks;
-    else if(GameObject::TYPE_RESEARCH_CENTER == type)
-        o2a.obj = new ResearchCenter;
-    else if(GameObject::TYPE_HOSPITAL == type)
+    if(ObjectData::TYPE_MOUNTAINS == type ||
+       ObjectData::TYPE_ROCKS == type)
+        o2a.obj = new SceneObject(data, variant);
+    else if(ObjectData::TYPE_RES_GEN_ENERGY == type ||
+       ObjectData::TYPE_RES_GEN_MATERIAL == type ||
+       ObjectData::TYPE_RES_GEN_ENERGY_SOLAR == type ||
+       ObjectData::TYPE_RES_GEN_MATERIAL_EXTRACT == type)
+        o2a.obj = new ResourceGenerator(data);
+    else if(ObjectData::TYPE_RES_STORAGE_BLOBS == type ||
+            ObjectData::TYPE_RES_STORAGE_DIAMONDS == type ||
+            ObjectData::TYPE_RES_STORAGE_ENERGY == type ||
+            ObjectData::TYPE_RES_STORAGE_MATERIAL == type)
+        o2a.obj = new ResourceStorage(data);
+    else if(ObjectData::TYPE_DIAMONDS == type)
+        o2a.obj = new Diamonds(data);
+    else if(ObjectData::TYPE_BLOBS == type)
+        o2a.obj  = new Blobs(data);
+    else if(ObjectData::TYPE_TREES == type)
+        o2a.obj  = new Trees(data, variant);
+    else if(ObjectData::TYPE_RADAR_STATION == type)
+        o2a.obj = new RadarStation(data);
+    else if(ObjectData::TYPE_RADAR_TOWER == type)
+        o2a.obj = new RadarTower(data);
+    else if(ObjectData::TYPE_BARRACKS == type)
+        o2a.obj = new Barracks(data);
+    else if(ObjectData::TYPE_RESEARCH_CENTER == type)
+        o2a.obj = new ResearchCenter(data);
+    else if(ObjectData::TYPE_HOSPITAL == type)
         o2a.obj = new Hospital(data);
-    else if(GameObject::TYPE_DEFENSIVE_TOWER == type)
+    else if(ObjectData::TYPE_DEFENSIVE_TOWER == type)
         o2a.obj = new DefensiveTower(data);
-    else if(GameObject::TYPE_BUNKER == type)
+    else if(ObjectData::TYPE_BUNKER == type)
         o2a.obj = new Bunker(data);
-    else if(GameObject::TYPE_TRADING_POST == type)
+    else if(ObjectData::TYPE_SPAWN_TOWER == type)
+        o2a.obj = new SpawningTower(data);
+    else if(ObjectData::TYPE_TRADING_POST == type)
         o2a.obj = new TradingPost(data);
-    else if(GameObject::TYPE_WALL == type)
-        o2a.obj = new Wall(variant);
-    else if(GameObject::TYPE_WALL_GATE == type)
-        o2a.obj = new WallGate(variant);
-    else if(GameObject::TYPE_LOOTBOX == type)
-        o2a.obj = new LootBox;
-    else if(GameObject::TYPE_TEMPLE == type)
-        o2a.obj = new Temple;
-    else if(GameObject::TYPE_BASE == type || GameObject::TYPE_BASE_SPOT == type)
+    else if(ObjectData::TYPE_WALL == type)
+        o2a.obj = new Wall(data, variant);
+    else if(ObjectData::TYPE_WALL_GATE == type)
+        o2a.obj = new WallGate(data, variant);
+    else if(ObjectData::TYPE_LOOTBOX == type)
+        o2a.obj = new LootBox(data);
+    else if(ObjectData::TYPE_TEMPLE == type)
+        o2a.obj = new Temple(data);
+    else if(ObjectData::TYPE_PRACTICE_TARGET == type)
+        o2a.obj = new PracticeTarget(data);
+    else if(ObjectData::TYPE_BASE == type || ObjectData::TYPE_BASE_SPOT == type)
     {
-        if(GameObject::TYPE_BASE_SPOT == type)
+        if(ObjectData::TYPE_BASE_SPOT == type)
         {
             o2a.owner = mGame->GetPlayerByIndex(variant);
             faction = o2a.owner->GetFaction();
         }
 
-
-        auto b = new Base;
+        // needeed to bypass BaseSpot data
+        const ObjectData & dataBase = GetObjectData(ObjectData::TYPE_BASE);
+        auto b = new Base(dataBase);
         o2a.obj = b;
 
         // base cells update
@@ -511,8 +545,6 @@ GameObject * GameMap::CreateObject(unsigned int layerId, GameObjectTypeId type,
         o2a.owner->SetBase(b);
         o2a.owner->SumCells(rows * cols);
     }
-    else if(GameObject::TYPE_PRACTICE_TARGET == type)
-        o2a.obj = new PracticeTarget;
     // this should never happen
     else
     {
@@ -522,13 +554,17 @@ GameObject * GameMap::CreateObject(unsigned int layerId, GameObjectTypeId type,
 
     // links to other objects
     o2a.obj->SetGameMap(this);
+    o2a.obj->SetParticlesManager(pm);
     o2a.obj->SetScreen(mScreenGame);
 
     // assign owner
-    o2a.obj->SetFaction(faction);
+    o2a.obj->SetOwner(o2a.owner);
 
     // set object properties
     o2a.obj->SetCell(&mCells[ind0]);
+
+    // weapon
+    AssignWeaponToObject(data.GetWeapon(), o2a.obj);
 
     // schedule object for map addition
     if(instantAdd)
@@ -554,6 +590,15 @@ bool GameMap::RemoveAndDestroyObject(GameObject * obj)
     DestroyObject(obj);
 
     return true;
+}
+
+void GameMap::RegisterEnemyKill(GameObject * killer)
+{
+    // TODO assign experience points based on kill maybe
+    const int experienceKill = 100;
+    killer->SumExperience(experienceKill);
+
+    ++mEnemiesKilled[killer->GetFaction()];
 }
 
 bool GameMap::AreObjectsAdjacent(const GameObject * obj1, const GameObject * obj2) const
@@ -869,7 +914,7 @@ void GameMap::BuildStructure(const Cell2D & cell, Player * player, GameObjectTyp
     UpdateLinkedCells(player);
 
     // update surrounding walls if building an object that can connect
-    if(obj->GetObjectType() == GameObject::TYPE_DEFENSIVE_TOWER || obj->GetObjectType() == GameObject::TYPE_WALL_GATE)
+    if(obj->GetObjectType() == ObjectData::TYPE_DEFENSIVE_TOWER || obj->GetObjectType() == ObjectData::TYPE_WALL_GATE)
         UpdateWalls(cell);
 
     // update visibility map
@@ -959,14 +1004,14 @@ void GameMap::BuildWall(const Cell2D & cell, Player * player, GameObjectTypeId p
     UpdateInfluencedCells(cell.row, cell.col);
 
     // add object wall
-    CreateObject(OBJECTS2, GameObject::TYPE_WALL, planned, player->GetFaction(), cell.row, cell.col, true);
+    CreateObject(OBJECTS2, ObjectData::TYPE_WALL, planned, player->GetFaction(), cell.row, cell.col, true);
 
     UpdateLinkedCells(player);
 
     // update minimap
     if(IsCellVisibleToLocalPlayer(cell.row, cell.col))
     {
-        const ObjectData & data = GetObjectData(GameObject::TYPE_WALL);
+        const ObjectData & data = GetObjectData(ObjectData::TYPE_WALL);
 
         const PlayerFaction faction = player->GetFaction();
         const MiniMap::MiniMapElemType type = static_cast<MiniMap::MiniMapElemType>(MiniMap::MME_FACTION1 + faction);
@@ -1111,9 +1156,10 @@ void GameMap::ConquerStructure(const Cell2D & end, Player * player)
         }
     }
 
-    // assign owner to object
     Player * prevOwner = mGame->GetPlayerByFaction(obj->GetFaction());
-    obj->SetFaction(player->GetFaction());
+
+    // assign owner to object
+    obj->SetOwner(player);
 
     // update player
     player->SumCells(1);
@@ -1128,7 +1174,7 @@ void GameMap::ConquerStructure(const Cell2D & end, Player * player)
         if(prevOwner)
             prevOwner->RemoveStructure(st);
 
-        if(obj->GetObjectCategory() == GameObject::CAT_RES_GENERATOR)
+        if(obj->GetObjectCategory() == ObjectData::CAT_RES_GENERATOR)
         {
             auto rg = static_cast<ResourceGenerator *>(obj);
 
@@ -1208,7 +1254,7 @@ void GameMap::HandleTempleExplorationOutcome(unsigned int outcome, Player * p, T
                 for(GameObject * o : mObjects)
                 {
                     if(o->GetFaction() == faction &&
-                       o->GetObjectType() == GameObject::TYPE_RES_GEN_ENERGY)
+                       o->GetObjectType() == ObjectData::TYPE_RES_GEN_ENERGY)
                         static_cast<ResourceGenerator *>(o)->ScaleOutput(mult);
                 }
             }
@@ -1221,7 +1267,7 @@ void GameMap::HandleTempleExplorationOutcome(unsigned int outcome, Player * p, T
                 for(GameObject * o : mObjects)
                 {
                     if(o->GetFaction() == faction &&
-                       o->GetObjectType() == GameObject::TYPE_RES_GEN_MATERIAL)
+                       o->GetObjectType() == ObjectData::TYPE_RES_GEN_MATERIAL)
                         static_cast<ResourceGenerator *>(o)->ScaleOutput(mult);
                 }
             }
@@ -1232,7 +1278,7 @@ void GameMap::HandleTempleExplorationOutcome(unsigned int outcome, Player * p, T
             {
                 for(GameObject * o : mObjects)
                 {
-                    if(o->GetObjectType() == GameObject::TYPE_BLOBS)
+                    if(o->GetObjectType() == ObjectData::TYPE_BLOBS)
                         static_cast<Blobs *>(o)->MaximizeUnits();
                 }
             }
@@ -1242,7 +1288,7 @@ void GameMap::HandleTempleExplorationOutcome(unsigned int outcome, Player * p, T
             {
                 for(GameObject * o : mObjects)
                 {
-                    if(o->GetObjectType() == GameObject::TYPE_DIAMONDS)
+                    if(o->GetObjectType() == ObjectData::TYPE_DIAMONDS)
                         static_cast<Diamonds *>(o)->MaximizeUnits();
                 }
             }
@@ -1296,7 +1342,7 @@ void GameMap::HandleTempleExplorationOutcome(unsigned int outcome, Player * p, T
                 for(GameObject * o : mObjects)
                 {
                     if(o->GetFaction() == faction &&
-                       o->GetObjectType() == GameObject::TYPE_RES_GEN_ENERGY)
+                       o->GetObjectType() == ObjectData::TYPE_RES_GEN_ENERGY)
                         static_cast<ResourceGenerator *>(o)->ScaleOutput(mult);
                 }
             }
@@ -1309,7 +1355,7 @@ void GameMap::HandleTempleExplorationOutcome(unsigned int outcome, Player * p, T
                 for(GameObject * o : mObjects)
                 {
                     if(o->GetFaction() == faction &&
-                       o->GetObjectType() == GameObject::TYPE_RES_GEN_MATERIAL)
+                       o->GetObjectType() == ObjectData::TYPE_RES_GEN_MATERIAL)
                         static_cast<ResourceGenerator *>(o)->ScaleOutput(mult);
                 }
             }
@@ -1320,7 +1366,7 @@ void GameMap::HandleTempleExplorationOutcome(unsigned int outcome, Player * p, T
             {
                 for(GameObject * o : mObjects)
                 {
-                    if(o->GetObjectType() == GameObject::TYPE_BLOBS)
+                    if(o->GetObjectType() == ObjectData::TYPE_BLOBS)
                         static_cast<Blobs *>(o)->MinimizeUnits();
                 }
             }
@@ -1330,7 +1376,7 @@ void GameMap::HandleTempleExplorationOutcome(unsigned int outcome, Player * p, T
             {
                 for(GameObject * o : mObjects)
                 {
-                    if(o->GetObjectType() == GameObject::TYPE_DIAMONDS)
+                    if(o->GetObjectType() == ObjectData::TYPE_DIAMONDS)
                         static_cast<Diamonds *>(o)->MinimizeUnits();
                 }
             }
@@ -1356,8 +1402,8 @@ bool GameMap::CanCreateUnit(GameObjectTypeId ut, GameObject * gen, Player * play
     // check if generator is valid
     const GameObjectTypeId genType = gen->GetObjectType();
 
-    if(genType != GameObject::TYPE_BASE && genType != GameObject::TYPE_BARRACKS &&
-       genType != GameObject::TYPE_HOSPITAL)
+    if(genType != ObjectData::TYPE_BASE && genType != ObjectData::TYPE_BARRACKS &&
+       genType != ObjectData::TYPE_HOSPITAL)
         return false;
 
     // generator is already busy
@@ -1418,7 +1464,7 @@ bool GameMap::CanCreateUnit(GameObjectTypeId ut, GameObject * gen, Player * play
     return false;
 }
 
-Cell2D GameMap::GetNewUnitDestination(GameObject * gen)
+Cell2D GameMap::GetNewUnitDestination(GameObject * gen) const
 {
     const int r1 = gen->GetRow1() > 0 ? gen->GetRow1() - 1 : 0;
     const int c1 = gen->GetCol1() > 0 ? gen->GetCol1() - 1 : 0;
@@ -1589,7 +1635,7 @@ void GameMap::StartCreateUnit(GameObjectTypeId ut, GameObject * gen, const Cell2
     gcell.changing = true;
 }
 
-void GameMap::CreateUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & dest, Player * player)
+Unit * GameMap::CreateUnit(GameObjectTypeId ut, const Cell2D & dest, Player * player)
 {
     const unsigned int r = static_cast<unsigned int>(dest.row);
     const unsigned int c = static_cast<unsigned int>(dest.col);
@@ -1597,16 +1643,21 @@ void GameMap::CreateUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & d
     const int ind = r * mCols + c;
     GameMapCell & gcell = mCells[ind];
 
-    const PlayerFaction faction = player->GetFaction();
     const ObjectData & data = GetObjectData(ut);
 
     Unit * unit = new Unit(data);
-    unit->SetFaction(faction);
+    unit->SetOwner(player);
     unit->SetCell(&mCells[ind]);
 
     // links to other objects
+    auto pm = mScreenGame->GetParticlesManager();
+
     unit->SetGameMap(this);
+    unit->SetParticlesManager(pm);
     unit->SetScreen(mScreenGame);
+
+    // weapon
+    AssignWeaponToObject(data.GetWeapon(), unit);
 
     // update cell
     gcell.objTop = unit;
@@ -1614,8 +1665,6 @@ void GameMap::CreateUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & d
     gcell.changing = false;
 
     mIsoMap->GetLayer(OBJECTS2)->AddObject(unit->GetIsoObject(), r, c);
-
-    unit->OnPositionChanged();
 
     // store unit in map list and in registry
     mObjects.push_back(unit);
@@ -1626,8 +1675,210 @@ void GameMap::CreateUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & d
 
     // update visibility map
     AddPlayerObjVisibility(unit, player);
-
     ApplyLocalVisibility();
+
+    return unit;
+}
+
+bool GameMap::CanCreateMiniUnit(GameObjectTypeId ut, GameObject * gen, int elements, Player * player)
+{
+    // generator is not owned by the player
+    if(gen->GetFaction() != player->GetFaction())
+        return false;
+
+    // check if player has enough resources
+    const auto & costs = GetObjectData(ut).GetCosts();
+
+    if(!player->HasEnough(Player::Stat::ENERGY, costs[RES_ENERGY] * elements) ||
+       !player->HasEnough(Player::Stat::MATERIAL, costs[RES_MATERIAL1] * elements) ||
+       !player->HasEnough(Player::Stat::DIAMONDS, costs[RES_DIAMONDS] * elements) ||
+       !player->HasEnough(Player::Stat::BLOBS, costs[RES_BLOBS] * elements))
+        return false;
+
+    if(!gen->HasEnergyForActionStep(GameObjectActionType::SPAWN))
+        return false;
+
+    return true;
+}
+
+GameObject * GameMap::CreateMiniUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & dest,
+                                     int elements, Player * player)
+{
+    const int ind = dest.row * mCols + dest.col;
+    GameMapCell & gcell = mCells[ind];
+
+    const ObjectData & data = GetObjectData(ut);
+
+    // pay costs
+    const auto & costs = data.GetCosts();
+
+    player->SumResource(Player::Stat::ENERGY, -costs[RES_ENERGY] * elements);
+    player->SumResource(Player::Stat::MATERIAL, -costs[RES_MATERIAL1] * elements);
+    player->SumResource(Player::Stat::DIAMONDS, -costs[RES_DIAMONDS] * elements);
+    player->SumResource(Player::Stat::BLOBS, -costs[RES_BLOBS] * elements);
+
+    // create object
+    auto mu = new MiniUnit(data, elements);
+    mu->SetOwner(player);
+    mu->SetCell(&mCells[ind]);
+
+    // weapon
+    AssignWeaponToObject(data.GetWeapon(), mu);
+
+    // links to other objects
+    auto pm = mScreenGame->GetParticlesManager();
+
+    mu->SetGameMap(this);
+    mu->SetParticlesManager(pm);
+    mu->SetScreen(mScreenGame);
+
+    // update cell
+    gcell.objTop = mu;
+    gcell.walkable = false;
+    gcell.changing = false;
+
+    mIsoMap->GetLayer(OBJECTS2)->AddObject(mu->GetIsoObject(), dest.row, dest.col);
+
+    // store unit in map list and in registry
+    mObjects.push_back(mu);
+    mObjectsSet.insert(mu);
+
+    // update visibility map
+    AddPlayerObjVisibility(mu, player);
+    ApplyLocalVisibility();
+
+    return mu;
+}
+
+Cell2D GameMap::GetNewMiniUnitDestination(const Cell2D & genCell) const
+{
+    // TODO quick code that will need to be improved later
+    const int maxDist = 2;
+
+    for(int d = 1; d <= maxDist; ++d)
+    {
+        const int r0 = (d < genCell.row) ? genCell.row - d : 0;
+        const int r1uc = genCell.row + d;
+        const int r1 = r1uc < mRows ? r1uc + 1 : mRows;
+
+        for(int r = r0; r < r1; ++r)
+        {
+            const int c0 = (d < genCell.col) ? genCell.col - d : 0;
+            const int c1uc = genCell.col + d;
+            const int c1 = c1uc < mCols ? c1uc + 1 : mCols;
+
+            for(int c = c0; c < c1; ++c)
+            {
+                if(mCells[r * mCols + c].walkable)
+                    return Cell2D(r, c);
+            }
+        }
+    }
+
+    return Cell2D(-1, -1);
+}
+
+MiniUnitsGroup * GameMap::CreateMiniUnitsGroup(PlayerFaction faction)
+{
+    auto group = new MiniUnitsGroup(faction);
+
+    mMiniUnitsGroups.emplace_back(group);
+
+    return group;
+}
+
+void GameMap::DamageArea(const Cell2D & srcBR, const Cell2D & srcTL, int radius, float maxDamage)
+{
+    const bool fatal = false;
+
+    for(int rad = 1; rad <= radius; ++rad)
+    {
+        const float damage = std::roundf(maxDamage / rad);
+
+        // ALONG COLS FROM LEFT TO RIGHT
+        const int c0UC = srcTL.col - rad;
+        const int c0 = (c0UC > 0) ? c0UC : 0;
+        const int c1UC = srcBR.col + rad;
+        const int c1 = (c1UC <= mCols) ? c1UC : mCols;
+
+        // TOP
+        const int tRow = srcTL.row - rad;
+
+        if(tRow >= 0)
+        {
+            const int ind0 = tRow * mCols;
+
+            for(int c = c0; c < c1; ++c)
+            {
+                const int ind = ind0 + c;
+
+                if(mCells[ind].objTop != nullptr && !mCells[ind].objTop->IsDestroyed())
+                    mCells[ind].objTop->Hit(damage, nullptr, fatal);
+
+                if(mCells[ind].objBottom != nullptr && !mCells[ind].objBottom->IsDestroyed())
+                    mCells[ind].objBottom->Hit(damage, nullptr, fatal);
+            }
+        }
+
+        // BOTTOM
+        const int bRow = srcBR.row + rad;
+
+        if(bRow < mRows)
+        {
+            const int ind0 = bRow * mCols;
+
+            for(int c = c0; c < c1; ++c)
+            {
+                const int ind = ind0 + c;
+
+                if(mCells[ind].objTop != nullptr && !mCells[ind].objTop->IsDestroyed())
+                    mCells[ind].objTop->Hit(damage, nullptr, fatal);
+
+                if(mCells[ind].objBottom != nullptr && !mCells[ind].objBottom->IsDestroyed())
+                    mCells[ind].objBottom->Hit(damage, nullptr, fatal);
+            }
+        }
+
+        // ALONG ROWS FROM TOP TO BOTTOM
+        const int r0UC = srcTL.row - rad + 1;
+        const int r0 = (r0UC > 0) ? r0UC : 0;
+        const int r1UC = srcBR.row + rad;
+        const int r1 = (r1UC <= mRows) ? r1UC : mRows;
+
+        // LEFT
+        const int lCol = srcTL.col - rad;
+
+        if(lCol >= 0)
+        {
+            for(int r = r0; r < r1; ++r)
+            {
+                const int ind = r * mCols + lCol;
+
+                if(mCells[ind].objTop != nullptr && !mCells[ind].objTop->IsDestroyed())
+                    mCells[ind].objTop->Hit(damage, nullptr, fatal);
+
+                if(mCells[ind].objBottom != nullptr && !mCells[ind].objBottom->IsDestroyed())
+                    mCells[ind].objBottom->Hit(damage, nullptr, fatal);
+            }
+        }
+
+        // RIGHT
+        const int rCol = srcBR.col + rad;
+
+        if(rCol < mCols)
+        {
+            for(int r = r0; r < r1; ++r)
+            {
+                const int ind = r * mCols + rCol;
+
+                if(mCells[ind].objTop != nullptr && !mCells[ind].objTop->IsDestroyed())
+                    mCells[ind].objTop->Hit(damage, nullptr, fatal);
+
+                if(mCells[ind].objBottom != nullptr && !mCells[ind].objBottom->IsDestroyed())
+                    mCells[ind].objBottom->Hit(damage, nullptr, fatal);
+            }
+        }
+    }
 }
 
 bool GameMap::CanUnitMove(const Cell2D & start, const Cell2D & end, Player * player) const
@@ -1696,7 +1947,9 @@ bool GameMap::MoveUnit(ObjectPath * path)
     const bool started = path->Start();
 
     if(started)
-        mPaths.emplace_back(path);
+        mPathsToAdd.emplace_back(path);
+    else
+        delete path;
 
     return started;
 }
@@ -1872,7 +2125,7 @@ Cell2D GameMap::GetOrthoAdjacentMoveTarget(const Cell2D & start, const Cell2D & 
 
 bool GameMap::FindAttackPosition(const Unit * u, const GameObject * target, Cell2D & pos)
 {
-    const int dist = ceilf(u->GetRangeAttack() * 0.5f);
+    const int dist = ceilf(u->GetWeapon()->GetRange() * 0.5f);
 
     if(FindAttackPosition(u, target, dist, pos))
         return true;
@@ -2054,6 +2307,65 @@ int GameMap::ApproxDistance(const GameObject * obj1, const GameObject * obj2) co
     const int C2 = obj2->GetCols() > 1 ? (obj2->GetCol0() + obj2->GetCol1()) / 2 : obj2->GetCol0();
 
     return std::abs(R2 - R1) + std::abs(C2 - C1);
+}
+
+int GameMap::Distance(const GameObject * obj1, const GameObject * obj2) const
+{
+    int distR = mRows;
+    int distC = mCols;
+
+    const int obj1RowBR = obj1->GetRow0();
+    const int obj1ColBR = obj1->GetCol0();
+    const int obj1RowTL = obj1->GetRow1();
+    const int obj1ColTL = obj1->GetCol1();
+
+    const int obj2RowBR = obj2->GetRow0();
+    const int obj2ColBR = obj2->GetCol0();
+    const int obj2RowTL = obj2->GetRow1();
+    const int obj2ColTL = obj2->GetCol1();
+
+    // BR -> BR
+    const int distR1 = std::abs(obj1RowBR - obj2RowBR);
+    const int distC1 = std::abs(obj1ColBR - obj2ColBR);
+
+    if(distR1 < distR)
+        distR = distR1;
+
+    if(distC1 < distC)
+        distC = distC1;
+
+
+    // BR -> TL
+    const int distR2 = std::abs(obj1RowBR - obj2RowTL);
+    const int distC2 = std::abs(obj1ColBR - obj2ColTL);
+
+    if(distR2 < distR)
+        distR = distR2;
+
+    if(distC2 < distC)
+        distC = distC2;
+
+    // TL -> BR
+    const int distR3 = std::abs(obj1RowTL - obj2RowBR);
+    const int distC3 = std::abs(obj1ColTL - obj2ColBR);
+
+    if(distR3 < distR)
+        distR = distR3;
+
+    if(distC3 < distC)
+        distC = distC3;
+
+    // TL -> TL
+    const int distR4 = std::abs(obj1RowTL - obj2RowTL);
+    const int distC4 = std::abs(obj1ColTL - obj2ColTL);
+
+    if(distR4 < distR)
+        distR = distR4;
+
+    if(distC4 < distC)
+        distC = distC4;
+
+    return distR + distC;
 }
 
 bool GameMap::FindClosestCellConnectedToObject(const GameObject * obj, const Cell2D start, Cell2D & end)
@@ -2434,6 +2746,10 @@ void GameMap::OnNewTurn(PlayerFaction faction)
     // notify all generators
     for(CollectableGenerator * cg : mCollGen)
         cg->OnNewTurn();
+
+    // select groups of mini units to move
+    DeleteEmptyMiniUnitsGroups();
+    InitMiniUnitsGroupsReadyToMove(faction);
 }
 
 int GameMap::GetFactionMoneyPerTurn(PlayerFaction faction)
@@ -2459,7 +2775,11 @@ void GameMap::Update(float delta)
         {
             GameObject * obj = *itObj;
 
-            mScreenGame->ClearObjectAction(obj);
+            // apply damage to surrounding area based on onject's energy and size
+            const int damageRadius = obj->GetRows();
+            const float maxDamage = obj->GetEnergy();
+            DamageArea(Cell2D(obj->GetRow0(), obj->GetCol0()), Cell2D(obj->GetRow1(), obj->GetCol1()),
+                       damageRadius, maxDamage);
 
             DestroyObjectPaths(obj);
 
@@ -2473,6 +2793,9 @@ void GameMap::Update(float delta)
             mObjectsSet.erase(obj);
 
             DestroyObject(obj);
+
+            auto player = sgl::media::AudioManager::Instance()->GetPlayer();
+            player->PlaySound("game/explosion-01.ogg");
         }
         else
             ++itObj;
@@ -2489,6 +2812,12 @@ void GameMap::Update(float delta)
 
     // wall building paths
     UpdateWallBuildPaths(delta);
+
+    // mini units attacking
+    UpdateMiniUnitsAttacking(delta);
+
+    // structures attacking
+    UpdateStructuresAttacking(delta);
 }
 
 // ==================== PRIVATE METHODS ====================
@@ -2702,14 +3031,14 @@ void GameMap::UpdateLinkedCells(Player * player)
                 mControlMap->AddControlPointsForObject(obj);
 
                 // mark linked radar
-                if(obj->GetObjectType() == GameObject::TYPE_RADAR_STATION)
+                if(obj->GetObjectType() == ObjectData::TYPE_RADAR_STATION)
                     radarLinked = true;
             }
         }
         // linked status unchanged
         else
         {
-            if(obj->IsLinked() && obj->GetObjectType() == GameObject::TYPE_RADAR_STATION)
+            if(obj->IsLinked() && obj->GetObjectType() == ObjectData::TYPE_RADAR_STATION)
                 radarLinked = true;
         }
     }
@@ -2857,7 +3186,6 @@ bool GameMap::MoveObjToCell(GameObject * obj, int row, int col)
 
     mCells[ind1].objTop = obj;
     mCells[ind1].walkable = false;
-    mCells[ind1].walkTarget = false;
 
     return true;
 }
@@ -2918,7 +3246,7 @@ void GameMap::AddObjectToMap(const ObjectToAdd & o2a)
     if(o2a.owner != nullptr)
     {
         // register objects to Player
-        if(o2a.obj->GetObjectCategory() == GameObject::CAT_RES_GENERATOR)
+        if(o2a.obj->GetObjectCategory() == ObjectData::CAT_RES_GENERATOR)
             o2a.owner->AddResourceGenerator(static_cast<ResourceGenerator *>(o2a.obj));
         if(o2a.obj->IsStructure())
             o2a.owner->AddStructure(static_cast<Structure *>(o2a.obj));
@@ -2946,6 +3274,8 @@ void GameMap::AddObjectToMap(const ObjectToAdd & o2a)
 
 void GameMap::DestroyObject(GameObject * obj)
 {
+    mScreenGame->OnObjectDestroyed(obj);
+
     Player * owner = mGame->GetPlayerByFaction(obj->GetFaction());
 
     if(owner != nullptr)
@@ -2955,17 +3285,13 @@ void GameMap::DestroyObject(GameObject * obj)
         // owner is local Player
         if(owner == localPlayer)
         {
-            // clear selection if object is selected
-            if(owner->GetSelectedObject() == obj)
-                mScreenGame->ClearSelection(owner);
-
             // update visibility map
             // NOTE only local player for now
             DelPlayerObjVisibility(obj, localPlayer);
         }
 
         // remove unit from player
-        if(obj->GetObjectCategory() == GameObject::CAT_UNIT)
+        if(obj->GetObjectCategory() == ObjectData::CAT_UNIT)
             owner->RemoveUnit(static_cast<Unit *>(obj));
         // remove structure
         else if(obj->IsStructure())
@@ -2973,7 +3299,7 @@ void GameMap::DestroyObject(GameObject * obj)
             owner->RemoveStructure(static_cast<Structure *>(obj));
 
             // remove resource generator
-            if(obj->GetObjectCategory() == GameObject::CAT_RES_GENERATOR)
+            if(obj->GetObjectCategory() == ObjectData::CAT_RES_GENERATOR)
                 owner->RemoveResourceGenerator(static_cast<ResourceGenerator *>(obj));
         }
     }
@@ -2990,7 +3316,11 @@ void GameMap::DestroyObject(GameObject * obj)
             GameMapCell & cell = mCells[ind];
 
             cell.walkable = true;
-            cell.objTop = nullptr;
+
+            if(cell.objTop == obj)
+                cell.objTop = nullptr;
+            else if(cell.objBottom == obj)
+                cell.objBottom = nullptr;
 
             // update cell image
             UpdateCellType(ind, cell);
@@ -3001,9 +3331,6 @@ void GameMap::DestroyObject(GameObject * obj)
     IsoObject * isoObj = obj->GetIsoObject();
     IsoLayer * layer = isoObj->GetLayer();
     layer->ClearObject(isoObj);
-
-    // remove object from mini map
-    mScreenGame->GetMiniMap()->RemoveElement(obj->GetRow0(), obj->GetCol0());
 
     // finally delete the object
     delete obj;
@@ -3198,7 +3525,7 @@ void GameMap::DestroyObjectPaths(GameObject * obj)
     }
 
     // other paths are only for units
-    if(obj->GetObjectCategory() != GameObject::CAT_UNIT)
+    if(obj->GetObjectCategory() != ObjectData::CAT_UNIT)
         return ;
 
     auto unit = static_cast<Unit *>(obj);
@@ -3242,6 +3569,11 @@ void GameMap::DestroyObjectPaths(GameObject * obj)
 
 void GameMap::UpdateObjectPaths(float delta)
 {
+    // merge object actions to do with object actions list
+    mPaths.insert(mPaths.end(), mPathsToAdd.begin(), mPathsToAdd.end());
+    mPathsToAdd.clear();
+
+    // now process all paths
     auto itPath = mPaths.begin();
 
     while(itPath != mPaths.end())
@@ -3250,16 +3582,12 @@ void GameMap::UpdateObjectPaths(float delta)
 
         path->Update(delta);
 
-        const ObjectPath::PathState state = path->GetState();
+        if(path->IsTerminated())
+        {
+            // AUTO MOVING MINI UNITS -> continue if possible
+            if(path->GetObject()->GetObjectCategory() == ObjectData::CAT_MINI_UNIT)
+                ContinueMiniUnitGroupMove(path);
 
-        if(state == ObjectPath::PathState::COMPLETED || state == ObjectPath::PathState::ABORTED)
-        {
-            delete path;
-            itPath = mPaths.erase(itPath);
-        }
-        else if(state == ObjectPath::PathState::FAILED)
-        {
-            // TODO try to recover from failed path
             delete path;
             itPath = mPaths.erase(itPath);
         }
@@ -3367,28 +3695,28 @@ void GameMap::UpdateWall(const Cell2D & cell)
     GameObject * obj = GetCell(cell.row, cell.col).objTop;
 
     // no wall or gate here
-    if(nullptr == obj || (obj->GetObjectType() != GameObject::TYPE_WALL && obj->GetObjectType() != GameObject::TYPE_WALL_GATE))
+    if(nullptr == obj || (obj->GetObjectType() != ObjectData::TYPE_WALL && obj->GetObjectType() != ObjectData::TYPE_WALL_GATE))
         return ;
 
     const GameObject * objN = (cell.row - 1 >= 0) ? GetCell(cell.row - 1, cell.col).objTop : nullptr;
-    const bool wallN = objN && (objN->GetObjectType() == GameObject::TYPE_WALL ||
-                                objN->GetObjectType() == GameObject::TYPE_DEFENSIVE_TOWER ||
-                                objN->GetObjectType() == GameObject::TYPE_WALL_GATE);
+    const bool wallN = objN && (objN->GetObjectType() == ObjectData::TYPE_WALL ||
+                                objN->GetObjectType() == ObjectData::TYPE_DEFENSIVE_TOWER ||
+                                objN->GetObjectType() == ObjectData::TYPE_WALL_GATE);
 
     const GameObject * objS = (cell.row + 1 < static_cast<int>(mRows)) ? GetCell(cell.row + 1, cell.col).objTop : nullptr;
-    const bool wallS = objS && (objS->GetObjectType() == GameObject::TYPE_WALL ||
-                                objS->GetObjectType() == GameObject::TYPE_DEFENSIVE_TOWER ||
-                                objS->GetObjectType() == GameObject::TYPE_WALL_GATE);
+    const bool wallS = objS && (objS->GetObjectType() == ObjectData::TYPE_WALL ||
+                                objS->GetObjectType() == ObjectData::TYPE_DEFENSIVE_TOWER ||
+                                objS->GetObjectType() == ObjectData::TYPE_WALL_GATE);
 
     const GameObject * objW = (cell.col - 1 >= 0) ? GetCell(cell.row, cell.col - 1).objTop : nullptr;
-    const bool wallW = objW && (objW->GetObjectType() == GameObject::TYPE_WALL ||
-                                objW->GetObjectType() == GameObject::TYPE_DEFENSIVE_TOWER ||
-                                objW->GetObjectType() == GameObject::TYPE_WALL_GATE);
+    const bool wallW = objW && (objW->GetObjectType() == ObjectData::TYPE_WALL ||
+                                objW->GetObjectType() == ObjectData::TYPE_DEFENSIVE_TOWER ||
+                                objW->GetObjectType() == ObjectData::TYPE_WALL_GATE);
 
     const GameObject * objE = (cell.col + 1 < static_cast<int>(mCols)) ? GetCell(cell.row, cell.col + 1).objTop : nullptr;
-    const bool wallE = objE && (objE->GetObjectType() == GameObject::TYPE_WALL ||
-                                objE->GetObjectType() == GameObject::TYPE_DEFENSIVE_TOWER ||
-                                objE->GetObjectType() == GameObject::TYPE_WALL_GATE);
+    const bool wallE = objE && (objE->GetObjectType() == ObjectData::TYPE_WALL ||
+                                objE->GetObjectType() == ObjectData::TYPE_DEFENSIVE_TOWER ||
+                                objE->GetObjectType() == ObjectData::TYPE_WALL_GATE);
 
     enum Flags
     {
@@ -3426,7 +3754,7 @@ void GameMap::UpdateWall(const Cell2D & cell)
                      WEST * static_cast<int>(wallW) +
                      EAST * static_cast<int>(wallE);
 
-    if(obj->GetObjectType() == GameObject::TYPE_WALL)
+    if(obj->GetObjectType() == ObjectData::TYPE_WALL)
     {
         auto wall = static_cast<Wall *>(obj);
 
@@ -3479,7 +3807,7 @@ void GameMap::UpdateWall(const Cell2D & cell)
             break;
         }
     }
-    else if(obj->GetObjectType() == GameObject::TYPE_WALL_GATE)
+    else if(obj->GetObjectType() == ObjectData::TYPE_WALL_GATE)
     {
         auto gate = static_cast<WallGate *>(obj);
 
@@ -3508,6 +3836,429 @@ const ObjectData & GameMap::GetObjectData(GameObjectTypeId t) const
 {
     const ObjectsDataRegistry * objReg = mGame->GetObjectsRegistry();
     return objReg->GetObjectData(t);
+}
+
+const WeaponData & GameMap::GetWeaponData(WeaponType t) const
+{
+    const ObjectsDataRegistry * objReg = mGame->GetObjectsRegistry();
+    return objReg->GetWeaponData(t);
+}
+
+void GameMap::AssignWeaponToObject(WeaponType wt, GameObject * obj)
+{
+    if(wt == WeaponData::TYPE_NULL)
+        return ;
+
+    auto pm = mScreenGame->GetParticlesManager();
+
+    const WeaponData & wData = GetWeaponData(wt);
+    Weapon * weapon = nullptr;
+
+    if(wData.GetClass() == WEAPONC_LASER)
+        weapon = new Laser(wData, obj, this, pm);
+
+    obj->SetWeapon(weapon);
+}
+
+void GameMap::DeleteEmptyMiniUnitsGroups()
+{
+    auto it = mMiniUnitsGroups.begin();
+
+    while(it != mMiniUnitsGroups.end())
+    {
+        auto group = *it;
+
+        // empty group -> destroy
+        if(group->IsEmpty())
+        {
+            delete group;
+
+            it = mMiniUnitsGroups.erase(it);
+        }
+        else
+            ++it;
+    }
+}
+
+void GameMap::InitMiniUnitsGroupsReadyToMove(PlayerFaction faction)
+{
+    // populate list of groups to move
+    for(auto g : mMiniUnitsGroups)
+    {
+        if(g->GetFaction() == faction && g->HasPathSet())
+            mMiniUnitsGroupsToMove.emplace_back(g);
+    }
+
+    // start to move
+    if(!mMiniUnitsGroupsToMove.empty())
+    {
+        mScreenGame->SetLocalTurnStage(TURN_STAGE_MINI_UNITS_MOVE);
+
+        SetNextMiniUnitsGroupToMove();
+    }
+    // no mini units need to move -> check for attack
+    else
+        InitMiniUnitsReadyToAttack(faction);
+}
+
+void GameMap::SetNextMiniUnitsGroupToMove()
+{
+    while(!mMiniUnitsGroupsToMove.empty())
+    {
+        if(StartMiniUnitGroupMove())
+            return ;
+        // init failed -> clear group from the list and try next
+        else
+            ClearMiniUnitsGroupMoveFailed();
+    }
+}
+
+bool GameMap::StartMiniUnitGroupMove()
+{
+    auto group = mMiniUnitsGroupsToMove.back();
+
+    const Cell2D & target = group->GetPathTarget();
+
+    // find shortest path to destination checking all MiniUnits in group
+    std::vector<unsigned int> path;
+    GameObject * obj = nullptr;
+
+    group->DoForAll([this, target, &obj, &path](GameObject * o)
+    {
+        // skip mini units that have already reached target
+        if(!static_cast<MiniUnit *>(o)->IsMoving())
+            return ;
+
+        // flag all mini units that need to move this turn
+        o->SetActiveAction(GameObjectActionType::MOVE);
+
+        const auto p = mPathfinder->MakePath(o->GetRow0(), o->GetCol0(), target.row, target.col,
+                                             sgl::ai::Pathfinder::INCLUDE_START);
+
+        if(path.empty() || (!p.empty() && p.size() < path.size()))
+        {
+            obj = o;
+            path = std::move(p);
+        }
+    });
+
+    // can't find a valid path to target -> cancel it
+    if(path.empty())
+        return false;
+
+    // path found -> start the move of the leader (first) mini unit
+    auto op = new ObjectPath(obj, mIsoMap, this, mScreenGame);
+    op->SetPath(path);
+
+    return MoveUnit(op);
+}
+
+void GameMap::ContinueMiniUnitGroupMove(const ObjectPath * prevOP)
+{
+    const unsigned int lastStep = prevOP->GetLastStepDone();
+
+    // previous mini unit didn't move at all -> error
+    if(0 == lastStep)
+    {
+        ClearMiniUnitsGroupMoveFailed();
+        SetNextMiniUnitsGroupToMove();
+
+        return ;
+    }
+
+    auto prevMU = static_cast<MiniUnit *>(prevOP->GetObject());
+    auto group = mMiniUnitsGroupsToMove.back();
+
+    // mark mini unit moved for this turn
+    prevMU->SetCurrentAction(GameObjectActionType::IDLE);
+    prevMU->SetActiveAction(GameObjectActionType::IDLE);
+
+    Cell2D target;
+
+    // previous MiniUnit reached group target
+    if(prevMU->GetRow0() == group->GetPathTarget().row && prevMU->GetCol0() == group->GetPathTarget().col)
+    {
+        // mark mini unit done
+        prevMU->SetMoving(false);
+        prevMU->setTargetReached();
+
+        // move group target back to path[n-1] and clear if this fails (it shouldn't)
+        if(!group->PopPathTargetBack(mCols))
+        {
+            ClearMiniUnitsGroupMoveFailed();
+            SetNextMiniUnitsGroupToMove();
+
+            return ;
+        }
+
+        // next target is new target
+        target = group->GetPathTarget();
+    }
+    // group target not reached yet
+    else
+    {
+        // next target is step before previous mini unit
+        const std::vector<unsigned int> & prevPath = prevOP->GetPath();
+        const unsigned int targetInd = prevPath[lastStep - 1];
+        target.row = targetInd / mCols;
+        target.col = targetInd % mCols;
+    }
+
+    std::vector<unsigned int> path;
+    GameObject * obj = nullptr;
+    int done = 0;
+    int moved = 0;
+
+    group->DoForAll([this, target, &obj, &path, &done, &moved](GameObject * o)
+    {
+        // already moved this turn
+        if(o->GetActiveAction() == GameObjectActionType::IDLE)
+        {
+            ++moved;
+
+            // target reached
+            if(!static_cast<MiniUnit *>(o)->IsMoving())
+                ++done;
+
+            return ;
+        }
+
+        const auto p = mPathfinder->MakePath(o->GetRow0(), o->GetCol0(), target.row, target.col,
+                                             sgl::ai::Pathfinder::INCLUDE_START);
+
+        if(path.empty() || (!p.empty() && p.size() < path.size()))
+        {
+            obj = o;
+            path = std::move(p);
+        }
+    });
+
+    // moved all mini units of group for this turn
+    if(moved == group->GetNumObjects())
+    {
+        ClearMiniUnitsGroupMoveCompleted(done == moved);
+        SetNextMiniUnitsGroupToMove();
+
+        return ;
+    }
+
+    // can't find a valid path to target -> failed
+    if(path.empty())
+    {
+        ClearMiniUnitsGroupMoveFailed();
+        SetNextMiniUnitsGroupToMove();
+
+        return ;
+    }
+
+    group->SetPath(std::move(path));
+
+    // path found -> start move
+    auto op = new ObjectPath(obj, mIsoMap, this, mScreenGame);
+    op->SetPath(path);
+
+    if(!MoveUnit(op))
+    {
+        ClearMiniUnitsGroupMoveFailed();
+        SetNextMiniUnitsGroupToMove();
+    }
+}
+
+void GameMap::ClearMiniUnitsGroupMoveCompleted(bool finished)
+{
+    auto group = mMiniUnitsGroupsToMove.back();
+
+    // finished completely -> clear group path
+    if(finished)
+        group->ClearPath();
+    // all moved for this turn, but not all reached target yet -> update group path
+    else
+    {
+        std::vector<unsigned int> path;
+        const Cell2D & target = group->GetPathTarget();
+
+        group->DoForAll([this, target, &path](GameObject * o)
+        {
+            const auto p = mPathfinder->MakePath(o->GetRow0(), o->GetCol0(), target.row, target.col,
+                                                 sgl::ai::Pathfinder::NO_OPTION);
+
+            if(path.empty() || (!p.empty() && p.size() < path.size()))
+                path = std::move(p);
+        });
+
+        if(!path.empty())
+            group->SetPath(std::move(path));
+    }
+
+    ClearMovingMiniUnitsGroup();
+}
+
+// NOTE this assumes that the current group moving is last one in the list
+void GameMap::ClearMiniUnitsGroupMoveFailed()
+{
+    // list empty -> nothing to do
+    if(mMiniUnitsGroupsToMove.empty())
+        return ;
+
+    auto group = mMiniUnitsGroupsToMove.back();
+
+    group->ClearPath();
+
+    // reset mini units action
+    group->DoForAll([](GameObject * o)
+    {
+        static_cast<MiniUnit *>(o)->SetMoving(false);
+        o->SetActiveAction(GameObjectActionType::IDLE);
+        o->SetCurrentAction(GameObjectActionType::IDLE);
+    });
+
+    ClearMovingMiniUnitsGroup();
+}
+
+void GameMap::ClearMovingMiniUnitsGroup()
+{
+    const PlayerFaction faction = mMiniUnitsGroupsToMove.back()->GetFaction();
+
+    // clear element from list
+    mMiniUnitsGroupsToMove.pop_back();
+
+    // move done -> next step, make mini units with weapon attack
+    if(mMiniUnitsGroupsToMove.empty())
+        InitMiniUnitsReadyToAttack(faction);
+}
+
+void GameMap::InitMiniUnitsReadyToAttack(PlayerFaction faction)
+{
+    // populate list of groups to move
+    for(auto g : mMiniUnitsGroups)
+    {
+        if(g->GetFaction() == faction && g->CanAttack())
+        {
+            g->DoForAll([this](GameObject * o)
+            {
+                if(o->HasEnemyInRange())
+                {
+                    o->SetActiveAction(GameObjectActionType::ATTACK);
+                    mMiniUnitsAttacking.emplace_back(static_cast<MiniUnit *>(o));
+                }
+            });
+        }
+    }
+
+    mTimerAutoAttacking = 0.f;
+
+    // nothing to do -> end here
+    if(mMiniUnitsAttacking.empty())
+        InitStructuresReadyToAttack();
+    else
+        mScreenGame->SetLocalTurnStage(TURN_STAGE_MINI_UNITS_ATTACK);
+}
+
+void GameMap::UpdateMiniUnitsAttacking(float delta)
+{
+    // empty queue -> nothing to do
+    if(mMiniUnitsAttacking.empty())
+        return ;
+
+    mTimerAutoAttacking -= delta;
+
+    // attack delay -> exit
+    if(mTimerAutoAttacking > 0.f)
+        return ;
+
+    MiniUnit * mu = mMiniUnitsAttacking.back();
+
+    // mini unit still attacking -> nothing to do
+    if(mu->GetWeapon()->HasTarget())
+        return ;
+
+    // unit not processed yet -> try to find a target
+    if(mu->GetCurrentAction() == GameObjectActionType::IDLE)
+        mu->FindAndSetEnemyTarget();
+
+    // target found -> start attack
+    if(mu->GetWeapon()->HasTarget())
+    {
+        mu->SetCurrentAction(GameObjectActionType::ATTACK);
+        return ;
+    }
+
+    // no target -> clear mini unit from queue
+    mu->SetActiveAction(GameObjectActionType::IDLE);
+    mu->SetCurrentAction(GameObjectActionType::IDLE);
+
+    mMiniUnitsAttacking.pop_back();
+
+    // reset auto-attack timer to delay next attacker
+    mTimerAutoAttacking = timeAutoAttackDelay;
+
+    // no more mini units to check -> finished
+    if(mMiniUnitsAttacking.empty())
+        InitStructuresReadyToAttack();
+}
+
+void GameMap::InitStructuresReadyToAttack()
+{
+    Player * player = mScreenGame->GetActivePlayer();
+
+    const std::vector<Structure *> & structures = player->GetStructures();
+
+    for(auto s : structures)
+    {
+        if(s->IsLinked() && s->HasEnemyInRange())
+            mStructuresAttacking.emplace_back(s);
+    }
+
+    mTimerAutoAttacking = 0.f;
+
+    // nothing to do -> end here
+    if(mStructuresAttacking.empty())
+        mScreenGame->OnAutomaticMovesFinished();
+    else
+        mScreenGame->SetLocalTurnStage(TURN_STAGE_TOWERS_ATTACK);
+}
+
+void GameMap::UpdateStructuresAttacking(float delta)
+{
+    // empty queue -> nothing to do
+    if(mStructuresAttacking.empty())
+        return ;
+
+    mTimerAutoAttacking -= delta;
+
+    // attack delay -> exit
+    if(mTimerAutoAttacking > 0.f)
+        return ;
+
+    GameObject * obj = mStructuresAttacking.back();
+
+    // object still attacking -> nothing to do
+    if(obj->GetWeapon()->HasTarget())
+        return ;
+
+    // object not processed yet -> try to find a target
+    if(obj->HasEnergyForActionStep(GameObjectActionType::ATTACK))
+        obj->FindAndSetEnemyTarget();
+
+    // target found -> start attack
+    if(obj->GetWeapon()->HasTarget())
+    {
+        obj->SetCurrentAction(GameObjectActionType::ATTACK);
+        return ;
+    }
+
+    // no target -> clear mini unit from queue
+    obj->SetActiveAction(GameObjectActionType::IDLE);
+    obj->SetCurrentAction(GameObjectActionType::IDLE);
+
+    mStructuresAttacking.pop_back();
+
+    // reset auto-attack timer to delay next attacker
+    mTimerAutoAttacking = timeAutoAttackDelay;
+
+    // nothing to do -> end here
+    if(mStructuresAttacking.empty())
+        mScreenGame->OnAutomaticMovesFinished();
 }
 
 } // namespace game

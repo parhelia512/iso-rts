@@ -12,8 +12,8 @@ enum PlayerFaction : unsigned int;
 
 struct DataParticleSingleLaser : public sgl::graphic::TexturedParticleData
 {
-    DataParticleSingleLaser(sgl::graphic::Texture * t, GameMap * gm, GameObject * obj, double ang,
-                            float x, float y, float tx, float ty, float sp, float dmg, PlayerFaction sh)
+    DataParticleSingleLaser(sgl::graphic::Texture * t, const GameMap * gm, GameObject * obj, double ang,
+                            float x, float y, float tx, float ty, float sp, float dmg, GameObject * sh, bool f)
         : sgl::graphic::TexturedParticleData(x, y, sp ,t)
         , map(gm)
         , target(obj)
@@ -22,16 +22,18 @@ struct DataParticleSingleLaser : public sgl::graphic::TexturedParticleData
         , targetY(ty)
         , damage(dmg)
         , shooter(sh)
+        , fatal(f)
     {
     }
 
-    GameMap * map = nullptr;
+    const GameMap * map = nullptr;
     GameObject * target = nullptr;
-    PlayerFaction shooter;
+    GameObject * shooter;
     double angle = 0;
     float targetX = 0.f;
     float targetY = 0.f;
     float damage = 0.f;
+    bool fatal = false;
 };
 
 } // namespace game

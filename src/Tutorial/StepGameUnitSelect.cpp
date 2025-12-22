@@ -12,63 +12,43 @@ namespace game
 {
 
 StepGameUnitSelect::StepGameUnitSelect(const Player * p)
+    : TutorialInfoStep(500, 200)
+    , mFocusArea(new FocusArea)
 {
-    // CLICK FILTER
-    mClickFilter = new PanelClickFilter;
-    mClickFilter->SetEnabled(false);
-
     // FOCUS
-    mFocusArea = new FocusArea;
     mFocusArea->SetVisible(false);
 
     // INFO
-    mInfo = new PanelInfoTutorial(500, 200);
-    mInfo->SetEnabled(false);
-    mInfo->SetVisible(false);
-    mInfo->SetPosition(1300, 350);
+    auto info = GetPanelInfo();
 
-    mInfo->AddInfoEntry("Okay, let's do it!", colorTutorialText, 4.f, true, false);
-    mInfo->AddInfoEntry("Select your unit with the LEFT MOUSE BUTTON.",
-                        colorTutorialTextAction, 0.f, false, false, [this, p]
-                        {
-                            // FOCUS
-                            mUnit = p->GetUnit(0);
-                            auto isoObj = mUnit->GetIsoObject();
-                            const int objX = isoObj->GetX();
-                            const int objY = isoObj->GetY();
-                            const int objW = isoObj->GetWidth();
-                            const int objH = isoObj->GetHeight();
+    info->SetPosition(1300, 350);
 
-                            mFocusArea->SetWorldArea(objX, objY, objW, objH);
-                            mFocusArea->SetCornersColor(colorTutorialFocusAction);
-                            mFocusArea->SetBlinking(true);
-                            mFocusArea->SetVisible(true);
+    info->AddInfoEntry("Okay, let's do it!", colorTutorialText, 4.f, true, false);
+    info->AddInfoEntry("Select your unit with the LEFT MOUSE BUTTON.",
+                       colorTutorialTextAction, 0.f, false, false, [this, p]
+                       {
+                           // FOCUS
+                           mUnit = p->GetUnit(0);
+                           auto isoObj = mUnit->GetIsoObject();
+                           const int objX = isoObj->GetX();
+                           const int objY = isoObj->GetY();
+                           const int objW = isoObj->GetWidth();
+                           const int objH = isoObj->GetHeight();
 
-                            // CLICK FILTER
-                            mClickFilter->SetWorldClickableArea(objX, objY, objW, objH);
-                        });
+                           mFocusArea->SetWorldArea(objX, objY, objW, objH);
+                           mFocusArea->SetCornersColor(colorTutorialFocusAction);
+                           mFocusArea->SetBlinking(true);
+                           mFocusArea->SetVisible(true);
+
+                           // CLICK FILTER
+                           GetClickFilter()->SetWorldClickableArea(objX, objY, objW, objH);
+                       });
 }
 
 StepGameUnitSelect::~StepGameUnitSelect()
 {
-    delete mClickFilter;
     delete mFocusArea;
-    delete mInfo;
 }
-
-void StepGameUnitSelect::OnStart()
-{
-    // CLICK FILTER
-    mClickFilter->SetEnabled(true);
-
-    // INFO
-    mInfo->SetEnabled(true);
-    mInfo->SetVisible(true);
-    mInfo->SetFocus();
-
-    mInfo->StartInfo();
-}
-
 void StepGameUnitSelect::Update(float)
 {
     if(mUnit != nullptr && mUnit->IsSelected())

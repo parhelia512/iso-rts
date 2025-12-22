@@ -5,19 +5,9 @@
 #include "MapsRegistry.h"
 #include "Player.h"
 #include "States/StatesIds.h"
-#include "Tutorial/StepDelay.h"
-#include "Tutorial/StepPlanetMapConquerTerritory.h"
-#include "Tutorial/StepPlanetMapConquerTerritoryStart.h"
-#include "Tutorial/StepPlanetMapIntro.h"
-#include "Tutorial/StepPlanetMapExploreTerritory.h"
-#include "Tutorial/StepPlanetMapExploreTerritoryInfo.h"
-#include "Tutorial/StepPlanetMapExploreTerritoryStart.h"
-#include "Tutorial/StepPlanetMapExploreTerritorySuccess.h"
-#include "Tutorial/StepPlanetMapNoInfo.h"
-#include "Tutorial/StepPlanetMapSelectTerritory.h"
-#include "Tutorial/StepPlanetMapSendAI.h"
 #include "Tutorial/TutorialManager.h"
 #include "Widgets/ButtonPlanetMap.h"
+#include "Widgets/DialogExit.h"
 #include "Widgets/GameUIData.h"
 #include "Widgets/PanelResources.h"
 #include "Widgets/PanelPlanetActionConquer.h"
@@ -29,6 +19,7 @@
 #include "Widgets/PlanetMap.h"
 #include "Widgets/WidgetsConstants.h"
 
+#include <sgl/core/event/KeyboardEvent.h>
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
 #include <sgl/graphic/Image.h>
@@ -429,36 +420,38 @@ ScreenPlanetMap::ScreenPlanetMap(Game * game)
     sgl::media::AudioManager::Instance()->GetPlayer()->PlayMusic("game/music_01.ogg");
 
     // TUTORIAL
-    if(game->IsTutorialEnabled() && game->GetTutorialState(TUTORIAL_PLANET_MAP) == TS_TODO)
-        CreateTutorial();
+    if(game->IsTutorialEnabled())
+    {
+        auto tutMan = game->GetTutorialManager();
+
+        if(tutMan->GetTutorialState(TUTORIAL_PLANET_MAP) == TS_TODO)
+        {
+            tutMan->CreateTutorial(TUTORIAL_PLANET_MAP, this);
+            tutMan->StartTutorial();
+        }
+    }
 }
 
 ScreenPlanetMap::~ScreenPlanetMap()
 {
-    sgl::sgui::Stage::Instance()->ClearWidgets();
-
     delete mBg;
 
-    auto stage = sgl::sgui::Stage::Instance();
+    sgl::sgui::Stage::Instance()->ClearWidgets();
+}
 
-    stage->ClearWidgets();
+void ScreenPlanetMap::OnKeyUp(sgl::core::KeyboardEvent & event)
+{
+    using namespace sgl;
+
+    const int key = event.GetKey();
+
+    if(key == core::KeyboardEvent::KEY_ESCAPE)
+        ShowDialogExit();
 }
 
 void ScreenPlanetMap::Update(float delta)
 {
-    // TUTORIAL
-    if(mTutMan != nullptr)
-    {
-        mTutMan->Update(delta);
-
-        if(mTutMan->AreAllStepsDone())
-        {
-            GetGame()->SetTutorialState(TUTORIAL_PLANET_MAP, TS_DONE);
-
-            delete mTutMan;
-            mTutMan = nullptr;
-        }
-    }
+    GetGame()->GetTutorialManager()->Update(delta);
 }
 
 void ScreenPlanetMap::Render()
@@ -466,32 +459,9 @@ void ScreenPlanetMap::Render()
     mBg->Render();
 }
 
-void ScreenPlanetMap::CreateTutorial()
+void ScreenPlanetMap::SetPause(bool paused)
 {
-    Game * game = GetGame();
-    Player * local = game->GetLocalPlayer();
-
-    mTutMan = new TutorialManager;
-    mTutMan->AddStep(new StepDelay(1.f));
-    mTutMan->AddStep(new StepPlanetMapIntro);
-    mTutMan->AddStep(new StepPlanetMapSelectTerritory(mPlanet));
-    mTutMan->AddStep(new StepDelay(0.5f));
-    mTutMan->AddStep(new StepPlanetMapNoInfo(mPanelInfo, mPanelResources));
-    mTutMan->AddStep(new StepPlanetMapExploreTerritory(mPanelActions));
-    mTutMan->AddStep(new StepDelay(0.5f));
-    mTutMan->AddStep(new StepPlanetMapExploreTerritoryInfo);
-    mTutMan->AddStep(new StepPlanetMapExploreTerritoryStart(mPanelExplore));
-    mTutMan->AddStep(new StepDelay(0.5f));
-    mTutMan->AddStep(new StepPlanetMapExploreTerritorySuccess(mPanelExplore, mPanelInfo, mPanelResources));
-    mTutMan->AddStep(new StepDelay(0.5f));
-    mTutMan->AddStep(new StepPlanetMapSendAI(mPanelActions));
-    mTutMan->AddStep(new StepPlanetMapConquerTerritory(mPanelActions));
-    mTutMan->AddStep(new StepDelay(0.5f));
-    mTutMan->AddStep(new StepPlanetMapConquerTerritoryStart(mPanelConquer));
-
-    game->SetTutorialState(TUTORIAL_PLANET_MAP, TS_IN_PROGRESS);
-
-    mTutMan->Start();
+    mPaused = paused;
 }
 
 void ScreenPlanetMap::SetPlanetName(const char * name)
@@ -584,6 +554,52 @@ void ScreenPlanetMap::UpdatePlanetButtons()
 
         mPlanet->SetButtonState(i, occupier, ts);
     }
+}
+
+void ScreenPlanetMap::ShowDialogExit()
+{
+    if(mDialogExit != nullptr)
+        return ;
+
+    ShowScreenOverlay();
+
+    SetPause(true);
+
+    auto game = GetGame();
+    auto tutMan = game->GetTutorialManager();
+
+    auto buttons = static_cast<DialogExit::DialogButtons>(DialogExit::BTN_MAIN_MENU |
+                                                          DialogExit::BTN_SETTINGS);
+
+    if(tutMan->HasActiveTutorial())
+    {
+        tutMan->SetTutorialPause(true);
+
+        buttons = static_cast<DialogExit::DialogButtons>(DialogExit::BTN_MAIN_MENU |
+                                                         DialogExit::BUTTONS_TUTORIAL);
+    }
+
+    mDialogExit = new DialogExit(buttons, game, this);
+
+    mDialogExit->SetFocus();
+
+    mDialogExit->SetFunctionOnClose([this]
+    {
+        // schedule dialog deletion
+        mDialogExit->DeleteLater();
+        mDialogExit = nullptr;
+
+        SetPause(false);
+        GetGame()->GetTutorialManager()->SetTutorialPause(false);
+
+        HideScreenOverlay();
+    });
+
+    // position dialog
+    auto renderer = sgl::graphic::Renderer::Instance();
+    const int posX = (renderer->GetWidth() - mDialogExit->GetWidth()) / 2;
+    const int posY = (renderer->GetHeight() - mDialogExit->GetHeight()) / 2;
+    mDialogExit->SetPosition(posX, posY);
 }
 
 } // namespace game

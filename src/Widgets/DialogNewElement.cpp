@@ -5,9 +5,12 @@
 #include "GameObjects/GameObject.h"
 #include "GameObjects/ObjectData.h"
 #include "GameObjects/ObjectsDataRegistry.h"
+#include "Widgets/ButtonDialogAction.h"
+#include "Widgets/ButtonDialogArrows.h"
 #include "Widgets/ButtonPanelTab.h"
 #include "Widgets/GameUIData.h"
 #include "Widgets/ObjectVisualAttribute.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/core/event/KeyboardEvent.h>
 #include <sgl/graphic/DummyRenderable.h>
@@ -28,74 +31,13 @@
 
 #include <cassert>
 
-namespace game
+// anonymous namespace for local "private" classes
+namespace
 {
+
+using namespace game;
 
 constexpr int NUM_SLOTS = 6;
-
-// ===== BUTTON LEFT =====
-class ButtonLeft : public sgl::sgui::ImageButton
-{
-public:
-    ButtonLeft(sgl::sgui::Widget * parent)
-        : ImageButton({ IND_DLG_NEWE_LEFT_NORMAL,
-                        IND_DLG_NEWE_LEFT_DISABLED,
-                        IND_DLG_NEWE_LEFT_OVER,
-                        IND_DLG_NEWE_LEFT_PUSHED,
-                        IND_DLG_NEWE_LEFT_NORMAL },
-                        SpriteFileDialogNewElement, parent)
-    {
-    }
-
-private:
-    void HandleMouseOver() override
-    {
-        sgl::sgui::AbstractButton::HandleMouseOver();
-
-        auto player = sgl::media::AudioManager::Instance()->GetPlayer();
-        player->PlaySound("UI/button_over-03.ogg");
-    }
-
-    void HandleButtonDown() override
-    {
-        sgl::sgui::AbstractButton::HandleButtonDown();
-
-        auto player = sgl::media::AudioManager::Instance()->GetPlayer();
-        player->PlaySound("UI/button_click-03.ogg");
-    }
-};
-
-// ===== BUTTON RIGHT =====
-class ButtonRight : public sgl::sgui::ImageButton
-{
-public:
-    ButtonRight(sgl::sgui::Widget * parent)
-        : ImageButton({ IND_DLG_NEWE_RIGHT_NORMAL,
-                        IND_DLG_NEWE_RIGHT_DISABLED,
-                        IND_DLG_NEWE_RIGHT_OVER,
-                        IND_DLG_NEWE_RIGHT_PUSHED,
-                        IND_DLG_NEWE_RIGHT_NORMAL },
-                        SpriteFileDialogNewElement, parent)
-    {
-    }
-
-private:
-    void HandleMouseOver() override
-    {
-        sgl::sgui::AbstractButton::HandleMouseOver();
-
-        auto player = sgl::media::AudioManager::Instance()->GetPlayer();
-        player->PlaySound("UI/button_over-03.ogg");
-    }
-
-    void HandleButtonDown() override
-    {
-        sgl::sgui::AbstractButton::HandleButtonDown();
-
-        auto player = sgl::media::AudioManager::Instance()->GetPlayer();
-        player->PlaySound("UI/button_click-03.ogg");
-    }
-};
 
 // ===== BUTTON CLOSE =====
 
@@ -159,122 +101,6 @@ private:
     sgl::graphic::Image * mBody = nullptr;
 };
 
-// ===== BUTTON BUILD =====
-
-class ButtonBuild : public sgl::sgui::AbstractButton
-{
-public:
-    ButtonBuild(sgl::sgui::Widget * parent)
-        : sgl::sgui::AbstractButton(parent)
-        , mBody(new sgl::graphic::Image)
-    {
-        using namespace sgl::graphic;
-
-        SetShortcutKey(sgl::core::KeyboardEvent::KEY_B);
-
-        auto fm = FontManager::Instance();
-        auto font = fm->GetFont("Lato-Bold.ttf", 11, Font::NORMAL);
-        mShortcut = new Text("B", font, true);
-        mShortcut->SetColor(0xd5daddff);
-
-        // register graphic elements
-        RegisterRenderable(mBody);
-        RegisterRenderable(mShortcut);
-
-        // LABEL
-        font = fm->GetFont("Lato-Regular.ttf", 19, Font::NORMAL);
-        mLabel = new Text("BUILD", font);
-        RegisterRenderable(mLabel);
-
-        // set initial visual state
-        SetState(NORMAL);
-    }
-
-private:
-    void HandleMouseOver() override
-    {
-        sgl::sgui::AbstractButton::HandleMouseOver();
-
-        auto player = sgl::media::AudioManager::Instance()->GetPlayer();
-        player->PlaySound("UI/button_over-01.ogg");
-    }
-
-    void HandleButtonDown() override
-    {
-        sgl::sgui::AbstractButton::HandleButtonDown();
-
-        auto player = sgl::media::AudioManager::Instance()->GetPlayer();
-        player->PlaySound("UI/button_click_long-02.ogg");
-    }
-
-    void OnStateChanged(sgl::sgui::AbstractButton::VisualState state) override
-    {
-        // BACKGROUND
-        const unsigned int texIds[NUM_VISUAL_STATES] =
-        {
-            IND_DLG_NEWE_BUILD_NORMAL,
-            IND_DLG_NEWE_BUILD_DISABLED,
-            IND_DLG_NEWE_BUILD_OVER,
-            IND_DLG_NEWE_BUILD_PUSHED,
-            IND_DLG_NEWE_BUILD_PUSHED,
-        };
-
-        auto tm = sgl::graphic::TextureManager::Instance();
-        sgl::graphic::Texture * tex = tm->GetSprite(SpriteFileDialogNewElement, texIds[state]);
-        mBody->SetTexture(tex);
-
-        SetSize(mBody->GetWidth(), mBody->GetHeight());
-
-        // LABEL
-        const unsigned int colorLabel[NUM_VISUAL_STATES] =
-        {
-            0xe3e6e8ff,
-            0x454f54ff,
-            0xf1f2f4ff,
-            0xabb4baff,
-            0xc2c2a3ff
-        };
-
-        mLabel->SetColor(colorLabel[state]);
-
-        // update shortcut label alpha
-        const unsigned char alphaEn = 255;
-        const unsigned char alphaDis = 128;
-        const unsigned char alphaLabel = DISABLED == state ? alphaDis : alphaEn;
-        mShortcut->SetAlpha(alphaLabel);
-    }
-
-    void HandlePositionChanged() override
-    {
-        const int x0 = GetScreenX();
-        const int y0 = GetScreenY();
-
-        // position BG
-        mBody->SetPosition(x0, y0);
-
-        // SHORTCUT
-        const int shortBgX0 = 182;
-        const int shortBgY0 = 22;
-        const int shortBgSize = 14;
-
-        const int shortcutX = x0 + shortBgX0 + (shortBgSize - mShortcut->GetWidth()) * 0.5f;
-        const int shortcutY = y0 + shortBgY0 + (shortBgSize - mShortcut->GetHeight()) * 0.5f;
-
-        mShortcut->SetPosition(shortcutX, shortcutY);
-
-        // LABEL
-        const int labelX = x0 + (GetWidth() - mLabel->GetWidth()) * 0.5f;
-        const int labelY = y0 + (GetHeight() - mLabel->GetHeight()) * 0.5f;
-
-        mLabel->SetPosition(labelX, labelY);
-    }
-
-private:
-    sgl::graphic::Image * mBody = nullptr;
-    sgl::graphic::Text * mLabel = nullptr;
-    sgl::graphic::Text * mShortcut = nullptr;
-};
-
 // ===== BUTTON SLOT =====
 
 class ButtonSlot : public sgl::sgui::AbstractButton
@@ -294,7 +120,7 @@ public:
         // TITLE
         auto tm = sgl::graphic::TextureManager::Instance();
         sgl::graphic::Texture * tex = tm->GetSprite(SpriteFileDialogNewElement, IND_DLG_NEWE_PANEL_NORMAL);
-        auto font = fm->GetFont("Lato-Regular.ttf", 16, Font::NORMAL);
+        auto font = fm->GetFont(WidgetsConstants::FontFileButton, 16, Font::NORMAL);
         mTitle = new sgl::sgui::TextArea(tex->GetWidth(), TITLE_H, font, false, this);
         mTitle->setTextAlignment(sgl::sgui::TextArea::ALIGN_H_CENTER, sgl::sgui::TextArea::ALIGN_V_CENTER);
 
@@ -302,7 +128,7 @@ public:
         mImage = new DummyRenderable;
 
         // SHORTCUT
-        font = fm->GetFont("Lato-Bold.ttf", 12, Font::NORMAL);
+        font = fm->GetFont(WidgetsConstants::FontFileShortcut, 12, Font::NORMAL);
         mShortcut = new Text(SHORTCUTS[index], font);
         mShortcut->SetColor(0xd5daddff);
 
@@ -496,6 +322,11 @@ const int ButtonSlot::KEYS[NUM_SLOTS] = {
 
 const char * ButtonSlot::SHORTCUTS[NUM_SLOTS] = { "1", "2", "3", "4", "5", "6" };
 
+} // namespace
+
+namespace game
+{
+
 // ===== DIALOG NEW ELEMENT =====
 DialogNewElement::DialogNewElement(ElemType type, Player * player,
                                    const ObjectsDataRegistry * dataReg)
@@ -534,7 +365,7 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
         {
             const ObjectData & data = dataReg->GetObjectData(t);
 
-            if(OCU_WORKER == data.GetClass())
+            if(OCU_WORKER == data.GetClass() || OCU_SPAWNER == data.GetClass())
                 mTypes.push_back(t);
         }
     }
@@ -582,7 +413,7 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
     mBtnClose->SetX(GetWidth() - mBtnClose->GetWidth());
 
     // TITLE
-    auto font = fm->GetFont("Lato-Regular.ttf", 28, sgl::graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 28, sgl::graphic::Font::NORMAL);
 
     if(ETYPE_STRUCTURES == type)
         mTitle = new sgui::Label("CREATE NEW STRUCTURE", font, this);
@@ -618,7 +449,7 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
 
     const int numData = mTypes.size();
 
-    mBtnLeft = new ButtonLeft(this);
+    mBtnLeft = new ButtonDialogArrowLeft(this);
     const int posLX = mSlots->GetX() - mBtnLeft->GetWidth() - marginButtonsLR;
     const int posLY = mSlots->GetY() + (mSlots->GetHeight() - mBtnLeft->GetHeight()) * 0.5f;
     mBtnLeft->SetPosition(posLX, posLY);
@@ -633,7 +464,7 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
        mBtnRight->SetEnabled(true);
     });
 
-    mBtnRight = new ButtonRight(this);
+    mBtnRight = new ButtonDialogArrowRight(this);
     const int posRX = mSlots->GetX() + mSlots->GetWidth() + marginButtonsLR;
     const int posRY = mSlots->GetY() + (mSlots->GetHeight() - mBtnRight->GetHeight()) * 0.5f;
     mBtnRight->SetPosition(posRX, posRY);
@@ -659,8 +490,8 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
     const unsigned int colorHeader = 0xf1f2f4ff;
     const unsigned int colorText = 0xb6c0c9ff;
 
-    auto fontHeader = fm->GetFont("Lato-Bold.ttf", 18, sgl::graphic::Font::NORMAL);
-    auto fontText = fm->GetFont("Lato-Regular.ttf", 17, sgl::graphic::Font::NORMAL);
+    auto fontHeader = fm->GetFont(WidgetsConstants::FontFileHeader, 18, sgl::graphic::Font::NORMAL);
+    auto fontText = fm->GetFont(WidgetsConstants::FontFileText, 17, sgl::graphic::Font::NORMAL);
 
     const int marginPanelXY0 = 10;
     const int marginPanelBlock = 20;
@@ -770,28 +601,28 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
     int panelsX = panelsX0;
     int panelsY = panelsY0;
 
-    for(int c = 0; c < VIS_ATT_COLS; ++c)
+    for(int r = 0; r < VIS_ATT_ROWS; ++r)
     {
-        const int ind0 = c * VIS_ATT_ROWS;
+        const int ind0 = r * VIS_ATT_COLS;
 
-        for(int r = 0; r < VIS_ATT_ROWS; ++r)
+        for(int c = 0; c < VIS_ATT_COLS; ++c)
         {
-            const int ind = ind0 + r;
+            const int ind = ind0 + c;
 
             auto panAtt = new ObjectVisualAttribute(this);
             panAtt->SetPosition(panelsX, panelsY);
 
             mVisAtt[ind] = panAtt;
 
-            panelsY += panAtt->GetHeight() - panelBorder;
+            panelsX += panAtt->GetWidth() - panelBorder;
         }
 
-        panelsX += mVisAtt[0]->GetWidth() - panelBorder;
-        panelsY = panelsY0;
+        panelsX = panelsX0;
+        panelsY += mVisAtt[0]->GetHeight() - panelBorder;
     }
 
     // BUTTON BUILD
-    mBtnBuild = new ButtonBuild(this);
+    mBtnBuild = new ButtonDialogAction("BUILD", "B", core::KeyboardEvent::KEY_B, this);
     const ObjectVisualAttribute * lastPanel = mVisAtt[NUM_VIS_ATT - 1];
     const int btnX = lastPanel->GetX() + lastPanel->GetWidth() - mBtnBuild->GetWidth();
     const int marginBtnTop = 15;
@@ -806,7 +637,7 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
         const int btnY = 55;
         int btnX = marginL;
 
-        auto btn = new ButtonPanelTab("RESOURCES", this);
+        auto btn = new ButtonPanelTab("GENERIC", this);
         btn->SetPosition(btnX, btnY);
         mButtonsStructures->AddButton(btn);
 
@@ -818,13 +649,13 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
 
         btnX += btn->GetWidth();
 
-        btn = new ButtonPanelTab("TECHNOLOGY", this);
+        btn = new ButtonPanelTab("RESOURCES", this);
         btn->SetPosition(btnX, btnY);
         mButtonsStructures->AddButton(btn);
 
         btnX += btn->GetWidth();
 
-        btn = new ButtonPanelTab("GENERIC", this);
+        btn = new ButtonPanelTab("TECHNOLOGY", this);
         btn->SetPosition(btnX, btnY);
         mButtonsStructures->AddButton(btn);
 
@@ -840,10 +671,10 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
 
             const ObjFamily categories[NUM_CAT] =
             {
-                OCAT_RESOURCES,
+                OCAT_GENERIC,
                 OCAT_DEFENSE,
+                OCAT_RESOURCES,
                 OCAT_TECHNOLOGY,
-                OCAT_GENERIC
             };
 
             ShowStructuresByFamily(categories[ind]);
@@ -910,7 +741,7 @@ void DialogNewElement::UpdateSlots()
         const ObjectData & data = mDataReg->GetObjectData(t);
 
         auto tex = tm->GetSprite(data.GetIconTexFile(), data.GetIconTexId(f));
-        slot->SetData(GameObject::TITLES.at(t).c_str(), tex);
+        slot->SetData(ObjectData::TITLES.at(t).c_str(), tex);
 
         // check first
         slot->SetChecked(false);
@@ -957,7 +788,7 @@ void DialogNewElement::ShowData(int ind)
     const ObjectData & data = mDataReg->GetObjectData(t);
 
     // DESCRIPTION
-    mDescription->SetText(GameObject::DESCRIPTIONS.at(t).c_str());
+    mDescription->SetText(ObjectData::DESCRIPTIONS.at(t).c_str());
 
     // CLASS
     mCategory->SetText(ObjectData::STR_CLASS[data.GetClass()]);
@@ -969,21 +800,34 @@ void DialogNewElement::ShowData(int ind)
         mLabelsCost[i]->SetText(std::to_string(costs[i]).c_str());
 
     // ATTRIBUTES
-    const auto & atts = data.GetAttributes();
-    const int numAtts = atts.size();
     int attsAdded = 0;
 
-    for(int i = 0; i < numAtts; ++i)
+    for(unsigned int i = 0; i < NUM_OBJ_ATTRIBUTES; ++i)
     {
-        const int val = atts[i];
+        const int val = data.GetAttribute(static_cast<ObjAttId>(i));
 
         if(val > 0)
+            mVisAtt[attsAdded++]->SetData(ObjectData::STR_ATTRIBUTES[i], val);
+    }
+
+    // WEAPON ATTRIBUTES
+    const WeaponType wt = data.GetWeapon();
+
+    if(wt != WeaponData::TYPE_NULL)
+    {
+        const WeaponData & wData = mDataReg->GetWeaponData(wt);
+        const std::unordered_map<ObjAttId, int> &  wAttributes = wData.GetAttributes();
+
+        for(unsigned int i = 0; i < NUM_WEAPON_ATTRIBUTES; ++i)
         {
-            mVisAtt[attsAdded]->SetData(ObjectData::STR_ATTRIBUTES[i], val);
-            ++attsAdded;
+            const auto attId = static_cast<ObjAttId>(FIRST_WEAPON_ATTRIBUTE + i);
+
+            const int val = wAttributes.at(attId);
+            mVisAtt[attsAdded++]->SetData(ObjectData::STR_ATTRIBUTES[attId], val);
         }
     }
 
+    // clear remaining slots
     for(int i = attsAdded; i < NUM_VIS_ATT; ++i)
         mVisAtt[i]->ClearData();
 }

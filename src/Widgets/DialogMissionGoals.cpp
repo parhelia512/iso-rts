@@ -4,6 +4,7 @@
 #include "Screens/ScreenGame.h"
 #include "Widgets/GameUIData.h"
 #include "Widgets/ProgressBarObjectVisualStat.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/core/event/KeyboardEvent.h>
 #include <sgl/graphic/Font.h>
@@ -23,8 +24,11 @@
 #include <iomanip>
 #include <sstream>
 
-namespace game
+// anonymous namespace for local "private" classes
+namespace
 {
+
+using namespace game;
 
 // ====== BUTTON CLOSE =====
 class ButtonCloseDMG : public sgl::sgui::ImageButton
@@ -78,10 +82,9 @@ public:
         using namespace sgl;
 
         auto fm = graphic::FontManager::Instance();
-        const char * fileFont = "Lato-Regular.ttf";
         const int size = 18;
 
-        auto font = fm->GetFont(fileFont, size, graphic::Font::NORMAL);
+        auto font = fm->GetFont(WidgetsConstants::FontFileButton, size, graphic::Font::NORMAL);
         SetLabelFont(font);
 
         SetLabel("END MISSION");
@@ -138,10 +141,9 @@ public:
         using namespace sgl;
 
         auto fm = graphic::FontManager::Instance();
-        const char * fileFont = "Lato-Regular.ttf";
         const int size = 18;
 
-        auto font = fm->GetFont(fileFont, size, graphic::Font::NORMAL);
+        auto font = fm->GetFont(WidgetsConstants::FontFileButton, size, graphic::Font::NORMAL);
         SetLabelFont(font);
 
         SetLabel("COLLECT");
@@ -180,6 +182,11 @@ private:
         player->PlaySound("UI/button_click-02.ogg");
     }
 };
+
+} // namespace
+
+namespace game
+{
 
 // ===== DIALOG =====
 DialogMissionGoals::DialogMissionGoals(ScreenGame * screen)
@@ -267,14 +274,12 @@ DialogMissionGoals::DialogMissionGoals(ScreenGame * screen)
     const int marginL = 40;
 
     // TITLE
-    const char * fileFont = "Lato-Regular.ttf";
-    const unsigned int colorTitle = 0xf1f3f4ff;
     const int sizeTitle = 28;
     const int marginTitleT = 14;
 
-    auto font = fm->GetFont(fileFont, sizeTitle, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileDialogTitle, sizeTitle, graphic::Font::NORMAL);
     auto title = new sgui::Label("MISSION GOALS", font, this);
-    title->SetColor(colorTitle);
+    title->SetColor(WidgetsConstants::colorDialogTitle);
 
     const int titleX = (w - title->GetWidth()) / 2;
     title->SetPosition(titleX, marginTitleT);
@@ -288,7 +293,7 @@ DialogMissionGoals::DialogMissionGoals(ScreenGame * screen)
 
     if(numPrimaryGoals > 0)
     {
-        auto font = fm->GetFont(fileFont, sizeHeader, graphic::Font::NORMAL);
+        auto font = fm->GetFont(WidgetsConstants::FontFileHeader, sizeHeader, graphic::Font::NORMAL);
         auto labelHeader = new sgui::Label("PRIMARY GOALS", font, this);
         labelHeader->SetColor(colorHeader);
         labelHeader->SetPosition(contentX, contentY);
@@ -313,7 +318,7 @@ DialogMissionGoals::DialogMissionGoals(ScreenGame * screen)
     {
         contentY += marginGoalsGroupH;
 
-        auto font = fm->GetFont(fileFont, sizeHeader, graphic::Font::NORMAL);
+        auto font = fm->GetFont(WidgetsConstants::FontFileHeader, sizeHeader, graphic::Font::NORMAL);
         auto labelHeader = new sgui::Label("SECONDARY GOALS", font, this);
         labelHeader->SetColor(colorHeader);
         labelHeader->SetPosition(contentX, contentY);
@@ -372,7 +377,6 @@ sgl::sgui::Widget * DialogMissionGoals::CreateGoalEntry(unsigned int goalInd,
     const MissionGoal & g = goals[goalInd];
 
     auto fm = graphic::FontManager::Instance();
-    const char * fileFont = "Lato-Regular.ttf";
 
     const int paddingH = 20;
     const int paddingT = 10;
@@ -400,7 +404,7 @@ sgl::sgui::Widget * DialogMissionGoals::CreateGoalEntry(unsigned int goalInd,
     const int sizeDesc = 20;
     const unsigned int colorData = 0x8cbfd9ff;
 
-    auto font = fm->GetFont(fileFont, sizeDesc, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileText, sizeDesc, graphic::Font::NORMAL);
     auto labelDesc = new sgui::Label(g.GetDescription().c_str(), font, bg);
     labelDesc->SetColor(colorData);
     labelDesc->SetPosition(contX, contY);
@@ -415,8 +419,8 @@ sgl::sgui::Widget * DialogMissionGoals::CreateGoalEntry(unsigned int goalInd,
     const int size2 = 18;
     const unsigned int colorHeader = 0xdbe9f0ff;
 
-    auto font2 = fm->GetFont(fileFont, size2, graphic::Font::NORMAL);
-    auto labelHeader = new sgui::Label("PROGRESS", font2, bg);
+    auto fontHeader = fm->GetFont(WidgetsConstants::FontFileHeader, size2, graphic::Font::NORMAL);
+    auto labelHeader = new sgui::Label("PROGRESS", fontHeader, bg);
     labelHeader->SetColor(colorHeader);
     labelHeader->SetPosition(contX, contY);
 
@@ -424,7 +428,7 @@ sgl::sgui::Widget * DialogMissionGoals::CreateGoalEntry(unsigned int goalInd,
 
     if(g.IsProgressUnknown())
     {
-        auto labelData = new sgui::Label("?", font2, bg);
+        auto labelData = new sgui::Label("?", font, bg);
         labelData->SetColor(colorData);
         labelData->SetPosition(contX, contY);
     }
@@ -441,7 +445,7 @@ sgl::sgui::Widget * DialogMissionGoals::CreateGoalEntry(unsigned int goalInd,
     const int rewardX0 = 415;
     contX = rewardX0;
 
-    labelHeader = new sgui::Label("REWARD", font2, bg);
+    labelHeader = new sgui::Label("REWARD", fontHeader, bg);
     labelHeader->SetColor(colorHeader);
     labelHeader->SetPosition(contX, contY);
 
@@ -450,7 +454,7 @@ sgl::sgui::Widget * DialogMissionGoals::CreateGoalEntry(unsigned int goalInd,
     // collected
     if(g.IsRewardCollected())
     {
-        auto labelData = new sgui::Label("-", font2, bg);
+        auto labelData = new sgui::Label("-", font, bg);
         labelData->SetColor(colorData);
         labelData->SetPosition(contX, contY);
     }
@@ -488,7 +492,7 @@ sgl::sgui::Widget * DialogMissionGoals::CreateGoalEntry(unsigned int goalInd,
             else
                 os << reward;
 
-            auto labelData = new sgui::Label(os.str().c_str(), font2, bg);
+            auto labelData = new sgui::Label(os.str().c_str(), fontHeader, bg);
             labelData->SetColor(colorData);
             labelData->SetPosition(contX, contY);
 
@@ -508,7 +512,7 @@ sgl::sgui::Widget * DialogMissionGoals::CreateGoalEntry(unsigned int goalInd,
     // label collected
     const unsigned int colorCollected = 0x67e486ff;
     const int sizeCollected = 22;
-    font = fm->GetFont(fileFont, sizeDesc, graphic::Font::NORMAL);
+    font = fm->GetFont(WidgetsConstants::FontFileText, sizeDesc, graphic::Font::NORMAL);
 
     auto labelData = new sgui::Label("COLLECTED", font, bg);
     labelData->SetColor(colorCollected);

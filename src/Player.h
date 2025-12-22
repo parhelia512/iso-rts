@@ -116,6 +116,11 @@ public:
     const std::vector<GameObjectTypeId> & GetAvailableUnits() const;
     bool IsUnitAvailable(GameObjectTypeId type) const;
 
+    // available mini units
+    void AddAvailableMiniUnit(GameObjectTypeId type);
+    const std::vector<GameObjectTypeId> & GetAvailableMiniUnits() const;
+    bool IsMiniUnitAvailable(GameObjectTypeId type) const;
+
     void ClearSelectedObject();
     GameObject * GetSelectedObject() const;
     void SetSelectedObject(GameObject * obj);
@@ -158,6 +163,7 @@ private:
     std::vector<StatValue> mStats;
     StatValue mDummyStat;
 
+    std::vector<GameObjectTypeId> mAvailableMiniUnits;
     std::vector<GameObjectTypeId> mAvailableStructures;
     std::vector<GameObjectTypeId> mAvailableUnits;
 
@@ -274,6 +280,11 @@ inline const std::vector<GameObjectTypeId> &Player::GetAvailableStructures() con
 inline const std::vector<GameObjectTypeId> & Player::GetAvailableUnits() const
 {
     return mAvailableUnits;
+}
+
+inline const std::vector<GameObjectTypeId> & Player::GetAvailableMiniUnits() const
+{
+    return mAvailableMiniUnits;
 }
 
 inline GameObject * Player::GetSelectedObject() const { return mSelObj; }

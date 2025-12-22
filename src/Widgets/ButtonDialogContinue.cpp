@@ -1,6 +1,7 @@
 #include "ButtonDialogContinue.h"
 
 #include "Widgets/GameUIData.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
@@ -32,7 +33,7 @@ ButtonDialogContinue::ButtonDialogContinue(sgl::sgui::Widget * parent)
 
     // set label font
     auto fm = FontManager::Instance();
-    Font * font = fm->GetFont("Lato-Regular.ttf", 32, Font::NORMAL);
+    Font * font = fm->GetFont(WidgetsConstants::FontFileButton, 32, Font::NORMAL);
 
     SetLabelFont(font);
 

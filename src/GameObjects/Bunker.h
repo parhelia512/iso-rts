@@ -12,8 +12,6 @@ class Bunker : public Structure
 public:
     Bunker(const ObjectData & data);
 
-    int GetAttackRange() const;
-
     void Update(float delta) override;
 
 protected:
@@ -22,20 +20,7 @@ protected:
 private:
     void SetImage();
 
-    void CheckForEnemies();
-
-    void Shoot();
-
-private:
-    GameObject * mTarget = nullptr;
-
-    // weapon
-    float mTimeAttack = 0.25f;
-    float mTimerAttack = 0.f;
-    float mWeaponDamage = 15.f;
-    int mAttackRange = 1;
+    void PrepareShoot();
 };
-
-inline int Bunker::GetAttackRange() const { return mAttackRange; }
 
 } // namespace game

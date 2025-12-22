@@ -70,14 +70,14 @@ void PlayerAI::PrepareData()
             mStructures.push_back(obj);
 
             // store resource generators
-            if(objCat == GameObject::CAT_RES_GENERATOR)
+            if(objCat == ObjectData::CAT_RES_GENERATOR)
                 mResGenerators.push_back(obj);
         }
-        else if(obj->GetObjectCategory() == GameObject::CAT_UNIT)
+        else if(obj->GetObjectCategory() == ObjectData::CAT_UNIT)
             mUnits.push_back(obj);
         else if(obj->CanBeCollected())
             mCollectables.push_back(obj);
-        else if(obj->GetObjectType() == GameObject::TYPE_TREES)
+        else if(obj->GetObjectType() == ObjectData::TYPE_TREES)
             mTrees.push_back(obj);
     }
 }
@@ -98,7 +98,7 @@ void PlayerAI::AddActions()
 
         const GameObjectTypeId objType = s->GetObjectType();
 
-        if(objType == GameObject::TYPE_BASE)
+        if(objType == ObjectData::TYPE_BASE)
             AddActionBaseCreateUnit(s);
     }
 
@@ -346,7 +346,7 @@ void PlayerAI::AddActionEndTurn()
     for(GameObject * obj : mUnits)
     {
         // only consider structure that have AI actions
-        if(obj->GetObjectType() == GameObject::TYPE_BASE)
+        if(obj->GetObjectType() == ObjectData::TYPE_BASE)
         {
             totEnergy += obj->GetEnergy();
             totMaxEnergy += obj->GetMaxEnergy();
@@ -400,7 +400,7 @@ void PlayerAI::AddActionBaseCreateUnit(Structure * base)
         return ;
 
     // DECIDE UNIT TYPE
-    std::vector<GameObjectTypeId> types { GameObject::TYPE_UNIT_WORKER1 };
+    std::vector<GameObjectTypeId> types { ObjectData::TYPE_UNIT_WORKER1 };
     const unsigned int numTypes = types.size();
 
     const int energy = mPlayer->GetStat(Player::ENERGY).GetValue();
@@ -660,44 +660,44 @@ void PlayerAI::AddActionUnitBuildStructure(Unit * u)
         return ;
 
     // RESOURCE GENERATORS
-    if(mPlayer->IsStructureAvailable(GameObject::TYPE_RES_GEN_ENERGY_SOLAR))
+    if(mPlayer->IsStructureAvailable(ObjectData::TYPE_RES_GEN_ENERGY_SOLAR))
         AddActionUnitBuildResourceGenerator(u, RES_ENERGY, priority);
-    if(mPlayer->IsStructureAvailable(GameObject::TYPE_RES_GEN_MATERIAL_EXTRACT))
+    if(mPlayer->IsStructureAvailable(ObjectData::TYPE_RES_GEN_MATERIAL_EXTRACT))
         AddActionUnitBuildResourceGenerator(u, RES_MATERIAL1, priority);
 
     // RESOURCE STORAGE
-    if(mPlayer->IsStructureAvailable(GameObject::TYPE_RES_STORAGE_ENERGY))
+    if(mPlayer->IsStructureAvailable(ObjectData::TYPE_RES_STORAGE_ENERGY))
         AddActionUnitBuildResourceStorage(u, RES_ENERGY, priority);
-    if(mPlayer->IsStructureAvailable(GameObject::TYPE_RES_STORAGE_MATERIAL))
+    if(mPlayer->IsStructureAvailable(ObjectData::TYPE_RES_STORAGE_MATERIAL))
         AddActionUnitBuildResourceStorage(u, RES_MATERIAL1, priority);
-    if(mPlayer->IsStructureAvailable(GameObject::TYPE_RES_STORAGE_BLOBS))
+    if(mPlayer->IsStructureAvailable(ObjectData::TYPE_RES_STORAGE_BLOBS))
         AddActionUnitBuildResourceStorage(u, RES_BLOBS, priority);
-    if(mPlayer->IsStructureAvailable(GameObject::TYPE_RES_STORAGE_DIAMONDS))
+    if(mPlayer->IsStructureAvailable(ObjectData::TYPE_RES_STORAGE_DIAMONDS))
         AddActionUnitBuildResourceStorage(u, RES_DIAMONDS, priority);
 
     // UNIT CREATION
-    if(mPlayer->IsStructureAvailable(GameObject::TYPE_BARRACKS))
-        AddActionUnitBuildUnitCreator(u, GameObject::TYPE_BARRACKS, priority);
-    if(mPlayer->IsStructureAvailable(GameObject::TYPE_HOSPITAL))
-        AddActionUnitBuildUnitCreator(u, GameObject::TYPE_HOSPITAL, priority);
+    if(mPlayer->IsStructureAvailable(ObjectData::TYPE_BARRACKS))
+        AddActionUnitBuildUnitCreator(u, ObjectData::TYPE_BARRACKS, priority);
+    if(mPlayer->IsStructureAvailable(ObjectData::TYPE_HOSPITAL))
+        AddActionUnitBuildUnitCreator(u, ObjectData::TYPE_HOSPITAL, priority);
 
     // TECH
-    if(mPlayer->IsStructureAvailable(GameObject::TYPE_RESEARCH_CENTER))
+    if(mPlayer->IsStructureAvailable(ObjectData::TYPE_RESEARCH_CENTER))
         AddActionUnitBuildResearchCenter(u, priority);
-    if(mPlayer->IsStructureAvailable(GameObject::TYPE_RADAR_STATION))
-        AddActionUnitBuildRadarStructure(u, GameObject::TYPE_RADAR_STATION, priority);
-    if(mPlayer->IsStructureAvailable(GameObject::TYPE_RADAR_TOWER))
-        AddActionUnitBuildRadarStructure(u, GameObject::TYPE_RADAR_TOWER, priority);
+    if(mPlayer->IsStructureAvailable(ObjectData::TYPE_RADAR_STATION))
+        AddActionUnitBuildRadarStructure(u, ObjectData::TYPE_RADAR_STATION, priority);
+    if(mPlayer->IsStructureAvailable(ObjectData::TYPE_RADAR_TOWER))
+        AddActionUnitBuildRadarStructure(u, ObjectData::TYPE_RADAR_TOWER, priority);
 
     // OTHER
-    if(mPlayer->IsStructureAvailable(GameObject::TYPE_PRACTICE_TARGET))
+    if(mPlayer->IsStructureAvailable(ObjectData::TYPE_PRACTICE_TARGET))
         AddActionUnitBuildPracticeTarget(u, priority);
 }
 
 void PlayerAI::AddActionUnitBuildUnitCreator(Unit * u, GameObjectTypeId structType, int priority0)
 {
     // check object type is supported
-    if(structType != GameObject::TYPE_BARRACKS && structType != GameObject::TYPE_HOSPITAL)
+    if(structType != ObjectData::TYPE_BARRACKS && structType != ObjectData::TYPE_HOSPITAL)
         return ;
 
     // no need to build these structures more than once
@@ -720,8 +720,8 @@ void PlayerAI::AddActionUnitBuildUnitCreator(Unit * u, GameObjectTypeId structTy
     // the more units exist the higher the priority as no unit can be created yet
     const std::unordered_map<GameObjectTypeId, float> bonusUnits
     {
-        {GameObject::TYPE_BARRACKS , 30.f},
-        {GameObject::TYPE_HOSPITAL , 15.f},
+        {ObjectData::TYPE_BARRACKS , 30.f},
+        {ObjectData::TYPE_HOSPITAL , 15.f},
     };
 
     priority += std::roundf(bonusUnits.at(structType) * numUnits / limitUnits);
@@ -753,8 +753,8 @@ void PlayerAI::AddActionUnitBuildResourceGenerator(Unit * u, ResourceType resTyp
 
     const GameObjectTypeId structTypes[] =
     {
-        GameObject::TYPE_RES_GEN_ENERGY_SOLAR,
-        GameObject::TYPE_RES_GEN_MATERIAL_EXTRACT
+        ObjectData::TYPE_RES_GEN_ENERGY_SOLAR,
+        ObjectData::TYPE_RES_GEN_MATERIAL_EXTRACT
     };
 
     const GameObjectTypeId structType = structTypes[resType];
@@ -803,10 +803,10 @@ void PlayerAI::AddActionUnitBuildResourceStorage(Unit * u, ResourceType resType,
 {
     const GameObjectTypeId structTypes[] =
     {
-        GameObject::TYPE_RES_STORAGE_ENERGY,
-        GameObject::TYPE_RES_STORAGE_MATERIAL,
-        GameObject::TYPE_RES_STORAGE_DIAMONDS,
-        GameObject::TYPE_RES_STORAGE_BLOBS,
+        ObjectData::TYPE_RES_STORAGE_ENERGY,
+        ObjectData::TYPE_RES_STORAGE_MATERIAL,
+        ObjectData::TYPE_RES_STORAGE_DIAMONDS,
+        ObjectData::TYPE_RES_STORAGE_BLOBS,
     };
 
     const GameObjectTypeId structType = structTypes[resType];
@@ -856,7 +856,7 @@ void PlayerAI::AddActionUnitBuildResourceStorage(Unit * u, ResourceType resType,
 
 void PlayerAI::AddActionUnitBuildResearchCenter(Unit * u, int priority0)
 {
-    const GameObjectTypeId structType = GameObject::TYPE_RESEARCH_CENTER;
+    const GameObjectTypeId structType = ObjectData::TYPE_RESEARCH_CENTER;
 
     // no need to build these structures more than once
     if(mPlayer->HasStructure(structType))
@@ -889,7 +889,7 @@ void PlayerAI::AddActionUnitBuildResearchCenter(Unit * u, int priority0)
 
 void PlayerAI::AddActionUnitBuildPracticeTarget(Unit * u, int priority0)
 {
-    const GameObjectTypeId structType = GameObject::TYPE_PRACTICE_TARGET;
+    const GameObjectTypeId structType = ObjectData::TYPE_PRACTICE_TARGET;
 
     // not enough resources to build
     if(!HasPlayerResourcesToBuild(structType))
@@ -923,12 +923,12 @@ void PlayerAI::AddActionUnitBuildPracticeTarget(Unit * u, int priority0)
 void PlayerAI::AddActionUnitBuildRadarStructure(Unit * u, GameObjectTypeId structType, int priority0)
 {
     // check object type is supported
-    if(structType != GameObject::TYPE_RADAR_STATION &&
-       structType != GameObject::TYPE_RADAR_TOWER)
+    if(structType != ObjectData::TYPE_RADAR_STATION &&
+       structType != ObjectData::TYPE_RADAR_TOWER)
         return ;
 
     // no need to build these structures more than once
-    if(GameObject::TYPE_RADAR_STATION == structType && mPlayer->HasStructure(structType))
+    if(ObjectData::TYPE_RADAR_STATION == structType && mPlayer->HasStructure(structType))
         return ;
 
     // not enough resources to build
@@ -940,13 +940,13 @@ void PlayerAI::AddActionUnitBuildRadarStructure(Unit * u, GameObjectTypeId struc
     // reduce priority based on available resources
     const std::unordered_map<GameObjectTypeId, float> bonusRes
     {
-        {GameObject::TYPE_RADAR_STATION , -20.f},
-        {GameObject::TYPE_RADAR_TOWER , -25.f},
+        {ObjectData::TYPE_RADAR_STATION , -20.f},
+        {ObjectData::TYPE_RADAR_TOWER , -25.f},
     };
     priority += GetPriorityBonusStructureBuildCost(structType, bonusRes.at(structType));
 
     // reduce priority based on number or existing structure
-    if(GameObject::TYPE_RADAR_TOWER == structType)
+    if(ObjectData::TYPE_RADAR_TOWER == structType)
     {
         const float bonusExist = -10.f;
         priority += bonusExist * mPlayer->GetNumStructuresByType(structType);
@@ -1001,7 +1001,7 @@ void PlayerAI::AddActionUnitCollectBlobs(Unit * u)
         const GameObject * c = mCollectables[i];
 
         // no blobs
-        if(c->GetObjectType() != GameObject::TYPE_BLOBS)
+        if(c->GetObjectType() != ObjectData::TYPE_BLOBS)
             continue;
 
         // basic logic, collect closest one
@@ -1071,7 +1071,7 @@ void PlayerAI::AddActionUnitCollectDiamonds(Unit * u)
         const GameObject * c = mCollectables[i];
 
         // no blobs
-        if(c->GetObjectType() != GameObject::TYPE_DIAMONDS)
+        if(c->GetObjectType() != ObjectData::TYPE_DIAMONDS)
             continue;
 
         // basic logic, collect closest one
@@ -1135,7 +1135,7 @@ void PlayerAI::AddActionUnitCollectLootbox(Unit * u)
         const GameObject * c = mCollectables[i];
 
         // no lootbox
-        if(c->GetObjectType() != GameObject::TYPE_LOOTBOX)
+        if(c->GetObjectType() != ObjectData::TYPE_LOOTBOX)
             continue;
 
         // basic logic, collect closest one
@@ -1541,12 +1541,12 @@ void PlayerAI::PrintdActionDebug(const char * title, const ActionAI * a)
     if(AIA_UNIT_BUILD_STRUCTURE == a->type)
     {
         auto ab = static_cast<const ActionAIBuildStructure *>(a);
-        std::cout << " | STRUCT: " << GameObject::TITLES.at(ab->structType);
+        std::cout << " | STRUCT: " << ObjectData::TITLES.at(ab->structType);
     }
     else if(AIA_NEW_UNIT == a->type)
     {
         auto an = static_cast<const ActionAINewUnit *>(a);
-        std::cout << " | UNIT: " << GameObject::TITLES.at(an->unitType);
+        std::cout << " | UNIT: " << ObjectData::TITLES.at(an->unitType);
     }
 
     if(a->ObjSrc != nullptr)

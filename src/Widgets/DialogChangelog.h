@@ -12,14 +12,15 @@ namespace sgl
         class Text;
     }
 
-    namespace sgui { class TextArea; }
+    namespace sgui
+    {
+        class ScrollArea;
+        class TextArea;
+    }
 }
 
 namespace game
 {
-
-class ButtonCloseChangelog;
-class ChangelogArea;
 
 // ===== BUTTON CHANGELOG =====
 class ButtonChangelog : public sgl::sgui::AbstractButton
@@ -58,8 +59,8 @@ private:
 private:
     sgl::graphic::Image * mBg = nullptr;
     sgl::graphic::Text * mTitle = nullptr;
-    ChangelogArea * mContArea = nullptr;
-    ButtonCloseChangelog * mButtonClose = nullptr;
+    sgl::sgui::ScrollArea * mContArea = nullptr;
+    sgl::sgui::AbstractButton * mButtonClose = nullptr;
 };
 
 } // namespace game

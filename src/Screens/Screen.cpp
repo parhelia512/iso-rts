@@ -3,9 +3,12 @@
 #include "Game.h"
 #include "Screens/SharedScreenListener.h"
 #include "Widgets/DialogSettings.h"
+#include "Widgets/ScreenOverlay.h"
 
 #include <sgl/graphic/Camera.h>
 #include <sgl/graphic/Renderer.h>
+#include <sgl/sgui/Stage.h>
+#include <sgl/sgui/Widget.h>
 
 namespace game
 {
@@ -30,6 +33,8 @@ DialogSettings * Screen::ShowDialogSettings()
 {
     using namespace sgl;
 
+    ShowScreenOverlay();
+
     // DIALOG
     const int screenW = graphic::Renderer::Instance()->GetWidth();
     const int screenH = graphic::Renderer::Instance()->GetHeight();
@@ -43,9 +48,27 @@ DialogSettings * Screen::ShowDialogSettings()
     {
         mSettings->DeleteLater();
         mSettings = nullptr;
+
+        HideScreenOverlay();
     });
 
     return mSettings;
+}
+
+void Screen::ShowScreenOverlay()
+{
+    if(mOverlay != nullptr)
+        return ;
+
+    mOverlay = new ScreenOverlay;
+
+    sgl::sgui::Stage::Instance()->MoveChildToFront(mOverlay);
+}
+
+void Screen::HideScreenOverlay()
+{
+    delete mOverlay;
+    mOverlay = nullptr;
 }
 
 } // namespace game

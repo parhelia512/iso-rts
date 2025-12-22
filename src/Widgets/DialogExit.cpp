@@ -3,9 +3,11 @@
 #include "Game.h"
 #include "Screens/Screen.h"
 #include "States/StatesIds.h"
+#include <Tutorial/TutorialManager.h>
 #include "Widgets/DialogSettings.h"
 #include "Widgets/GameButton.h"
 #include "Widgets/GameUIData.h"
+#include "Widgets/WidgetsConstants.h"
 
 #include <sgl/core/event/KeyboardEvent.h>
 #include <sgl/graphic/Font.h>
@@ -18,8 +20,11 @@
 #include <sgl/sgui/ImageButton.h>
 #include <sgl/utilities/System.h>
 
-namespace game
+// anonymous namespace for local "private" classes
+namespace
 {
+
+using namespace game;
 
 // ===== BUTTON 1 =====
 class ButtonDialogExit : public GameButton
@@ -27,18 +32,17 @@ class ButtonDialogExit : public GameButton
 public:
     ButtonDialogExit(sgl::sgui::Widget * parent)
         : GameButton(SpriteFileDialogExit,
-        { IND_DIA_EX_BTN_NORMAL, IND_DIA_EX_BTN_DISABLED,
-          IND_DIA_EX_BTN_OVER, IND_DIA_EX_BTN_PUSHED, IND_DIA_EX_BTN_PUSHED },
-        { 0xcadce5ff, 0x5a6266ff, 0xd7eaf4ff, 0xd7eaf4ff, 0xd7eaf4ff },
-        parent)
+                     { IND_DIA_EX_BTN_NORMAL, IND_DIA_EX_BTN_DISABLED,
+                       IND_DIA_EX_BTN_OVER, IND_DIA_EX_BTN_PUSHED, IND_DIA_EX_BTN_PUSHED },
+                     { 0xcadce5ff, 0x5a6266ff, 0xd7eaf4ff, 0xd7eaf4ff, 0xd7eaf4ff },
+                     parent)
     {
         using namespace sgl;
 
-        const char * fileFont = "Lato-Regular.ttf";
         const int size = 24;
 
         auto fm = graphic::FontManager::Instance();
-        graphic::Font * fnt = fm->GetFont(fileFont, size, graphic::Font::NORMAL);
+        auto fnt = fm->GetFont(WidgetsConstants::FontFileButton, size, graphic::Font::NORMAL);
         SetLabelFont(fnt);
     }
 
@@ -65,8 +69,8 @@ class ButtonCloseDialogExit : public sgl::sgui::ImageButton
 public:
     ButtonCloseDialogExit(sgl::sgui::Widget * parent)
         : sgl::sgui::ImageButton({ IND_DIA_EX_BTN_X_NORMAL, IND_DIA_EX_BTN_X_DISABLED,
-                                 IND_DIA_EX_BTN_X_OVER, IND_DIA_EX_BTN_X_PUSHED,
-                                 IND_DIA_EX_BTN_X_PUSHED }, SpriteFileDialogExit, parent)
+                                   IND_DIA_EX_BTN_X_OVER, IND_DIA_EX_BTN_X_PUSHED,
+                                   IND_DIA_EX_BTN_X_PUSHED }, SpriteFileDialogExit, parent)
     {
         SetShortcutKey(sgl::core::KeyboardEvent::KEY_ESCAPE);
     }
@@ -108,7 +112,7 @@ public:
         // TEXT LABEL
         // TODO use setLabel after adding support for icon to PushButton
         auto fm = graphic::FontManager::Instance();
-        graphic::Font * font = fm->GetFont("Lato-Regular.ttf", 18, graphic::Font::NORMAL);
+        auto font = fm->GetFont(WidgetsConstants::FontFileButton, 18, graphic::Font::NORMAL);
         mText = new graphic::Text("WISHLIST NOW", font, true);
         RegisterRenderable(mText);
 
@@ -145,31 +149,31 @@ private:
         using namespace sgl;
 
         const unsigned int texBgIds[NUM_VISUAL_STATES] =
-        {
-            IND_DIA_EX_BTN2_NORMAL,
-            IND_DIA_EX_BTN2_DISABLED,
-            IND_DIA_EX_BTN2_OVER,
-            IND_DIA_EX_BTN2_PUSHED,
-            IND_DIA_EX_BTN2_PUSHED
-        };
+            {
+                IND_DIA_EX_BTN2_NORMAL,
+                IND_DIA_EX_BTN2_DISABLED,
+                IND_DIA_EX_BTN2_OVER,
+                IND_DIA_EX_BTN2_PUSHED,
+                IND_DIA_EX_BTN2_PUSHED
+            };
 
         const unsigned int texIconIds[NUM_VISUAL_STATES] =
-        {
-            IND_DIA_ICON_STEAM_NORMAL,
-            IND_DIA_ICON_STEAM_DISABLED,
-            IND_DIA_ICON_STEAM_OVER,
-            IND_DIA_ICON_STEAM_PUSHED,
-            IND_DIA_ICON_STEAM_PUSHED
-        };
+            {
+                IND_DIA_ICON_STEAM_NORMAL,
+                IND_DIA_ICON_STEAM_DISABLED,
+                IND_DIA_ICON_STEAM_OVER,
+                IND_DIA_ICON_STEAM_PUSHED,
+                IND_DIA_ICON_STEAM_PUSHED
+            };
 
         const unsigned int colorsTxt[NUM_VISUAL_STATES] =
-        {
-            0xc3dae5ff,
-            0x5a6266ff,
-            0xc2e2f2ff,
-            0xb9ced9ff,
-            0xb9ced9ff,
-        };
+            {
+                0xc3dae5ff,
+                0x5a6266ff,
+                0xc2e2f2ff,
+                0xb9ced9ff,
+                0xb9ced9ff,
+            };
 
         // body
         auto tm = graphic::TextureManager::Instance();
@@ -217,8 +221,13 @@ private:
     sgl::graphic::Text * mText = nullptr;
 };
 
+} // namespace
+
+namespace game
+{
+
 // ===== DIALOG =====
-DialogExit::DialogExit(Game * game, Screen * screen)
+DialogExit::DialogExit(DialogButtons buttons, Game * game, Screen * screen)
     : mOnShowingSettings([]{})
     , mOnHidingSettings([]{})
 {
@@ -244,62 +253,102 @@ DialogExit::DialogExit(Game * game, Screen * screen)
     mButtonClose->SetX(GetWidth() - mButtonClose->GetWidth());
 
     // TITLE
-    auto font = fm->GetFont("Lato-Regular.ttf", 28, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 28, graphic::Font::NORMAL);
     mTitle = new graphic::Text("LEAVE", font);
-    mTitle->SetColor(0xf1f3f4ff);
+    mTitle->SetColor(WidgetsConstants::colorDialogTitle);
     RegisterRenderable(mTitle);
 
     // BUTTON PLANET MAP
     const int btnY0 = 78;
-    const int marginBtnV = 38;
+    const int marginBtnV = 35;
     int btnX = 0;
     int btnY = btnY0;
 
-    auto btn = new ButtonDialogExit(this);
-    btn->SetLabel("SETTINGS");
+    GameButton * btn = nullptr;
 
-    btnX = (w - btn->GetWidth()) / 2;
-    btn->SetPosition(btnX, btnY);
-
-    btn->AddOnClickFunction([this, screen]
+    if(buttons & BTN_SETTINGS)
     {
-        mButtonClose->Click();
+        btn = new ButtonDialogExit(this);
+        btn->SetLabel("SETTINGS");
 
-        DialogSettings * dialog = screen->ShowDialogSettings();
+        btnX = (w - btn->GetWidth()) / 2;
+        btn->SetPosition(btnX, btnY);
 
-        mOnShowingSettings();
+        btn->AddOnClickFunction([this, screen]
+        {
+            mButtonClose->Click();
 
-        dialog->AddOnCloseClickedFunction(mOnHidingSettings);
-    });
+            DialogSettings * dialog = screen->ShowDialogSettings();
 
-    btnY += btn->GetHeight() + marginBtnV;
+            mOnShowingSettings();
+
+            dialog->AddOnCloseClickedFunction(mOnHidingSettings);
+        });
+
+        btnY += btn->GetHeight() + marginBtnV;
+    }
+
+    // BUTTON PLANET MAP
+    if(buttons & BTN_PLANET_MAP)
+    {
+        btn = new ButtonDialogExit(this);
+        btn->SetLabel("PLANET MAP");
+
+        btnX = (w - btn->GetWidth()) / 2;
+        btn->SetPosition(btnX, btnY);
+
+        btn->AddOnClickFunction([game]
+        {
+            game->GetTutorialManager()->AbortTutorial();
+            game->RequestNextActiveState(StateId::PLANET_MAP);
+        });
+
+        btnY += btn->GetHeight() + marginBtnV;
+    }
 
     // BUTTON MAIN MENU
-    btn = new ButtonDialogExit(this);
-    btn->SetLabel("PLANET MAP");
-    btn->SetPosition(btnX, btnY);
-
-    btn->AddOnClickFunction([game]
+    if(buttons & BTN_MAIN_MENU)
     {
-        game->RequestNextActiveState(StateId::PLANET_MAP);
-    });
+        btn = new ButtonDialogExit(this);
+        btn->SetLabel("MAIN MENU");
 
-    btnY += btn->GetHeight() + marginBtnV;
+        btnX = (w - btn->GetWidth()) / 2;
+        btn->SetPosition(btnX, btnY);
+
+        btn->AddOnClickFunction([game]
+        {
+            game->GetTutorialManager()->AbortTutorial();
+            game->RequestNextActiveState(StateId::MAIN_MENU);
+        });
+
+        btnY += btn->GetHeight() + marginBtnV;
+    }
 
     // BUTTON MAIN MENU
-    btn = new ButtonDialogExit(this);
-    btn->SetLabel("MAIN MENU");
-    btn->SetPosition(btnX, btnY);
-
-    btn->AddOnClickFunction([game]
+    if(buttons & BTN_QUIT_TUTORIAL)
     {
-        game->RequestNextActiveState(StateId::MAIN_MENU);
-    });
+        btn = new ButtonDialogExit(this);
+        btn->SetLabel("QUIT TUTORIAL");
 
-    btnY += btn->GetHeight() + marginBtnV;
+        btnX = (w - btn->GetWidth()) / 2;
+        btn->SetPosition(btnX, btnY);
+
+        btn->AddOnClickFunction([this, game, screen]
+        {
+            mButtonClose->Click();
+
+            game->GetTutorialManager()->AbortTutorial();
+        });
+
+        btnY += btn->GetHeight() + marginBtnV;
+    }
 
     // BUTTON WISHLIST
     auto btn2 = new ButtonWishlistDialogExit(this);
+
+    const int marginBottom = 20;
+    btnX = (w - btn2->GetWidth()) / 2;
+    btnY = h - btn2->GetHeight() - marginBottom;
 
     btn2->SetPosition(btnX, btnY);
 

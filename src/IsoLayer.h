@@ -2,7 +2,6 @@
 
 #include <sgl/core/Point.h>
 
-#include <string>
 #include <vector>
 
 namespace game
@@ -37,12 +36,13 @@ public:
 
     void UpdateSize(bool force);
 
-    bool ContainsObject(unsigned int r, unsigned int c) const;
+    bool HasObject(IsoObject * obj) const;
+    bool HasObject(unsigned int r, unsigned int c) const;
     bool AddObject(IsoObject * obj, unsigned int r, unsigned int c);
     void ClearObject(IsoObject * obj);
     void ClearObject(unsigned int r, unsigned int c);
-    bool MoveObject(unsigned int r0, unsigned int c0,
-                    unsigned int r1, unsigned int c1,
+    bool MoveObject(IsoObject * obj, unsigned int r, unsigned int c, bool updatePosition = true);
+    bool MoveObject(unsigned int r0, unsigned int c0, unsigned int r1, unsigned int c1,
                     bool updatePosition = true);
 
     void SetObjectVisible(IsoObject * obj, bool visible);

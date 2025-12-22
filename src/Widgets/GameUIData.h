@@ -3,6 +3,27 @@
 namespace game
 {
 
+// DIALOG SELF DESTRUCTION
+extern const char SpriteFileDialogDestruction[];
+
+enum SpriteIdDialogDestruction : unsigned int
+{
+    // BACKGROUND
+    ID_DLG_DESTR_BG,
+
+    // BUTTON 1
+    ID_DLG_DESTR_BTN1_NORMAL,
+    ID_DLG_DESTR_BTN1_DISABLED,
+    ID_DLG_DESTR_BTN1_OVER,
+    ID_DLG_DESTR_BTN1_PUSHED,
+
+    // BUTTON CLOSE
+    ID_DLG_DESTR_BTN_CLOSE_NORMAL,
+    ID_DLG_DESTR_BTN_CLOSE_DISABLED,
+    ID_DLG_DESTR_BTN_CLOSE_OVER,
+    ID_DLG_DESTR_BTN_CLOSE_PUSHED,
+};
+
 // DIALOG END MISSION
 extern const char SpriteFileDialogEndMission[];
 
@@ -195,6 +216,9 @@ enum SpriteIdDialogNewElementExp : unsigned int
     IND_DLG_NEWE_BG_BTM,
 };
 
+// NEW MINI UNITS SQUAD DIALOG
+extern const char SpriteFileDialogNewMiniUnits[];
+
 // DIALOG OBJECT
 extern const char SpriteFileDialogObject[];
 
@@ -281,7 +305,7 @@ enum SpriteIdDialogTrading : unsigned int
     ID_DLG_TRADING_BTN_PLUS_DISABLED,
 };
 
-// FACTION SELECTION DIALOG
+// GENERIC GAME UI
 extern const char SpriteFileGameUI[];
 
 enum SpriteIdGameUI : unsigned int
@@ -290,6 +314,36 @@ enum SpriteIdGameUI : unsigned int
     ID_GAMEUI_GOAL_F1,
     ID_GAMEUI_GOAL_F2,
     ID_GAMEUI_GOAL_F3,
+
+    // MOUSE CURSORS
+    ID_GAME_CURSOR_1,
+};
+
+extern const char SpriteFileGameUIExp[];
+
+enum SpriteIdGameUIExp : unsigned int
+{
+    // SCREEN OVERALY BG
+    ID_SCREEN_OVERLAY_BG
+};
+
+// SHARED GAME UI GRAPHICS
+extern const char SpriteFileGameUIShared[];
+
+enum SpriteIdGameUIShared : unsigned int
+{
+    // ICONS WHITE RESOURCES 24x24
+    ID_UIS_ICON_W_RES_MONEY_24,
+    ID_UIS_ICON_W_RES_ENERGY_24,
+    ID_UIS_ICON_W_RES_MATERIAL_24,
+    ID_UIS_ICON_W_RES_DIAMONDS_24,
+    ID_UIS_ICON_W_RES_BLOBS_24,
+    // ICONS WHITE RESOURCES 16x16
+    ID_UIS_ICON_W_RES_MONEY_16,
+    ID_UIS_ICON_W_RES_ENERGY_16,
+    ID_UIS_ICON_W_RES_MATERIAL_16,
+    ID_UIS_ICON_W_RES_DIAMONDS_16,
+    ID_UIS_ICON_W_RES_BLOBS_16,
 };
 
 // FACTION SELECTION DIALOG
@@ -365,8 +419,16 @@ enum SpriteIdObjActionButton : unsigned int
     IND_BUTTON_ICON_CANCEL,
     IND_BUTTON_ICON_HEAL,
     IND_BUTTON_ICON_TRADE,
+    IND_BUTTON_ICON_SPAWN,
+    IND_BUTTON_ICON_SELF_DESTROY,
+    IND_BUTTON_ICON_SET_TARGET,
 
-    NUM_IND_OBJ_ACT_BUTTON
+    // ACTION OPTION BUTTON
+    ID_BTN_ACT_OPT_NORMAL,
+    ID_BTN_ACT_OPT_DISABLED,
+    ID_BTN_ACT_OPT_MOUSE_OVER,
+    ID_BTN_ACT_OPT_PUSHED,
+    ID_BTN_ACT_OPT_CHECKED,
 };
 
 
@@ -463,12 +525,15 @@ enum SpriteIdMainMenuButtons : unsigned int
     // ICONS
     IND_MM_ICON_STEAM,
     IND_MM_ICON_DISCORD,
-    IND_MM_ICON_TWITTER,
+    IND_MM_ICON_BLUESKY,
     IND_MM_ICON_YOUTUBE,
     IND_MM_ICON_LINKEDIN,
 
     NUM_MAIN_MENU_SPRITES
 };
+
+// PANEL HIT
+extern const char SpriteFilePanelHit[];
 
 // MAP PANELS
 extern const char SpriteFilePanelMinimap[];
@@ -550,25 +615,43 @@ enum SpriteIdPlanetMap : unsigned int
 {
     // PLANET
     IND_PM_PLANET,
+    // PLANET CELL
     IND_PM_CELL_UNEXPLORED,
     IND_PM_CELL_UNEXPLORED_SEL,
     IND_PM_CELL_EXPLORED,
     IND_PM_CELL_SELECTED,
-    IND_PM_CELL_DISABLED,
     IND_PM_CELL_F1,
     IND_PM_CELL_F1_SEL,
     IND_PM_CELL_F2,
     IND_PM_CELL_F2_SEL,
     IND_PM_CELL_F3,
     IND_PM_CELL_F3_SEL,
+    IND_PM_CELL_DISABLED,
+    // PLANET MAIN CELL
+    IND_PM_MAIN_CELL_UNEXPLORED,
+    IND_PM_MAIN_CELL_UNEXPLORED_SEL,
+    IND_PM_MAIN_CELL_EXPLORED,
+    IND_PM_MAIN_CELL_SELECTED,
+    IND_PM_MAIN_CELL_F1,
+    IND_PM_MAIN_CELL_F1_SEL,
+    IND_PM_MAIN_CELL_F2,
+    IND_PM_MAIN_CELL_F2_SEL,
+    IND_PM_MAIN_CELL_F3,
+    IND_PM_MAIN_CELL_F3_SEL,
+    IND_PM_MAIN_CELL_DISABLED,
 
     // STARS BAR
-    IND_PM_STARS_DIS,
+    IND_PM_STARS_0,
     IND_PM_STARS_1,
     IND_PM_STARS_2,
     IND_PM_STARS_3,
     IND_PM_STARS_4,
     IND_PM_STARS_5,
+    IND_PM_STARS_6,
+    IND_PM_STARS_7,
+    IND_PM_STARS_8,
+    IND_PM_STARS_9,
+    IND_PM_STARS_10,
 
     // PIPS BAR
     IND_PM_PIPS_BAR_DIS,
@@ -739,22 +822,30 @@ enum SpriteIdUnitQuickSel : unsigned int
     IND_UQS_ICON_ENERGY,
     IND_UQS_ICON_HEALTH,
 
-    // UNITS
+    // UNITS F1
     IND_UQS_UNIT1_F1,
     IND_UQS_UNIT2_F1,
     IND_UQS_UNIT3_F1,
     IND_UQS_UNIT4_F1,
     IND_UQS_UNIT5_F1,
+    IND_UQS_UNIT6_F1,
+    IND_UQS_UNIT7_F1,
+    // UNITS F2
     IND_UQS_UNIT1_F2,
     IND_UQS_UNIT2_F2,
     IND_UQS_UNIT3_F2,
     IND_UQS_UNIT4_F2,
     IND_UQS_UNIT5_F2,
+    IND_UQS_UNIT6_F2,
+    IND_UQS_UNIT7_F2,
+    // UNITS F3
     IND_UQS_UNIT1_F3,
     IND_UQS_UNIT2_F3,
     IND_UQS_UNIT3_F3,
     IND_UQS_UNIT4_F3,
     IND_UQS_UNIT5_F3,
+    IND_UQS_UNIT6_F3,
+    IND_UQS_UNIT7_F3,
 
     NUM_UQS_UNIT_SPRITE_PER_FACTION = IND_UQS_UNIT1_F2 - IND_UQS_UNIT1_F1
 };
