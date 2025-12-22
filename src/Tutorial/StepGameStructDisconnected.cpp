@@ -18,7 +18,7 @@ StepGameStructDisconnected::StepGameStructDisconnected()
                        colorTutorialText, 6.f, true, true);
     info->AddInfoEntry("You might have noticed the blinking icon on top of the energy generator.",
                        colorTutorialText, 7.f, true, false);
-    info->AddInfoEntry("That means that this structire is not connected to your base yet, hence "
+    info->AddInfoEntry("That means that this structure is not connected to your base yet, hence "
                        "it's not active.", colorTutorialText, 7.f, true, false);
     info->AddInfoEntry("To connect it to your base you need to create a path of conquered cells "
                        "with your unit.", colorTutorialText, 11.f, true, false);
