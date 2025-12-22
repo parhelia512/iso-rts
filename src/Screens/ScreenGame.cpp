@@ -3482,7 +3482,7 @@ void ScreenGame::UpdatePanelHit(const GameObject * attacker)
 
     auto weapon = attacker->GetWeapon();
 
-    if(objTarget != nullptr && weapon->IsTargetInRange(objTarget))
+    if(objTarget != nullptr && objTarget != attacker && weapon->IsTargetInRange(objTarget))
         mHUD->ShowPanelHit(attacker, objTarget);
     else
         mHUD->HidePanelHit();
