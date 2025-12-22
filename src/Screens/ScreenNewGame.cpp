@@ -21,11 +21,11 @@ ScreenNewGame::ScreenNewGame(Game * game)
     , mDiff(Difficulty::EASY)
 {
     const int MAX_UNITS0 = 6;
-    const int startEnergy = 800;
-    const int startMaterial = 250;
+    const int startEnergy = 1000;
+    const int startMaterial = 500;
     const int startMoney = 1000;
     const int startDiamonds = 10;
-    const int startBlobs = 5;
+    const int startBlobs = 10;
 
     // create human player
     const PlayerFaction pf = game->GetLocalPlayerFaction();
