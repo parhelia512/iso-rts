@@ -33,7 +33,7 @@ public:
     PathState GetState() const;
     bool IsTerminated() const;
 
-    float GetPathCost() const;
+    int GetPathCost() const;
 
     // CURRENT PATH
     // NOTE path is expected to include start position
@@ -81,7 +81,7 @@ private:
     float mTargetX = 0.f;
     float mTargetY = 0.f;
 
-    float mCost = 0.f;
+    int mCost = 0;
 };
 
 inline GameObject * ObjectPath::GetObject() const { return mObj; }
@@ -103,7 +103,7 @@ inline unsigned int ObjectPath::GetLastStepDone() const
 
 inline bool ObjectPath::HasStarted() const { return mState != READY; }
 
-inline float ObjectPath::GetPathCost() const { return mCost; }
+inline int ObjectPath::GetPathCost() const { return mCost; }
 
 inline const std::vector<unsigned int> & ObjectPath::GetPath() const { return mCells; }
 

@@ -24,19 +24,19 @@ public:
     MoveIndicator();
 
     void SetIndicatorType(IndicatorType type);
-    void SetCost(float val);
+    void SetCost(int val);
     void SetCostUnknown();
 
     void Render() override;
 
 private:
-    static float const COST_UNKNOWN;
+    static int const COST_UNKNOWN;
 
 private:
     sgl::graphic::Text * mTxtCost = nullptr;
     unsigned int mColorCost = 0;
 
-    float mCost = COST_UNKNOWN;
+    int mCost = COST_UNKNOWN;
 
     IndicatorType mType = UNDEFINED;
 };

@@ -183,8 +183,10 @@ void ObjectPath::Update(float delta)
 
 void ObjectPath::UpdatePathCost()
 {
-    // TODO proper cost computation
-    mCost = (mCells.size() - 1) * 0.5f;
+    if(mCells.empty())
+        mCost = 0;
+    else
+        mCost = (mCells.size() - 1) * mObj->GetEnergyForActionStep(MOVE);
 }
 
 bool ObjectPath::Fail()

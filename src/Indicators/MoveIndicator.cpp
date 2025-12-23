@@ -8,13 +8,11 @@
 #include <sgl/graphic/Text.h>
 
 #include <cmath>
-#include <iomanip>
-#include <sstream>
 
 namespace game
 {
 
-float const MoveIndicator::COST_UNKNOWN = -1.f;
+int const MoveIndicator::COST_UNKNOWN = -1;
 
 MoveIndicator::MoveIndicator()
     : IsoObject(1, 1)
@@ -56,15 +54,12 @@ void MoveIndicator::SetIndicatorType(IndicatorType type)
         mTxtCost->SetColor(mColorCost);
 }
 
-void MoveIndicator::SetCost(float val)
+void MoveIndicator::SetCost(int val)
 {
     using namespace sgl::graphic;
 
-    // (almost) same cost as current -> do nothing
-    const float minDelta = 0.1f;
-    const float valDiff = std::fabs(val - mCost);
-
-    if(valDiff < minDelta)
+    // same cost as current -> do nothing
+    if(val == mCost)
         return ;
 
     // update cost value
@@ -76,16 +71,12 @@ void MoveIndicator::SetCost(float val)
 
     delete mTxtCost;
 
-    const float minCost = 0.f;
+    const int minCost = 0;
 
     if(mCost < minCost)
         mTxtCost = new Text("?", font);
     else
-    {
-        std::ostringstream s;
-        s << std::fixed << std::setprecision(1) << mCost;
-        mTxtCost = new Text(s.str().c_str(), font);
-    }
+        mTxtCost = new Text(std::to_string(mCost).c_str(), font);
 
     mTxtCost->SetColor(mColorCost);
 }
