@@ -34,7 +34,6 @@ class IsoLayer;
 class IsoMap;
 class MiniMap;
 class MiniUnit;
-class MoveIndicator;
 class PathIndicator;
 class PathOverlay;
 class Player;
@@ -239,15 +238,13 @@ private:
 
     sgl::ai::Pathfinder * mPathfinder = nullptr;
 
-    MoveIndicator * mMoveInd = nullptr;
-
     struct Cell2D mCurrCell;
     sgl::core::Pointd2D mMousePos;
 
     // MAP OVERLAYS
     PathOverlay * mPathOverlay = nullptr;
 
-    PathIndicator * mMiniUnitTargetIndicator = nullptr;
+    PathIndicator * mPathIndicator = nullptr;
 
     // TURN MANAGEMENT
     Player * mLocalPlayer = nullptr;

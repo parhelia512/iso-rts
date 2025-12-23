@@ -145,8 +145,6 @@ add_executable(
     src/Indicators/ConquestIndicator.cpp
     src/Indicators/HealingRangeIndicator.h
     src/Indicators/HealingRangeIndicator.cpp
-    src/Indicators/MoveIndicator.h
-    src/Indicators/MoveIndicator.cpp
     src/Indicators/PathIndicator.h
     src/Indicators/PathIndicator.cpp
     src/Indicators/PathOverlay.h

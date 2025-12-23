@@ -30,7 +30,7 @@ void PathOverlay::ClearPath()
     mNextIndicator = 0;
 }
 
-void PathOverlay::SetPath(const std::vector<unsigned int> & path, PlayerFaction faction, int cost)
+void PathOverlay::SetPath(const std::vector<unsigned int> & path, PlayerFaction faction, int cost, bool doable)
 {
     // empty path -> nothing to do
     if(path.empty())
@@ -49,7 +49,7 @@ void PathOverlay::SetPath(const std::vector<unsigned int> & path, PlayerFaction 
         const unsigned int row = ind / mMapCols;
         const unsigned int col = ind % mMapCols;
 
-        auto pi = GetNewIndicator(faction, i == lastInd);
+        auto pi = GetNewIndicator(faction, doable, i == lastInd);
         mActiveIndicators.emplace_back(pi);
 
         mLayer->AddObject(pi, row, col);
@@ -58,7 +58,7 @@ void PathOverlay::SetPath(const std::vector<unsigned int> & path, PlayerFaction 
     mActiveIndicators.back()->SetCost(cost);
 }
 
-PathIndicator * PathOverlay::GetNewIndicator(PlayerFaction faction, bool final)
+PathIndicator * PathOverlay::GetNewIndicator(PlayerFaction faction, bool doable, bool final)
 {
     PathIndicator * pi = nullptr;
 
@@ -80,6 +80,8 @@ PathIndicator * PathOverlay::GetNewIndicator(PlayerFaction faction, bool final)
     }
 
     ++mNextIndicator;
+
+    pi->SetDoable(doable);
 
     return pi;
 }

@@ -22,6 +22,7 @@ public:
 
     void SetFaction(PlayerFaction faction);
     void SetFinal(bool final);
+    void SetDoable(bool doable);
 
     void ClearCost();
     void SetCost(int cost);
@@ -30,6 +31,8 @@ public:
 
 private:
     void UpdateTexture();
+
+    void UpdateColors();
 
     void OnPositionChanged() override;
     void UpdatePositions();
@@ -43,6 +46,7 @@ private:
     int mCost = -1;
 
     bool mFinal = false;
+    bool mDoable = true;
 };
 
 } // namespace game

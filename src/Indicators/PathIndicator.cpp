@@ -2,6 +2,7 @@
 
 #include "GameConstants.h"
 #include "GameData.h"
+#include "Widgets/GameUIData.h"
 
 #include <sgl/graphic/DummyRenderable.h>
 #include <sgl/graphic/Font.h>
@@ -11,7 +12,6 @@
 #include <sgl/graphic/Text.h>
 
 #include <cassert>
-#include <sstream>
 
 namespace game
 {
@@ -58,6 +58,16 @@ void PathIndicator::SetFinal(bool final)
     UpdateTexture();
 }
 
+void PathIndicator::SetDoable(bool doable)
+{
+    if(doable == mDoable)
+        return ;
+
+    mDoable = doable;
+
+    UpdateColors();
+}
+
 void PathIndicator::ClearCost()
 {
     // cost already cleared
@@ -95,23 +105,20 @@ void PathIndicator::SetCost(int cost)
     delete mTextCost;
 
     // create label
-    const unsigned int color = 0xfcf1cfff;
     const int fontSize = 14;
 
     auto fm = graphic::FontManager::Instance();
     graphic::Font * font = fm->GetFont("Lato-Bold.ttf", fontSize, graphic::Font::NORMAL);
 
-    std::ostringstream s;
-    s << -cost;
-
-    mTextCost = new graphic::Text(s.str().c_str(), font);
-    mTextCost->SetColor(color);
+    mTextCost = new graphic::Text(std::to_string(cost).c_str(), font);
 
     //create icon
     auto tm = graphic::TextureManager::Instance();
-    graphic::Texture * tex = tm->GetSprite(SpriteFileMapIndicators, ID_MIND_ICON_ENERGY);
+    graphic::Texture * tex = tm->GetSprite(SpriteFileGameUIShared, ID_UIS_ICON_W_RES_ENERGY_16);
 
     mIconCost = new graphic::Image(tex);
+
+    UpdateColors();
 
     // now position graphics
     UpdatePositions();
@@ -150,6 +157,23 @@ void PathIndicator::UpdateTexture()
 
     graphic::Texture * tex = tm->GetSprite(SpriteFileMapIndicators, texID);
     SetTexture(tex);
+}
+
+void PathIndicator::UpdateColors()
+{
+    const auto ind = static_cast<unsigned int>(mDoable);
+
+    // set alpha of indicator
+    const unsigned char alpha[] = { 64, 255 };
+    SetAlpha(alpha[ind]);
+
+    // set cost color
+    const unsigned int colorCost[] = { 0xfc9c9cff, 0xfaf6eaff };
+    mTextCost->SetColor(colorCost[ind]);
+
+    // set icon cost
+    const unsigned int colorIcon[] = { 0xfc9c9cff, 0xfff2ccff };
+    mIconCost->SetColor(colorIcon[ind]);
 }
 
 void PathIndicator::OnPositionChanged()

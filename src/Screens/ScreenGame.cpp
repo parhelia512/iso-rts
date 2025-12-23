@@ -28,7 +28,6 @@
 #include "Indicators/AttackRangeIndicator.h"
 #include "Indicators/ConquestIndicator.h"
 #include "Indicators/HealingRangeIndicator.h"
-#include "Indicators/MoveIndicator.h"
 #include "Indicators/PathIndicator.h"
 #include "Indicators/PathOverlay.h"
 #include "Indicators/StructureIndicator.h"
@@ -176,7 +175,7 @@ ScreenGame::ScreenGame(Game * game)
     mPathOverlay = new PathOverlay(mIsoMap->GetLayer(MapLayers::CELL_OVERLAYS2),
                                    mIsoMap->GetNumRows(), mIsoMap->GetNumCols());
 
-    mMiniUnitTargetIndicator = new PathIndicator(mLocalPlayer->GetFaction(), true);
+    mPathIndicator = new PathIndicator(mLocalPlayer->GetFaction(), true);
 
     // set initial camera position
     CenterCameraOverPlayerBase();
@@ -220,7 +219,7 @@ ScreenGame::~ScreenGame()
 
     delete mPathOverlay;
 
-    delete mMiniUnitTargetIndicator;
+    delete mPathIndicator;
 
     for(auto ind : mAttIndicators)
         delete ind;
@@ -2731,7 +2730,7 @@ void ScreenGame::HandleMiniUnitSetTargetOnMouseUp(GameObject * obj, const Cell2D
 
     // clear target indicator
     auto layerInd = mIsoMap->GetLayer(MapLayers::CELL_OVERLAYS3);
-    layerInd->ClearObject(mMiniUnitTargetIndicator);
+    layerInd->ClearObject(mPathIndicator);
 }
 
 void ScreenGame::HandleSelectionClick(sgl::core::MouseButtonEvent & event)
@@ -2978,19 +2977,19 @@ void ScreenGame::ShowActiveMiniUnitIndicators(MiniUnit * mu, const Cell2D & cell
     if(!showIndicator)
     {
         // hide the indicator, if any
-        layer->SetObjectVisible(mMiniUnitTargetIndicator, false);
+        layer->SetObjectVisible(mPathIndicator, false);
         return ;
     }
 
     // indicator already visible
-    if(layer->HasObject(mMiniUnitTargetIndicator))
+    if(layer->HasObject(mPathIndicator))
     {
-        layer->MoveObject(mMiniUnitTargetIndicator, cell.row, cell.col);
-        layer->SetObjectVisible(mMiniUnitTargetIndicator, true);
+        layer->MoveObject(mPathIndicator, cell.row, cell.col);
+        layer->SetObjectVisible(mPathIndicator, true);
     }
     // indicator not visible yet
     else
-        layer->AddObject(mMiniUnitTargetIndicator, cell.row, cell.col);
+        layer->AddObject(mPathIndicator, cell.row, cell.col);
 }
 
 void ScreenGame::ShowAttackIndicators(const GameObject * obj, int range)
@@ -3378,66 +3377,64 @@ void ScreenGame::ShowHealingIndicators(const GameObject * obj, int range)
 
 void ScreenGame::ShowMoveIndicator(GameObject * obj, const Cell2D & dest)
 {
-    IsoLayer * layer = mIsoMap->GetLayer(MapLayers::CELL_OVERLAYS2);
-
-    // mouse outside the map
+    // cell outside the map
     if(!mIsoMap->IsCellInside(dest))
     {
-        // hide the indicator, if any
-        if(mMoveInd != nullptr)
-            layer->SetObjectVisible(mMoveInd, false);
-
+        mPathOverlay->ClearPath();
         return ;
     }
 
-    // move indicator already created -> move it and continue
-    if(mMoveInd != nullptr)
-        layer->MoveObject(mMoveInd->GetRow(), mMoveInd->GetCol(), dest.row, dest.col);
-    // create new move indicator
-    else
-    {
-        mMoveInd = new MoveIndicator;
-        layer->AddObject(mMoveInd, dest.row, dest.col);
-    }
-
+    // check destination is visible
     const int destInd = dest.row * mGameMap->GetNumCols() + dest.col;
-
     const bool destVisible = mLocalPlayer->IsCellVisible(destInd);
-    const bool destVisited = mGameMap->IsCellObjectVisited(destInd);
-    const bool destWalkable = mGameMap->IsCellWalkable(destInd);
 
-    const bool showIndicator = (!destVisible && !destVisited) || destWalkable;
-
-    layer->SetObjectVisible(mMoveInd, showIndicator);
-
-    // stop here if not showing indicator
-    if(!showIndicator)
+    if(!destVisible)
+    {
+        mPathOverlay->ClearPath();
         return ;
-
-    if(destVisible)
-    {
-        // set indicator type
-        mMoveInd->SetIndicatorType(MoveIndicator::NORMAL);
-
-        // show path cost when destination is visible
-        const auto path = mPathfinder->MakePath(obj->GetRow0(), obj->GetCol0(),
-                                                dest.row, dest.col,
-                                                sgl::ai::Pathfinder::ALL_OPTIONS);
-
-        ObjectPath op(obj, mIsoMap, mGameMap, this);
-        op.SetPath(path);
-
-        mMoveInd->SetCost(op.GetPathCost());
     }
-    // not visible destination
+
+    // check if destination is not occupied or if object on it can be conquered
+    const GameMapCell & destGC = mGameMap->GetCell(dest.row, dest.col);
+    const GameObject * destObj = destGC.objTop;
+
+    Cell2D destFinal;
+
+    if(destObj != nullptr)
+    {
+        // not walkable
+        if(!destObj->CanBeConquered())
+        {
+            mPathOverlay->ClearPath();
+            return ;
+        }
+
+        // find a new destination next to conquerable object
+        const Cell2D start(obj->GetRow0(), obj->GetCol0());
+        destFinal = mGameMap->GetAdjacentMoveTarget(start, destObj);
+
+        // failed to find a suitable target
+        if(-1 == destFinal.row || -1 == destFinal.col)
+        {
+            mPathOverlay->ClearPath();
+            return ;
+        }
+    }
+    // no object -> use original destination
     else
-    {
-        // set indicator type
-        mMoveInd->SetIndicatorType(MoveIndicator::NO_VIS_CELL);
+        destFinal = dest;
 
-        // hide cost when destination is not visible
-        mMoveInd->SetCostUnknown();
-    }
+    // show path with cost when destination is reachable
+    const auto path = mPathfinder->MakePath(obj->GetRow0(), obj->GetCol0(), destFinal.row,
+                                            destFinal.col, sgl::ai::Pathfinder::ALL_OPTIONS);
+
+    ObjectPath op(obj, mIsoMap, mGameMap, this);
+    op.SetPath(path);
+
+    const int cost = op.GetPathCost();
+    const bool doable = obj->GetEnergy() >= cost;
+
+    mPathOverlay->SetPath(path, obj->GetFaction(), cost, doable);
 }
 
 void ScreenGame::ClearCellOverlays()
@@ -3450,10 +3447,6 @@ void ScreenGame::ClearCellOverlays()
 
     layer = mIsoMap->GetLayer(MapLayers::CELL_OVERLAYS4);
     layer->ClearObjects();
-
-    // delete move indicator
-    delete mMoveInd;
-    mMoveInd = nullptr;
 }
 
 void ScreenGame::ClearTempStructIndicator()

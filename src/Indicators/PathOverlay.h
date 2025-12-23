@@ -17,10 +17,10 @@ public:
     ~PathOverlay();
 
     void ClearPath();
-    void SetPath(const std::vector<unsigned int> & path, PlayerFaction faction, int cost = -1);
+    void SetPath(const std::vector<unsigned int> & path, PlayerFaction faction, int cost = -1, bool doable = true);
 
 private:
-    PathIndicator * GetNewIndicator(PlayerFaction faction, bool final);
+    PathIndicator * GetNewIndicator(PlayerFaction faction, bool doable, bool final);
 
 private:
     std::vector<PathIndicator * > mActiveIndicators;

@@ -916,12 +916,10 @@ void ScreenInit::SetupTextures()
             { 388, 98, 96, 48 },
             { 485, 98, 96, 48 },
             { 0, 147, 96, 48 },
-            // move indicator
-            { 97, 147, 96, 48 },
             // conquest indicator
+            { 97, 147, 96, 48 },
             { 194, 147, 96, 48 },
             { 291, 147, 96, 48 },
-            { 388, 147, 96, 48 },
             // attack range indicator
             { 0, 196, 96, 48 },
             // HEALING RANGE INDICATOR
@@ -975,13 +973,6 @@ void ScreenInit::SetupTextures()
             { 582, 294, 96, 48 },
             { 582, 343, 96, 48 },
             { 582, 392, 96, 48 },
-
-            // ICON RESOURCES COST
-            { 582, 441, 16, 16 },
-            { 599, 441, 16, 16 },
-            { 616, 441, 16, 16 },
-            { 633, 441, 16, 16 },
-            { 650, 441, 16, 16 },
         };
 
         tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_GAME], SpriteFileMapIndicators, rects);

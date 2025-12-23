@@ -84,9 +84,6 @@ enum SpriteIdIndicators : unsigned int
 
     IND_WB_INVALID,
 
-    // MOVE INDICATOR
-    IND_MOVE,
-
     // CONQUEST INDICATOR
     IND_CONQUEST_F1,
     IND_CONQUEST_F2,
@@ -149,13 +146,6 @@ enum SpriteIdIndicators : unsigned int
     ID_MIND_PATH_DEST_F2,
     ID_MIND_PATH_F3,
     ID_MIND_PATH_DEST_F3,
-
-    // ICON RESOURCES COST
-    ID_MIND_ICON_ENERGY,
-    ID_MIND_ICON_MATERIAL,
-    ID_MIND_ICON_DIAMONDS,
-    ID_MIND_ICON_BLOBS,
-    ID_MIND_ICON_MONEY,
 
     // TOTAL
     NUM_IND_SPRITES,
