@@ -322,7 +322,7 @@ void ScreenMainMenu::CreateChangelog()
 
     auto textNewFeat = new sgui::TextArea(contentW, minBlockH, font, true, content);
     textNewFeat->SetText("NEW FEATURES\n"
-                         "- \n"
+                         "- Show path overlay when planning unit's move.\n"
                          );
     textNewFeat->SetPosition(contX, contY);
     textNewFeat->SetColor(colorContent);
@@ -332,7 +332,7 @@ void ScreenMainMenu::CreateChangelog()
     // CONTENT BLOCK: CHANGES
     auto textChange = new sgui::TextArea(contentW, minBlockH, font, true, content);
     textChange->SetText("CHANGES\n"
-                        "-\n"
+                        "- Unit movements are limited to visible cells.\n"
                         );
     textChange->SetPosition(contX, contY);
     textChange->SetColor(colorContent);
@@ -342,7 +342,7 @@ void ScreenMainMenu::CreateChangelog()
     // CONTENT BLOCK: FIXES
     auto textFix = new sgui::TextArea(contentW, minBlockH, font, true, content);
     textFix->SetText("FIXES\n"
-                     "- Fixed energy cost computation of units moves.\n"
+                     "- Fixed energy cost computation of unit moves.\n"
                      );
     textFix->SetPosition(contX, contY);
     textFix->SetColor(colorContent);
