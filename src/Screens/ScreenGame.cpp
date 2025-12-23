@@ -172,7 +172,7 @@ ScreenGame::ScreenGame(Game * game)
     CreateUI();
 
     // OVERLAYS
-    mPathOverlay = new PathOverlay(mIsoMap->GetLayer(MapLayers::CELL_OVERLAYS2),
+    mPathOverlay = new PathOverlay(mIsoMap->GetLayer(MapLayers::CELL_OVERLAYS4),
                                    mIsoMap->GetNumRows(), mIsoMap->GetNumCols());
 
     mPathIndicator = new PathIndicator(mLocalPlayer->GetFaction(), true);
@@ -3402,8 +3402,8 @@ void ScreenGame::ShowMoveIndicator(GameObject * obj, const Cell2D & dest)
 
     if(destObj != nullptr)
     {
-        // not walkable
-        if(!destObj->CanBeConquered())
+        // can't be conquered or adjacent -> no move
+        if(!destObj->CanBeConquered() || mGameMap->AreObjectsAdjacent(obj, destObj))
         {
             mPathOverlay->ClearPath();
             return ;
