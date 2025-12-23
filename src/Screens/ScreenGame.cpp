@@ -2188,6 +2188,15 @@ bool ScreenGame::SetupUnitMove(Unit * unit, const Cell2D & start, const Cell2D &
     auto op = new ObjectPath(unit, mIsoMap, mGameMap, this);
     op->SetPath(path);
 
+    // do not move if energy is not enough
+    const int cost = op->GetPathCost();
+
+    if(cost > unit->GetEnergy() || cost > player->GetTurnEnergy())
+    {
+        PlayLocalActionErrorSFX(player);
+        return false;
+    }
+
     if(mGameMap->MoveUnit(op))
     {
         // disable actions panel (if action is done by local player)
@@ -2418,54 +2427,47 @@ bool ScreenGame::FindWhereToBuildStructureAI(Unit * unit, Cell2D & target)
 
 void ScreenGame::HandleUnitMoveOnMouseUp(Unit * unit, const Cell2D & clickCell)
 {
+    // check destination is visible
+    const int ClickInd = clickCell.row * mGameMap->GetNumCols() + clickCell.col;
+    const bool clickVisible = mLocalPlayer->IsCellVisible(ClickInd);
+
+    if(!clickVisible)
+    {
+        PlayLocalActionErrorSFX(mLocalPlayer);
+        return;
+    }
+
+    // check destination is walkable
     const Cell2D selCell(unit->GetRow0(), unit->GetCol0());
 
-    const bool clickWalkable = mGameMap->IsCellWalkable(clickCell.row, clickCell.col);
+    const GameMapCell & clickGameCell = mGameMap->GetCell(ClickInd);
+    const GameObject * clickObj = clickGameCell.objTop;
 
     // destination is walkable -> try to generate a path and move
-    if(clickWalkable)
+    if(clickObj == nullptr)
     {
         SetupUnitMove(unit, selCell, clickCell);
         return ;
     }
 
-    const GameMapCell & clickGameCell = mGameMap->GetCell(clickCell.row, clickCell.col);
-    const GameObject * clickObj = clickGameCell.objTop;
-    const bool clickVisited = clickObj && clickObj->IsVisited();
-
-    // destination never visited (hence not visible as well) -> try to move close
-    if(!clickVisited)
+    // there's an object and it can't be conquered -> exit
+    if(!clickObj->CanBeConquered())
     {
-        Cell2D target = mGameMap->GetCloseMoveTarget(selCell, clickCell);
-
-        // failed to find a suitable target
-        if(-1 == target.row || -1 == target.col)
-            return ;
-
-        SetupUnitMove(unit, selCell, target);
-
+        PlayLocalActionErrorSFX(mLocalPlayer);
         return ;
     }
 
-    // check if destination obj is visible
-    const bool clickVisible = clickObj && clickObj->IsVisible();
-
-    // visited, but not visible object -> exit
-    if(!clickVisible)
-        return ;
-
-    // visible, but it can't be conquered -> exit
-    if(!clickObj->CanBeConquered())
-        return ;
-
     // unit can't conquer
     if(!unit->CanConquer())
+    {
+        PlayLocalActionErrorSFX(mLocalPlayer);
         return ;
+    }
 
     // object is adjacent -> try to interact
     if(mGameMap->AreObjectsAdjacent(unit, clickObj))
         SetupStructureConquest(unit, selCell, clickCell, mLocalPlayer);
-    // object is far -> move close and then try to interact
+    // object is far -> move close and then try to conquer
     else
     {
         Cell2D target = mGameMap->GetAdjacentMoveTarget(selCell, clickObj);
@@ -3395,7 +3397,7 @@ void ScreenGame::ShowMoveIndicator(GameObject * obj, const Cell2D & dest)
     }
 
     // check if destination is not occupied or if object on it can be conquered
-    const GameMapCell & destGC = mGameMap->GetCell(dest.row, dest.col);
+    const GameMapCell & destGC = mGameMap->GetCell(destInd);
     const GameObject * destObj = destGC.objTop;
 
     Cell2D destFinal;
@@ -3432,7 +3434,9 @@ void ScreenGame::ShowMoveIndicator(GameObject * obj, const Cell2D & dest)
     op.SetPath(path);
 
     const int cost = op.GetPathCost();
-    const bool doable = obj->GetEnergy() >= cost;
+    const int energyObj = obj->GetEnergy();
+    const int energyTurn = mLocalPlayer->GetTurnEnergy();
+    const bool doable = energyObj >= cost && energyTurn >= cost;
 
     mPathOverlay->SetPath(path, obj->GetFaction(), cost, doable);
 }
