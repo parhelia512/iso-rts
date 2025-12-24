@@ -43,7 +43,7 @@ void PathOverlay::SetPath(const std::vector<unsigned int> & path, PlayerFaction 
     const unsigned int pathSize = path.size();
     const unsigned int lastInd = pathSize - 1;
 
-    for(unsigned int i = 0; i < pathSize; ++i)
+    for(unsigned int i = 1; i < pathSize; ++i)
     {
         const unsigned int ind = path[i];
         const unsigned int row = ind / mMapCols;
