@@ -25,6 +25,7 @@
 #include "Tutorial/StepGameMissionGoalsDialog.h"
 #include "Tutorial/StepGameMoveCamera.h"
 #include "Tutorial/StepGameMoveUnit.h"
+#include "Tutorial/StepGameSetSelectionActiveAction.h"
 #include "Tutorial/StepGameStructConnected.h"
 #include "Tutorial/StepGameStructDisconnected.h"
 #include "Tutorial/StepGameTurnEnergy.h"
@@ -70,20 +71,23 @@ TutorialGameIntro::TutorialGameIntro(Screen * screen)
     AddStep(new StepGameBaseBuildUnit(mScreen->mHUD));
     AddStep(new StepDelay(localBase->GetTimeBuildUnit()));
     AddStep(new StepGameUnit(local));
+    AddStep(new StepGameSetSelectionActiveAction(local, GameObjectActionType::IDLE));
     AddStep(new StepDelay(0.5f));
     AddStep(new StepGameMoveUnit(local, mScreen->mIsoMap));
-    AddStep(new StepDelay(3.f));
+    AddStep(new StepGameSetSelectionActiveAction(local, GameObjectActionType::IDLE));
     // TODO update based on tutorial map
     const int genR = 56;
     const int genC = 13;
     const GameMapCell gmc = mScreen->mGameMap->GetCell(genR, genC);
     AddStep(new StepGameMoveCamera(200, -100));
-    AddStep(new StepGameConquerStruct(gmc.objTop, mScreen->mIsoMap));
+    AddStep(new StepGameConquerStruct(local, gmc.objTop, mScreen->mIsoMap));
+    AddStep(new StepGameSetSelectionActiveAction(local, GameObjectActionType::IDLE));
     AddStep(new StepDelay(0.5f));
     AddStep(new StepGameTurnEnergy(mScreen->mHUD));
     AddStep(new StepDelay(0.5f));
     AddStep(new StepGameEndTurn(panelTurn));
     AddStep(new StepGameWaitTurn(mScreen));
+    AddStep(new StepGameSetSelectionActiveAction(local, GameObjectActionType::IDLE));
     AddStep(new StepDelay(0.5f));
     AddStep(new StepGameEnergyRegeneration);
     AddStep(new StepGameStructDisconnected);

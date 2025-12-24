@@ -8,6 +8,12 @@
 #include "Widgets/Tutorial/PanelClickFilter.h"
 #include "Widgets/Tutorial/PanelInfoTutorial.h"
 
+namespace
+{
+const int destR = 57;
+const int destC = 13;
+}
+
 namespace game
 {
 
@@ -30,9 +36,6 @@ StepGameMoveUnit::StepGameMoveUnit(const Player * p, const IsoMap * isoMap)
     info->AddInfoEntry("Click inside this cell with the RIGHT MOUSE BUTTON to move next to that spiky structure.",
                        TutorialConstants::colorTextAction, 0.f, false, false, [this, p, isoMap]
                        {
-                           const int destR = 57;
-                           const int destC = 13;
-
                            const sgl::core::Pointd2D pos = isoMap->GetCellPosition(destR, destC);
 
                            // FOCUS
@@ -53,7 +56,9 @@ StepGameMoveUnit::StepGameMoveUnit(const Player * p, const IsoMap * isoMap)
                            cf->SetWorldClickableArea(objX, objY, objW, objH);
                            cf->SetClickableCell(isoMap, destR, destC);
 
+                           // re-allow unit to move
                            mUnit = p->GetUnit(0);
+                           mUnit->SetActiveAction(GameObjectActionType::MOVE);
                        });
 }
 
@@ -66,7 +71,7 @@ void StepGameMoveUnit::Update(float)
 {
     if(mUnit != nullptr)
     {
-        if(mUnit->GetCurrentAction() == MOVE)
+        if(mUnit->GetRow0() == destR && mUnit->GetCol0() == destC)
             SetDone();
     }
 }

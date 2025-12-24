@@ -253,6 +253,8 @@ add_executable(
     src/Tutorial/StepGameMoveCamera.cpp
     src/Tutorial/StepGameMoveUnit.h
     src/Tutorial/StepGameMoveUnit.cpp
+    src/Tutorial/StepGameSetSelectionActiveAction.h
+    src/Tutorial/StepGameSetSelectionActiveAction.cpp
     src/Tutorial/StepGameStructConnected.h
     src/Tutorial/StepGameStructConnected.cpp
     src/Tutorial/StepGameStructDisconnected.h

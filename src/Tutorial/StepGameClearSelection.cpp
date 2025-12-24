@@ -12,6 +12,8 @@ StepGameClearSelection::StepGameClearSelection(ScreenGame * screen)
 
 void StepGameClearSelection::OnStart()
 {
+    TutorialStep::OnStart();
+
     auto p = mScreen->GetActivePlayer();
     mScreen->ClearSelection(p);
 

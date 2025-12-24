@@ -3,7 +3,8 @@
 #include "GameConstants.h"
 #include "IsoMap.h"
 #include "IsoObject.h"
-#include "GameObjects/GameObject.h"
+#include "Player.h"
+#include "GameObjects/Unit.h"
 #include "Tutorial/TutorialConstants.h"
 #include "Widgets/Tutorial/FocusArea.h"
 #include "Widgets/Tutorial/PanelClickFilter.h"
@@ -14,7 +15,8 @@
 namespace game
 {
 
-StepGameConquerStruct::StepGameConquerStruct(const GameObject * energyGen, const IsoMap * isoMap)
+StepGameConquerStruct::StepGameConquerStruct(const Player * p, const GameObject * energyGen,
+                                             const IsoMap * isoMap)
     : TutorialInfoStep(500, 300)
     , mFocusArea(new FocusArea)
     , mEnergyGen(energyGen)
@@ -44,7 +46,8 @@ StepGameConquerStruct::StepGameConquerStruct(const GameObject * energyGen, const
                            mFocusArea->SetVisible(true);
                        });
     info->AddInfoEntry("Click on the generator with the RIGHT MOUSE BUTTON to start the conquest.",
-                       TutorialConstants::colorTextAction, 0.f, false, false, [this, objX, objY, objW, objH, energyGen, isoMap]
+                       TutorialConstants::colorTextAction, 0.f, false, false,
+                       [this, objX, objY, objW, objH, energyGen, isoMap, p]
                        {
                            // FOCUS
                            mFocusArea->SetCornersColor(TutorialConstants::colorFocusAction);
@@ -56,6 +59,10 @@ StepGameConquerStruct::StepGameConquerStruct(const GameObject * energyGen, const
                            cf->SetButtonToExclude(sgl::core::MouseEvent::BUTTON_LEFT);
                            cf->SetClickableCells(isoMap, energyGen->GetRow1(), energyGen->GetCol1(),
                                                  energyGen->GetRow0(), energyGen->GetCol0());
+
+                           // re-allow unit to move and conquer
+                           auto unit = p->GetUnit(0);
+                           unit->SetActiveAction(GameObjectActionType::MOVE);
                        });
 }
 
