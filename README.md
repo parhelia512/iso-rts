@@ -16,15 +16,16 @@ If you want to influence the development and to know more about what's happening
 [![Join us on Discord](https://cdn.akamai.steamstatic.com/steam/apps/1607580/extras/join_discord.png?t=1643724257)](https://discord.gg/pdEPr7efQX)
 
 You can also follow all the less frequent updates on social media:
-- [Website](https://virtualord.com)
-- [Twitter](https://twitter.com/vivaladev)
 - [Youtube](https://www.youtube.com/channel/UCUYD1ElkmiIklQRemVGxarw).
+- [Bluesky](https://bsky.app/profile/voxelay.bsky.social)
+- [Mastodon](https://mastodon.gamedev.place/@vivaladev)
+- [X / Twitter](https://twitter.com/vivaladev)
 - [Linkedin](https://www.linkedin.com/company/voxelay)
 - [Facebook](https://www.facebook.com/voxelay/)
 
 
 ## Current status
-0.3.0 - alpha
+0.4.0 - alpha
 
 ![Virtualord, red faction](https://i.imgur.com/kd7t8QM.jpeg)
 ![Virtualord, green faction](https://i.imgur.com/lWqvZhE.jpeg)
