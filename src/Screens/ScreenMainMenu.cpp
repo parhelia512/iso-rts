@@ -333,6 +333,7 @@ void ScreenMainMenu::CreateChangelog()
     auto textChange = new sgui::TextArea(contentW, minBlockH, font, true, content);
     textChange->SetText("CHANGES\n"
                         "- Unit movements are limited to visible cells.\n"
+                        "- New look&feel for tutorial panels.\n"
                         );
     textChange->SetPosition(contX, contY);
     textChange->SetColor(colorContent);
