@@ -66,7 +66,7 @@ StepGameConquerCells::~StepGameConquerCells()
 void StepGameConquerCells::Update(float)
 {
     if(mUnit != nullptr && mUnit->GetActiveAction() == MOVE)
-            SetDone();
+        SetDone();
 }
 
 } // namespace game

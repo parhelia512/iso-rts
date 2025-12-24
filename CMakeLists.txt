@@ -227,6 +227,8 @@ add_executable(
     src/Tutorial/StepGameBaseBuildUnitIcon.cpp
     src/Tutorial/StepGameBaseFeatures.h
     src/Tutorial/StepGameBaseFeatures.cpp
+    src/Tutorial/StepGameClearSelection.h
+    src/Tutorial/StepGameClearSelection.cpp
     src/Tutorial/StepGameConquerCells.h
     src/Tutorial/StepGameConquerCells.cpp
     src/Tutorial/StepGameConquerStruct.h

@@ -12,6 +12,7 @@
 #include "Tutorial/StepGameBaseBuildUnit.h"
 #include "Tutorial/StepGameBaseBuildUnitIcon.h"
 #include "Tutorial/StepGameBaseFeatures.h"
+#include "Tutorial/StepGameClearSelection.h"
 #include "Tutorial/StepGameConquerCells.h"
 #include "Tutorial/StepGameConquerStruct.h"
 #include "Tutorial/StepGameDisableCamera.h"
@@ -89,6 +90,7 @@ TutorialGameIntro::TutorialGameIntro(Screen * screen)
     AddStep(new StepGameUnitSelect(local));
     AddStep(new StepGameUnitConquerCellsIcon(panelActions));
     AddStep(new StepGameConquerCells(local, mScreen->mIsoMap));
+    AddStep(new StepGameClearSelection(mScreen));
     AddStep(new StepDelay(0.5f));
     AddStep(new StepGameStructConnected);
 
