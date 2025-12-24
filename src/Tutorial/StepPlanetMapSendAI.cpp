@@ -11,7 +11,7 @@ namespace game
 {
 
 StepPlanetMapSendAI::StepPlanetMapSendAI(PanelPlanetActions * panel)
-    : TutorialInfoStep(infoPlanetMapW, infoPlanetMapH)
+    : TutorialInfoStep(TutorialConstants::infoPlanetMapW, TutorialConstants::infoPlanetMapH)
     , mFocusArea(new FocusArea)
 {
     // FOCUS
@@ -25,19 +25,19 @@ StepPlanetMapSendAI::StepPlanetMapSendAI(PanelPlanetActions * panel)
 
     mFocusArea = new FocusArea;
     mFocusArea->SetScreenArea(fX, fY, fW, fH);
-    mFocusArea->SetCornersColor(colorTutorialFocusElement);
+    mFocusArea->SetCornersColor(TutorialConstants::colorFocusElement);
     mFocusArea->SetVisible(false);
 
     // INFO
     auto info = GetPanelInfo();
 
-    info->SetPosition(infoPlanetMapX, infoPlanetMapY);
+    info->SetPosition(TutorialConstants::infoPlanetMapX, TutorialConstants::infoPlanetMapY);
 
     info->AddInfoEntry("Now that this territory is explored you can decide if you want to conquer it or not.",
-                       colorTutorialText, 7.f, true, true);
+                       TutorialConstants::colorText, 7.f, true, true);
     info->AddInfoEntry("You can send an AI general to do the job for you, but it will cost you many "
                        "resources and victory is not guaranteed.",
-                       colorTutorialText, 8.f, true, true, [this]
+                       TutorialConstants::colorText, 8.f, true, true, [this]
                        {
                            mFocusArea->SetBlinking(true);
                            mFocusArea->SetVisible(true);

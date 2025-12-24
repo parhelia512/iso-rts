@@ -14,22 +14,22 @@ namespace game
 {
 
 StepGameMissionGoalsDialog::StepGameMissionGoalsDialog(GameHUD * HUD)
-    : TutorialInfoStep(900, 130)
+    : TutorialInfoStep(900, 140)
     , mFocusArea(new FocusArea)
     , mHUD(HUD)
 {
     // FOCUS
-    mFocusArea->SetCornersColor(colorTutorialFocusElement);
+    mFocusArea->SetCornersColor(TutorialConstants::colorFocusElement);
     mFocusArea->SetVisible(false);
 
     // INFO
     auto info = GetPanelInfo();
 
-    info->SetPosition(510, 65);
+    info->SetPosition(510, 60);
 
     info->AddInfoEntry("In this dialog you can find your primary goals, which are the ones you need "
                        "to complete in order to win this mission.",
-                       colorTutorialText, 13.f, true, true, [this]
+                       TutorialConstants::colorText, 13.f, true, true, [this]
                        {
                            mFocusArea->SetScreenArea(340, 290, 1240, 160);
                            mFocusArea->SetBlinking(true);
@@ -37,7 +37,7 @@ StepGameMissionGoalsDialog::StepGameMissionGoalsDialog(GameHUD * HUD)
                        });
 
     info->AddInfoEntry("Below there are your secondary goals, which you can complete to gain extra rewards.",
-                       colorTutorialText, 9.f, true, true, [this]
+                       TutorialConstants::colorText, 9.f, true, true, [this]
                        {
                            mFocusArea->SetScreenArea(340, 460, 1240, 345);
                            mFocusArea->SetBlinking(true);
@@ -46,7 +46,7 @@ StepGameMissionGoalsDialog::StepGameMissionGoalsDialog(GameHUD * HUD)
 
     info->AddInfoEntry("Here there are the COLLECT buttons that will allow you to get your rewards once "
                        "you complete a mission goal.",
-                       colorTutorialText, 12.f, true, true, [this]
+                       TutorialConstants::colorText, 12.f, true, true, [this]
                        {
                            mFocusArea->SetScreenArea(1300, 340, 280, 440);
                            mFocusArea->SetBlinking(true);
@@ -55,7 +55,7 @@ StepGameMissionGoalsDialog::StepGameMissionGoalsDialog(GameHUD * HUD)
 
     info->AddInfoEntry("Finally there's the END MISSION button that will be enabled once you complete "
                        "all your primary goals.",
-                       colorTutorialText, 12.f, true, true, [this]
+                       TutorialConstants::colorText, 12.f, true, true, [this]
                        {
                            const int padding = 10;
                            auto btn = mHUD->GetDialogMissionGoals()->GetButtonEnd();
@@ -70,10 +70,10 @@ StepGameMissionGoalsDialog::StepGameMissionGoalsDialog(GameHUD * HUD)
                            mFocusArea->SetVisible(true);
                        });
 
-    info->AddInfoEntry("Ok commander, let's move on!\n", colorTutorialText, 6.f, true, true);
+    info->AddInfoEntry("Ok commander, let's move on!\n", TutorialConstants::colorText, 6.f, true, true);
 
     info->AddInfoEntry("Close the dialog clicking on the button with the X on the top-right corner.",
-                       colorTutorialTextAction, 0.f, false, false, [this]
+                       TutorialConstants::colorTextAction, 0.f, false, false, [this]
                        {
                            const int padding = 10;
 
@@ -95,7 +95,7 @@ StepGameMissionGoalsDialog::StepGameMissionGoalsDialog(GameHUD * HUD)
                            GetClickFilter()->SetScreenClickableArea(x, y, w, h);
 
                            mFocusArea->SetScreenArea(x, y, w, h);
-                           mFocusArea->SetCornersColor(colorTutorialFocusAction);
+                           mFocusArea->SetCornersColor(TutorialConstants::colorFocusAction);
                            mFocusArea->SetBlinking(true);
                            mFocusArea->SetVisible(true);
                        });

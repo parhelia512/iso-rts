@@ -23,9 +23,9 @@ StepGameUnit::StepGameUnit(const Player * p)
 
     info->SetPosition(1300, 450);
 
-    info->AddInfoEntry("Well done commander, this is your first unit!", colorTutorialText, 5.f, true, false);
+    info->AddInfoEntry("Well done commander, this is your first unit!", TutorialConstants::colorText, 5.f, true, false);
     info->AddInfoEntry("Now select it by clicking on its cell with the LEFT MOUSE BUTTON.",
-                       colorTutorialTextAction, 0.f, false, false, [this, p]
+                       TutorialConstants::colorTextAction, 0.f, false, false, [this, p]
                        {
                            // FOCUS
                            mUnit = p->GetUnit(0);
@@ -36,7 +36,7 @@ StepGameUnit::StepGameUnit(const Player * p)
                            const int objH = isoObj->GetHeight();
 
                            mFocusArea->SetWorldArea(objX, objY, objW, objH);
-                           mFocusArea->SetCornersColor(colorTutorialFocusAction);
+                           mFocusArea->SetCornersColor(TutorialConstants::colorFocusAction);
                            mFocusArea->SetBlinking(true);
                            mFocusArea->SetVisible(true);
 

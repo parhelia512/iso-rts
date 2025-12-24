@@ -7,19 +7,19 @@ namespace game
 {
 
 StepPlanetMapIntro::StepPlanetMapIntro()
-    : TutorialInfoStep(infoPlanetMapW, infoPlanetMapH)
+    : TutorialInfoStep(TutorialConstants::infoPlanetMapW, TutorialConstants::infoPlanetMapH)
 {
     // INFO
     auto info = GetPanelInfo();
 
-    info->SetPosition(infoPlanetMapX, infoPlanetMapY);
+    info->SetPosition(TutorialConstants::infoPlanetMapX, TutorialConstants::infoPlanetMapY);
 
     info->AddInfoEntry("Welcome commander,",
-                       colorTutorialText, 4.f, true, true);
+                       TutorialConstants::colorText, 4.f, true, true);
     info->AddInfoEntry("I am your assistant and I will guide you in your first planet conquest.",
-                       colorTutorialText, 7.f, true, true);
+                       TutorialConstants::colorText, 7.f, true, true);
     info->AddInfoEntry("This is the planet screen, where you can decide how to manage your expansion.",
-                       colorTutorialText, 8.f, true, true);
+                       TutorialConstants::colorText, 8.f, true, true);
 
     info->SetFunctionOnFinished([this]
     {

@@ -24,12 +24,12 @@ StepGameConquerCells::StepGameConquerCells(const Player * p, const IsoMap * isoM
     info->SetPosition(1300, 350);
 
     info->AddInfoEntry("Now that your unit is selected you can decide what cells to conquer.",
-                       colorTutorialText, 7.f, true, false);
+                       TutorialConstants::colorText, 7.f, true, false);
     info->AddInfoEntry("Moving your mouse around will design a path for your unit to conquer.\n"
                        "You can set anchor points clicking the RIGHT MOUSE BUTTON and finalize "
-                       "the path with a double click.", colorTutorialText, 14.f, true, false);
+                       "the path with a double click.", TutorialConstants::colorText, 14.f, true, false);
     info->AddInfoEntry("Now move your mouse inside this cell and double click the RIGHT MOUSE BUTTON to "
-                       "start the conquest.", colorTutorialTextAction, 0.f, false, false, [this, p, isoMap]
+                       "start the conquest.", TutorialConstants::colorTextAction, 0.f, false, false, [this, p, isoMap]
                        {
                            const int destR = 62;
                            const int destC = 13;
@@ -45,7 +45,7 @@ StepGameConquerCells::StepGameConquerCells(const Player * p, const IsoMap * isoM
                            const int objH = isoMap->GetTileHeight() + (2 * marginH);
 
                            mFocusArea->SetWorldArea(objX, objY, objW, objH);
-                           mFocusArea->SetCornersColor(colorTutorialFocusAction);
+                           mFocusArea->SetCornersColor(TutorialConstants::colorFocusAction);
                            mFocusArea->SetBlinking(true);
                            mFocusArea->SetVisible(true);
 

@@ -12,7 +12,7 @@ namespace game
 {
 
 StepPlanetMapConquerTerritory::StepPlanetMapConquerTerritory(PanelPlanetActions * panelActions)
-    : TutorialInfoStep(infoPlanetMapW, infoPlanetMapH)
+    : TutorialInfoStep(TutorialConstants::infoPlanetMapW, TutorialConstants::infoPlanetMapH)
     , mFocusArea(new FocusArea)
 {
     // FOCUS
@@ -25,19 +25,19 @@ StepPlanetMapConquerTerritory::StepPlanetMapConquerTerritory(PanelPlanetActions 
     const int fH = btn->GetHeight() + (padding * 2);
 
     mFocusArea->SetScreenArea(fX, fY, fW, fH);
-    mFocusArea->SetCornersColor(colorTutorialFocusAction);
+    mFocusArea->SetCornersColor(TutorialConstants::colorFocusAction);
     mFocusArea->SetBlinking(true);
     mFocusArea->SetVisible(false);
 
     // INFO
     auto info = GetPanelInfo();
 
-    info->SetPosition(infoPlanetMapX, infoPlanetMapY);
+    info->SetPosition(TutorialConstants::infoPlanetMapX, TutorialConstants::infoPlanetMapY);
 
     info->AddInfoEntry("I would suggest you to conquer the territory yourself.",
-                       colorTutorialText, 6.f, true, true);
+                       TutorialConstants::colorText, 6.f, true, true);
     info->AddInfoEntry("To do that click the button CONQUER.",
-                       colorTutorialTextAction, 0.f, false, false, [this, fX, fY, fW, fH]
+                       TutorialConstants::colorTextAction, 0.f, false, false, [this, fX, fY, fW, fH]
                        {
                            // CLICK FILTER
                            auto cf = GetClickFilter();

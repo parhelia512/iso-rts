@@ -12,7 +12,7 @@ namespace game
 {
 
 StepPlanetMapConquerTerritoryStart::StepPlanetMapConquerTerritoryStart(PanelPlanetActionConquer * panel)
-    : TutorialInfoStep(infoPlanetMapW, infoPlanetMapH)
+    : TutorialInfoStep(TutorialConstants::infoPlanetMapW, TutorialConstants::infoPlanetMapH)
     , mFocusArea(new FocusArea)
 {
     // FOCUS
@@ -25,17 +25,17 @@ StepPlanetMapConquerTerritoryStart::StepPlanetMapConquerTerritoryStart(PanelPlan
     const int fH = btn->GetHeight() + (padding * 2);
 
     mFocusArea->SetScreenArea(fX, fY, fW, fH);
-    mFocusArea->SetCornersColor(colorTutorialFocusAction);
+    mFocusArea->SetCornersColor(TutorialConstants::colorFocusAction);
     mFocusArea->SetBlinking(true);
     mFocusArea->SetVisible(false);
 
     // INFO
     auto info = GetPanelInfo();
 
-    info->SetPosition(infoPlanetMapX, infoPlanetMapY);
+    info->SetPosition(TutorialConstants::infoPlanetMapX, TutorialConstants::infoPlanetMapY);
 
     info->AddInfoEntry("Now click the button PROCEED to start your first mission.",
-                       colorTutorialTextAction, 0.f, false, false);
+                       TutorialConstants::colorTextAction, 0.f, false, false);
 
     info->SetFunctionOnFinished([this, fX, fY, fW, fH]
     {

@@ -28,7 +28,7 @@ StepGameConquerStruct::StepGameConquerStruct(const GameObject * energyGen, const
     const int objH = isoObj->GetHeight();
 
     mFocusArea->SetWorldArea(objX, objY, objW, objH);
-    mFocusArea->SetCornersColor(colorTutorialFocusElement);
+    mFocusArea->SetCornersColor(TutorialConstants::colorFocusElement);
     mFocusArea->SetVisible(false);
 
     // INFO
@@ -37,17 +37,17 @@ StepGameConquerStruct::StepGameConquerStruct(const GameObject * energyGen, const
     info->SetPosition(1300, 200);
 
     info->AddInfoEntry("When your unit action is set to MOVE you can also conquer structures.",
-                       colorTutorialText, 7.f, true, false);
-    info->AddInfoEntry("For example we can conquer this ENERGY GENERATOR.", colorTutorialText, 7.f, true, false,
+                       TutorialConstants::colorText, 7.f, true, false);
+    info->AddInfoEntry("For example we can conquer this ENERGY GENERATOR.", TutorialConstants::colorText, 7.f, true, false,
                        [this]
                        {
                            mFocusArea->SetVisible(true);
                        });
     info->AddInfoEntry("Click on the generator with the RIGHT MOUSE BUTTON to start the conquest.",
-                       colorTutorialTextAction, 0.f, false, false, [this, objX, objY, objW, objH, energyGen, isoMap]
+                       TutorialConstants::colorTextAction, 0.f, false, false, [this, objX, objY, objW, objH, energyGen, isoMap]
                        {
                            // FOCUS
-                           mFocusArea->SetCornersColor(colorTutorialFocusAction);
+                           mFocusArea->SetCornersColor(TutorialConstants::colorFocusAction);
                            mFocusArea->SetBlinking(true);
 
                            // CLICK FILTER

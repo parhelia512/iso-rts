@@ -33,18 +33,30 @@ PanelInfoTutorial::PanelInfoTutorial(int w, int h)
 {
     using namespace sgl;
 
-    SetSize(w, h);
-
-    // CREATE BACKGROUND
     auto tm = graphic::TextureManager::Instance();
     graphic::Texture * tex = nullptr;
 
-    const unsigned int texIds[NUM_BGPARTS] =
+    // CREATE BACKGROUND CORNERS
+    const unsigned int texIdsCorners[] =
     {
         IND_TUT_PANEL_INFO_CORNER_TL,
         IND_TUT_PANEL_INFO_CORNER_TR,
         IND_TUT_PANEL_INFO_CORNER_BL,
         IND_TUT_PANEL_INFO_CORNER_BR,
+    };
+
+    for(unsigned int i = 0; i < NUM_BG_CORNERS; ++i)
+    {
+        tex = tm->GetSprite(SpriteFileTutorial, texIdsCorners[i]);
+
+        const unsigned int ind = BGPART_TL + i;
+        mBgParts[ind] = new graphic::Image(tex);
+        RegisterRenderable(mBgParts[ind]);
+    }
+
+    // CREATE BACKGROUND EXPANDABLE PARTS
+    const unsigned int texIdsExp[] =
+    {
         IND_TUT_PANEL_INFO_BG,
         IND_TUT_PANEL_INFO_L,
         IND_TUT_PANEL_INFO_R,
@@ -52,14 +64,26 @@ PanelInfoTutorial::PanelInfoTutorial(int w, int h)
         IND_TUT_PANEL_INFO_B
     };
 
-    for(unsigned int ind = BGPART_TL; ind < NUM_BGPARTS; ++ind)
+    for(unsigned int i = 0; i < NUM_BG_EXPANDABLES; ++i)
     {
-        tex = tm->GetSprite(SpriteFileTutorialExp, texIds[ind]);
+        tex = tm->GetSprite(SpriteFileTutorialExp, texIdsExp[i]);
         tex->SetScaleMode(graphic::TSCALE_NEAREST);
 
+        const unsigned int ind = BGPART_CENTER + i;
         mBgParts[ind] = new graphic::Image(tex);
         RegisterRenderable(mBgParts[ind]);
     }
+
+    // SET SIZE
+    const int minW = (mBgParts[BGPART_TL]->GetWidth()) * 2 + mBgParts[BGPART_L]->GetWidth();
+    const int minH = (mBgParts[BGPART_TL]->GetHeight() * 2) + mBgParts[BGPART_L]->GetHeight();
+
+    if(w < minW)
+        w = minW;
+    if(h < minH)
+        h = minH;
+
+    SetSize(w, h);
 
     // LABEL CONTINUE
     const int marginBottom = 20;
@@ -68,7 +92,7 @@ PanelInfoTutorial::PanelInfoTutorial(int w, int h)
     auto font = fm->GetFont(WidgetsConstants::FontFileText, 18, graphic::Font::NORMAL);
 
     mLabelContinue = new sgui::Label("LEFT CLICK here or press SPACE to continue", font, this);
-    mLabelContinue->SetColor(0x6c8093ff);
+    mLabelContinue->SetColor(TutorialConstants::colorTextContinue);
 
     const int labelX = (w - mLabelContinue->GetWidth()) / 2;
     const int labelY = h - marginBottom - mLabelContinue->GetHeight();
@@ -138,7 +162,7 @@ void PanelInfoTutorial::ShowNextInfo()
     // keep current entry
     else
     {
-        oldEntry->mTxtArea->SetColor(colorTutorialTextOld);
+        oldEntry->mTxtArea->SetColor(TutorialConstants::colorTextOld);
 
         const int marginTextV = 25;
         mCurrEntryY += oldEntry->mTxtArea->GetTextHeight() + marginTextV;

@@ -24,11 +24,11 @@ StepGameMoveUnit::StepGameMoveUnit(const Player * p, const IsoMap * isoMap)
     info->SetPosition(1350, 125);
 
     info->AddInfoEntry("Now that your unit is selected you can do several things with it.",
-                       colorTutorialText, 7.f, true, false);
+                       TutorialConstants::colorText, 7.f, true, false);
     info->AddInfoEntry("The default action is MOVE, so let's start with that.",
-                       colorTutorialText, 7.f, true, false);
+                       TutorialConstants::colorText, 7.f, true, false);
     info->AddInfoEntry("Click inside this cell with the RIGHT MOUSE BUTTON to move next to that spiky structure.",
-                       colorTutorialTextAction, 0.f, false, false, [this, p, isoMap]
+                       TutorialConstants::colorTextAction, 0.f, false, false, [this, p, isoMap]
                        {
                            const int destR = 57;
                            const int destC = 13;
@@ -44,7 +44,7 @@ StepGameMoveUnit::StepGameMoveUnit(const Player * p, const IsoMap * isoMap)
                            const int objH = isoMap->GetTileHeight() + (2 * marginH);
 
                            mFocusArea->SetWorldArea(objX, objY, objW, objH);
-                           mFocusArea->SetCornersColor(colorTutorialFocusAction);
+                           mFocusArea->SetCornersColor(TutorialConstants::colorFocusAction);
                            mFocusArea->SetBlinking(true);
                            mFocusArea->SetVisible(true);
 

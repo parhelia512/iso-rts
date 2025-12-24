@@ -59,7 +59,9 @@ private:
         BGPART_T,
         BGPART_B,
 
-        NUM_BGPARTS
+        NUM_ALL_BG_PARTS,
+        NUM_BG_CORNERS = 4,
+        NUM_BG_EXPANDABLES = NUM_ALL_BG_PARTS - NUM_BG_CORNERS,
     };
 
     struct InfoEntry
@@ -73,7 +75,7 @@ private:
     };
 
     std::vector<InfoEntry *> mInfoEntries;
-    std::array<sgl::graphic::Image *, NUM_BGPARTS> mBgParts;
+    std::array<sgl::graphic::Image *, NUM_ALL_BG_PARTS> mBgParts;
 
     std::function<void()> mOnFinished = [](){};
 

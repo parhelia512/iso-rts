@@ -18,7 +18,7 @@ StepGameTurnEnergy::StepGameTurnEnergy(const GameHUD * HUD)
     , mFocusArea(new FocusArea)
 {
     // FOCUS
-    mFocusArea->SetCornersColor(colorTutorialFocusElement);
+    mFocusArea->SetCornersColor(TutorialConstants::colorFocusElement);
     mFocusArea->SetVisible(false);
 
     // INFO
@@ -27,10 +27,10 @@ StepGameTurnEnergy::StepGameTurnEnergy(const GameHUD * HUD)
     info->SetPosition(1300, 550);
 
     info->AddInfoEntry("Well done commander!\nNow this energy generator is under your control and we "
-                       "can keep going.", colorTutorialText, 9.f, true, true);
+                       "can keep going.", TutorialConstants::colorText, 9.f, true, true);
     info->AddInfoEntry("Always remember that your faction has a limited amount of energy to spend for "
-                       "units and structures each turn.", colorTutorialText, 10.f, true, false);
-    info->AddInfoEntry("The big bar in this panel shows your remaining faction energy.", colorTutorialText,
+                       "units and structures each turn.", TutorialConstants::colorText, 10.f, true, false);
+    info->AddInfoEntry("The big bar in this panel shows your remaining faction energy.", TutorialConstants::colorText,
                        8.f, true, false, [this, HUD]
                        {
                            // FOCUS
@@ -46,7 +46,7 @@ StepGameTurnEnergy::StepGameTurnEnergy(const GameHUD * HUD)
                            mFocusArea->SetBlinking(true);
                        });
     info->AddInfoEntry("You also need to consider the energy of your units or structures, which you can "
-                       "track in the object panel.", colorTutorialText, 10.f, true, false, [this, HUD]
+                       "track in the object panel.", TutorialConstants::colorText, 10.f, true, false, [this, HUD]
                        {
                            // FOCUS
                            const auto panel = HUD->GetPanelSelectedObject();
@@ -60,7 +60,7 @@ StepGameTurnEnergy::StepGameTurnEnergy(const GameHUD * HUD)
                            mFocusArea->SetVisible(true);
                            mFocusArea->SetBlinking(true);
                        });
-    info->AddInfoEntry("You can also see it in the quick selection button.", colorTutorialText, 8.f, true, false,
+    info->AddInfoEntry("You can also see it in the quick selection button.", TutorialConstants::colorText, 8.f, true, false,
                        [this, HUD]
                        {
                            // FOCUS

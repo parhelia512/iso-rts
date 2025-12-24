@@ -15,16 +15,16 @@ StepGameMapNavigation::StepGameMapNavigation()
     info->SetPosition(1200, 450);
 
     info->AddInfoEntry("Now that you learned how to control your units I want to show you how to move around.",
-                       colorTutorialText, 9.f, true, true);
-    info->AddInfoEntry("You can navigate the map in 3 different ways:", colorTutorialText, 5.f, true, false);
+                       TutorialConstants::colorText, 9.f, true, true);
+    info->AddInfoEntry("You can navigate the map in 3 different ways:", TutorialConstants::colorText, 5.f, true, false);
     info->AddInfoEntry("- You can move your mouse to the border of the screen and the map will scroll in that "
-                       "direction.", colorTutorialText, 12.f, true, false);
+                       "direction.", TutorialConstants::colorText, 12.f, true, false);
     info->AddInfoEntry("- You can use the keyboard keys W, A, S, D to move in the 4 directions.",
-                       colorTutorialText, 10.f, true, false);
+                       TutorialConstants::colorText, 10.f, true, false);
     info->AddInfoEntry("- You can click with your LEFT MOUSE button on it and drag to move in the opposite "
-                       "direction.", colorTutorialText, 10.f, true, false);
+                       "direction.", TutorialConstants::colorText, 10.f, true, false);
     info->AddInfoEntry("Now I will let you to practice and to explore this map.",
-                       colorTutorialText, 9.f, true, false);
+                       TutorialConstants::colorText, 9.f, true, false);
 
     info->SetFunctionOnFinished([this]
     {

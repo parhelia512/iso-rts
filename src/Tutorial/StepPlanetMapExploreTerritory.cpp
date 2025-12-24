@@ -12,7 +12,7 @@ namespace game
 {
 
 StepPlanetMapExploreTerritory::StepPlanetMapExploreTerritory(PanelPlanetActions * panelActions)
-    : TutorialInfoStep(infoPlanetMapW, infoPlanetMapH)
+    : TutorialInfoStep(TutorialConstants::infoPlanetMapW, TutorialConstants::infoPlanetMapH)
     , mFocusArea(new FocusArea)
 {
     // FOCUS
@@ -25,17 +25,17 @@ StepPlanetMapExploreTerritory::StepPlanetMapExploreTerritory(PanelPlanetActions 
     const int fH = btnExplore->GetHeight() + (padding * 2);
 
     mFocusArea->SetScreenArea(fX, fY, fW, fH);
-    mFocusArea->SetCornersColor(colorTutorialFocusAction);
+    mFocusArea->SetCornersColor(TutorialConstants::colorFocusAction);
     mFocusArea->SetBlinking(true);
     mFocusArea->SetVisible(false);
 
     // INFO
     auto info = GetPanelInfo();
 
-    info->SetPosition(infoPlanetMapX, infoPlanetMapY);
+    info->SetPosition(TutorialConstants::infoPlanetMapX, TutorialConstants::infoPlanetMapY);
 
     info->AddInfoEntry("Click the button EXPLORE to try to explore it.",
-                       colorTutorialTextAction, 0.f, false, false, [this, fX, fY, fW, fH]
+                       TutorialConstants::colorTextAction, 0.f, false, false, [this, fX, fY, fW, fH]
                        {
                            GetClickFilter()->SetScreenClickableArea(fX, fY, fW, fH);
                        });

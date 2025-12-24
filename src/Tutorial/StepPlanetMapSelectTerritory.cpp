@@ -12,7 +12,7 @@ namespace game
 {
 
 StepPlanetMapSelectTerritory::StepPlanetMapSelectTerritory(PlanetMap * planet)
-    : TutorialInfoStep(infoPlanetMapW, infoPlanetMapH)
+    : TutorialInfoStep(TutorialConstants::infoPlanetMapW, TutorialConstants::infoPlanetMapH)
     , mFocusArea(new FocusArea)
 {
     // FOCUS
@@ -25,22 +25,22 @@ StepPlanetMapSelectTerritory::StepPlanetMapSelectTerritory(PlanetMap * planet)
     const int fH = mTerritory->GetHeight() + (padding * 2);
 
     mFocusArea->SetScreenArea(fX, fY, fW, fH);
-    mFocusArea->SetCornersColor(colorTutorialFocusElement);
+    mFocusArea->SetCornersColor(TutorialConstants::colorFocusElement);
     mFocusArea->SetVisible(false);
 
     // INFO
     auto info = GetPanelInfo();
 
-    info->SetPosition(infoPlanetMapX, infoPlanetMapY);
+    info->SetPosition(TutorialConstants::infoPlanetMapX, TutorialConstants::infoPlanetMapY);
 
     info->AddInfoEntry("Let's start to explore a territory of this planet.",
-                       colorTutorialText, 6.f, true, true);
-    info->AddInfoEntry("Select this one in the top with the LEFT MOUSE BUTTON", colorTutorialTextAction,
+                       TutorialConstants::colorText, 6.f, true, true);
+    info->AddInfoEntry("Select this one in the top with the LEFT MOUSE BUTTON", TutorialConstants::colorTextAction,
                        0.f, false, false);
 
     info->SetFunctionOnFinished([this, fX, fY, fW, fH]
     {
-        mFocusArea->SetCornersColor(colorTutorialFocusAction);
+        mFocusArea->SetCornersColor(TutorialConstants::colorFocusAction);
         mFocusArea->SetBlinking(true);
 
         GetClickFilter()->SetScreenClickableArea(fX, fY, fW, fH);

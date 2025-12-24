@@ -17,7 +17,7 @@ StepGameMissionGoalsIcon::StepGameMissionGoalsIcon(PanelObjectActions * panel)
     , mPanelActions(panel)
 {
     // FOCUS
-    mFocusArea->SetCornersColor(colorTutorialFocusAction);
+    mFocusArea->SetCornersColor(TutorialConstants::colorFocusAction);
     mFocusArea->SetBlinking(true);
     mFocusArea->SetVisible(false);
 
@@ -27,9 +27,9 @@ StepGameMissionGoalsIcon::StepGameMissionGoalsIcon(PanelObjectActions * panel)
     info->SetPosition(300, 550);
 
     info->AddInfoEntry("For example you can check your missions goals from here.",
-                       colorTutorialText, 5.f, true, false);
+                       TutorialConstants::colorText, 5.f, true, false);
     info->AddInfoEntry("Click this button to open the mission goals dialog.",
-                       colorTutorialTextAction, 0.f, false, false, [this, panel]
+                       TutorialConstants::colorTextAction, 0.f, false, false, [this, panel]
                        {
                            // FOCUS
                            auto btn = panel->GetButton(PanelObjectActions::BTN_MISSION_GOALS);

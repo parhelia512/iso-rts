@@ -18,7 +18,7 @@ StepGameEndTurn::StepGameEndTurn(const PanelTurnControl * panel)
 {
 
     // FOCUS
-    mFocusArea->SetCornersColor(colorTutorialFocusElement);
+    mFocusArea->SetCornersColor(TutorialConstants::colorFocusElement);
     mFocusArea->SetVisible(false);
 
     // INFO
@@ -27,10 +27,10 @@ StepGameEndTurn::StepGameEndTurn(const PanelTurnControl * panel)
     info->SetPosition(1300, 650);
 
     info->AddInfoEntry("You can restore your energy by ending a turn and waiting for your "
-                       "opponents to finish theirs.", colorTutorialText, 10.f, true, false);
+                       "opponents to finish theirs.", TutorialConstants::colorText, 10.f, true, false);
 
     info->AddInfoEntry("Click this button to END THIS TURN, then wait your enemy's moves.",
-                       colorTutorialTextAction, 0.f, false, false, [this, panel]
+                       TutorialConstants::colorTextAction, 0.f, false, false, [this, panel]
                        {
                            // FOCUS
                            auto btn = panel->GetButtonEndTurn();
@@ -40,7 +40,7 @@ StepGameEndTurn::StepGameEndTurn(const PanelTurnControl * panel)
                            const int fW = btn->GetWidth() + (padding * 2);
                            const int fH = btn->GetHeight() + (padding * 2);
 
-                           mFocusArea->SetCornersColor(colorTutorialFocusAction);
+                           mFocusArea->SetCornersColor(TutorialConstants::colorFocusAction);
                            mFocusArea->SetBlinking(true);
                            mFocusArea->SetScreenArea(fX, fY, fW, fH);
                            mFocusArea->SetVisible(true);

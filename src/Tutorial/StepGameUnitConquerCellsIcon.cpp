@@ -17,7 +17,7 @@ StepGameUnitConquerCellsIcon::StepGameUnitConquerCellsIcon(PanelObjectActions * 
     , mPanelActions(panel)
 {
     // FOCUS
-    mFocusArea->SetCornersColor(colorTutorialFocusAction);
+    mFocusArea->SetCornersColor(TutorialConstants::colorFocusAction);
     mFocusArea->SetBlinking(true);
     mFocusArea->SetVisible(false);
 
@@ -27,7 +27,7 @@ StepGameUnitConquerCellsIcon::StepGameUnitConquerCellsIcon(PanelObjectActions * 
     info->SetPosition(1100, 600);
 
     info->AddInfoEntry("Then click this button to set your unit's action to CELL CONQUEST.",
-                       colorTutorialTextAction, 0.f, false, false, [this, panel]
+                       TutorialConstants::colorTextAction, 0.f, false, false, [this, panel]
                        {
                            // FOCUS
                            auto btn = panel->GetButton(PanelObjectActions::BTN_CONQUER_CELL);

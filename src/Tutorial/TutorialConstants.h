@@ -3,16 +3,21 @@
 namespace game
 {
 
-constexpr unsigned int colorTutorialFocusAction = 0xfaeb9eff;
-constexpr unsigned int colorTutorialFocusElement = 0xadd6ebff;
+class TutorialConstants
+{
+public:
+    static const unsigned int colorFocusAction;
+    static const unsigned int colorFocusElement;
 
-constexpr unsigned int colorTutorialText = 0xb6c0c9ff;
-constexpr unsigned int colorTutorialTextAction = 0xfaeb9eff;
-constexpr unsigned int colorTutorialTextOld = 0x627483ff;
+    static const unsigned int colorText;
+    static const unsigned int colorTextAction;
+    static const unsigned int colorTextContinue;
+    static const unsigned int colorTextOld;
 
-constexpr int infoPlanetMapX = 560;
-constexpr int infoPlanetMapY = 100;
-constexpr int infoPlanetMapW = 800;
-constexpr int infoPlanetMapH = 125;
+    static const int infoPlanetMapX;
+    static const int infoPlanetMapY;
+    static const int infoPlanetMapW;
+    static const int infoPlanetMapH;
+};
 
 } // namespace game

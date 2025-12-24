@@ -16,7 +16,7 @@ namespace game
 StepPlanetMapExploreTerritorySuccess::StepPlanetMapExploreTerritorySuccess(const PanelPlanetActionExplore * panelExplore,
                                                                            const PanelPlanetInfo * panelInfo,
                                                                            const PanelPlanetResources * panelResources)
-    : TutorialInfoStep(infoPlanetMapW, infoPlanetMapH)
+    : TutorialInfoStep(TutorialConstants::infoPlanetMapW, TutorialConstants::infoPlanetMapH)
     , mFocusArea(new FocusArea)
     , mFocusInfo(new FocusArea)
     , mFocusResources(new FocusArea)
@@ -31,7 +31,7 @@ StepPlanetMapExploreTerritorySuccess::StepPlanetMapExploreTerritorySuccess(const
     const int fH = btnClose->GetHeight() + (padding * 2);
 
     mFocusArea->SetScreenArea(fX, fY, fW, fH);
-    mFocusArea->SetCornersColor(colorTutorialFocusAction);
+    mFocusArea->SetCornersColor(TutorialConstants::colorFocusAction);
     mFocusArea->SetBlinking(true);
     mFocusArea->SetVisible(false);
 
@@ -41,7 +41,7 @@ StepPlanetMapExploreTerritorySuccess::StepPlanetMapExploreTerritorySuccess(const
     const int fH1 = panelInfo->GetHeight() - (padding * 2);
 
     mFocusInfo->SetScreenArea(fX1, fY1, fW1, fH1);
-    mFocusInfo->SetCornersColor(colorTutorialFocusElement);
+    mFocusInfo->SetCornersColor(TutorialConstants::colorFocusElement);
     mFocusInfo->SetBlinking(true);
     mFocusInfo->SetVisible(false);
 
@@ -51,19 +51,19 @@ StepPlanetMapExploreTerritorySuccess::StepPlanetMapExploreTerritorySuccess(const
     const int fH2 = panelResources->GetHeight() - (padding * 2);
 
     mFocusResources->SetScreenArea(fX2, fY2, fW2, fH2);
-    mFocusResources->SetCornersColor(colorTutorialFocusElement);
+    mFocusResources->SetCornersColor(TutorialConstants::colorFocusElement);
     mFocusResources->SetBlinking(true);
     mFocusResources->SetVisible(false);
 
     // INFO
     auto info = GetPanelInfo();
 
-    info->SetPosition(infoPlanetMapX, infoPlanetMapY);
+    info->SetPosition(TutorialConstants::infoPlanetMapX, TutorialConstants::infoPlanetMapY);
 
     info->AddInfoEntry("Exploration was successful and now you can see several detailed "
-                       "info in the RESOURCES and INFO panels.", colorTutorialText, 8.f, true, true);
+                       "info in the RESOURCES and INFO panels.", TutorialConstants::colorText, 8.f, true, true);
     info->AddInfoEntry("Click the button CLOSE to go back to the actions panel.",
-                       colorTutorialTextAction, 0.f, false, false, [this, fX, fY, fW, fH]
+                       TutorialConstants::colorTextAction, 0.f, false, false, [this, fX, fY, fW, fH]
                        {
                            GetClickFilter()->SetScreenClickableArea(fX, fY, fW, fH);
 

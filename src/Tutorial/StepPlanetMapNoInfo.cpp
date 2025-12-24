@@ -11,7 +11,7 @@ namespace game
 
 StepPlanetMapNoInfo::StepPlanetMapNoInfo(const PanelPlanetInfo * panelInfo,
                                          const PanelPlanetResources * panelResources)
-    : TutorialInfoStep(infoPlanetMapW, infoPlanetMapH)
+    : TutorialInfoStep(TutorialConstants::infoPlanetMapW, TutorialConstants::infoPlanetMapH)
     , mFocusInfo(new FocusArea)
     , mFocusResources(new FocusArea)
 {
@@ -24,7 +24,7 @@ StepPlanetMapNoInfo::StepPlanetMapNoInfo(const PanelPlanetInfo * panelInfo,
     const int fH1 = panelInfo->GetHeight() - (padding * 2);
 
     mFocusInfo->SetScreenArea(fX1, fY1, fW1, fH1);
-    mFocusInfo->SetCornersColor(colorTutorialFocusElement);
+    mFocusInfo->SetCornersColor(TutorialConstants::colorFocusElement);
     mFocusInfo->SetVisible(false);
     mFocusInfo->SetBlinking(true);
 
@@ -34,19 +34,19 @@ StepPlanetMapNoInfo::StepPlanetMapNoInfo(const PanelPlanetInfo * panelInfo,
     const int fH2 = panelResources->GetHeight() - (padding * 2);
 
     mFocusResources->SetScreenArea(fX2, fY2, fW2, fH2);
-    mFocusResources->SetCornersColor(colorTutorialFocusElement);
+    mFocusResources->SetCornersColor(TutorialConstants::colorFocusElement);
     mFocusResources->SetVisible(false);
     mFocusResources->SetBlinking(true);
 
     // INFO
     auto info = GetPanelInfo();
 
-    info->SetPosition(infoPlanetMapX, infoPlanetMapY);
+    info->SetPosition(TutorialConstants::infoPlanetMapX, TutorialConstants::infoPlanetMapY);
 
     info->AddInfoEntry("You selected a territory, but the RESOURCES and INFO panels "
-                       "do not show any data yet.", colorTutorialText, 8.f, true, true);
+                       "do not show any data yet.", TutorialConstants::colorText, 8.f, true, true);
     info->AddInfoEntry("That's because this territory is still unexplored.",
-                       colorTutorialText, 6.f, true, true, [this]
+                       TutorialConstants::colorText, 6.f, true, true, [this]
                        {
                            mFocusInfo->SetVisible(false);
                            mFocusResources->SetVisible(false);

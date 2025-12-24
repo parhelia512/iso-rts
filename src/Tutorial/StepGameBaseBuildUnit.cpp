@@ -19,7 +19,7 @@ StepGameBaseBuildUnit::StepGameBaseBuildUnit(GameHUD * HUD)
     , mHUD(HUD)
 {
     // FOCUS
-    mFocusArea->SetCornersColor(colorTutorialFocusAction);
+    mFocusArea->SetCornersColor(TutorialConstants::colorFocusAction);
     mFocusArea->SetBlinking(true);
     mFocusArea->SetVisible(false);
 
@@ -29,11 +29,11 @@ StepGameBaseBuildUnit::StepGameBaseBuildUnit(GameHUD * HUD)
     info->SetPosition(40, 810);
 
     info->AddInfoEntry("You can choose what unit you want to build using this dialog.",
-                       colorTutorialText, 7.f, true, false);
+                       TutorialConstants::colorText, 7.f, true, false);
     info->AddInfoEntry("You can only build worker units for now, so let's do that!",
-                       colorTutorialText, 7.f, true, false);
+                       TutorialConstants::colorText, 7.f, true, false);
     info->AddInfoEntry("Click the button BUILD to create one.",
-                       colorTutorialTextAction, 0.f, false, false, [this, HUD]
+                       TutorialConstants::colorTextAction, 0.f, false, false, [this, HUD]
                        {
                            auto dialog = HUD->GetDialogNewElement();
                            auto btn = dialog->GetButtonBuild();
