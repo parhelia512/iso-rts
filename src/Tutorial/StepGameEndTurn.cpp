@@ -13,7 +13,7 @@ namespace game
 {
 
 StepGameEndTurn::StepGameEndTurn(const PanelTurnControl * panel)
-    : TutorialInfoStep(550, 200)
+    : TutorialInfoStep(600, 200)
     , mFocusArea(new FocusArea)
 {
 
@@ -24,7 +24,7 @@ StepGameEndTurn::StepGameEndTurn(const PanelTurnControl * panel)
     // INFO
     auto info = GetPanelInfo();
 
-    info->SetPosition(1300, 650);
+    info->SetPosition(1250, 650);
 
     info->AddInfoEntry("You can restore your energy by ending a turn and waiting for your "
                        "opponents to finish theirs.", TutorialConstants::colorText, 10.f, true, false);

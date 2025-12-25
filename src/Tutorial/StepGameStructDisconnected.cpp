@@ -7,12 +7,12 @@ namespace game
 {
 
 StepGameStructDisconnected::StepGameStructDisconnected()
-    : TutorialInfoStep(550, 350)
+    : TutorialInfoStep(600, 350)
 {
     // INFO
     auto info = GetPanelInfo();
 
-    info->SetPosition(1300, 250);
+    info->SetPosition(1250, 250);
 
     info->AddInfoEntry("Okay, enough of that for now. Let's go back to your conquest!",
                        TutorialConstants::colorText, 6.f, true, true);

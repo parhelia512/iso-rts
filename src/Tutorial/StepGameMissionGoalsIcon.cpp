@@ -12,7 +12,7 @@ namespace game
 {
 
 StepGameMissionGoalsIcon::StepGameMissionGoalsIcon(PanelObjectActions * panel)
-    : TutorialInfoStep(590, 200)
+    : TutorialInfoStep(600, 200)
     , mFocusArea(new FocusArea)
     , mPanelActions(panel)
 {
@@ -24,7 +24,7 @@ StepGameMissionGoalsIcon::StepGameMissionGoalsIcon(PanelObjectActions * panel)
     // INFO
     auto info = GetPanelInfo();
 
-    info->SetPosition(300, 550);
+    info->SetPosition(290, 550);
 
     info->AddInfoEntry("For example you can check your missions goals from here.",
                        TutorialConstants::colorText, 5.f, true, false);

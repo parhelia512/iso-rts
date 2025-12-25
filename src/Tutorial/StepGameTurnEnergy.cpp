@@ -14,7 +14,7 @@ namespace game
 {
 
 StepGameTurnEnergy::StepGameTurnEnergy(const GameHUD * HUD)
-    : TutorialInfoStep(600, 350)
+    : TutorialInfoStep(650, 350)
     , mFocusArea(new FocusArea)
 {
     // FOCUS
@@ -24,7 +24,7 @@ StepGameTurnEnergy::StepGameTurnEnergy(const GameHUD * HUD)
     // INFO
     auto info = GetPanelInfo();
 
-    info->SetPosition(1300, 550);
+    info->SetPosition(1250, 550);
 
     info->AddInfoEntry("Well done commander!\nNow this energy generator is under your control and we "
                        "can keep going.", TutorialConstants::colorText, 9.f, true, true);

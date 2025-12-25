@@ -14,7 +14,7 @@ namespace game
 {
 
 StepGameBaseBuildUnit::StepGameBaseBuildUnit(GameHUD * HUD)
-    : TutorialInfoStep(480, 250)
+    : TutorialInfoStep(530, 250)
     , mFocusArea(new FocusArea)
     , mHUD(HUD)
 {

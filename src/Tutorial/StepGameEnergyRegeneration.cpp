@@ -7,7 +7,7 @@ namespace game
 {
 
 StepGameEnergyRegeneration::StepGameEnergyRegeneration()
-    : TutorialInfoStep(550, 325)
+    : TutorialInfoStep(600, 325)
 {
     // INFO
     auto info = GetPanelInfo();
@@ -19,7 +19,8 @@ StepGameEnergyRegeneration::StepGameEnergyRegeneration()
     info->AddInfoEntry("Your unit's energy is fully restored too, but it's not always the case.",
                        TutorialConstants::colorText, 7.f, true, false);
     info->AddInfoEntry("The amount restored depends on its REGENERATION attribute and by how much "
-                       "there was left when you ended your turn.", TutorialConstants::colorText, 11.f, true, false);
+                       "there was left when you ended your turn.", TutorialConstants::colorText,
+                       11.f, true, false);
 
     info->SetFunctionOnFinished([this]
     {

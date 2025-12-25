@@ -12,7 +12,7 @@ namespace game
 {
 
 StepGameUnitConquerCellsIcon::StepGameUnitConquerCellsIcon(PanelObjectActions * panel)
-    : TutorialInfoStep(450, 150)
+    : TutorialInfoStep(550, 150)
     , mFocusArea(new FocusArea)
     , mPanelActions(panel)
 {
@@ -26,7 +26,7 @@ StepGameUnitConquerCellsIcon::StepGameUnitConquerCellsIcon(PanelObjectActions * 
 
     info->SetPosition(1100, 600);
 
-    info->AddInfoEntry("Then click this button to set your unit's action to CELL CONQUEST.",
+    info->AddInfoEntry("First click this button to set your unit's action to CELL CONQUEST.",
                        TutorialConstants::colorTextAction, 0.f, false, false, [this, panel]
                        {
                            // FOCUS

@@ -18,7 +18,7 @@ namespace game
 {
 
 StepGameMoveUnit::StepGameMoveUnit(const Player * p, const IsoMap * isoMap)
-    : TutorialInfoStep(500, 275)
+    : TutorialInfoStep(600, 275)
     , mFocusArea(new FocusArea)
 {
     // FOCUS
@@ -27,7 +27,7 @@ StepGameMoveUnit::StepGameMoveUnit(const Player * p, const IsoMap * isoMap)
     // INFO
     auto info = GetPanelInfo();
 
-    info->SetPosition(1350, 125);
+    info->SetPosition(450, 125);
 
     info->AddInfoEntry("Now that your unit is selected you can do several things with it.",
                        TutorialConstants::colorText, 7.f, true, false);

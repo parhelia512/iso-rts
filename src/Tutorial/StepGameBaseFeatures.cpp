@@ -11,7 +11,7 @@ namespace game
 
 StepGameBaseFeatures::StepGameBaseFeatures(const PanelSelectedObject * panelObj,
                                            PanelObjectActions * panelActions)
-    : TutorialInfoStep(590, 250)
+    : TutorialInfoStep(660, 250)
     , mFocusArea(new FocusArea)
 {
     // FOCUS
@@ -28,7 +28,7 @@ StepGameBaseFeatures::StepGameBaseFeatures(const PanelSelectedObject * panelObj,
     // INFO
     auto info = GetPanelInfo();
 
-    info->SetPosition(200, 400);
+    info->SetPosition(150, 400);
 
     info->AddInfoEntry("Well done commander, you selected your base!",
                        TutorialConstants::colorText, 5.f, true, true);

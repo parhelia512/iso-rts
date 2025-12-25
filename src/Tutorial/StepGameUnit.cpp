@@ -12,7 +12,7 @@ namespace game
 {
 
 StepGameUnit::StepGameUnit(const Player * p)
-    : TutorialInfoStep(500, 200)
+    : TutorialInfoStep(580, 200)
     , mFocusArea(new FocusArea)
 {
     // FOCUS
@@ -21,7 +21,7 @@ StepGameUnit::StepGameUnit(const Player * p)
     // INFO
     auto info = GetPanelInfo();
 
-    info->SetPosition(1300, 450);
+    info->SetPosition(1250, 450);
 
     info->AddInfoEntry("Well done commander, this is your first unit!", TutorialConstants::colorText, 5.f, true, false);
     info->AddInfoEntry("Now select it by clicking on its cell with the LEFT MOUSE BUTTON.",

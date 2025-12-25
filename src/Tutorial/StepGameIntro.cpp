@@ -7,7 +7,7 @@ namespace game
 {
 
 StepGameIntro::StepGameIntro()
-    : TutorialInfoStep(500, 250)
+    : TutorialInfoStep(550, 250)
 {
     // INFO
     auto info = GetPanelInfo();

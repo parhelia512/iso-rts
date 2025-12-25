@@ -7,12 +7,12 @@ namespace game
 {
 
 StepGameMapNavigation::StepGameMapNavigation()
-    : TutorialInfoStep(650, 400)
+    : TutorialInfoStep(750, 400)
 {
     // INFO
     auto info = GetPanelInfo();
 
-    info->SetPosition(1200, 450);
+    info->SetPosition(1100, 450);
 
     info->AddInfoEntry("Now that you learned how to control your units I want to show you how to move around.",
                        TutorialConstants::colorText, 9.f, true, true);

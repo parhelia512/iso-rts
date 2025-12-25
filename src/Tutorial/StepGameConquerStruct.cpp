@@ -17,7 +17,7 @@ namespace game
 
 StepGameConquerStruct::StepGameConquerStruct(const Player * p, const GameObject * energyGen,
                                              const IsoMap * isoMap)
-    : TutorialInfoStep(500, 300)
+    : TutorialInfoStep(550, 300)
     , mFocusArea(new FocusArea)
     , mEnergyGen(energyGen)
 {
@@ -36,7 +36,7 @@ StepGameConquerStruct::StepGameConquerStruct(const Player * p, const GameObject 
     // INFO
     auto info = GetPanelInfo();
 
-    info->SetPosition(1300, 200);
+    info->SetPosition(1250, 200);
 
     info->AddInfoEntry("When your unit action is set to MOVE you can also conquer structures.",
                        TutorialConstants::colorText, 7.f, true, false);

@@ -7,12 +7,12 @@ namespace game
 {
 
 StepGameStructConnected::StepGameStructConnected()
-    : TutorialInfoStep(600, 350)
+    : TutorialInfoStep(750, 350)
 {
     // INFO
     auto info = GetPanelInfo();
 
-    info->SetPosition(1250, 200);
+    info->SetPosition(200, 100);
 
     info->AddInfoEntry("Well done commander!", TutorialConstants::colorText, 4.f, true, true);
     info->AddInfoEntry("Now the energy generator is connected to your base and from now on you "

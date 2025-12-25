@@ -11,7 +11,7 @@ namespace game
 {
 
 StepGameBase::StepGameBase(const Base * b)
-    : TutorialInfoStep(500, 250)
+    : TutorialInfoStep(600, 250)
     , mFocusArea(new FocusArea)
     , mBase(b)
 {

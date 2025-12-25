@@ -12,7 +12,7 @@ namespace game
 {
 
 StepGameConquerCells::StepGameConquerCells(const Player * p, const IsoMap * isoMap)
-    : TutorialInfoStep(550, 350)
+    : TutorialInfoStep(600, 350)
     , mFocusArea(new FocusArea)
 {
     // FOCUS
@@ -21,15 +21,15 @@ StepGameConquerCells::StepGameConquerCells(const Player * p, const IsoMap * isoM
     // INFO
     auto info = GetPanelInfo();
 
-    info->SetPosition(1300, 350);
+    info->SetPosition(1250, 350);
 
-    info->AddInfoEntry("Now that your unit is selected you can decide what cells to conquer.",
+    info->AddInfoEntry("Moving your mouse around will design a path for your unit to conquer.",
                        TutorialConstants::colorText, 7.f, true, false);
-    info->AddInfoEntry("Moving your mouse around will design a path for your unit to conquer.\n"
-                       "You can set anchor points clicking the RIGHT MOUSE BUTTON and finalize "
+    info->AddInfoEntry("You can set anchor points clicking the RIGHT MOUSE BUTTON and finalize "
                        "the path with a double click.", TutorialConstants::colorText, 14.f, true, false);
     info->AddInfoEntry("Now move your mouse inside this cell and double click the RIGHT MOUSE BUTTON to "
-                       "start the conquest.", TutorialConstants::colorTextAction, 0.f, false, false, [this, p, isoMap]
+                       "start the conquest.", TutorialConstants::colorTextAction, 0.f, false, false,
+                       [this, p, isoMap]
                        {
                            const int destR = 62;
                            const int destC = 13;

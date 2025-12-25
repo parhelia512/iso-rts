@@ -263,8 +263,6 @@ add_executable(
     src/Tutorial/StepGameTurnEnergy.cpp
     src/Tutorial/StepGameUnit.h
     src/Tutorial/StepGameUnit.cpp
-    src/Tutorial/StepGameUnitSelect.h
-    src/Tutorial/StepGameUnitSelect.cpp
     src/Tutorial/StepGameUnitConquerCellsIcon.h
     src/Tutorial/StepGameUnitConquerCellsIcon.cpp
     src/Tutorial/StepGameWaitTurn.h

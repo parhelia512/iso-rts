@@ -31,7 +31,6 @@
 #include "Tutorial/StepGameTurnEnergy.h"
 #include "Tutorial/StepGameUnit.h"
 #include "Tutorial/StepGameUnitConquerCellsIcon.h"
-#include "Tutorial/StepGameUnitSelect.h"
 #include "Tutorial/StepGameWaitTurn.h"
 #include "Widgets/GameHUD.h"
 
@@ -91,7 +90,6 @@ TutorialGameIntro::TutorialGameIntro(Screen * screen)
     AddStep(new StepDelay(0.5f));
     AddStep(new StepGameEnergyRegeneration);
     AddStep(new StepGameStructDisconnected);
-    AddStep(new StepGameUnitSelect(local));
     AddStep(new StepGameUnitConquerCellsIcon(panelActions));
     AddStep(new StepGameConquerCells(local, mScreen->mIsoMap));
     AddStep(new StepGameClearSelection(mScreen));
