@@ -344,6 +344,7 @@ void ScreenMainMenu::CreateChangelog()
     auto textFix = new sgui::TextArea(contentW, minBlockH, font, true, content);
     textFix->SetText("FIXES\n"
                      "- Fixed energy cost computation of unit moves.\n"
+                     "- Hide path overlay when not needed during tutorial.\n"
                      );
     textFix->SetPosition(contX, contY);
     textFix->SetColor(colorContent);
