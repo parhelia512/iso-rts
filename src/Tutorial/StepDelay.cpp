@@ -28,7 +28,7 @@ void StepDelay::Update(float delta)
 {
     mTimer -= delta;
 
-    if(mTimer <= 0.f)
+    if(mTimer < 0.f)
         SetDone();
 }
 

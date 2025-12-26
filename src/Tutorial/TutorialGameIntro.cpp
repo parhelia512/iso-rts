@@ -26,6 +26,7 @@
 #include "Tutorial/StepGameMoveCamera.h"
 #include "Tutorial/StepGameMoveUnit.h"
 #include "Tutorial/StepGameSetSelectionActiveAction.h"
+#include "Tutorial/StepGameSetSelectionDefaultAction.h"
 #include "Tutorial/StepGameStructConnected.h"
 #include "Tutorial/StepGameStructDisconnected.h"
 #include "Tutorial/StepGameTurnEnergy.h"
@@ -80,6 +81,7 @@ TutorialGameIntro::TutorialGameIntro(Screen * screen)
     const GameMapCell gmc = mScreen->mGameMap->GetCell(genR, genC);
     AddStep(new StepGameMoveCamera(200, -100));
     AddStep(new StepGameConquerStruct(local, gmc.objTop, mScreen->mIsoMap));
+    AddStep(new StepGameSetSelectionDefaultAction(local, GameObjectActionType::IDLE));
     AddStep(new StepGameSetSelectionActiveAction(local, GameObjectActionType::IDLE));
     AddStep(new StepDelay(0.5f));
     AddStep(new StepGameTurnEnergy(mScreen->mHUD));
@@ -92,6 +94,7 @@ TutorialGameIntro::TutorialGameIntro(Screen * screen)
     AddStep(new StepGameStructDisconnected);
     AddStep(new StepGameUnitConquerCellsIcon(panelActions));
     AddStep(new StepGameConquerCells(local, mScreen->mIsoMap));
+    AddStep(new StepGameSetSelectionDefaultAction(local, GameObjectActionType::MOVE));
     AddStep(new StepGameClearSelection(mScreen));
     AddStep(new StepDelay(0.5f));
     AddStep(new StepGameStructConnected);

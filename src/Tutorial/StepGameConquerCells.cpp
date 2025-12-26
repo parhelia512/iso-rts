@@ -8,6 +8,12 @@
 #include "Widgets/Tutorial/PanelClickFilter.h"
 #include "Widgets/Tutorial/PanelInfoTutorial.h"
 
+namespace
+{
+const int destR = 62;
+const int destC = 13;
+}
+
 namespace game
 {
 
@@ -31,9 +37,6 @@ StepGameConquerCells::StepGameConquerCells(const Player * p, const IsoMap * isoM
                        "start the conquest.", TutorialConstants::colorTextAction, 0.f, false, false,
                        [this, p, isoMap]
                        {
-                           const int destR = 62;
-                           const int destC = 13;
-
                            const sgl::core::Pointd2D pos = isoMap->GetCellPosition(destR, destC);
 
                            // FOCUS
@@ -65,8 +68,12 @@ StepGameConquerCells::~StepGameConquerCells()
 
 void StepGameConquerCells::Update(float)
 {
-    if(mUnit != nullptr && mUnit->GetActiveAction() == MOVE)
-        SetDone();
+    if(mUnit != nullptr)
+    {
+        if(mUnit->GetRow0() == destR && mUnit->GetCol0() == destC &&
+           mUnit->GetCurrentAction() == IDLE)
+            SetDone();
+    }
 }
 
 } // namespace game
