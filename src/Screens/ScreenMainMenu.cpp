@@ -345,6 +345,7 @@ void ScreenMainMenu::CreateChangelog()
     textFix->SetText("FIXES\n"
                      "- Fixed energy cost computation of unit moves.\n"
                      "- Hide path overlay when not needed during tutorial.\n"
+                     "- Get rid of random focus area in top-left corner of planet map tutorial.\n"
                      );
     textFix->SetPosition(contX, contY);
     textFix->SetColor(colorContent);

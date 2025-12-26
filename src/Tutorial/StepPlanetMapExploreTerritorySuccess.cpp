@@ -82,6 +82,8 @@ StepPlanetMapExploreTerritorySuccess::StepPlanetMapExploreTerritorySuccess(const
 StepPlanetMapExploreTerritorySuccess::~StepPlanetMapExploreTerritorySuccess()
 {
     delete mFocusArea;
+    delete mFocusInfo;
+    delete mFocusResources;
 }
 
 void StepPlanetMapExploreTerritorySuccess::OnStart()
