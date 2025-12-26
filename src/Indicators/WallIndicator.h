@@ -21,6 +21,7 @@ class WallIndicator : public IsoObject
 {
 public:
     WallIndicator();
+    ~WallIndicator();
 
     game::GameObjectVariantId GetBlockType() const;
 

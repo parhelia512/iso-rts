@@ -45,6 +45,7 @@ public:
     };
 
     DialogNewElement(ElemType type, Player * player, const ObjectsDataRegistry * dataReg);
+    ~DialogNewElement();
 
     void CheckBuild();
 

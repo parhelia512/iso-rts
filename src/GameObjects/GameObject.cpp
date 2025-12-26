@@ -77,6 +77,8 @@ GameObject::~GameObject()
 {
     delete mIsoObj;
 
+    delete mWeapon;
+
     ClearGroup();
 }
 

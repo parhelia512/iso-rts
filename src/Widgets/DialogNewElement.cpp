@@ -692,6 +692,11 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
     ap->PlaySound("UI/dialog_open-01.ogg");
 }
 
+DialogNewElement::~DialogNewElement()
+{
+    delete mButtonsStructures;
+}
+
 void DialogNewElement::CheckBuild()
 {
     const int ind = GetSelectedIndex();

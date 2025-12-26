@@ -2198,6 +2198,7 @@ bool ScreenGame::SetupUnitMove(Unit * unit, const Cell2D & start, const Cell2D &
 
     if(cost > unit->GetEnergy() || cost > player->GetTurnEnergy())
     {
+        delete op;
         PlayLocalActionErrorSFX(player);
         return false;
     }
@@ -2222,6 +2223,7 @@ bool ScreenGame::SetupUnitMove(Unit * unit, const Cell2D & start, const Cell2D &
     }
     else
     {
+        delete op;
         PlayLocalActionErrorSFX(player);
         return false;
     }
@@ -2314,6 +2316,8 @@ bool ScreenGame::SetupConnectCellsAI(Unit * unit, const std::function<void (bool
                   << " - CONNECT STRUCTURE FAILED (ConquerCells failed) - "
                      "start: " << start.row << "," << start.col
                   << " - target: " << target.row << "," << target.col << std::endl;
+
+        delete cp;
 
         return false;
     }

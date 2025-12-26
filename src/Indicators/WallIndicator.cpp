@@ -22,6 +22,14 @@ WallIndicator::WallIndicator()
 {
 }
 
+WallIndicator::~WallIndicator()
+{
+    delete mIconEnergy;
+    delete mTxtCostEnergy;
+    delete mIconMaterial;
+    delete mTxtCostMaterial;
+}
+
 void WallIndicator::SetFaction(PlayerFaction faction)
 {
     if(faction == mFaction)
