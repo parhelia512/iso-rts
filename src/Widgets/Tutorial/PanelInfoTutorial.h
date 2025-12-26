@@ -23,6 +23,7 @@ class PanelInfoTutorial : public sgl::sgui::Widget
 {
 public:
     PanelInfoTutorial(int w, int h);
+    ~PanelInfoTutorial();
 
     void AddInfoEntry(const char * text, unsigned int color, float nextTime,
         bool showContinue, bool hideAfter, const std::function<void()> & onShow = [](){});

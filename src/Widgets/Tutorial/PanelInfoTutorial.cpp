@@ -102,6 +102,12 @@ PanelInfoTutorial::PanelInfoTutorial(int w, int h)
     PositionElements();
 }
 
+PanelInfoTutorial::~PanelInfoTutorial()
+{
+    for(auto entry : mInfoEntries)
+        delete entry;
+}
+
 void PanelInfoTutorial::AddInfoEntry(const char * text, unsigned int color, float timeNext,
                                      bool showContinue, bool hideAfter,
                                      const std::function<void ()> & onShow)
