@@ -24,6 +24,8 @@ Unit::Unit(const ObjectData & data)
     : GameObject(data)
     , mStructToBuild(ObjectData::TYPE_NULL)
 {
+    SetDefaultAction(MOVE);
+
     // set healing range converting attribute
     const int maxHealVal = 11;
     const int HealRanges[maxHealVal] = { 0, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4 };
@@ -103,8 +105,6 @@ bool Unit::SetTargetHealing(GameObject * obj)
 
     return true;
 }
-
-void Unit::SetActiveActionToDefault() { SetActiveAction(MOVE); }
 
 void Unit::Update(float delta)
 {

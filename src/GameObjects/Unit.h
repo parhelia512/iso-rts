@@ -24,8 +24,6 @@ public:
     bool IsTargetHealingInRange(GameObject * obj) const;
     bool SetTargetHealing(GameObject * obj);
 
-    void SetActiveActionToDefault() override;
-
     void Update(float delta) override;
 
     // build

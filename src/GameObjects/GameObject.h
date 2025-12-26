@@ -172,9 +172,11 @@ public:
 
     GameObjectActionType GetActiveAction() const;
     void SetActiveAction(GameObjectActionType action);
-    virtual void SetActiveActionToDefault();
+    void SetActiveActionToDefault();
     GameObjectActionType GetCurrentAction() const;
     void SetCurrentAction(GameObjectActionType action);
+    GameObjectActionType GetDefaultAction() const;
+    void SetDefaultAction(GameObjectActionType action);
 
     virtual void OnNewTurn(PlayerFaction faction);
 
@@ -259,6 +261,7 @@ private:
 
     GameObjectActionType mActiveAction = IDLE;
     GameObjectActionType mCurrAction = IDLE;
+    GameObjectActionType mDefaultAction = IDLE;
 
     PlayerFaction mFaction;
 
@@ -383,6 +386,8 @@ inline GameObjectActionType GameObject::GetActiveAction() const { return mActive
 inline void GameObject::SetActiveAction(GameObjectActionType action) { mActiveAction = action; }
 inline GameObjectActionType GameObject::GetCurrentAction() const { return mCurrAction; }
 inline void GameObject::SetCurrentAction(GameObjectActionType action) { mCurrAction = action; }
+inline GameObjectActionType GameObject::GetDefaultAction() const { return mDefaultAction; }
+inline void GameObject::SetDefaultAction(GameObjectActionType action) { mDefaultAction = action; }
 
 inline void GameObject::SetMaxEnergy(float val) { mMaxEnergy = val; }
 

@@ -607,7 +607,7 @@ void GameObject::MissHit()
 
 void GameObject::SelfDestroy() { Hit(0.f, nullptr, true); }
 
-void GameObject::SetActiveActionToDefault() { mActiveAction = IDLE; }
+void GameObject::SetActiveActionToDefault() { mActiveAction = mDefaultAction; }
 
 void GameObject::OnNewTurn(PlayerFaction faction)
 {
