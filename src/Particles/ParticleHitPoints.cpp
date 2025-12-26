@@ -13,8 +13,9 @@
 namespace game
 {
 
-ParticleHitPoints::ParticleHitPoints()
+ParticleHitPoints::~ParticleHitPoints()
 {
+    delete mTxt;
 }
 
 void ParticleHitPoints::SetData(const DataParticleHitPoints & data)

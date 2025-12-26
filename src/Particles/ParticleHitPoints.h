@@ -17,7 +17,7 @@ struct DataParticleHitPoints;
 class ParticleHitPoints : public sgl::graphic::Particle
 {
 public:
-    ParticleHitPoints();
+    ~ParticleHitPoints();
 
     void SetData(const DataParticleHitPoints & data);
 
