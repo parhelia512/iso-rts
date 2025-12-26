@@ -13,6 +13,7 @@ class ConquestIndicator : public IsoObject
 {
 public:
     ConquestIndicator();
+    ~ConquestIndicator();
 
     void SetFaction(PlayerFaction faction);
 

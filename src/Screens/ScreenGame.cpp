@@ -1118,6 +1118,9 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
             std::cout << "ScreenGame::ExecuteAIAction - AI " << turnAI
                       << " ==================== END TURN ====================" << std::endl;
 
+            if(action != nullptr)
+                delete action;
+
             EndTurn();
 
             return ;
@@ -1442,6 +1445,8 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
 
         if(done)
             ai->RegisterActionInProgress(action);
+        else
+            delete action;
     }
 }
 

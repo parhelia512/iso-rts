@@ -24,6 +24,12 @@ ConquestIndicator::ConquestIndicator()
 {
 }
 
+ConquestIndicator::~ConquestIndicator()
+{
+    delete mTxtDummy;
+    delete mTxtCost;
+}
+
 void ConquestIndicator::SetFaction(PlayerFaction faction)
 {
     using namespace sgl::graphic;

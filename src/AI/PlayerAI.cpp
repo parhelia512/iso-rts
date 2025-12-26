@@ -374,6 +374,9 @@ void PlayerAI::AddActionEndTurn()
     // push action if above priority threshold
     if(action->priority >= mMinPriority)
         PushAction(action);
+    // action not added
+    else
+        delete action;
 }
 
 void PlayerAI::AddActionBaseCreateUnit(Structure * base)

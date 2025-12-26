@@ -19,6 +19,7 @@ class ParticleLootboxPrize : public sgl::graphic::Particle
 {
 public:
     ParticleLootboxPrize();
+    ~ParticleLootboxPrize();
 
     void SetData(const DataParticleLootboxPrize & data);
 

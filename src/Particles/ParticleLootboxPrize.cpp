@@ -21,6 +21,12 @@ ParticleLootboxPrize::ParticleLootboxPrize()
 {
 }
 
+ParticleLootboxPrize::~ParticleLootboxPrize()
+{
+    delete mIcon;
+    delete mTxt;
+}
+
 void ParticleLootboxPrize::SetData(const DataParticleLootboxPrize & data)
 {
     using namespace sgl;
@@ -106,7 +112,6 @@ void ParticleLootboxPrize::SetStart(int x0, int y0)
     const int iconX = txtX + mTxt->GetWidth() + margin;
     const int iconY = y0;
     mIcon->SetPosition(iconX, iconY);
-
 }
 
 void ParticleLootboxPrize::Update(float delta)

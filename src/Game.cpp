@@ -16,6 +16,7 @@
 #include "States/StateTest.h"
 #include "Tutorial/TutorialManager.h"
 
+#include <sgl/graphic/Cursor.h>
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
 #include <sgl/graphic/GraphicConstants.h>
@@ -122,6 +123,11 @@ Game::Game(int argc, char * argv[])
 Game::~Game()
 {
     using namespace sgl;
+
+    for(auto it: mCursors)
+        delete it.second;
+
+    delete mTutMan;
 
     // delete states and screens
     delete mStateMan;
