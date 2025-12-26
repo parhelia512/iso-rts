@@ -25,23 +25,27 @@ TutorialPlanetMap::TutorialPlanetMap(Screen * screen)
 {
     assert(mScreen != nullptr);
 
-    AddStep(new StepDelay(1.f));
-    AddStep(new StepPlanetMapIntro);
-    AddStep(new StepPlanetMapSelectTerritory(mScreen->mPlanet));
-    AddStep(new StepDelay(0.5f));
-    AddStep(new StepPlanetMapNoInfo(mScreen->mPanelInfo, mScreen->mPanelResources));
-    AddStep(new StepPlanetMapExploreTerritory(mScreen->mPanelActions));
-    AddStep(new StepDelay(0.5f));
-    AddStep(new StepPlanetMapExploreTerritoryInfo);
-    AddStep(new StepPlanetMapExploreTerritoryStart(mScreen->mPanelExplore));
-    AddStep(new StepDelay(0.5f));
-    AddStep(new StepPlanetMapExploreTerritorySuccess(mScreen->mPanelExplore, mScreen->mPanelInfo,
-                                                     mScreen->mPanelResources));
-    AddStep(new StepDelay(0.5f));
-    AddStep(new StepPlanetMapSendAI(mScreen->mPanelActions));
-    AddStep(new StepPlanetMapConquerTerritory(mScreen->mPanelActions));
-    AddStep(new StepDelay(0.5f));
-    AddStep(new StepPlanetMapConquerTerritoryStart(mScreen->mPanelConquer));
+    AddStep([] { return new StepDelay(1.f); });
+    AddStep([] { return new StepPlanetMapIntro; });
+    AddStep([this] { return new StepPlanetMapSelectTerritory(mScreen->mPlanet); });
+    AddStep([] { return new StepDelay(0.5f); });
+    AddStep([this] { return new StepPlanetMapNoInfo(mScreen->mPanelInfo, mScreen->mPanelResources); });
+    AddStep([this] { return new StepPlanetMapExploreTerritory(mScreen->mPanelActions); });
+    AddStep([] { return new StepDelay(0.5f); });
+    AddStep([] { return new StepPlanetMapExploreTerritoryInfo; });
+    AddStep([this] { return new StepPlanetMapExploreTerritoryStart(mScreen->mPanelExplore); });
+    AddStep([] { return new StepDelay(0.5f); });
+    AddStep([this]
+            {
+                return new StepPlanetMapExploreTerritorySuccess(mScreen->mPanelExplore,
+                                                                mScreen->mPanelInfo,
+                                                                mScreen->mPanelResources);
+            });
+    AddStep([] { return new StepDelay(0.5f); });
+    AddStep([this] { return new StepPlanetMapSendAI(mScreen->mPanelActions); });
+    AddStep([this] { return new StepPlanetMapConquerTerritory(mScreen->mPanelActions); });
+    AddStep([] { return new StepDelay(0.5f); });
+    AddStep([this] { return new StepPlanetMapConquerTerritoryStart(mScreen->mPanelConquer); });
 }
 
 } // namespace game

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <deque>
+#include <functional>
 
 namespace game
 {
@@ -17,7 +18,7 @@ public:
 
     TutorialId GetId() const;
 
-    void AddStep(TutorialStep * step);
+    void AddStep(const std::function<TutorialStep *()> & step);
 
     bool IsDone() const;
 
@@ -41,7 +42,7 @@ private:
     void StartNextStep();
 
 private:
-    std::deque<TutorialStep *> mSteps;
+    std::deque<std::function<TutorialStep *()>> mSteps;
 
     TutorialStep * mCurrStep = nullptr;
 
@@ -58,7 +59,10 @@ inline TutorialId Tutorial::GetId() const { return mId; }
 
 inline bool Tutorial::IsDone() const { return mDone; }
 
-inline void Tutorial::AddStep(TutorialStep * step) { mSteps.push_back(step); }
+inline void Tutorial::AddStep(const std::function<TutorialStep *()> & step)
+{
+    mSteps.push_back(step);
+}
 
 inline bool Tutorial::IsPaused() const { return mPaused; }
 

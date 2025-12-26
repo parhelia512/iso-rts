@@ -54,54 +54,58 @@ TutorialGameIntro::TutorialGameIntro(Screen * screen)
 
     auto localBase = local->GetBase();
 
-    AddStep(new StepGameDisableCamera(mScreen->mCamController));
+    AddStep([this] { return new StepGameDisableCamera(mScreen->mCamController); });
 
-    AddStep(new StepDelay(1.f));
-    AddStep(new StepGameIntro);
-    AddStep(new StepDelay(0.3f));
-    AddStep(new StepGameBase(localBase));
-    AddStep(new StepDelay(0.5f));
-    AddStep(new StepGameBaseFeatures(panelObj, panelActions));
-    AddStep(new StepGameMissionGoalsIcon(panelActions));
-    AddStep(new StepDelay(0.5f));
-    AddStep(new StepGameMissionGoalsDialog(mScreen->mHUD));
-    AddStep(new StepDelay(0.5f));
-    AddStep(new StepGameBaseBuildUnitIcon(panelActions));
-    AddStep(new StepDelay(0.5f));
-    AddStep(new StepGameBaseBuildUnit(mScreen->mHUD));
-    AddStep(new StepDelay(localBase->GetTimeBuildUnit()));
-    AddStep(new StepGameUnit(local));
-    AddStep(new StepGameSetSelectionActiveAction(local, GameObjectActionType::IDLE));
-    AddStep(new StepDelay(0.5f));
-    AddStep(new StepGameMoveUnit(local, mScreen->mIsoMap));
-    AddStep(new StepGameSetSelectionActiveAction(local, GameObjectActionType::IDLE));
+    AddStep([] { return new StepDelay(1.f); });
+    AddStep([] { return new StepGameIntro; });
+    AddStep([] { return new StepDelay(0.3f); });
+    AddStep([localBase] { return new StepGameBase(localBase); });
+    AddStep([] { return new StepDelay(0.5f); });
+    AddStep([panelActions, panelObj] { return new StepGameBaseFeatures(panelObj, panelActions); });
+    AddStep([panelActions] { return new StepGameMissionGoalsIcon(panelActions); });
+    AddStep([] { return new StepDelay(0.5f); });
+    AddStep([this] { return new StepGameMissionGoalsDialog(mScreen->mHUD); });
+    AddStep([] { return new StepDelay(0.5f); });
+    AddStep([panelActions] { return new StepGameBaseBuildUnitIcon(panelActions); });
+    AddStep([] { return new StepDelay(0.5f); });
+    AddStep([this] { return new StepGameBaseBuildUnit(mScreen->mHUD); });
+    AddStep([localBase] { return new StepDelay(localBase->GetTimeBuildUnit()); });
+    AddStep([local] { return new StepGameUnit(local); });
+    AddStep([local] { return new StepGameSetSelectionActiveAction(local, GameObjectActionType::IDLE); });
+    AddStep([] { return new StepDelay(0.5f); });
+    AddStep([this, local] { return new StepGameMoveUnit(local, mScreen->mIsoMap); });
+    AddStep([local] { return new StepGameSetSelectionActiveAction(local, GameObjectActionType::IDLE); });
     // TODO update based on tutorial map
-    const int genR = 56;
-    const int genC = 13;
-    const GameMapCell gmc = mScreen->mGameMap->GetCell(genR, genC);
-    AddStep(new StepGameMoveCamera(200, -100));
-    AddStep(new StepGameConquerStruct(local, gmc.objTop, mScreen->mIsoMap));
-    AddStep(new StepGameSetSelectionDefaultAction(local, GameObjectActionType::IDLE));
-    AddStep(new StepGameSetSelectionActiveAction(local, GameObjectActionType::IDLE));
-    AddStep(new StepDelay(0.5f));
-    AddStep(new StepGameTurnEnergy(mScreen->mHUD));
-    AddStep(new StepDelay(0.5f));
-    AddStep(new StepGameEndTurn(panelTurn));
-    AddStep(new StepGameWaitTurn(mScreen));
-    AddStep(new StepGameSetSelectionActiveAction(local, GameObjectActionType::IDLE));
-    AddStep(new StepDelay(0.5f));
-    AddStep(new StepGameEnergyRegeneration);
-    AddStep(new StepGameStructDisconnected);
-    AddStep(new StepGameUnitConquerCellsIcon(panelActions));
-    AddStep(new StepGameConquerCells(local, mScreen->mIsoMap));
-    AddStep(new StepGameSetSelectionDefaultAction(local, GameObjectActionType::MOVE));
-    AddStep(new StepGameClearSelection(mScreen));
-    AddStep(new StepDelay(0.5f));
-    AddStep(new StepGameStructConnected);
+    AddStep([] { return new StepGameMoveCamera(200, -100); });
+    AddStep([this, local]
+            {
+                const int genR = 56;
+                const int genC = 13;
+                const GameMapCell gmc = mScreen->mGameMap->GetCell(genR, genC);
 
-    AddStep(new StepGameEnableCamera(mScreen->mCamController));
+                return new StepGameConquerStruct(local, gmc.objTop, mScreen->mIsoMap);
+            });
+    AddStep([local] { return new StepGameSetSelectionDefaultAction(local, GameObjectActionType::IDLE); });
+    AddStep([local] { return new StepGameSetSelectionActiveAction(local, GameObjectActionType::IDLE); });
+    AddStep([] { return new StepDelay(0.5f); });
+    AddStep([this] { return new StepGameTurnEnergy(mScreen->mHUD); });
+    AddStep([] { return new StepDelay(0.5f); });
+    AddStep([panelTurn] { return new StepGameEndTurn(panelTurn); });
+    AddStep([this] { return new StepGameWaitTurn(mScreen); });
+    AddStep([local] { return new StepGameSetSelectionActiveAction(local, GameObjectActionType::IDLE); });
+    AddStep([] { return new StepDelay(0.5f); });
+    AddStep([] { return new StepGameEnergyRegeneration; });
+    AddStep([] { return new StepGameStructDisconnected; });
+    AddStep([panelActions] { return new StepGameUnitConquerCellsIcon(panelActions); });
+    AddStep([this, local] { return new StepGameConquerCells(local, mScreen->mIsoMap); });
+    AddStep([local] { return new StepGameSetSelectionDefaultAction(local, GameObjectActionType::MOVE); });
+    AddStep([this] { return new StepGameClearSelection(mScreen); });
+    AddStep([] { return new StepDelay(0.5f); });
+    AddStep([] { return new StepGameStructConnected; });
 
-    AddStep(new StepGameMapNavigation);
+    AddStep([this] { return new StepGameEnableCamera(mScreen->mCamController); });
+
+    AddStep([] { return new StepGameMapNavigation; });
 }
 
 TutorialGameIntro::~TutorialGameIntro()

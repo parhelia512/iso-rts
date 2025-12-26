@@ -13,9 +13,6 @@ Tutorial::Tutorial(TutorialId tutId)
 Tutorial::~Tutorial()
 {
     delete mCurrStep;
-
-    for(const TutorialStep * s : mSteps)
-        delete s;
 }
 
 void Tutorial::Start()
@@ -78,7 +75,8 @@ void Tutorial::StartNextStep()
     if(mSteps.empty())
         return ;
 
-    mCurrStep = mSteps.front();
+    // create current step
+    mCurrStep = (mSteps.front())();
     mSteps.pop_front();
 
     mCurrStep->OnStart();
