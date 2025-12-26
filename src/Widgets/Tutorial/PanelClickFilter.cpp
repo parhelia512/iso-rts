@@ -10,6 +10,7 @@ namespace game
 {
 
 PanelClickFilter::PanelClickFilter()
+    : mButton(sgl::core::MouseEvent::BUTTON_NULL)
 {
     auto renderer = sgl::graphic::Renderer::Instance();
     const int rendW = renderer->GetWidth();
