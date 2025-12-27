@@ -2009,31 +2009,73 @@ Cell2D GameMap::GetAdjacentMoveTarget(const Cell2D & start, const Cell2D & targe
     return GetAdjacentMoveTarget(start, target, target);
 }
 
-Cell2D GameMap::GetAdjacentMoveTarget(const Cell2D & start, const Cell2D & targetTL, const Cell2D & targetBR) const
+Cell2D GameMap::GetAdjacentMoveTarget(const Cell2D & start, const Cell2D & targetTL,
+                                      const Cell2D & targetBR) const
 {
-    // get all walkable cells around target
     const int tRows = targetBR.row - targetTL.row + 1;
     const int tCols = targetBR.col - targetTL.col + 1;
 
-    const int rowTL = targetTL.row - 1 > 0 ? targetTL.row - 1 : 0;
-    const int colTL = targetTL.col - 1 > 0 ? targetTL.col - 1 : 0;
-    const int rowBR = targetBR.row + 1 < static_cast<int>(mRows - 1) ? targetBR.row + 1 : mRows - 1;
-    const int colBR = targetBR.col + 1 < static_cast<int>(mCols - 1) ? targetBR.col + 1 : mCols - 1;
-
     std::vector<Cell2D> walkalbes;
-    const int maxWalkables = (tCols + 2 + tRows) * 2;
+    const int maxWalkables = (tCols + tRows + 2 ) * 2;
     walkalbes.reserve(maxWalkables);
 
-    for(int r = rowTL; r <= rowBR; ++r)
-    {
-        const int indBase = r * mCols;
+    const int colL = targetTL.col > 0 ? targetTL.col - 1 : 0;
+    const int colR = (targetBR.col + 2) < mCols ? targetBR.col + 2 : mCols;
+    const int rowB = targetBR.row + 1;
 
-        for(int c = colTL; c <= colBR; ++c)
+    // TOP CELLS
+    if(targetTL.row > 0)
+    {
+        const int r = targetTL.row - 1;
+        const int ind0 = r * mCols;
+
+        for(int c = colL; c < colR; ++c)
         {
-            const int ind = indBase + c;
+            const int ind = ind0 + c;
 
             if(mCells[ind].walkable)
                 walkalbes.emplace_back(r, c);
+        }
+    }
+
+    // RIGHT CELLS
+    if((targetBR.col + 1) < mCols)
+    {
+        const int c = targetBR.col + 1;
+
+        for(int r = targetTL.row; r < rowB; ++r)
+        {
+            const int ind = (r * mCols) + c;
+
+            if(mCells[ind].walkable)
+                walkalbes.emplace_back(r, c);
+        }
+    }
+
+    // BOTTOM CELLS
+    if((targetBR.row + 1) < mRows)
+    {
+        const int r = targetBR.row + 1;
+        const int ind0 = r * mCols;
+
+        for(int c = colL; c < colR; ++c)
+        {
+            const int ind = ind0 + c;
+
+            if(mCells[ind].walkable)
+                walkalbes.emplace_back(r, c);
+        }
+    }
+
+    // LEFT CELLS
+    if(targetTL.col > 0)
+    {
+        for(int r = targetTL.row; r < rowB; ++r)
+        {
+            const int ind = (r * mCols) + colL;
+
+            if(mCells[ind].walkable)
+                walkalbes.emplace_back(r, colL);
         }
     }
 
