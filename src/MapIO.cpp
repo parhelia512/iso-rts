@@ -165,7 +165,7 @@ bool MapIO::Save(const std::string & filename, const std::vector<GameMapCell> & 
     fs << "# ====== OBJECTS =====\n";
     for(const GameObject * obj : objects)
     {
-        fs << MapLayers::OBJECTS1 << " "
+        fs << MapLayers::REGULAR_OBJECTS << " "
            << obj->GetObjectTypeStr() << " "
            << obj->GetObjectVariant() << " "
            << obj->GetFaction() << " "

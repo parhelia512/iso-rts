@@ -546,8 +546,8 @@ void ScreenGame::CreateLayers()
     mIsoMap->CreateLayer(MapLayers::CELL_OVERLAYS2);
     mIsoMap->CreateLayer(MapLayers::CELL_OVERLAYS3);
     mIsoMap->CreateLayer(MapLayers::FACTION_INFLUENCE);
-    mIsoMap->CreateLayer(MapLayers::OBJECTS1);
-    mIsoMap->CreateLayer(MapLayers::OBJECTS2);
+    mIsoMap->CreateLayer(MapLayers::GROUND_OBJECTS);
+    mIsoMap->CreateLayer(MapLayers::REGULAR_OBJECTS);
     mIsoMap->CreateLayer(MapLayers::CELL_OVERLAYS4);
 }
 
@@ -727,7 +727,7 @@ void ScreenGame::CreateUI()
         mGameMap->MoveObjectDown(gate);
 
         // move to iso layer 1
-        mIsoMap->ChangeObjectLayer(gate->GetIsoObject(), MapLayers::OBJECTS2, MapLayers::OBJECTS1);
+        mIsoMap->ChangeObjectLayer(gate->GetIsoObject(), MapLayers::REGULAR_OBJECTS, MapLayers::GROUND_OBJECTS);
 
         // update panel actions
         panelObjActions->SetObject(gate);
@@ -750,7 +750,7 @@ void ScreenGame::CreateUI()
         mGameMap->MoveObjectUp(gate);
 
         // move to iso layer 2
-        mIsoMap->ChangeObjectLayer(gate->GetIsoObject(), MapLayers::OBJECTS1, MapLayers::OBJECTS2);
+        mIsoMap->ChangeObjectLayer(gate->GetIsoObject(), MapLayers::GROUND_OBJECTS, MapLayers::REGULAR_OBJECTS);
 
         // update panel actions
         panelObjActions->SetObject(gate);

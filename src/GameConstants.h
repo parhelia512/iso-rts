@@ -47,8 +47,10 @@ enum MapLayers : unsigned int
     CELL_OVERLAYS2,
     CELL_OVERLAYS3,
     FACTION_INFLUENCE,
-    OBJECTS1,
-    OBJECTS2,
+    // used for objects below the regular ones, like Gate when closed
+    GROUND_OBJECTS,
+    // normal objects
+    REGULAR_OBJECTS,
     CELL_OVERLAYS4,
 
     NUM_LAYERS,

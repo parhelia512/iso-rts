@@ -897,7 +897,7 @@ void GameMap::BuildStructure(const Cell2D & cell, Player * player, GameObjectTyp
     // reset cell's changing flag
     gcell.changing = false;
 
-    GameObject * obj = CreateObject(OBJECTS2, st, 0, player->GetFaction(), cell.row, cell.col, true);
+    GameObject * obj = CreateObject(REGULAR_OBJECTS, st, 0, player->GetFaction(), cell.row, cell.col, true);
 
     // propagate effects of conquest
     for(int r = obj->GetRow1(); r <= obj->GetRow0(); ++r)
@@ -1004,7 +1004,7 @@ void GameMap::BuildWall(const Cell2D & cell, Player * player, GameObjectTypeId p
     UpdateInfluencedCells(cell.row, cell.col);
 
     // add object wall
-    CreateObject(OBJECTS2, ObjectData::TYPE_WALL, planned, player->GetFaction(), cell.row, cell.col, true);
+    CreateObject(REGULAR_OBJECTS, ObjectData::TYPE_WALL, planned, player->GetFaction(), cell.row, cell.col, true);
 
     UpdateLinkedCells(player);
 
@@ -1664,7 +1664,7 @@ Unit * GameMap::CreateUnit(GameObjectTypeId ut, const Cell2D & dest, Player * pl
     gcell.walkable = false;
     gcell.changing = false;
 
-    mIsoMap->GetLayer(OBJECTS2)->AddObject(unit->GetIsoObject(), r, c);
+    mIsoMap->GetLayer(REGULAR_OBJECTS)->AddObject(unit->GetIsoObject(), r, c);
 
     // store unit in map list and in registry
     mObjects.push_back(unit);
@@ -1737,7 +1737,7 @@ GameObject * GameMap::CreateMiniUnit(GameObjectTypeId ut, GameObject * gen, cons
     gcell.walkable = false;
     gcell.changing = false;
 
-    mIsoMap->GetLayer(OBJECTS2)->AddObject(mu->GetIsoObject(), dest.row, dest.col);
+    mIsoMap->GetLayer(REGULAR_OBJECTS)->AddObject(mu->GetIsoObject(), dest.row, dest.col);
 
     // store unit in map list and in registry
     mObjects.push_back(mu);

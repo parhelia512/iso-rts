@@ -118,7 +118,7 @@ void Trees::SpawnTree(int r0, int c0)
     sgl::utilities::UniformDistribution dis(0, NUM_TREE1_VARIANTS - 1);
     const int variant = dis.GetNextValue();
 
-    gm->CreateObject(MapLayers::OBJECTS1, ObjectData::TYPE_TREES, variant, NO_FACTION, r0, c0, false);
+    gm->CreateObject(MapLayers::REGULAR_OBJECTS, ObjectData::TYPE_TREES, variant, NO_FACTION, r0, c0, false);
 
     // set cell type of new tree
     gm->SetCellType(r0, c0, TREES1);
