@@ -2547,7 +2547,7 @@ void ScreenGame::HandleUnitBuildStructureOnMouseUp(Unit * unit, const Cell2D & c
             // add temporary indicator for tower
             mTempStructIndicator = new StructureIndicator(objData, unit->GetFaction());
 
-            IsoLayer * layer = mIsoMap->GetLayer(MapLayers::OBJECTS2);
+            IsoLayer * layer = mIsoMap->GetLayer(MapLayers::CELL_OVERLAYS4);
             layer->AddObject(mTempStructIndicator, clickCell.row, clickCell.col);
 
             // move
@@ -3466,7 +3466,7 @@ void ScreenGame::ClearTempStructIndicator()
 {
     if(mTempStructIndicator)
     {
-        IsoLayer * layer = mIsoMap->GetLayer(MapLayers::OBJECTS2);
+        IsoLayer * layer = mIsoMap->GetLayer(MapLayers::CELL_OVERLAYS4);
         layer->ClearObject(mTempStructIndicator);
 
         delete mTempStructIndicator;
