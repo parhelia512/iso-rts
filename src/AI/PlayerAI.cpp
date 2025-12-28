@@ -1555,19 +1555,29 @@ void PlayerAI::PrintdActionDebug(const char * title, const ActionAI * a)
     if(a->ObjSrc != nullptr)
     {
         auto obj = a->ObjSrc;
-        std::cout << " | OBJ SRC - ID: " << obj->GetObjectId()
-                  << " - FACT: " << obj->GetFaction()
-                  << " - ENRG: " << obj->GetEnergy() << "/" << obj->GetMaxEnergy()
-                  << " - HLTH: " << obj->GetHealth() << "/" << obj->GetMaxHealth();
+
+        // make sure obj is still valid (not destroyed)
+        if(mGm->HasObject(obj))
+        {
+            std::cout << " | OBJ SRC - ID: " << obj->GetObjectId()
+                      << " - FACT: " << obj->GetFaction()
+                      << " - ENRG: " << obj->GetEnergy() << "/" << obj->GetMaxEnergy()
+                      << " - HLTH: " << obj->GetHealth() << "/" << obj->GetMaxHealth();
+        }
     }
 
     if(a->ObjDst != nullptr)
     {
         auto obj = a->ObjDst;
-        std::cout << " | OBJ DST - ID: " << obj->GetObjectId()
-                  << " - FACT: " << obj->GetFaction()
-                  << " - ENRG: " << obj->GetEnergy() << "/" << obj->GetMaxEnergy()
-                  << " - HLT: " << obj->GetHealth() << "/" << obj->GetMaxHealth();
+
+        // make sure obj is still valid (not destroyed)
+        if(mGm->HasObject(obj))
+        {
+            std::cout << " | OBJ DST - ID: " << obj->GetObjectId()
+                      << " - FACT: " << obj->GetFaction()
+                      << " - ENRG: " << obj->GetEnergy() << "/" << obj->GetMaxEnergy()
+                      << " - HLT: " << obj->GetHealth() << "/" << obj->GetMaxHealth();
+        }
     }
 
     if(a->cellSrc.row != -1)

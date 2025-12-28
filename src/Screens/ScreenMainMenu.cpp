@@ -347,7 +347,8 @@ void ScreenMainMenu::CreateChangelog()
                      "- Hide path overlay when not needed during tutorial.\n"
                      "- Get rid of random focus area in top-left corner of planet map tutorial.\n"
                      "- Fixed many memory leaks.\n"
-                     "- Fixed unit disappearing when building structure.\n"
+                     "- Fixed unit disappearing when building structure."
+                     "- Fixed possible crash when AI collects lootbox.\n"
                      );
     textFix->SetPosition(contX, contY);
     textFix->SetColor(colorContent);
