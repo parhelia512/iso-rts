@@ -349,6 +349,7 @@ void ScreenMainMenu::CreateChangelog()
                      "- Fixed many memory leaks.\n"
                      "- Fixed unit disappearing when building structure."
                      "- Fixed possible crash when AI collects lootbox.\n"
+                     "- Fixed possible crash when AI builds structure.\n"
                      );
     textFix->SetPosition(contX, contY);
     textFix->SetColor(colorContent);
