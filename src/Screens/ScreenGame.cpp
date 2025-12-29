@@ -2446,18 +2446,21 @@ void ScreenGame::HandleUnitMoveOnMouseUp(Unit * unit, const Cell2D & clickCell)
         return;
     }
 
-    // check destination is walkable
     const Cell2D selCell(unit->GetRow0(), unit->GetCol0());
 
-    const GameMapCell & clickGameCell = mGameMap->GetCell(ClickInd);
-    const GameObject * clickObj = clickGameCell.objTop;
+    // check destination is walkable
+    const bool clickWalkable = mGameMap->IsCellWalkable(clickCell.row, clickCell.col);
 
     // destination is walkable -> try to generate a path and move
-    if(clickObj == nullptr)
+    if(clickWalkable)
     {
         SetupUnitMove(unit, selCell, clickCell);
         return ;
     }
+
+    // handle special cases for non-walkable cells
+    const GameMapCell & clickGameCell = mGameMap->GetCell(ClickInd);
+    const GameObject * clickObj = clickGameCell.objTop;
 
     // there's an object and it can't be conquered -> exit
     if(!clickObj->CanBeConquered())
