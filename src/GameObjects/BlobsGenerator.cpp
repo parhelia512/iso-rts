@@ -8,7 +8,11 @@ namespace game
 {
 
 BlobsGenerator::BlobsGenerator(GameMap * gm)
-    : CollectableGenerator(gm, 5, 35)
+#ifdef DEV_MODE
+    : CollectableGenerator(gm, 1, 10)
+#else
+    : CollectableGenerator(gm, 5, 30)
+#endif
 {
 }
 
