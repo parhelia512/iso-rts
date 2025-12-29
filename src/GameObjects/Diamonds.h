@@ -16,6 +16,8 @@ public:
     void MaximizeUnits();
     void MinimizeUnits();
 
+    void Collected(Player * collector) override;
+
 protected:
     void UpdateGraphics() override;
 
