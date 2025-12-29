@@ -16,13 +16,13 @@ StepPlanetMapExploreTerritory::StepPlanetMapExploreTerritory(PanelPlanetActions 
     , mFocusArea(new FocusArea)
 {
     // FOCUS
-    auto btnExplore = panelActions->GetButton(PanelPlanetActions::EXPLORE);
+    mButton = panelActions->GetButton(PanelPlanetActions::EXPLORE);
 
     const int padding = 10;
-    const int fX = panelActions->GetX() + btnExplore->GetX() - padding;
-    const int fY = panelActions->GetY() + btnExplore->GetY() - padding;
-    const int fW = btnExplore->GetWidth() + (padding * 2);
-    const int fH = btnExplore->GetHeight() + (padding * 2);
+    const int fX = panelActions->GetX() + mButton->GetX() - padding;
+    const int fY = panelActions->GetY() + mButton->GetY() - padding;
+    const int fW = mButton->GetWidth() + (padding * 2);
+    const int fH = mButton->GetHeight() + (padding * 2);
 
     mFocusArea->SetScreenArea(fX, fY, fW, fH);
     mFocusArea->SetCornersColor(TutorialConstants::colorFocusAction);
@@ -41,7 +41,7 @@ StepPlanetMapExploreTerritory::StepPlanetMapExploreTerritory(PanelPlanetActions 
                        });
 
     // EXPLORE BUTTON
-    btnExplore->AddOnClickFunction([this]
+    mFuncId = mButton->AddOnClickFunction([this]
     {
         SetDone();
     });
@@ -50,6 +50,9 @@ StepPlanetMapExploreTerritory::StepPlanetMapExploreTerritory(PanelPlanetActions 
 StepPlanetMapExploreTerritory::~StepPlanetMapExploreTerritory()
 {
     delete mFocusArea;
+
+    // clear callback
+    mButton->RemoveClickFunction(mFuncId);
 }
 
 void StepPlanetMapExploreTerritory::OnStart()

@@ -16,13 +16,13 @@ StepPlanetMapConquerTerritory::StepPlanetMapConquerTerritory(PanelPlanetActions 
     , mFocusArea(new FocusArea)
 {
     // FOCUS
-    auto btn = panelActions->GetButton(PanelPlanetActions::CONQUER);
+    mButton = panelActions->GetButton(PanelPlanetActions::CONQUER);
 
     const int padding = 10;
-    const int fX = panelActions->GetX() + btn->GetX() - padding;
-    const int fY = panelActions->GetY() + btn->GetY() - padding;
-    const int fW = btn->GetWidth() + (padding * 2);
-    const int fH = btn->GetHeight() + (padding * 2);
+    const int fX = panelActions->GetX() + mButton->GetX() - padding;
+    const int fY = panelActions->GetY() + mButton->GetY() - padding;
+    const int fW = mButton->GetWidth() + (padding * 2);
+    const int fH = mButton->GetHeight() + (padding * 2);
 
     mFocusArea->SetScreenArea(fX, fY, fW, fH);
     mFocusArea->SetCornersColor(TutorialConstants::colorFocusAction);
@@ -49,7 +49,7 @@ StepPlanetMapConquerTerritory::StepPlanetMapConquerTerritory(PanelPlanetActions 
                        });
 
     // CONQUER BUTTON
-    btn->AddOnClickFunction([this]
+    mFuncId = mButton->AddOnClickFunction([this]
     {
         SetDone();
     });
@@ -58,6 +58,9 @@ StepPlanetMapConquerTerritory::StepPlanetMapConquerTerritory(PanelPlanetActions 
 StepPlanetMapConquerTerritory::~StepPlanetMapConquerTerritory()
 {
     delete mFocusArea;
+
+    // clear callback
+    mButton->RemoveClickFunction(mFuncId);
 }
 
 } // namespace game

@@ -49,9 +49,9 @@ StepGameEndTurn::StepGameEndTurn(const PanelTurnControl * panel)
                            GetClickFilter()->SetScreenClickableArea(fX, fY, fW, fH);
                        });
 
-    auto btn = panel->GetButtonEndTurn();
+    mButton = panel->GetButtonEndTurn();
 
-    btn->AddOnClickFunction([this]
+    mFuncId = mButton->AddOnClickFunction([this]
     {
         SetDone();
     });
@@ -60,6 +60,9 @@ StepGameEndTurn::StepGameEndTurn(const PanelTurnControl * panel)
 StepGameEndTurn::~StepGameEndTurn()
 {
     delete mFocusArea;
+
+    // clear callback
+    mButton->RemoveClickFunction(mFuncId);
 }
 
 } // namespace game

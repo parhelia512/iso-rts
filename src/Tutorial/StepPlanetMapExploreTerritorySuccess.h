@@ -2,6 +2,8 @@
 
 #include "Tutorial/TutorialInfoStep.h"
 
+namespace sgl { namespace sgui { class AbstractButton; } }
+
 namespace game
 {
 
@@ -24,6 +26,9 @@ private:
     FocusArea * mFocusArea = nullptr;
     FocusArea * mFocusInfo = nullptr;
     FocusArea * mFocusResources = nullptr;
+
+    sgl::sgui::AbstractButton * mButton = nullptr;
+    unsigned int mFuncId = 0;
 };
 
 } // namespace game
