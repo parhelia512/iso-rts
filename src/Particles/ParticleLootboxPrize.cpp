@@ -11,7 +11,6 @@
 #include <sgl/graphic/TextureManager.h>
 
 #include <cmath>
-#include <sstream>
 
 namespace game
 {
@@ -86,9 +85,7 @@ void ParticleLootboxPrize::SetData(const DataParticleLootboxPrize & data)
     auto fm = graphic::FontManager::Instance();
     graphic::Font * font = fm->GetFont("Lato-Bold.ttf", fontSize, graphic::Font::NORMAL);
 
-    std::ostringstream ss;
-    ss << "+" << data.quantity;
-    mTxt = new graphic::Text(ss.str().c_str(), font);
+    mTxt = new graphic::Text(std::to_string(data.quantity).c_str(), font);
     mTxt->SetColor(colorText);
 
     SetStart(data.x0, data.y0);
