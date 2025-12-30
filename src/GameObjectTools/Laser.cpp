@@ -11,11 +11,11 @@
 #include <sgl/graphic/ParticlesManager.h>
 #include <sgl/graphic/Texture.h>
 #include <sgl/graphic/TextureManager.h>
+#include <sgl/media/AudioManager.h>
+#include <sgl/media/AudioPlayer.h>
 #include <sgl/utilities/UniformRealDistribution.h>
 
 #include <cmath>
-
-#include <iostream>
 
 namespace game
 {
@@ -36,6 +36,9 @@ Laser::Laser(const WeaponData & data, GameObject * owner, GameMap * gm,
 
 void Laser::OnShoot(float x0, float y0)
 {
+    auto player = sgl::media::AudioManager::Instance()->GetPlayer();
+    player->PlaySound("game/laser-01.ogg");
+
     GameObject * owner = GetOwner();
 
     const IsoObject * isoTarget = mTarget->GetIsoObject();
@@ -82,8 +85,6 @@ void Laser::OnShoot(float x0, float y0)
     float damage = 0.f;
     bool fatal = false;
 
-    std::cout << "Laser::OnShoot - valHit: " << valHit << " / probHit: " << probHit << std::endl;
-
     // hit
     if(valHit < probHit)
     {
@@ -95,8 +96,6 @@ void Laser::OnShoot(float x0, float y0)
         const float valFatal = dist.GetNextValue();
 
         fatal = valFatal < probFatal;
-
-        std::cout << "Laser::OnShoot - valFatal: " << valFatal << " / probFatal: " << probFatal << std::endl;
     }
 
     const DataParticleSingleLaser pd =

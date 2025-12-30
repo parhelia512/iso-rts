@@ -323,6 +323,8 @@ void ScreenMainMenu::CreateChangelog()
     auto textNewFeat = new sgui::TextArea(contentW, minBlockH, font, true, content);
     textNewFeat->SetText("NEW FEATURES\n"
                          "- Show path overlay when planning unit's move.\n"
+                         "- Collecting blobs and diamonds show the number collected.\n"
+                         "- New SFX for laser weapon.\n"
                          );
     textNewFeat->SetPosition(contX, contY);
     textNewFeat->SetColor(colorContent);
