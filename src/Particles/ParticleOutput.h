@@ -13,15 +13,15 @@ namespace game
 class GameMap;
 class GameObject;
 
-struct DataParticleLootboxPrize;
+struct DataParticleOutput;
 
-class ParticleLootboxPrize : public sgl::graphic::Particle
+class ParticleOutput : public sgl::graphic::Particle
 {
 public:
-    ParticleLootboxPrize();
-    ~ParticleLootboxPrize();
+    ParticleOutput();
+    ~ParticleOutput();
 
-    void SetData(const DataParticleLootboxPrize & data);
+    void SetData(const DataParticleOutput & data);
 
     float GetSpeed() const;
 
@@ -44,7 +44,7 @@ private:
     float mDecaySpeed = 1.f;
 };
 
-inline float ParticleLootboxPrize::GetSpeed() const { return mSpeed; }
+inline float ParticleOutput::GetSpeed() const { return mSpeed; }
 
 
 } // namespace game

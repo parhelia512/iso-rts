@@ -5,7 +5,7 @@
 namespace game
 {
 
-class UpdaterLootboxPrize : public sgl::graphic::ParticlesUpdater
+class UpdaterOutput : public sgl::graphic::ParticlesUpdater
 {
 private:
     sgl::graphic::Particle * CreateParticle(const sgl::graphic::ParticleData & initData) override;

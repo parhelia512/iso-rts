@@ -4,9 +4,8 @@
 #include "GameData.h"
 #include "GameMap.h"
 #include "IsoObject.h"
-#include "GameObjects/LootBox.h"
-#include "Particles/DataParticleLootboxPrize.h"
-#include "Particles/UpdaterLootboxPrize.h"
+#include "Particles/DataParticleOutput.h"
+#include "Particles/UpdaterOutput.h"
 
 #include <sgl/graphic/ParticlesManager.h>
 #include <sgl/graphic/TextureManager.h>
@@ -37,7 +36,7 @@ void Base::OnNewTurn(PlayerFaction faction)
 
     // emit notification
     auto partMan = GetParticlesManager();
-    auto pu = static_cast<UpdaterLootboxPrize *>(partMan->GetUpdater(PU_LOOTBOX_PRIZE));
+    auto pu = static_cast<UpdaterOutput *>(partMan->GetUpdater(PU_OUTPUT));
 
     IsoObject * isoObj = GetIsoObject();
 
@@ -51,14 +50,14 @@ void Base::OnNewTurn(PlayerFaction faction)
     const float speed = 40.f;
     const float decaySpeed = 125.f;
 
-    const DataParticleLootboxPrize pd1(mOutputEnergy, LootBox::LB_ENERGY, x1, y12, speed, decaySpeed);
+    const DataParticleOutput pd1(mOutputEnergy, OT_ENERGY, x1, y12, speed, decaySpeed);
     pu->AddParticle(pd1);
 
-    const DataParticleLootboxPrize pd2(mOutputMaterial, LootBox::LB_MATERIAL, x2, y12, speed, decaySpeed);
+    const DataParticleOutput pd2(mOutputMaterial, OT_MATERIAL, x2, y12, speed, decaySpeed);
     pu->AddParticle(pd2);
 
     const int money = GetGameMap()->GetFactionMoneyPerTurn(faction);
-    const DataParticleLootboxPrize pd3(money, LootBox::LB_MONEY, x3, y3, speed, decaySpeed);
+    const DataParticleOutput pd3(money, OT_MONEY, x3, y3, speed, decaySpeed);
     pu->AddParticle(pd3);
 }
 

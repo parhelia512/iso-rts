@@ -149,7 +149,7 @@ enum ParticlesUpdaterId : unsigned int
     PU_DAMAGE,
     PU_HEALING,
     PU_HIT_POINTS,
-    PU_LOOTBOX_PRIZE,
+    PU_OUTPUT,
     PU_SINGLE_LASER
 };
 

@@ -3,8 +3,8 @@
 #include "GameData.h"
 #include "IsoObject.h"
 #include "Player.h"
-#include "Particles/DataParticleLootboxPrize.h"
-#include "Particles/UpdaterLootboxPrize.h"
+#include "Particles/DataParticleOutput.h"
+#include "Particles/UpdaterOutput.h"
 
 #include <sgl/graphic/ParticlesManager.h>
 #include <sgl/graphic/TextureManager.h>
@@ -50,7 +50,7 @@ void Diamonds::Collected(Player * collector)
 
     // emit notification
     auto partMan = GetParticlesManager();
-    auto pu = static_cast<UpdaterLootboxPrize *>(partMan->GetUpdater(PU_LOOTBOX_PRIZE));
+    auto pu = static_cast<UpdaterOutput *>(partMan->GetUpdater(PU_OUTPUT));
 
     IsoObject * isoObj = GetIsoObject();
 
@@ -60,7 +60,7 @@ void Diamonds::Collected(Player * collector)
     const float speed = 50.f;
     const float decaySpeed = 150.f;
 
-    DataParticleLootboxPrize pd(mNum, 1, x0, y0, speed, decaySpeed);
+    DataParticleOutput pd(mNum, OT_DIAMONDS, x0, y0, speed, decaySpeed);
 
     pu->AddParticle(pd);
 }

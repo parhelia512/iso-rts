@@ -156,7 +156,7 @@ add_executable(
     src/Particles/DataParticleDamage.h
     src/Particles/DataParticleHealing.h
     src/Particles/DataParticleHitPoints.h
-    src/Particles/DataParticleLootboxPrize.h
+    src/Particles/DataParticleOutput.h
     src/Particles/DataParticleSingleLaser.h
     src/Particles/ParticleDamage.h
     src/Particles/ParticleDamage.cpp
@@ -164,8 +164,8 @@ add_executable(
     src/Particles/ParticleHealing.cpp
     src/Particles/ParticleHitPoints.h
     src/Particles/ParticleHitPoints.cpp
-    src/Particles/ParticleLootboxPrize.h
-    src/Particles/ParticleLootboxPrize.cpp
+    src/Particles/ParticleOutput.h
+    src/Particles/ParticleOutput.cpp
     src/Particles/ParticleSingleLaser.h
     src/Particles/ParticleSingleLaser.cpp
     src/Particles/UpdaterDamage.h
@@ -174,8 +174,8 @@ add_executable(
     src/Particles/UpdaterHealing.cpp
     src/Particles/UpdaterHitPoints.h
     src/Particles/UpdaterHitPoints.cpp
-    src/Particles/UpdaterLootboxPrize.h
-    src/Particles/UpdaterLootboxPrize.cpp
+    src/Particles/UpdaterOutput.h
+    src/Particles/UpdaterOutput.cpp
     src/Particles/UpdaterSingleLaser.h
     src/Particles/UpdaterSingleLaser.cpp
     src/Screens/Screen.h

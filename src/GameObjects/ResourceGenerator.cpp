@@ -3,9 +3,8 @@
 #include "GameConstants.h"
 #include "GameData.h"
 #include "IsoObject.h"
-#include "GameObjects/LootBox.h"
-#include "Particles/DataParticleLootboxPrize.h"
-#include "Particles/UpdaterLootboxPrize.h"
+#include "Particles/DataParticleOutput.h"
+#include "Particles/UpdaterOutput.h"
 
 #include <sgl/graphic/ParticlesManager.h>
 #include <sgl/graphic/TextureManager.h>
@@ -63,18 +62,18 @@ void ResourceGenerator::OnNewTurn(PlayerFaction faction)
         return ;
 
     const GameObjectTypeId type = GetObjectType();
-    unsigned int outputType;
+    OutputType outputType;
 
     if(type == ObjectData::TYPE_RES_GEN_ENERGY || type == ObjectData::TYPE_RES_GEN_ENERGY_SOLAR)
-        outputType = LootBox::LB_ENERGY;
+        outputType = OT_ENERGY;
     else if(type == ObjectData::TYPE_RES_GEN_MATERIAL || type == ObjectData::TYPE_RES_GEN_MATERIAL_EXTRACT)
-        outputType = LootBox::LB_MATERIAL;
+        outputType = OT_MATERIAL;
     else
         return ;
 
     // emit notification
     auto partMan = GetParticlesManager();
-    auto pu = static_cast<UpdaterLootboxPrize *>(partMan->GetUpdater(PU_LOOTBOX_PRIZE));
+    auto pu = static_cast<UpdaterOutput *>(partMan->GetUpdater(PU_OUTPUT));
 
     IsoObject * isoObj = GetIsoObject();
 
@@ -84,7 +83,7 @@ void ResourceGenerator::OnNewTurn(PlayerFaction faction)
     const float speed = 40.f;
     const float decaySpeed = 125.f;
 
-    DataParticleLootboxPrize pd(mOutput, outputType, x0, y0, speed, decaySpeed);
+    DataParticleOutput pd(mOutput, outputType, x0, y0, speed, decaySpeed);
 
     pu->AddParticle(pd);
 }

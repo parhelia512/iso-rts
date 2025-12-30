@@ -35,7 +35,7 @@
 #include "Particles/UpdaterDamage.h"
 #include "Particles/UpdaterHealing.h"
 #include "Particles/UpdaterHitPoints.h"
-#include "Particles/UpdaterLootboxPrize.h"
+#include "Particles/UpdaterOutput.h"
 #include "Particles/UpdaterSingleLaser.h"
 #include "States/StatesIds.h"
 #include "Tutorial/Tutorial.h"
@@ -523,8 +523,8 @@ void ScreenGame::InitParticlesSystem()
     mPartMan->RegisterUpdater(PU_HIT_POINTS, updater);
 
     // LOOTBOX PRIZE
-    updater = new UpdaterLootboxPrize;
-    mPartMan->RegisterUpdater(PU_LOOTBOX_PRIZE, updater);
+    updater = new UpdaterOutput;
+    mPartMan->RegisterUpdater(PU_OUTPUT, updater);
 
     // SINGLE LASER
     updater = new UpdaterSingleLaser;

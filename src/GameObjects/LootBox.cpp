@@ -4,8 +4,8 @@
 #include "GameData.h"
 #include "IsoObject.h"
 #include "Player.h"
-#include "Particles/DataParticleLootboxPrize.h"
-#include "Particles/UpdaterLootboxPrize.h"
+#include "Particles/DataParticleOutput.h"
+#include "Particles/UpdaterOutput.h"
 
 #include <sgl/graphic/ParticlesManager.h>
 #include <sgl/graphic/TextureManager.h>
@@ -66,7 +66,7 @@ void LootBox::Collected(Player * collector)
 
     // emit notification
     auto partMan = GetParticlesManager();
-    auto pu = static_cast<UpdaterLootboxPrize *>(partMan->GetUpdater(PU_LOOTBOX_PRIZE));
+    auto pu = static_cast<UpdaterOutput *>(partMan->GetUpdater(PU_OUTPUT));
 
     IsoObject * isoObj = GetIsoObject();
 
@@ -76,7 +76,18 @@ void LootBox::Collected(Player * collector)
     const float speed = 50.f;
     const float decaySpeed = 150.f;
 
-    DataParticleLootboxPrize pd(mPrizeQuantity, mPrizeType, x0, y0, speed, decaySpeed);
+    OutputType ot[NUM_OUTPUT_TYPES] =
+    {
+        OT_BLOBS,
+        OT_DIAMONDS,
+        OT_ENERGY,
+        OT_MATERIAL,
+        OT_MONEY,
+    };
+
+    static_assert(NUM_OUTPUT_TYPES == NUM_LB_PRIZES);
+
+    DataParticleOutput pd(mPrizeQuantity, ot[mPrizeType], x0, y0, speed, decaySpeed);
 
     pu->AddParticle(pd);
 }

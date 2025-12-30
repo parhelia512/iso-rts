@@ -1,8 +1,7 @@
-#include "Particles/ParticleLootboxPrize.h"
+#include "Particles/ParticleOutput.h"
 
 #include "GameData.h"
-#include "GameObjects/LootBox.h"
-#include "Particles/DataParticleLootboxPrize.h"
+#include "Particles/DataParticleOutput.h"
 
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
@@ -15,18 +14,18 @@
 namespace game
 {
 
-ParticleLootboxPrize::ParticleLootboxPrize()
+ParticleOutput::ParticleOutput()
     : mIcon(new sgl::graphic::TexturedRenderable)
 {
 }
 
-ParticleLootboxPrize::~ParticleLootboxPrize()
+ParticleOutput::~ParticleOutput()
 {
     delete mIcon;
     delete mTxt;
 }
 
-void ParticleLootboxPrize::SetData(const DataParticleLootboxPrize & data)
+void ParticleOutput::SetData(const DataParticleOutput & data)
 {
     using namespace sgl;
 
@@ -46,27 +45,27 @@ void ParticleLootboxPrize::SetData(const DataParticleLootboxPrize & data)
 
     switch(data.type)
     {
-        case LootBox::LB_BLOBS:
+        case OT_BLOBS:
             iconTexId = ID_PART_ICON_BLOBS;
             color = 0xe481e4ff;
         break;
 
-        case LootBox::LB_DIAMONDS:
+        case OT_DIAMONDS:
             iconTexId = ID_PART_ICON_DIAMONDS;
             color = 0xe4e481ff;
         break;
 
-        case LootBox::LB_ENERGY:
+        case OT_ENERGY:
             iconTexId = ID_PART_ICON_ENERGY;
             color = 0xe4cb81ff;
         break;
 
-        case LootBox::LB_MATERIAL:
+        case OT_MATERIAL:
             iconTexId = ID_PART_ICON_MATERIAL;
             color = 0xa3c2bfff;
         break;
 
-        case LootBox::LB_MONEY:
+        case OT_MONEY:
             iconTexId = ID_PART_ICON_MONEY;
             color = 0x81e481ff;
         break;
@@ -91,7 +90,7 @@ void ParticleLootboxPrize::SetData(const DataParticleLootboxPrize & data)
     SetStart(data.x0, data.y0);
 }
 
-void ParticleLootboxPrize::SetStart(int x0, int y0)
+void ParticleOutput::SetStart(int x0, int y0)
 {
     mPosXf = x0;
     mPosYf = y0;
@@ -111,7 +110,7 @@ void ParticleLootboxPrize::SetStart(int x0, int y0)
     mIcon->SetPosition(iconX, iconY);
 }
 
-void ParticleLootboxPrize::Update(float delta)
+void ParticleOutput::Update(float delta)
 {
     const float speed = mSpeed * delta;
     const float alphaDecay = mDecaySpeed * delta;
@@ -137,7 +136,7 @@ void ParticleLootboxPrize::Update(float delta)
          SetDone();
 }
 
-void ParticleLootboxPrize::Render()
+void ParticleOutput::Render()
 {
     mIcon->Render();
     mTxt->Render();
