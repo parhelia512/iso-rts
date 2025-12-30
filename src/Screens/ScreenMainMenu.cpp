@@ -324,7 +324,7 @@ void ScreenMainMenu::CreateChangelog()
     textNewFeat->SetText("NEW FEATURES\n"
                          "- Show path overlay when planning unit's move.\n"
                          "- Collecting blobs and diamonds show the number collected.\n"
-                         "- New SFX for laser weapon.\n"
+                         "- New SFX for laser weapon, unit and mini-unit move.\n"
                          );
     textNewFeat->SetPosition(contX, contY);
     textNewFeat->SetColor(colorContent);

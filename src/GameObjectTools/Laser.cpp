@@ -36,8 +36,11 @@ Laser::Laser(const WeaponData & data, GameObject * owner, GameMap * gm,
 
 void Laser::OnShoot(float x0, float y0)
 {
-    auto player = sgl::media::AudioManager::Instance()->GetPlayer();
-    player->PlaySound("game/laser-01.ogg");
+    if(GetOwner()->IsVisible() || mTarget->IsVisible())
+    {
+        auto player = sgl::media::AudioManager::Instance()->GetPlayer();
+        player->PlaySound("game/laser-01.ogg");
+    }
 
     GameObject * owner = GetOwner();
 

@@ -7,7 +7,11 @@
 #include "IsoObject.h"
 #include "Player.h"
 #include "GameObjects/GameObject.h"
+#include "GameObjects/ObjectData.h"
 #include "Screens/ScreenGame.h"
+
+#include <sgl/media/AudioManager.h>
+#include <sgl/media/AudioPlayer.h>
 
 #include <cmath>
 
@@ -65,6 +69,17 @@ bool ObjectPath::InitNextMove()
     }
 
     mState = MOVING;
+
+    auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+
+    // play sound
+    if(mObj->IsVisible())
+    {
+        if(mObj->GetObjectCategory() == ObjectData::CAT_MINI_UNIT)
+            ap->PlaySound("game/miniunit_move-01.ogg");
+        else
+            ap->PlaySound("game/unit_move-02.ogg");
+    }
 
     return true;
 }
