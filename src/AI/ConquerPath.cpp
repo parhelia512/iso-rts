@@ -162,6 +162,12 @@ bool ConquerPath::InitNextConquest()
 
         mUnit->ActionStepCompleted(CONQUER_CELL);
 
+        if(mUnit->IsVisible())
+        {
+            auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+            ap->FadeOutSound("game/conquer-01.ogg", 200);
+        }
+
         ++mNextCell;
 
         if(mNextCell < mCells.size())
@@ -175,6 +181,13 @@ bool ConquerPath::InitNextConquest()
         else
             Finish();
     });
+
+    // play sound
+    if(mUnit->IsVisible())
+    {
+        auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+        ap->PlaySoundLoop("game/conquer-01.ogg");
+    }
 
     return true;
 }
