@@ -14,6 +14,9 @@
 #include "Widgets/GameHUD.h"
 #include "Widgets/GameMapProgressBar.h"
 
+#include <sgl/media/AudioManager.h>
+#include <sgl/media/AudioPlayer.h>
+
 #include <cmath>
 #include <unordered_set>
 
@@ -219,6 +222,13 @@ bool ConquerPath::InitNextMove()
     }
 
     mState = MOVING;
+
+    // play sound
+    if(mUnit->IsVisible())
+    {
+        auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+        ap->PlaySound("game/unit_move-02.ogg");
+    }
 
     return true;
 }

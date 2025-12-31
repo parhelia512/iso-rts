@@ -15,6 +15,9 @@
 #include "Widgets/GameHUD.h"
 #include "Widgets/GameMapProgressBar.h"
 
+#include <sgl/media/AudioManager.h>
+#include <sgl/media/AudioPlayer.h>
+
 #include <cmath>
 
 namespace game
@@ -155,6 +158,13 @@ bool WallBuildPath::InitNextMove()
     mVelY = (mTargetY - mObjY) * mUnit->GetSpeed();
 
     mState = MOVING;
+
+    // play sound
+    if(mUnit->IsVisible())
+    {
+        auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+        ap->PlaySound("game/unit_move-02.ogg");
+    }
 
     return true;
 }
