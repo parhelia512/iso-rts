@@ -2023,6 +2023,12 @@ bool ScreenGame::SetupStructureConquest(Unit * unit, const Cell2D & start, const
 
         // clear action data once the action is completed
         SetObjectActionCompleted(unit);
+
+        if(unit->IsVisible())
+        {
+            auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+            ap->FadeOutSound("game/conquer-02.ogg", 200);
+        }
     });
 
     // store active action
@@ -2037,6 +2043,13 @@ bool ScreenGame::SetupStructureConquest(Unit * unit, const Cell2D & start, const
     // disable actions panel (if action is done by local player)
     if(player->IsLocal())
         mHUD->SetLocalActionsEnabled(false);
+
+    // play sound
+    if(unit->IsVisible())
+    {
+        auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+        ap->PlaySoundLoop("game/conquer-02.ogg");
+    }
 
     return true;
 }

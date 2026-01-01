@@ -265,6 +265,7 @@ void ScreenInit::SetupSFX()
     mJobs.emplace_back([this, am]
     {
         am->CreateSound(packageSoundsGame, "game/conquer-01.ogg");
+        am->CreateSound(packageSoundsGame, "game/conquer-02.ogg");
         am->CreateSound(packageSoundsGame, "game/error_action_01.ogg");
         am->CreateSound(packageSoundsGame, "game/explosion-01.ogg");
         am->CreateSound(packageSoundsGame, "game/laser-01.ogg");
