@@ -321,8 +321,8 @@ void GameHUD::ShowPanelHit(const GameObject * attacker, const GameObject * targe
     const int panelH = mPanelHit->GetHeight();
 
     const IsoObject * isoTarget = target->GetIsoObject();
-    const int isoX = isoTarget->GetX() - camera->GetX();
-    const int isoY = isoTarget->GetY() - camera->GetY();
+    const int isoX = camera->GetWorldToScreenX(isoTarget->GetX());
+    const int isoY = camera->GetWorldToScreenY(isoTarget->GetY());
 
     int posX = isoX + isoTarget->GetWidth();
     int posY = isoY + (isoTarget->GetHeight() - panelH) / 2;
