@@ -425,6 +425,8 @@ add_executable(
     src/Widgets/ScreenOverlay.cpp
     src/Widgets/SimpleResourceDisplay.h
     src/Widgets/SimpleResourceDisplay.cpp
+    src/Widgets/WarningMessage.h
+    src/Widgets/WarningMessage.cpp
     src/Widgets/WidgetsConstants.h
     src/Widgets/WidgetsConstants.cpp
     src/Widgets/Test/TestComboBox.h

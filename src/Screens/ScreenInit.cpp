@@ -566,6 +566,8 @@ void ScreenInit::SetupTextures()
             { 159, 0, 16, 16 },
             { 176, 0, 16, 16 },
             { 193, 0, 16, 16 },
+            // WARNING ICON
+            { 210, 0, 36, 32 },
         };
 
         tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_UI_GAME], SpriteFileGameUIShared, rects);

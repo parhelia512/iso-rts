@@ -39,4 +39,4 @@ private:
     sgl::sgui::Image * mIconCost = nullptr;
 };
 
-} // namespace sgl
+} // namespace game
