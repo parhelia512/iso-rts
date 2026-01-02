@@ -3,6 +3,7 @@
 #include "Widgets/GameUIData.h"
 #include "Widgets/WidgetsConstants.h"
 
+#include <sgl/graphic/Camera.h>
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
 #include <sgl/graphic/Image.h>
@@ -24,6 +25,9 @@ WarningMessage::WarningMessage(const char * text, float time)
 
     auto tm = graphic::TextureManager::Instance();
     auto fm = graphic::FontManager::Instance();
+
+    // use default camera to move according to view
+    SetCamera(graphic::Camera::GetDefaultCamera());
 
     // ICON
     auto tex = tm->GetSprite(SpriteFileGameUIShared, ID_UIS_ICON_WARNING);

@@ -2466,16 +2466,11 @@ void ScreenGame::HandleUnitMoveOnMouseUp(Unit * unit, const Cell2D & clickCell)
     const int ClickInd = clickCell.row * mGameMap->GetNumCols() + clickCell.col;
     const bool clickVisible = mLocalPlayer->IsCellVisible(ClickInd);
 
-    const IsoObject * unitIO = unit->GetIsoObject();
-    auto camera = mCamController->GetCamera();
-
     if(!clickVisible)
     {
         PlayLocalActionErrorSFX(mLocalPlayer);
+        mHUD->ShowWarningMessageAboveObject("cell not visible", 3.f, unit);
 
-        const int messX = camera->GetWorldToScreenX(unitIO->GetX()) + (unitIO->GetWidth() / 2);
-        const int messY = camera->GetWorldToScreenY(unitIO->GetY());
-        mHUD->ShowWarningMessage("cell not visible", 3.f, messX, messY);
         return;
     }
 

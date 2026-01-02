@@ -923,25 +923,30 @@ GameMapProgressBar * GameHUD::CreateProgressBarInCell(const Cell2D & cell, float
     return pb;
 }
 
-void GameHUD::ShowWarningMessage(const char * text, float time, int centerX, int bottomY)
+void GameHUD::ShowWarningMessageAboveObject(const char * text, float time, const GameObject * obj)
 {
     auto wm = new WarningMessage(text, time);
 
-    // position X
-    int x = centerX - (wm->GetWidth() / 2);
+    // positioning
+    const IsoObject * isoObj = obj->GetIsoObject();
 
-    if(x < 0)
-        x = 0;
+    const auto camera = sgl::graphic::Camera::GetDefaultCamera();
 
-    // position Y
+    const int objX = isoObj->GetX();
+    const int objY = isoObj->GetY();
     const int marginB = 5;
 
-    int y = bottomY - wm->GetHeight() - marginB;
+    int messX = objX + (isoObj->GetWidth() - wm->GetWidth()) / 2;
+    int messY = objY - wm->GetHeight() - marginB;
 
-    if(y < 0)
-        y = 0;
+    if(camera->GetWorldToScreenX(messX) < 0)
+        messX = camera->GetX();
 
-    wm->SetPosition(x, y);
+    // move below object if can't see warning above it
+    if(camera->GetWorldToScreenY(messY) < 0)
+        messY = objY + isoObj->GetHeight() + marginB;
+
+    wm->SetPosition(messX, messY);
 }
 
 void GameHUD::HideDialogExploreTempleOutcome()
