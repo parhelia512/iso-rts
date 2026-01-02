@@ -40,6 +40,7 @@ class PanelTurnControl;
 class Player;
 class ScreenGame;
 class Temple;
+class WarningMessage;
 
 struct Cell2D;
 
@@ -159,6 +160,8 @@ private:
     ButtonPanelSelectedObject * mButtonPanelSelObj = nullptr;
 
     sgl::sgui::Image * mGoalCompletedIcon = nullptr;
+
+    WarningMessage * mWarnMessage = nullptr;
 
     ScreenGame * mScreen = nullptr;
 

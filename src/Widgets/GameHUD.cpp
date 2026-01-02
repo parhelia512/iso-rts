@@ -929,7 +929,11 @@ void GameHUD::ShowLocalWarningMessageAboveObject(const char * text, float time, 
     if(!mScreen->IsCurrentTurnLocal())
         return ;
 
-    auto wm = new WarningMessage(text, time);
+    // create the first time
+    if(nullptr == mWarnMessage)
+        mWarnMessage = new WarningMessage;
+
+    mWarnMessage->ShowMessage(text, time);
 
     // positioning
     const IsoObject * isoObj = obj->GetIsoObject();
@@ -940,8 +944,8 @@ void GameHUD::ShowLocalWarningMessageAboveObject(const char * text, float time, 
     const int objY = isoObj->GetY();
     const int marginB = 5;
 
-    int messX = objX + (isoObj->GetWidth() - wm->GetWidth()) / 2;
-    int messY = objY - wm->GetHeight() - marginB;
+    int messX = objX + (isoObj->GetWidth() - mWarnMessage->GetWidth()) / 2;
+    int messY = objY - mWarnMessage->GetHeight() - marginB;
 
     if(camera->GetWorldToScreenX(messX) < 0)
         messX = camera->GetX();
@@ -950,7 +954,7 @@ void GameHUD::ShowLocalWarningMessageAboveObject(const char * text, float time, 
     if(camera->GetWorldToScreenY(messY) < 0)
         messY = objY + isoObj->GetHeight() + marginB;
 
-    wm->SetPosition(messX, messY);
+    mWarnMessage->SetPosition(messX, messY);
 
     // play sound
     auto player = sgl::media::AudioManager::Instance()->GetPlayer();

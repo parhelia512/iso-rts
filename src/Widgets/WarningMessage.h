@@ -4,11 +4,7 @@
 
 namespace sgl
 {
-    namespace graphic
-    {
-        class Image;
-        class Text;
-    }
+    namespace graphic { class Renderable; }
 }
 
 namespace game
@@ -17,7 +13,9 @@ namespace game
 class WarningMessage : public sgl::sgui::Widget
 {
 public:
-    WarningMessage(const char * text, float time);
+    WarningMessage();
+
+    void ShowMessage(const char * text, float time);
 
 private:
     void HandlePositionChanged() override;
@@ -27,8 +25,8 @@ private:
     void OnUpdate(float delta) override;
 
 private:
-    sgl::graphic::Image * mIcon = nullptr;
-    sgl::graphic::Text * mText = nullptr;
+    sgl::graphic::Renderable * mIcon = nullptr;
+    sgl::graphic::Renderable * mText = nullptr;
 
     float mTimer = 0.f;
 };

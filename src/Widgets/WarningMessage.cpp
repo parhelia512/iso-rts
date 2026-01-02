@@ -4,6 +4,7 @@
 #include "Widgets/WidgetsConstants.h"
 
 #include <sgl/graphic/Camera.h>
+#include <sgl/graphic/DummyRenderable.h>
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
 #include <sgl/graphic/Image.h>
@@ -18,23 +19,38 @@ const int marginR = 5;
 namespace game
 {
 
-WarningMessage::WarningMessage(const char * text, float time)
-    : mTimer(time)
+WarningMessage::WarningMessage()
 {
     using namespace sgl;
-
-    auto tm = graphic::TextureManager::Instance();
-    auto fm = graphic::FontManager::Instance();
 
     // use default camera to move according to view
     SetCamera(graphic::Camera::GetDefaultCamera());
 
     // ICON
+    auto tm = graphic::TextureManager::Instance();
+
     auto tex = tm->GetSprite(SpriteFileGameUIShared, ID_UIS_ICON_WARNING);
     mIcon = new graphic::Image(tex);
     RegisterRenderable(mIcon);
 
     // TEXT
+    mText = new graphic::DummyRenderable;
+}
+
+void WarningMessage::ShowMessage(const char * text, float time)
+{
+    using namespace sgl;
+
+    // reset timer
+    mTimer = time;
+
+    // delete previous text
+    UnregisterRenderable(mText);
+    delete mText;
+
+    // TEXT
+    auto fm = graphic::FontManager::Instance();
+
     const int fontSize = 16;
     auto font = fm->GetFont(WidgetsConstants::FontFileText, fontSize, graphic::Font::NORMAL);
 
@@ -45,7 +61,14 @@ WarningMessage::WarningMessage(const char * text, float time)
     const int w = mIcon->GetWidth() + marginR + mText->GetWidth();
     const int h = mIcon->GetHeight();
 
+    // update size and positioning
     SetSize(w, h);
+
+    UpdatePositions();
+
+    // show again
+    SetVisible(true);
+    SetEnabled(true);
 }
 
 void WarningMessage::HandlePositionChanged()
@@ -73,7 +96,10 @@ void WarningMessage::OnUpdate(float delta)
     mTimer -= delta;
 
     if(mTimer < 0.f)
-        DeleteLater();
+    {
+        SetVisible(false);
+        SetEnabled(false);
+    }
 }
 
 } // namespace game
