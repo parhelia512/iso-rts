@@ -2473,9 +2473,9 @@ void ScreenGame::HandleUnitMoveOnMouseUp(Unit * unit, const Cell2D & clickCell)
     {
         PlayLocalActionErrorSFX(mLocalPlayer);
 
-        const int messX = camera->GetWorldToScreenX(unitIO->GetX());
-        const int messY = camera->GetWorldToScreenY(unitIO->GetY()) - 32;
-        mHUD->ShowWarningMessage("cell not visible", 2.f, messX, messY);
+        const int messX = camera->GetWorldToScreenX(unitIO->GetX()) + (unitIO->GetWidth() / 2);
+        const int messY = camera->GetWorldToScreenY(unitIO->GetY());
+        mHUD->ShowWarningMessage("cell not visible", 3.f, messX, messY);
         return;
     }
 

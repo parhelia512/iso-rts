@@ -31,7 +31,7 @@ WarningMessage::WarningMessage(const char * text, float time)
     RegisterRenderable(mIcon);
 
     // TEXT
-    const int fontSize = 15;
+    const int fontSize = 16;
     auto font = fm->GetFont(WidgetsConstants::FontFileText, fontSize, graphic::Font::NORMAL);
 
     mText = new graphic::Text(text, font);

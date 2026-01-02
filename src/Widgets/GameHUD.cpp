@@ -923,9 +923,24 @@ GameMapProgressBar * GameHUD::CreateProgressBarInCell(const Cell2D & cell, float
     return pb;
 }
 
-void GameHUD::ShowWarningMessage(const char * text, float time, int x, int y)
+void GameHUD::ShowWarningMessage(const char * text, float time, int centerX, int bottomY)
 {
     auto wm = new WarningMessage(text, time);
+
+    // position X
+    int x = centerX - (wm->GetWidth() / 2);
+
+    if(x < 0)
+        x = 0;
+
+    // position Y
+    const int marginB = 5;
+
+    int y = bottomY - wm->GetHeight() - marginB;
+
+    if(y < 0)
+        y = 0;
+
     wm->SetPosition(x, y);
 }
 
