@@ -194,9 +194,6 @@ private:
 
     void ReselectLastSelected();
 
-    // SFX
-    void PlayLocalActionErrorSFX(const Player * player);
-
 #ifdef DEV_MODE
     void CreateEnemyInCurrentCell(GameObjectTypeId type);
 #endif

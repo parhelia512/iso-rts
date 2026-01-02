@@ -923,8 +923,12 @@ GameMapProgressBar * GameHUD::CreateProgressBarInCell(const Cell2D & cell, float
     return pb;
 }
 
-void GameHUD::ShowWarningMessageAboveObject(const char * text, float time, const GameObject * obj)
+void GameHUD::ShowLocalWarningMessageAboveObject(const char * text, float time, const GameObject * obj)
 {
+    // show warning messages only for local player
+    if(!mScreen->IsCurrentTurnLocal())
+        return ;
+
     auto wm = new WarningMessage(text, time);
 
     // positioning
@@ -947,6 +951,10 @@ void GameHUD::ShowWarningMessageAboveObject(const char * text, float time, const
         messY = objY + isoObj->GetHeight() + marginB;
 
     wm->SetPosition(messX, messY);
+
+    // play sound
+    auto player = sgl::media::AudioManager::Instance()->GetPlayer();
+    player->PlaySound("game/error_action_01.ogg");
 }
 
 void GameHUD::HideDialogExploreTempleOutcome()

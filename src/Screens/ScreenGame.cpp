@@ -1982,7 +1982,7 @@ bool ScreenGame::SetupStructureConquest(Unit * unit, const Cell2D & start, const
     // check if conquest is possible
     if(!mGameMap->CanConquerStructure(unit, end, player))
     {
-        PlayLocalActionErrorSFX(player);
+        mHUD->ShowLocalWarningMessageAboveObject("object can't be conquered", 3.f, unit);
         return false;
     }
 
@@ -2062,7 +2062,7 @@ bool ScreenGame::SetupStructureBuilding(Unit * unit, const Cell2D & cellTarget, 
     // check if building is possible
     if(!mGameMap->CanBuildStructure(unit, cellTarget, player, st))
     {
-        PlayLocalActionErrorSFX(player);
+        mHUD->ShowLocalWarningMessageAboveObject("unit can't build structure", 3.f, unit);
         return false;
     }
 
@@ -2133,7 +2133,7 @@ bool ScreenGame::SetupUnitAttack(Unit * unit, GameObject * target, Player * play
 
     if(!res)
     {
-        PlayLocalActionErrorSFX(player);
+        mHUD->ShowLocalWarningMessageAboveObject("unit can't set this target", 3.f, unit);
         return false;
     }
 
@@ -2162,7 +2162,7 @@ bool ScreenGame::SetupHospitalHeal(Hospital * hospital, GameObject * target, Pla
 
     if(!res)
     {
-        PlayLocalActionErrorSFX(player);
+        mHUD->ShowLocalWarningMessageAboveObject("hospital can't set this target", 3.f, hospital);
         return false;
     }
 
@@ -2185,7 +2185,7 @@ bool ScreenGame::SetupUnitHeal(Unit * unit, GameObject * target, Player * player
 
     if(!res)
     {
-        PlayLocalActionErrorSFX(player);
+        mHUD->ShowLocalWarningMessageAboveObject("unit can't set this target", 3.f, unit);
         return false;
     }
 
@@ -2212,7 +2212,7 @@ bool ScreenGame::SetupUnitMove(Unit * unit, const Cell2D & start, const Cell2D &
     // empty path -> exit
     if(path.empty())
     {
-        PlayLocalActionErrorSFX(player);
+        mHUD->ShowLocalWarningMessageAboveObject("can't find path to cell", 3.f, unit);
         return false;
     }
 
@@ -2222,10 +2222,17 @@ bool ScreenGame::SetupUnitMove(Unit * unit, const Cell2D & start, const Cell2D &
     // do not move if energy is not enough
     const int cost = op->GetPathCost();
 
-    if(cost > unit->GetEnergy() || cost > player->GetTurnEnergy())
+    if(cost > unit->GetEnergy())
     {
         delete op;
-        PlayLocalActionErrorSFX(player);
+        mHUD->ShowLocalWarningMessageAboveObject("not enough energy", 2.f, unit);
+        return false;
+    }
+
+    if(cost > player->GetTurnEnergy())
+    {
+        delete op;
+        mHUD->ShowLocalWarningMessageAboveObject("not enough turn energy", 3.f, unit);
         return false;
     }
 
@@ -2250,7 +2257,7 @@ bool ScreenGame::SetupUnitMove(Unit * unit, const Cell2D & start, const Cell2D &
     else
     {
         delete op;
-        PlayLocalActionErrorSFX(player);
+        mHUD->ShowLocalWarningMessageAboveObject("move failed", 2.f, unit);
         return false;
     }
 }
@@ -2468,9 +2475,7 @@ void ScreenGame::HandleUnitMoveOnMouseUp(Unit * unit, const Cell2D & clickCell)
 
     if(!clickVisible)
     {
-        PlayLocalActionErrorSFX(mLocalPlayer);
-        mHUD->ShowWarningMessageAboveObject("cell not visible", 3.f, unit);
-
+        mHUD->ShowLocalWarningMessageAboveObject("cell not visible", 2.f, unit);
         return;
     }
 
@@ -2493,14 +2498,14 @@ void ScreenGame::HandleUnitMoveOnMouseUp(Unit * unit, const Cell2D & clickCell)
     // there's an object and it can't be conquered -> exit
     if(!clickObj->CanBeConquered())
     {
-        PlayLocalActionErrorSFX(mLocalPlayer);
+        mHUD->ShowLocalWarningMessageAboveObject("object can't be conquered", 3.f, unit);
         return ;
     }
 
     // unit can't conquer
     if(!unit->CanConquer())
     {
-        PlayLocalActionErrorSFX(mLocalPlayer);
+        mHUD->ShowLocalWarningMessageAboveObject("unit can't conquer", 2.f, unit);
         return ;
     }
 
@@ -2514,7 +2519,10 @@ void ScreenGame::HandleUnitMoveOnMouseUp(Unit * unit, const Cell2D & clickCell)
 
         // failed to find a suitable target
         if(-1 == target.row || -1 == target.col)
+        {
+            mHUD->ShowLocalWarningMessageAboveObject("can't find available cell", 3.f, unit);
             return ;
+        }
 
         SetupUnitMove(unit, selCell, target,
             [this, unit, clickCell](bool successful)
@@ -2609,7 +2617,7 @@ void ScreenGame::HandleUnitBuildWallOnMouseUp(Unit * unit, const Cell2D & clickC
     if(!diffClick || !mLocalPlayer->IsCellVisible(clickInd) ||
        !mGameMap->IsCellWalkable(clickCell.row, clickCell.col))
     {
-        PlayLocalActionErrorSFX(player);
+        mHUD->ShowLocalWarningMessageAboveObject("target cell not valid", 3.f, unit);
         return ;
     }
 
@@ -2652,7 +2660,7 @@ void ScreenGame::HandleUnitBuildWallOnMouseUp(Unit * unit, const Cell2D & clickC
                 if(pathMov.empty())
                 {
                     onFail();
-                    PlayLocalActionErrorSFX(player);
+                    mHUD->ShowLocalWarningMessageAboveObject("can't find path to target", 3.f, unit);
                     return ;
                 }
 
@@ -2665,7 +2673,7 @@ void ScreenGame::HandleUnitBuildWallOnMouseUp(Unit * unit, const Cell2D & clickC
                 if(!res)
                 {
                     onFail();
-                    PlayLocalActionErrorSFX(player);
+                    mHUD->ShowLocalWarningMessageAboveObject("move failed", 2.f, unit);
                     return;
                 }
 
@@ -2682,7 +2690,7 @@ void ScreenGame::HandleUnitBuildWallOnMouseUp(Unit * unit, const Cell2D & clickC
             else
             {
                 if(!StartUnitBuildWall(unit))
-                    PlayLocalActionErrorSFX(player);
+                    mHUD->ShowLocalWarningMessageAboveObject("can't start building wall", 3.f, unit);
             }
 
             return ;
@@ -2703,7 +2711,7 @@ void ScreenGame::HandleUnitBuildWallOnMouseUp(Unit * unit, const Cell2D & clickC
     // empty path -> nothing to do
     if(path.empty())
     {
-        PlayLocalActionErrorSFX(player);
+        mHUD->ShowLocalWarningMessageAboveObject("can't find path to target", 3.f, unit);
         return ;
     }
 
@@ -2723,7 +2731,7 @@ void ScreenGame::HandleMiniUnitSetTargetOnMouseUp(GameObject * obj, const Cell2D
     if(!mLocalPlayer->IsCellVisible(clickInd) ||
        !mGameMap->IsCellWalkable(clickCell.row, clickCell.col))
     {
-        PlayLocalActionErrorSFX(player);
+        mHUD->ShowLocalWarningMessageAboveObject("target cell not valid", 3.f, obj);
         return ;
     }
 
@@ -2760,7 +2768,7 @@ void ScreenGame::HandleMiniUnitSetTargetOnMouseUp(GameObject * obj, const Cell2D
             o->SetActiveAction(GameObjectActionType::IDLE);
         });
 
-        PlayLocalActionErrorSFX(player);
+        mHUD->ShowLocalWarningMessageAboveObject("can't find path to target", 3.f, obj);
 
         return ;
     }
@@ -2898,7 +2906,8 @@ void ScreenGame::HandleActionClick(sgl::core::MouseButtonEvent & event)
                             selUnit->SetCurrentAction(GameObjectActionType::CONQUER_CELL);
                         }
                         else
-                            PlayLocalActionErrorSFX(player);
+                            mHUD->ShowLocalWarningMessageAboveObject("can't start conquest",
+                                                                     2.f, selUnit);
 
                         return ;
                     }
@@ -2919,7 +2928,8 @@ void ScreenGame::HandleActionClick(sgl::core::MouseButtonEvent & event)
                 // empty path -> nothing to do
                 if(path.empty())
                 {
-                    PlayLocalActionErrorSFX(player);
+                    mHUD->ShowLocalWarningMessageAboveObject("can't find path to target",
+                                                             3.f, selUnit);
                     return ;
                 }
 
@@ -3815,15 +3825,6 @@ void ScreenGame::ReselectLastSelected()
         SelectObject(mLastSelected, mLocalPlayer);
 
     mLastSelected = nullptr;
-}
-
-void ScreenGame::PlayLocalActionErrorSFX(const Player * player)
-{
-    if(player->IsLocal())
-    {
-        auto player = sgl::media::AudioManager::Instance()->GetPlayer();
-        player->PlaySound("game/error_action_01.ogg");
-    }
 }
 
 #ifdef DEV_MODE
