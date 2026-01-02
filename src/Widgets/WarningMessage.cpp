@@ -31,7 +31,7 @@ WarningMessage::WarningMessage(const char * text, float time)
     RegisterRenderable(mIcon);
 
     // TEXT
-    const int fontSize = 14;
+    const int fontSize = 15;
     auto font = fm->GetFont(WidgetsConstants::FontFileText, fontSize, graphic::Font::NORMAL);
 
     mText = new graphic::Text(text, font);
@@ -60,7 +60,7 @@ void WarningMessage::UpdatePositions()
     mIcon->SetPosition(x, y);
 
     x += mIcon->GetWidth() + marginR;
-    y = (GetHeight() - mIcon->GetHeight()) / 2;
+    y = y0 + (GetHeight() - mText->GetHeight()) / 2;
     mText->SetPosition(x, y);
 }
 

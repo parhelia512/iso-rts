@@ -37,6 +37,7 @@
 #include "Widgets/PanelSelfDestruction.h"
 #include "Widgets/PanelShotType.h"
 #include "Widgets/PanelTurnControl.h"
+#include "Widgets/WarningMessage.h"
 
 #include <sgl/graphic/Camera.h>
 #include <sgl/graphic/Renderer.h>
@@ -920,6 +921,12 @@ GameMapProgressBar * GameHUD::CreateProgressBarInCell(const Cell2D & cell, float
     pb->SetVisible(mScreen->mGameMap->IsCellVisibleToLocalPlayer(cell.row, cell.col));
 
     return pb;
+}
+
+void GameHUD::ShowWarningMessage(const char * text, float time, int x, int y)
+{
+    auto wm = new WarningMessage(text, time);
+    wm->SetPosition(x, y);
 }
 
 void GameHUD::HideDialogExploreTempleOutcome()
