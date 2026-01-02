@@ -1865,7 +1865,10 @@ bool ScreenGame::SetupNewMiniUnits(GameObjectTypeId type, GameObject * gen, Game
 {
     // check if create is possible
     if(!mGameMap->CanCreateMiniUnit(type, gen, elements, player))
+    {
+        mHUD->ShowLocalWarningMessageAboveObject("can't create mini units", 3.f, gen);
         return false;
+    }
 
     // find where to build
     const Cell2D gc(gen->GetRow0(), gen->GetCol0());
@@ -1873,7 +1876,7 @@ bool ScreenGame::SetupNewMiniUnits(GameObjectTypeId type, GameObject * gen, Game
 
     if(-1 == cell.row || -1 == cell.col)
     {
-        std::cout << "[WAR] GameMap::GetNewMiniUnitDestination FAILED" << std::endl;
+        mHUD->ShowLocalWarningMessageAboveObject("can't find available cell", 3.f, gen);
         return false;
     }
 
@@ -1930,13 +1933,16 @@ bool ScreenGame::SetupNewUnit(GameObjectTypeId type, GameObject * gen, Player * 
 {
     // check if create is possible
     if(!mGameMap->CanCreateUnit(type, gen, player))
+    {
+        mHUD->ShowLocalWarningMessageAboveObject("can't create unit", 3.f, gen);
         return false;
+    }
 
     Cell2D cell = mGameMap->GetNewUnitDestination(gen);
 
     if(-1 == cell.row || -1 == cell.col)
     {
-        std::cerr << "GameMap::GetNewUnitDestination FAILED" << std::endl;
+        mHUD->ShowLocalWarningMessageAboveObject("can't find available cell", 3.f, gen);
         return false;
     }
 
