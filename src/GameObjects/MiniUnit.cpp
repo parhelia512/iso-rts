@@ -22,8 +22,8 @@ namespace
 namespace game
 {
 
-MiniUnit::MiniUnit(const ObjectData & data, int elements)
-    : GameObject(data)
+MiniUnit::MiniUnit(const ObjectData & data, const ObjectInitData & initData, int elements)
+    : GameObject(data, initData)
     , mElements(elements)
 {
     // set actual speed

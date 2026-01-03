@@ -10,8 +10,9 @@
 namespace game
 {
 
-WallGate::WallGate(const ObjectData & data, GameObjectVariantId orientation)
-    : Structure(data)
+WallGate::WallGate(const ObjectData & data, const ObjectInitData & initData,
+                   GameObjectVariantId orientation)
+    : Structure(data, initData)
 {
     mVariant = orientation;
 

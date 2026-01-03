@@ -8,6 +8,7 @@
 #include "IsoObject.h"
 #include "Player.h"
 #include "GameObjects/GameObjectsGroup.h"
+#include "GameObjects/ObjectInitData.h"
 #include "GameObjectTools/Weapon.h"
 #include "GameObjectTools/WeaponData.h"
 #include "Particles/DataParticleDamage.h"
@@ -45,13 +46,16 @@ unsigned int GameObject::counter = 0;
 const GameObjectVariantId GameObject::VAR_0 = 0;
 
 // -- CONSTRUCTOR & DESTRUCTOR --
-GameObject::GameObject(const ObjectData & data)
+GameObject::GameObject(const ObjectData & data, const ObjectInitData & initData)
     : mAttributes(data.GetAttributes())
     , mIsoObj(new IsoObject(data.GetRows(), data.GetCols()))
     , mObjId(++counter)
+    , mGameMap(initData.GetGameMap())
+    , mPartMan(initData.GetParticlesManager())
+    , mScreen(initData.GetScreen())
+    , mOwner(initData.GetPlayer())
     , mType(data.GetType())
     , mCategory(data.GetCategory())
-    , mFaction(NO_FACTION)
     , mRows(data.GetRows())
     , mCols(data.GetCols())
 {
@@ -59,6 +63,12 @@ GameObject::GameObject(const ObjectData & data)
     // this avoids to call SetLinked to avoid virtual methods
     if(ObjectData::TYPE_BASE == mType)
         mLinked = true;
+
+    // init faction based on owner
+    if(mOwner != nullptr)
+        mFaction = mOwner->GetFaction();
+    else
+        mFaction = NO_FACTION;
 
     // init colors for NO FACTION
     SetDefaultColors();

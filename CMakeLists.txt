@@ -99,6 +99,8 @@ add_executable(
     src/GameObjects/MiniUnitsGroup.cpp
     src/GameObjects/ObjectData.h
     src/GameObjects/ObjectData.cpp
+    src/GameObjects/ObjectInitData.h
+    src/GameObjects/ObjectInitData.cpp
     src/GameObjects/ObjectsDataRegistry.h
     src/GameObjects/ObjectsDataRegistry.cpp
     src/GameObjects/GameObjectsGroup.h

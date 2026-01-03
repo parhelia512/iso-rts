@@ -10,7 +10,7 @@ class BlinkingIconEnergy;
 class Structure : public GameObject
 {
 public:
-    Structure(const ObjectData & data);
+    Structure(const ObjectData & data, const ObjectInitData & initData);
 
     float GetTimeBuildUnit() const;
 

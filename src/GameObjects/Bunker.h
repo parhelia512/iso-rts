@@ -10,7 +10,7 @@ class ObjectData;
 class Bunker : public Structure
 {
 public:
-    Bunker(const ObjectData & data);
+    Bunker(const ObjectData & data, const ObjectInitData & initData);
 
     void Update(float delta) override;
 

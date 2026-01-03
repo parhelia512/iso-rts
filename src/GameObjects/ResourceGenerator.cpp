@@ -14,8 +14,8 @@
 namespace game
 {
 
-ResourceGenerator::ResourceGenerator(const ObjectData & data)
-    : Structure(data)
+ResourceGenerator::ResourceGenerator(const ObjectData & data, const ObjectInitData & initData)
+    : Structure(data, initData)
 {
     if(ObjectData::TYPE_RES_GEN_ENERGY == data.GetType() ||
        ObjectData::TYPE_RES_GEN_ENERGY_SOLAR == data.GetType())

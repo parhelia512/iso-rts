@@ -9,7 +9,7 @@ namespace game
 class MiniUnit : public GameObject
 {
 public:
-    MiniUnit(const ObjectData & data, int elements);
+    MiniUnit(const ObjectData & data, const ObjectInitData & initData, int elements);
 
     int GetNumElements() const;
     void SetNumElements(int num);

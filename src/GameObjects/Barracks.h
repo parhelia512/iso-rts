@@ -8,7 +8,7 @@ namespace game
 class Barracks : public Structure
 {
 public:
-    Barracks(const ObjectData & data);
+    Barracks(const ObjectData & data, const ObjectInitData & initData);
 
 protected:
     void UpdateGraphics() override;

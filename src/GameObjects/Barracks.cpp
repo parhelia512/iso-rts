@@ -9,8 +9,8 @@
 namespace game
 {
 
-Barracks::Barracks(const ObjectData & data)
-    : Structure(data)
+Barracks::Barracks(const ObjectData & data, const ObjectInitData & initData)
+    : Structure(data, initData)
 {
     SetImage();
 }

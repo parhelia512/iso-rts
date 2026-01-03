@@ -13,11 +13,12 @@
 namespace game
 {
 
-Base::Base(const ObjectData & data)
-    : Structure(data)
+Base::Base(const ObjectData & data, const ObjectInitData & initData)
+    : Structure(data, initData)
     , mOutputEnergy(15)
     , mOutputMaterial(5)
 {
+    SetImage();
 }
 
 void Base::OnNewTurn(PlayerFaction faction)

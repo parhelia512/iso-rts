@@ -9,8 +9,8 @@
 namespace game
 {
 
-RadarTower::RadarTower(const ObjectData & data)
-    : Structure(data)
+RadarTower::RadarTower(const ObjectData & data, const ObjectInitData & initData)
+    : Structure(data, initData)
 {
     SetCanBeConquered(true);
 

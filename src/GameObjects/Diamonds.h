@@ -10,7 +10,7 @@ class DiamondsGenerator;
 class Diamonds : public Collectable
 {
 public:
-    Diamonds(const ObjectData & data);
+    Diamonds(const ObjectData & data, const ObjectInitData & initData);
 
     int GetNum() const;
     void MaximizeUnits();

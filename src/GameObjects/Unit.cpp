@@ -20,8 +20,8 @@
 namespace game
 {
 
-Unit::Unit(const ObjectData & data)
-    : GameObject(data)
+Unit::Unit(const ObjectData & data, const ObjectInitData & initData)
+    : GameObject(data, initData)
     , mStructToBuild(ObjectData::TYPE_NULL)
 {
     SetDefaultAction(MOVE);
@@ -44,6 +44,9 @@ Unit::Unit(const ObjectData & data)
     // health
     const float maxHealthValue = 250.f;
     UpdateMaxHealth(maxHealthValue);
+
+    // init graphics
+    SetImage();
 }
 
 bool Unit::CanAttack() const

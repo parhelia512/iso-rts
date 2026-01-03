@@ -66,7 +66,7 @@ public:
     };
 
 public:
-    Temple(const ObjectData & data);
+    Temple(const ObjectData & data, const ObjectInitData & initData);
 
     void SetInvestedResources(int money, int material, int blobs, int diamonds);
     int GetInvestedMoney() const;

@@ -11,8 +11,8 @@
 namespace game
 {
 
-SpawningTower::SpawningTower(const ObjectData & data)
-    : Structure(data)
+SpawningTower::SpawningTower(const ObjectData & data, const ObjectInitData & initData)
+    : Structure(data, initData)
 {
     SetImage();
 }

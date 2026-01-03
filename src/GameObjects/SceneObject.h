@@ -51,7 +51,8 @@ public:
     };
 
 public:
-    SceneObject(const ObjectData & data, GameObjectVariantId part);
+    SceneObject(const ObjectData & data, const ObjectInitData & initData,
+                GameObjectVariantId part);
 
 protected:
     void UpdateGraphics() override;

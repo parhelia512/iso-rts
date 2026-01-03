@@ -10,7 +10,7 @@ class ObjectData;
 class DefensiveTower : public Structure
 {
 public:
-    DefensiveTower(const ObjectData & data);
+    DefensiveTower(const ObjectData & data, const ObjectInitData & initData);
 
     void Update(float delta) override;
 

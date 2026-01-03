@@ -10,7 +10,7 @@ class ObjectData;
 class Hospital : public Structure
 {
 public:
-    Hospital(const ObjectData & data);
+    Hospital(const ObjectData & data, const ObjectInitData & initData);
 
     // heal
     int GetRangeHealing() const;

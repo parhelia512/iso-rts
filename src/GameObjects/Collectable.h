@@ -11,13 +11,13 @@ class Player;
 class Collectable : public GameObject
 {
 public:
-    Collectable(const ObjectData & data);
+    Collectable(const ObjectData & data, const ObjectInitData & initData);
 
     virtual void Collected(Player * collector);
 };
 
-inline Collectable::Collectable(const ObjectData & data) :
-    GameObject(data)
+inline Collectable::Collectable(const ObjectData & data, const ObjectInitData & initData)
+    : GameObject(data, initData)
 {
 }
 

@@ -13,8 +13,8 @@
 namespace game
 {
 
-ResourceStorage::ResourceStorage(const ObjectData & data)
-    : Structure(data)
+ResourceStorage::ResourceStorage(const ObjectData & data, const ObjectInitData & initData)
+    : Structure(data, initData)
 {
     if(ObjectData::TYPE_RES_STORAGE_BLOBS == data.GetType())
         mResource = RES_BLOBS;

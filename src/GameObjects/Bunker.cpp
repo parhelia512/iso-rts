@@ -14,8 +14,8 @@
 namespace game
 {
 
-Bunker::Bunker(const ObjectData & data)
-    : Structure(data)
+Bunker::Bunker(const ObjectData & data, const ObjectInitData & initData)
+    : Structure(data, initData)
 {
     SetImage();
 }

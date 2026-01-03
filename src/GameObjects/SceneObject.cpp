@@ -8,8 +8,9 @@
 namespace game
 {
 
-SceneObject::SceneObject(const ObjectData & data, GameObjectVariantId part)
-    : GameObject(data)
+SceneObject::SceneObject(const ObjectData & data, const ObjectInitData & initData,
+                         GameObjectVariantId part)
+    : GameObject(data, initData)
 {
     SetStatic(true);
 

@@ -9,7 +9,7 @@ namespace game
 class Unit : public GameObject
 {
 public:
-    Unit(const ObjectData & data);
+    Unit(const ObjectData & data, const ObjectInitData & initData);
 
     // attack
     bool CanAttack() const;

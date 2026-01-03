@@ -8,7 +8,7 @@ namespace game
 class Base : public Structure
 {
 public:
-    Base(const ObjectData & data);
+    Base(const ObjectData & data, const ObjectInitData & initData);
 
     int GetOutputEnergy() const;
     int GetOutputMaterial() const;

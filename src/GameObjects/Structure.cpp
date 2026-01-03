@@ -7,8 +7,8 @@
 namespace game
 {
 
-Structure::Structure(const ObjectData & data)
-    : GameObject(data)
+Structure::Structure(const ObjectData & data, const ObjectInitData & initData)
+    : GameObject(data, initData)
     , mIconEnergy(new BlinkingIconEnergy)
 {
     SetStructure(true);

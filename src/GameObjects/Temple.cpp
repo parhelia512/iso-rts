@@ -15,8 +15,8 @@
 namespace game
 {
 
-Temple::Temple(const ObjectData & data)
-    : Structure(data)
+Temple::Temple(const ObjectData & data, const ObjectInitData & initData)
+    : Structure(data, initData)
     , mOnDone([]{})
     , mExplorer(NO_FACTION)
 {

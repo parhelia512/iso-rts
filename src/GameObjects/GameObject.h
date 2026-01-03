@@ -49,6 +49,7 @@ enum GameObjectActionType : unsigned int
 class GameMap;
 class GameObjectsGroup;
 class IsoObject;
+class ObjectInitData;
 class Player;
 class ScreenGame;
 class Weapon;
@@ -63,7 +64,7 @@ public:
     static const GameObjectVariantId VAR_0;
 
 public:
-    GameObject(const ObjectData & data);
+    GameObject(const ObjectData & data, const ObjectInitData & initData);
     virtual ~GameObject();
 
     // GROUP
@@ -72,9 +73,9 @@ public:
     void SetGroup(GameObjectsGroup * g);
     void ClearGroup();
 
-    void SetGameMap(GameMap * map);
-    void SetParticlesManager(const sgl::graphic::ParticlesManager * partMan);
-    void SetScreen(ScreenGame * screen);
+    // void SetGameMap(GameMap * map);
+    // void SetParticlesManager(const sgl::graphic::ParticlesManager * partMan);
+    // void SetScreen(ScreenGame * screen);
     void SetOwner(Player * p);
 
     unsigned int GetObjectId() const;
@@ -297,9 +298,9 @@ private:
 inline bool GameObject::IsInGroup() const { return mGroup != nullptr; }
 inline GameObjectsGroup * GameObject::GetGroup() const { return mGroup; }
 
-inline void GameObject::SetGameMap(GameMap * map) { mGameMap = map; }
-inline void GameObject::SetParticlesManager(const sgl::graphic::ParticlesManager * pm) { mPartMan = pm; }
-inline void GameObject::SetScreen(ScreenGame * screen) { mScreen = screen; }
+// inline void GameObject::SetGameMap(GameMap * map) { mGameMap = map; }
+// inline void GameObject::SetParticlesManager(const sgl::graphic::ParticlesManager * pm) { mPartMan = pm; }
+// inline void GameObject::SetScreen(ScreenGame * screen) { mScreen = screen; }
 
 inline unsigned int GameObject::GetObjectId() const { return mObjId; }
 

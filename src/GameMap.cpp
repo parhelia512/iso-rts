@@ -27,6 +27,7 @@
 #include "GameObjects/MiniUnit.h"
 #include "GameObjects/MiniUnitsGroup.h"
 #include "GameObjects/ObjectData.h"
+#include "GameObjects/ObjectInitData.h"
 #include "GameObjects/ObjectsDataRegistry.h"
 #include "GameObjects/PracticeTarget.h"
 #include "GameObjects/RadarStation.h"
@@ -461,70 +462,72 @@ GameObject * GameMap::CreateObject(unsigned int layerId, GameObjectTypeId type,
     if(gcell.objTop)
         return nullptr;
 
-    auto pm = mScreenGame->GetParticlesManager();
-
     // create game object
     o2a.obj = nullptr;
     o2a.owner = mGame->GetPlayerByFaction(faction);
 
+    // CONVERT BASE SPOT TO BASE
+    if(ObjectData::TYPE_BASE_SPOT == type)
+    {
+        o2a.owner = mGame->GetPlayerByIndex(variant);
+        type = ObjectData::TYPE_BASE;
+    }
+
+    // data to pass to new object
+    const ObjectInitData initData(this, mScreenGame->GetParticlesManager(),
+                                  o2a.owner, mScreenGame);
+
     if(ObjectData::TYPE_MOUNTAINS == type ||
        ObjectData::TYPE_ROCKS == type)
-        o2a.obj = new SceneObject(data, variant);
+        o2a.obj = new SceneObject(data, initData, variant);
     else if(ObjectData::TYPE_RES_GEN_ENERGY == type ||
        ObjectData::TYPE_RES_GEN_MATERIAL == type ||
        ObjectData::TYPE_RES_GEN_ENERGY_SOLAR == type ||
        ObjectData::TYPE_RES_GEN_MATERIAL_EXTRACT == type)
-        o2a.obj = new ResourceGenerator(data);
+        o2a.obj = new ResourceGenerator(data, initData);
     else if(ObjectData::TYPE_RES_STORAGE_BLOBS == type ||
             ObjectData::TYPE_RES_STORAGE_DIAMONDS == type ||
             ObjectData::TYPE_RES_STORAGE_ENERGY == type ||
             ObjectData::TYPE_RES_STORAGE_MATERIAL == type)
-        o2a.obj = new ResourceStorage(data);
+        o2a.obj = new ResourceStorage(data, initData);
     else if(ObjectData::TYPE_DIAMONDS == type)
-        o2a.obj = new Diamonds(data);
+        o2a.obj = new Diamonds(data, initData);
     else if(ObjectData::TYPE_BLOBS == type)
-        o2a.obj  = new Blobs(data);
+        o2a.obj  = new Blobs(data, initData);
     else if(ObjectData::TYPE_TREES == type)
-        o2a.obj  = new Trees(data, variant);
+        o2a.obj  = new Trees(data, initData, variant);
     else if(ObjectData::TYPE_RADAR_STATION == type)
-        o2a.obj = new RadarStation(data);
+        o2a.obj = new RadarStation(data, initData);
     else if(ObjectData::TYPE_RADAR_TOWER == type)
-        o2a.obj = new RadarTower(data);
+        o2a.obj = new RadarTower(data, initData);
     else if(ObjectData::TYPE_BARRACKS == type)
-        o2a.obj = new Barracks(data);
+        o2a.obj = new Barracks(data, initData);
     else if(ObjectData::TYPE_RESEARCH_CENTER == type)
-        o2a.obj = new ResearchCenter(data);
+        o2a.obj = new ResearchCenter(data, initData);
     else if(ObjectData::TYPE_HOSPITAL == type)
-        o2a.obj = new Hospital(data);
+        o2a.obj = new Hospital(data, initData);
     else if(ObjectData::TYPE_DEFENSIVE_TOWER == type)
-        o2a.obj = new DefensiveTower(data);
+        o2a.obj = new DefensiveTower(data, initData);
     else if(ObjectData::TYPE_BUNKER == type)
-        o2a.obj = new Bunker(data);
+        o2a.obj = new Bunker(data, initData);
     else if(ObjectData::TYPE_SPAWN_TOWER == type)
-        o2a.obj = new SpawningTower(data);
+        o2a.obj = new SpawningTower(data, initData);
     else if(ObjectData::TYPE_TRADING_POST == type)
-        o2a.obj = new TradingPost(data);
+        o2a.obj = new TradingPost(data, initData);
     else if(ObjectData::TYPE_WALL == type)
-        o2a.obj = new Wall(data, variant);
+        o2a.obj = new Wall(data, initData, variant);
     else if(ObjectData::TYPE_WALL_GATE == type)
-        o2a.obj = new WallGate(data, variant);
+        o2a.obj = new WallGate(data, initData, variant);
     else if(ObjectData::TYPE_LOOTBOX == type)
-        o2a.obj = new LootBox(data);
+        o2a.obj = new LootBox(data, initData);
     else if(ObjectData::TYPE_TEMPLE == type)
-        o2a.obj = new Temple(data);
+        o2a.obj = new Temple(data, initData);
     else if(ObjectData::TYPE_PRACTICE_TARGET == type)
-        o2a.obj = new PracticeTarget(data);
-    else if(ObjectData::TYPE_BASE == type || ObjectData::TYPE_BASE_SPOT == type)
+        o2a.obj = new PracticeTarget(data, initData);
+    else if(ObjectData::TYPE_BASE == type)
     {
-        if(ObjectData::TYPE_BASE_SPOT == type)
-        {
-            o2a.owner = mGame->GetPlayerByIndex(variant);
-            faction = o2a.owner->GetFaction();
-        }
-
-        // needeed to bypass BaseSpot data
-        const ObjectData & dataBase = GetObjectData(ObjectData::TYPE_BASE);
-        auto b = new Base(dataBase);
+        const ObjectData & dataBase = GetObjectData(type);
+        auto b = new Base(dataBase, initData);
         o2a.obj = b;
 
         // base cells update
@@ -551,14 +554,6 @@ GameObject * GameMap::CreateObject(unsigned int layerId, GameObjectTypeId type,
         std::cerr << "[ERR] GameMap::CreateObject - unknown obj type: " << type << std::endl;
         return nullptr;
     }
-
-    // links to other objects
-    o2a.obj->SetGameMap(this);
-    o2a.obj->SetParticlesManager(pm);
-    o2a.obj->SetScreen(mScreenGame);
-
-    // assign owner
-    o2a.obj->SetOwner(o2a.owner);
 
     // set object properties
     o2a.obj->SetCell(&mCells[ind0]);
@@ -1004,7 +999,8 @@ void GameMap::BuildWall(const Cell2D & cell, Player * player, GameObjectTypeId p
     UpdateInfluencedCells(cell.row, cell.col);
 
     // add object wall
-    CreateObject(REGULAR_OBJECTS, ObjectData::TYPE_WALL, planned, player->GetFaction(), cell.row, cell.col, true);
+    CreateObject(REGULAR_OBJECTS, ObjectData::TYPE_WALL, planned,
+                 player->GetFaction(), cell.row, cell.col, true);
 
     UpdateLinkedCells(player);
 
@@ -1014,7 +1010,7 @@ void GameMap::BuildWall(const Cell2D & cell, Player * player, GameObjectTypeId p
         const ObjectData & data = GetObjectData(ObjectData::TYPE_WALL);
 
         const PlayerFaction faction = player->GetFaction();
-        const MiniMap::MiniMapElemType type = static_cast<MiniMap::MiniMapElemType>(MiniMap::MME_FACTION1 + faction);
+        const auto type = static_cast<MiniMap::MiniMapElemType>(MiniMap::MME_FACTION1 + faction);
         MiniMap * mm = mScreenGame->GetMiniMap();
         mm->AddElement(cell.row, cell.col, data.GetRows(), data.GetCols(), type, faction);
     }
@@ -1618,7 +1614,8 @@ Cell2D GameMap::GetNewUnitDestination(GameObject * gen) const
     return Cell2D(-1, -1);
 }
 
-void GameMap::StartCreateUnit(GameObjectTypeId ut, GameObject * gen, const Cell2D & dest, Player * player)
+void GameMap::StartCreateUnit(GameObjectTypeId ut, GameObject * gen,
+                              const Cell2D & dest, Player * player)
 {
     const int ind = dest.row * mCols + dest.col;
     GameMapCell & gcell = mCells[ind];
@@ -1645,16 +1642,12 @@ Unit * GameMap::CreateUnit(GameObjectTypeId ut, const Cell2D & dest, Player * pl
 
     const ObjectData & data = GetObjectData(ut);
 
-    Unit * unit = new Unit(data);
-    unit->SetOwner(player);
+    // data to pass to new object
+    const ObjectInitData initData(this, mScreenGame->GetParticlesManager(),
+                                  player, mScreenGame);
+
+    Unit * unit = new Unit(data, initData);
     unit->SetCell(&mCells[ind]);
-
-    // links to other objects
-    auto pm = mScreenGame->GetParticlesManager();
-
-    unit->SetGameMap(this);
-    unit->SetParticlesManager(pm);
-    unit->SetScreen(mScreenGame);
 
     // weapon
     AssignWeaponToObject(data.GetWeapon(), unit);
@@ -1709,6 +1702,10 @@ GameObject * GameMap::CreateMiniUnit(GameObjectTypeId ut, GameObject * gen, cons
 
     const ObjectData & data = GetObjectData(ut);
 
+    // data to pass to new object
+    const ObjectInitData initData(this, mScreenGame->GetParticlesManager(),
+                                  player, mScreenGame);
+
     // pay costs
     const auto & costs = data.GetCosts();
 
@@ -1718,19 +1715,11 @@ GameObject * GameMap::CreateMiniUnit(GameObjectTypeId ut, GameObject * gen, cons
     player->SumResource(Player::Stat::BLOBS, -costs[RES_BLOBS] * elements);
 
     // create object
-    auto mu = new MiniUnit(data, elements);
-    mu->SetOwner(player);
+    auto mu = new MiniUnit(data, initData, elements);
     mu->SetCell(&mCells[ind]);
 
     // weapon
     AssignWeaponToObject(data.GetWeapon(), mu);
-
-    // links to other objects
-    auto pm = mScreenGame->GetParticlesManager();
-
-    mu->SetGameMap(this);
-    mu->SetParticlesManager(pm);
-    mu->SetScreen(mScreenGame);
 
     // update cell
     gcell.objTop = mu;
@@ -2095,7 +2084,8 @@ Cell2D GameMap::GetOrthoAdjacentMoveTarget(const Cell2D & start, const Cell2D & 
     return GetOrthoAdjacentMoveTarget(start, target, target);
 }
 
-Cell2D GameMap::GetOrthoAdjacentMoveTarget(const Cell2D & start, const Cell2D & targetTL, const Cell2D & targetBR) const
+Cell2D GameMap::GetOrthoAdjacentMoveTarget(const Cell2D & start, const Cell2D & targetTL,
+                                           const Cell2D & targetBR) const
 {
     const int tRows = targetBR.row - targetTL.row + 1;
     const int tCols = targetBR.col - targetTL.col + 1;
@@ -3737,7 +3727,8 @@ void GameMap::UpdateWall(const Cell2D & cell)
     GameObject * obj = GetCell(cell.row, cell.col).objTop;
 
     // no wall or gate here
-    if(nullptr == obj || (obj->GetObjectType() != ObjectData::TYPE_WALL && obj->GetObjectType() != ObjectData::TYPE_WALL_GATE))
+    if(nullptr == obj || (obj->GetObjectType() != ObjectData::TYPE_WALL &&
+                          obj->GetObjectType() != ObjectData::TYPE_WALL_GATE))
         return ;
 
     const GameObject * objN = (cell.row - 1 >= 0) ? GetCell(cell.row - 1, cell.col).objTop : nullptr;
@@ -3745,7 +3736,8 @@ void GameMap::UpdateWall(const Cell2D & cell)
                                 objN->GetObjectType() == ObjectData::TYPE_DEFENSIVE_TOWER ||
                                 objN->GetObjectType() == ObjectData::TYPE_WALL_GATE);
 
-    const GameObject * objS = (cell.row + 1 < static_cast<int>(mRows)) ? GetCell(cell.row + 1, cell.col).objTop : nullptr;
+    const GameObject * objS = (cell.row + 1 < static_cast<int>(mRows)) ?
+                              GetCell(cell.row + 1, cell.col).objTop : nullptr;
     const bool wallS = objS && (objS->GetObjectType() == ObjectData::TYPE_WALL ||
                                 objS->GetObjectType() == ObjectData::TYPE_DEFENSIVE_TOWER ||
                                 objS->GetObjectType() == ObjectData::TYPE_WALL_GATE);
@@ -3755,7 +3747,8 @@ void GameMap::UpdateWall(const Cell2D & cell)
                                 objW->GetObjectType() == ObjectData::TYPE_DEFENSIVE_TOWER ||
                                 objW->GetObjectType() == ObjectData::TYPE_WALL_GATE);
 
-    const GameObject * objE = (cell.col + 1 < static_cast<int>(mCols)) ? GetCell(cell.row, cell.col + 1).objTop : nullptr;
+    const GameObject * objE = (cell.col + 1 < static_cast<int>(mCols)) ?
+                              GetCell(cell.row, cell.col + 1).objTop : nullptr;
     const bool wallE = objE && (objE->GetObjectType() == ObjectData::TYPE_WALL ||
                                 objE->GetObjectType() == ObjectData::TYPE_DEFENSIVE_TOWER ||
                                 objE->GetObjectType() == ObjectData::TYPE_WALL_GATE);
@@ -4018,7 +4011,8 @@ void GameMap::ContinueMiniUnitGroupMove(const ObjectPath * prevOP)
     Cell2D target;
 
     // previous MiniUnit reached group target
-    if(prevMU->GetRow0() == group->GetPathTarget().row && prevMU->GetCol0() == group->GetPathTarget().col)
+    if(prevMU->GetRow0() == group->GetPathTarget().row &&
+       prevMU->GetCol0() == group->GetPathTarget().col)
     {
         // mark mini unit done
         prevMU->SetMoving(false);

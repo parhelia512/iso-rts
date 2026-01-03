@@ -9,8 +9,8 @@
 namespace game
 {
 
-ResearchCenter::ResearchCenter(const ObjectData & data)
-    : Structure(data)
+ResearchCenter::ResearchCenter(const ObjectData & data, const ObjectInitData & initData)
+    : Structure(data, initData)
 {
     SetImage();
 }

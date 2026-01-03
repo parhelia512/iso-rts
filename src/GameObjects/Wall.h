@@ -26,7 +26,7 @@ public:
     };
 
 public:
-    Wall(const ObjectData & data, GameObjectVariantId part);
+    Wall(const ObjectData & data, const ObjectInitData & initData, GameObjectVariantId part);
 
     static unsigned int GetCostEnergy(unsigned int level);
     static unsigned int GetCostMaterial(unsigned int level);

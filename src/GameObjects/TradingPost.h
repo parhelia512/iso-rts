@@ -10,7 +10,7 @@ class ObjectData;
 class TradingPost : public Structure
 {
 public:
-    TradingPost(const ObjectData & data);
+    TradingPost(const ObjectData & data, const ObjectInitData & initData);
 
 private:
     void UpdateGraphics() override;

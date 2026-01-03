@@ -17,8 +17,8 @@
 namespace game
 {
 
-LootBox::LootBox(const ObjectData & data)
-    : Collectable(data)
+LootBox::LootBox(const ObjectData & data, const ObjectInitData & initData)
+    : Collectable(data, initData)
 {
     SetImage();
 

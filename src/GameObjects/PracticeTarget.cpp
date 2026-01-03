@@ -8,8 +8,8 @@
 namespace game
 {
 
-PracticeTarget::PracticeTarget(const ObjectData & data)
-    : Structure(data)
+PracticeTarget::PracticeTarget(const ObjectData & data, const ObjectInitData & initData)
+    : Structure(data, initData)
 {
     // health
     const float maxHealthValue = 2500.f;

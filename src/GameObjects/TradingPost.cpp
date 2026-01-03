@@ -11,8 +11,8 @@
 namespace game
 {
 
-TradingPost::TradingPost(const ObjectData & data)
-    : Structure(data)
+TradingPost::TradingPost(const ObjectData & data, const ObjectInitData & initData)
+    : Structure(data, initData)
 {
     SetImage();
 }

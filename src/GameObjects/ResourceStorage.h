@@ -10,7 +10,7 @@ enum ResourceType : unsigned int;
 class ResourceStorage : public Structure
 {
 public:
-    ResourceStorage(const ObjectData & data);
+    ResourceStorage(const ObjectData & data, const ObjectInitData & initData);
 
     ResourceType GetResourceType() const;
 

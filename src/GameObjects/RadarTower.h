@@ -8,7 +8,7 @@ namespace game
 class RadarTower : public Structure
 {
 public:
-    RadarTower(const ObjectData & data);
+    RadarTower(const ObjectData & data, const ObjectInitData & initData);
 
 protected:
     void UpdateGraphics() override;

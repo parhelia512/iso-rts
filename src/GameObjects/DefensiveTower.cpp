@@ -17,8 +17,8 @@ namespace game
 const int maxAttVal = 11;
 const int attRanges[maxAttVal] = { 0, 2, 3, 4, 5, 6, 7, 9, 10, 12, 14 };
 
-DefensiveTower::DefensiveTower(const ObjectData & data)
-    : Structure(data)
+DefensiveTower::DefensiveTower(const ObjectData & data, const ObjectInitData & initData)
+    : Structure(data, initData)
 {
     SetImage();
 }

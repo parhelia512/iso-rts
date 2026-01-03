@@ -9,8 +9,8 @@
 namespace game
 {
 
-Wall::Wall(const ObjectData & data, GameObjectVariantId part)
-    : Structure(data)
+Wall::Wall(const ObjectData & data, const ObjectInitData & initData, GameObjectVariantId part)
+    : Structure(data, initData)
 {
     mVariant = part;
 
