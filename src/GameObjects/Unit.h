@@ -6,6 +6,8 @@
 namespace game
 {
 
+class ScreenGame;
+
 class Unit : public GameObject
 {
 public:
@@ -64,6 +66,8 @@ private:
     float mHealingPower = 1.f;
     int mRangeHealing = 1;
     GameObject * mTargetHealing = nullptr;
+
+    ScreenGame * mScreen = nullptr;
 
     GameObjectTypeId mStructToBuild;
 };

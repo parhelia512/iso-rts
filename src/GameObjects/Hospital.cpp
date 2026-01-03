@@ -5,6 +5,7 @@
 #include "IsoObject.h"
 #include "ObjectData.h"
 #include "GameMap.h"
+#include "GameObjects/ObjectInitData.h"
 #include "Particles/DataParticleHealing.h"
 #include "Particles/UpdaterHealing.h"
 #include "Screens/ScreenGame.h"
@@ -22,6 +23,7 @@ const float HealPowers[maxAttVals] = { 0.f, 1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f, 8
 
 Hospital::Hospital(const ObjectData & data, const ObjectInitData & initData)
     : Structure(data, initData)
+    , mScreen(initData.GetScreen())
 {
     // SET ATTRIBUTES values in range [1-10]
     // set healing range converting attribute
@@ -119,7 +121,7 @@ void Hospital::UpdateHealing(float delta)
                 mTargetHealing = nullptr;
 
                 // mark healing action as completed
-                GetScreen()->SetObjectActionCompleted(this);
+                mScreen->SetObjectActionCompleted(this);
 
                 return ;
             }
@@ -129,7 +131,7 @@ void Hospital::UpdateHealing(float delta)
             mTargetHealing = nullptr;
 
             // mark healing action as failed
-            GetScreen()->SetObjectActionFailed(this);
+            mScreen->SetObjectActionFailed(this);
         }
     }
     // target destroyed -> stop
@@ -138,7 +140,7 @@ void Hospital::UpdateHealing(float delta)
         mTargetHealing = nullptr;
 
         // mark healing action as failed
-        GetScreen()->SetObjectActionFailed(this);
+        mScreen->SetObjectActionFailed(this);
     }
 
     mTimerHealing = mTimeHealing;

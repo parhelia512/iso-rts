@@ -28,7 +28,6 @@ private:
     const sgl::graphic::ParticlesManager * mPartMan;
     Player * mPlayer = nullptr;
     ScreenGame * mScreen = nullptr;
-
 };
 
 inline ObjectInitData::ObjectInitData(GameMap * map, const sgl::graphic::ParticlesManager * pm,

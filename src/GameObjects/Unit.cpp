@@ -5,6 +5,7 @@
 #include "GameMap.h"
 #include "IsoObject.h"
 #include "GameObjects/ObjectData.h"
+#include "GameObjects/ObjectInitData.h"
 #include "GameObjectTools/Weapon.h"
 #include "Particles/DataParticleHealing.h"
 #include "Particles/UpdaterHealing.h"
@@ -22,6 +23,7 @@ namespace game
 
 Unit::Unit(const ObjectData & data, const ObjectInitData & initData)
     : GameObject(data, initData)
+    , mScreen(initData.GetScreen())
     , mStructToBuild(ObjectData::TYPE_NULL)
 {
     SetDefaultAction(MOVE);
@@ -115,7 +117,7 @@ void Unit::Update(float delta)
     if(mWeapon != nullptr)
     {
         if(!mWeapon->Update(delta))
-            GetScreen()->SetObjectActionFailed(this);
+            mScreen->SetObjectActionFailed(this);
 
         if(mWeapon->IsReadyToShoot())
             PrepareShoot();
@@ -219,7 +221,7 @@ void Unit::UpdateHealing(float delta)
                 mTargetHealing = nullptr;
 
                 // mark healing action as completed
-                GetScreen()->SetObjectActionCompleted(this);
+                mScreen->SetObjectActionCompleted(this);
 
                 return ;
             }
@@ -229,7 +231,7 @@ void Unit::UpdateHealing(float delta)
             mTargetHealing = nullptr;
 
             // mark healing action as failed
-            GetScreen()->SetObjectActionFailed(this);
+            mScreen->SetObjectActionFailed(this);
         }
     }
     // target destroyed -> stop
@@ -238,7 +240,7 @@ void Unit::UpdateHealing(float delta)
         mTargetHealing = nullptr;
 
         // mark healing action as failed
-        GetScreen()->SetObjectActionFailed(this);
+        mScreen->SetObjectActionFailed(this);
     }
 
     mTimerHealing = mTimeHealing;
@@ -254,7 +256,7 @@ void Unit::PrepareShoot()
     mWeapon->Shoot(x0, y0);
 
     if(!mWeapon->HasTarget())
-        GetScreen()->SetObjectActionCompleted(this);
+        mScreen->SetObjectActionCompleted(this);
 }
 
 void Unit::Heal()

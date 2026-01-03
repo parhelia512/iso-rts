@@ -51,7 +51,6 @@ class GameObjectsGroup;
 class IsoObject;
 class ObjectInitData;
 class Player;
-class ScreenGame;
 class Weapon;
 struct GameMapCell;
 
@@ -73,9 +72,6 @@ public:
     void SetGroup(GameObjectsGroup * g);
     void ClearGroup();
 
-    // void SetGameMap(GameMap * map);
-    // void SetParticlesManager(const sgl::graphic::ParticlesManager * partMan);
-    // void SetScreen(ScreenGame * screen);
     void SetOwner(Player * p);
 
     unsigned int GetObjectId() const;
@@ -191,7 +187,6 @@ protected:
 
     GameMap * GetGameMap() const;
     const sgl::graphic::ParticlesManager * GetParticlesManager() const;
-    ScreenGame * GetScreen() const;
     Player * GetOwner() const;
 
     void SetStructure(bool val);
@@ -252,7 +247,6 @@ private:
 
     GameMap * mGameMap = nullptr;
     const sgl::graphic::ParticlesManager * mPartMan = nullptr;
-    ScreenGame * mScreen = nullptr;
     Player * mOwner = nullptr;
 
     const GameMapCell * mCell = nullptr;
@@ -297,10 +291,6 @@ private:
 
 inline bool GameObject::IsInGroup() const { return mGroup != nullptr; }
 inline GameObjectsGroup * GameObject::GetGroup() const { return mGroup; }
-
-// inline void GameObject::SetGameMap(GameMap * map) { mGameMap = map; }
-// inline void GameObject::SetParticlesManager(const sgl::graphic::ParticlesManager * pm) { mPartMan = pm; }
-// inline void GameObject::SetScreen(ScreenGame * screen) { mScreen = screen; }
 
 inline unsigned int GameObject::GetObjectId() const { return mObjId; }
 
@@ -353,7 +343,6 @@ inline PlayerFaction GameObject::GetFaction() const { return mFaction; }
 
 inline GameMap * GameObject::GetGameMap() const { return mGameMap; }
 inline const sgl::graphic::ParticlesManager * GameObject::GetParticlesManager() const { return mPartMan; }
-inline ScreenGame * GameObject::GetScreen() const { return mScreen; }
 inline Player * GameObject::GetOwner() const { return mOwner; }
 
 inline void GameObject::SetStructure(bool val) { mStructure = val; }
