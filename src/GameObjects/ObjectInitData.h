@@ -16,7 +16,8 @@ class ScreenGame;
 class ObjectInitData
 {
 public:
-    ObjectInitData(Game * game, GameMap * map, const sgl::graphic::ParticlesManager * pm,
+    ObjectInitData(const Game * game, GameMap * map,
+                   const sgl::graphic::ParticlesManager * pm,
                    Player * p, ScreenGame * screen);
 
     const Game * GetGame() const;
@@ -33,7 +34,7 @@ private:
     ScreenGame * mScreen = nullptr;
 };
 
-inline ObjectInitData::ObjectInitData(Game * game, GameMap * map,
+inline ObjectInitData::ObjectInitData(const Game * game, GameMap * map,
                                       const sgl::graphic::ParticlesManager * pm,
                                       Player * p, ScreenGame * screen)
     : mGame(game)
