@@ -335,6 +335,8 @@ void ScreenMainMenu::CreateChangelog()
     textChange->SetText("CHANGES\n"
                         "- Unit movements are limited to visible cells.\n"
                         "- New look&feel for tutorial panels.\n"
+                        "- New game starts directly playing first mission.\n"
+                        "- Quitting to planet map screen makes mission fail.\n"
                         );
     textChange->SetPosition(contX, contY);
     textChange->SetColor(colorContent);
