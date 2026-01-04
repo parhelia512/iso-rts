@@ -118,6 +118,9 @@ public:
     unsigned int AddOnSettingsChangedFunction(const std::function<void()> & f);
     void RemoveOnSettingsChangedFunction(unsigned int fId);
 
+    void SetRandSeed(unsigned int seed);
+    unsigned int GetRandSeed() const;
+
     TutorialManager * GetTutorialManager() const;
 
 private:
@@ -153,6 +156,8 @@ private:
     unsigned int mCurrMap = 0;
     Planets mCurrPlanet;
     unsigned int mCurrTerritory = 0;
+
+    unsigned int mRandSeed = 0;
 
     // SETTINGS
     int mMapDraggingSpeed = 5;
@@ -251,6 +256,9 @@ inline void Game::SetAutoEndTurn(bool val)
 
 inline bool Game::IsTutorialEnabled() const { return mTutorialEnabled; }
 inline void Game::SetTutorialEnabled(bool val) { mTutorialEnabled = val; }
+
+inline void Game::SetRandSeed(unsigned int seed) { mRandSeed = seed; }
+inline unsigned int Game::GetRandSeed() const { return mRandSeed; }
 
 inline TutorialManager * Game::GetTutorialManager() const { return mTutMan; }
 

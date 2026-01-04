@@ -244,9 +244,9 @@ void GameMap::CreateCollectableGenerator(unsigned int r, unsigned int c, Resourc
     CollectableGenerator * gen = nullptr;
 
     if(RES_DIAMONDS == type)
-        gen = new DiamondsGenerator(this);
+        gen = new DiamondsGenerator(mGame, this);
     else if(RES_BLOBS == type)
-        gen = new BlobsGenerator(this);
+        gen = new BlobsGenerator(mGame, this);
     else
         return ;
 
@@ -474,7 +474,7 @@ GameObject * GameMap::CreateObject(unsigned int layerId, GameObjectTypeId type,
     }
 
     // data to pass to new object
-    const ObjectInitData initData(this, mScreenGame->GetParticlesManager(),
+    const ObjectInitData initData(mGame, this, mScreenGame->GetParticlesManager(),
                                   o2a.owner, mScreenGame);
 
     if(ObjectData::TYPE_MOUNTAINS == type ||
@@ -1643,7 +1643,7 @@ Unit * GameMap::CreateUnit(GameObjectTypeId ut, const Cell2D & dest, Player * pl
     const ObjectData & data = GetObjectData(ut);
 
     // data to pass to new object
-    const ObjectInitData initData(this, mScreenGame->GetParticlesManager(),
+    const ObjectInitData initData(mGame, this, mScreenGame->GetParticlesManager(),
                                   player, mScreenGame);
 
     Unit * unit = new Unit(data, initData);
@@ -1703,7 +1703,7 @@ GameObject * GameMap::CreateMiniUnit(GameObjectTypeId ut, GameObject * gen, cons
     const ObjectData & data = GetObjectData(ut);
 
     // data to pass to new object
-    const ObjectInitData initData(this, mScreenGame->GetParticlesManager(),
+    const ObjectInitData initData(mGame, this, mScreenGame->GetParticlesManager(),
                                   player, mScreenGame);
 
     // pay costs
@@ -3890,7 +3890,7 @@ void GameMap::AssignWeaponToObject(WeaponType wt, GameObject * obj)
     Weapon * weapon = nullptr;
 
     if(wData.GetClass() == WEAPONC_LASER)
-        weapon = new Laser(wData, obj, this, pm);
+        weapon = new Laser(wData, obj, mGame, this, pm);
 
     obj->SetWeapon(weapon);
 }

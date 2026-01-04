@@ -10,6 +10,7 @@ namespace sgl
 namespace game
 {
 
+class Game;
 class GameMap;
 class GameObject;
 class WeaponData;
@@ -20,8 +21,8 @@ enum ObjAttId : unsigned int;
 class Weapon
 {
 public:
-    Weapon(const WeaponData & data, GameObject * owner, GameMap * gm,
-           const sgl::graphic::ParticlesManager * partMan);
+    Weapon(const WeaponData & data, GameObject * owner, const Game * g,
+           GameMap * gm, const sgl::graphic::ParticlesManager * partMan);
     virtual ~Weapon() = default;
 
     AttackMode GetAttackMode() const;
@@ -59,6 +60,8 @@ public:
 
 protected:
     GameObject * GetOwner() const;
+
+    const Game * GetGame() const;
     GameMap * GetGameMap() const;
     const sgl::graphic::ParticlesManager * GetParticlesManager() const;
 
@@ -76,6 +79,8 @@ private:
     const std::unordered_map<AttackMode, int> mEnergyCosts;
 
     GameObject * mOwner = nullptr;
+
+    const Game * mGame = nullptr;
     GameMap * mGameMap = nullptr;
 
     const sgl::graphic::ParticlesManager * mPartMan = nullptr;
@@ -115,6 +120,7 @@ inline const std::unordered_map<ObjAttId, int> & Weapon::GetAttributes() const {
 
 inline GameObject * Weapon::GetOwner() const { return mOwner; }
 
+inline const Game * Weapon::GetGame() const { return mGame; }
 inline GameMap * Weapon::GetGameMap() const { return mGameMap; }
 
 inline const sgl::graphic::ParticlesManager * Weapon::GetParticlesManager() const { return mPartMan; }

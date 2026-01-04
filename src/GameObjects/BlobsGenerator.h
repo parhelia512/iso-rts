@@ -10,7 +10,7 @@ class GameMap;
 class BlobsGenerator : public CollectableGenerator
 {
 public:
-    BlobsGenerator(GameMap * gm);
+    BlobsGenerator(const Game * g, GameMap * gm);
 
 private:
     void OnGeneration() override;

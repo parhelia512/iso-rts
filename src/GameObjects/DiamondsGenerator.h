@@ -10,7 +10,7 @@ class GameMap;
 class DiamondsGenerator : public CollectableGenerator
 {
 public:
-    DiamondsGenerator(GameMap * gm);
+    DiamondsGenerator(const Game * g, GameMap * gm);
 
 private:
     void OnGeneration() override;

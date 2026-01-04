@@ -1,5 +1,6 @@
 #include "GameObjects/Temple.h"
 
+#include "Game.h"
 #include "GameConstants.h"
 #include "GameData.h"
 #include "IsoObject.h"
@@ -226,7 +227,7 @@ void Temple::DefineMaxValues()
 
 void Temple::DecideRewards()
 {
-    sgl::utilities::UniformDistribution dist(FIRST_EXP_REW, LAST_EXP_REW);
+    sgl::utilities::UniformDistribution dist(FIRST_EXP_REW, LAST_EXP_REW, GetGame()->GetRandSeed());
 
     mOutcome1 = static_cast<ExplorationOutcome>(dist.GetNextValue());
     mOutcome2 = static_cast<ExplorationOutcome>(dist.GetNextValue());
@@ -244,7 +245,7 @@ void Temple::DecideRewards()
 
 void Temple::DecidePunishments()
 {
-    sgl::utilities::UniformDistribution dist(FIRST_EXP_PUN, LAST_EXP_PUN);
+    sgl::utilities::UniformDistribution dist(FIRST_EXP_PUN, LAST_EXP_PUN, GetGame()->GetRandSeed());
 
     mOutcome1 = static_cast<ExplorationOutcome>(dist.GetNextValue());
     mOutcome2 = static_cast<ExplorationOutcome>(dist.GetNextValue());

@@ -1,5 +1,6 @@
 #include "GameObjects/CollectableGenerator.h"
 
+#include "Game.h"
 #include "GameMap.h"
 
 #include <sgl/utilities/UniformDistribution.h>
@@ -7,8 +8,9 @@
 namespace game
 {
 
-CollectableGenerator::CollectableGenerator(GameMap * gm, int turnsMin, int turnsMax)
-    : mGameMap(gm)
+CollectableGenerator::CollectableGenerator(const Game * g, GameMap * gm, int turnsMin, int turnsMax)
+    : mGame(g)
+    , mGameMap(gm)
 {
     ResetCounter(turnsMin, turnsMax);
 }
@@ -39,7 +41,7 @@ void CollectableGenerator::OnNewTurn()
 void CollectableGenerator::ResetCounter(int min, int max)
 {
     // randomize generation time between min and max
-    sgl::utilities::UniformDistribution ran(min, max);
+    sgl::utilities::UniformDistribution ran(min, max, mGame->GetRandSeed());
 
     mRegenTurns = ran.GetNextValue();
     mCounterRegen = mRegenTurns;

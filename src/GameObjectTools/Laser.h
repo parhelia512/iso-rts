@@ -15,8 +15,8 @@ class UpdaterSingleLaser;
 class Laser : public Weapon
 {
 public:
-    Laser(const WeaponData & data, GameObject * owner, GameMap * gm,
-          const sgl::graphic::ParticlesManager * partMan);
+    Laser(const WeaponData & data, GameObject * owner, const Game * g,
+          GameMap * gm, const sgl::graphic::ParticlesManager * partMan);
 
 private:
     void OnShoot(float x0, float y0) override;

@@ -1,5 +1,6 @@
 #include "GameObjects/LootBox.h"
 
+#include "Game.h"
 #include "GameConstants.h"
 #include "GameData.h"
 #include "IsoObject.h"
@@ -49,7 +50,7 @@ LootBox::LootBox(const ObjectData & data, const ObjectInitData & initData)
         max = 250;
     }
 
-    sgl::utilities::UniformDistribution d(min, max);
+    sgl::utilities::UniformDistribution d(min, max, GetGame()->GetRandSeed());
 
     // round quantity to 5
     const int r = 5;

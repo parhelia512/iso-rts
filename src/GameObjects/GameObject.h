@@ -46,6 +46,7 @@ enum GameObjectActionType : unsigned int
     NUM_OBJ_ACTIONS
 };
 
+class Game;
 class GameMap;
 class GameObjectsGroup;
 class IsoObject;
@@ -185,6 +186,7 @@ protected:
     virtual void OnFactionChanged();
     virtual void OnLinkedChanged();
 
+    const Game * GetGame() const;
     GameMap * GetGameMap() const;
     const sgl::graphic::ParticlesManager * GetParticlesManager() const;
     Player * GetOwner() const;
@@ -245,6 +247,7 @@ private:
 
     unsigned int mObjId;
 
+    const Game * mGame = nullptr;
     GameMap * mGameMap = nullptr;
     const sgl::graphic::ParticlesManager * mPartMan = nullptr;
     Player * mOwner = nullptr;
@@ -341,6 +344,7 @@ inline unsigned int GameObject::GetCols() const { return mCols; }
 
 inline PlayerFaction GameObject::GetFaction() const { return mFaction; }
 
+inline const Game * GameObject::GetGame() const { return mGame; }
 inline GameMap * GameObject::GetGameMap() const { return mGameMap; }
 inline const sgl::graphic::ParticlesManager * GameObject::GetParticlesManager() const { return mPartMan; }
 inline Player * GameObject::GetOwner() const { return mOwner; }

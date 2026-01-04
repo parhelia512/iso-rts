@@ -1,5 +1,6 @@
 #include "GameObjects/Trees.h"
 
+#include "Game.h"
 #include "GameData.h"
 #include "GameConstants.h"
 #include "GameMap.h"
@@ -33,7 +34,7 @@ Trees::Trees(const ObjectData & data, const ObjectInitData & initData, GameObjec
     // randomize turns for change
     const int minTurns = 10;
     const int maxTurns = 30;
-    sgl::utilities::UniformDistribution dis(minTurns, maxTurns);
+    sgl::utilities::UniformDistribution dis(minTurns, maxTurns, GetGame()->GetRandSeed());
     mTurnsToChange = dis.GetNextValue();
 
     SetObjColors();
@@ -64,7 +65,7 @@ void Trees::OnNewTurn(PlayerFaction faction)
     else if(mNumTrees < MAX_TREE1_TREES)
     {
         // randomize new variant
-        sgl::utilities::UniformDistribution dis(0, NUM_TREE1_VARIANTS - 1);
+        sgl::utilities::UniformDistribution dis(0, NUM_TREE1_VARIANTS - 1, GetGame()->GetRandSeed());
         mVariant = dis.GetNextValue();
 
         ++mNumTrees;
@@ -115,7 +116,7 @@ void Trees::SpawnTree(int r0, int c0)
 {
     GameMap * gm = GetGameMap();
 
-    sgl::utilities::UniformDistribution dis(0, NUM_TREE1_VARIANTS - 1);
+    sgl::utilities::UniformDistribution dis(0, NUM_TREE1_VARIANTS - 1, GetGame()->GetRandSeed());
     const int variant = dis.GetNextValue();
 
     gm->CreateObject(MapLayers::REGULAR_OBJECTS, ObjectData::TYPE_TREES, variant, NO_FACTION, r0, c0, false);

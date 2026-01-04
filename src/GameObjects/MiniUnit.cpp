@@ -1,5 +1,6 @@
 #include "GameObjects/MiniUnit.h"
 
+#include "Game.h"
 #include "GameConstants.h"
 #include "GameData.h"
 #include "GameMap.h"
@@ -201,7 +202,7 @@ void MiniUnit::PrepareShoot()
             deltas.emplace_back(48, 30);
         }
 
-        utilities::UniformDistribution ud(0, deltas.size() - 1);
+        utilities::UniformDistribution ud(0, deltas.size() - 1, GetGame()->GetRandSeed());
         delta = deltas[ud.GetNextValue()];
     }
 

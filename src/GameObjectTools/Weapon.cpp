@@ -10,11 +10,12 @@
 namespace game
 {
 
-Weapon::Weapon(const WeaponData & data, GameObject * owner, GameMap * gm,
-               const sgl::graphic::ParticlesManager * partMan)
+Weapon::Weapon(const WeaponData & data, GameObject * owner, const Game * g,
+               GameMap * gm, const sgl::graphic::ParticlesManager * partMan)
     : mAttributes(data.GetAttributes())
     , mEnergyCosts(data.GetEnergyCosts())
     , mOwner(owner)
+    , mGame(g)
     , mGameMap(gm)
     , mPartMan(partMan)
     , mAttackMode(ATT_QUICK_SHOT)

@@ -1,5 +1,6 @@
 #include "GameObjects/Blobs.h"
 
+#include "Game.h"
 #include "GameData.h"
 #include "IsoObject.h"
 #include "Player.h"
@@ -19,7 +20,7 @@ const int MAX_UNITS = 4;
 Blobs::Blobs(const ObjectData & data, const ObjectInitData & initData)
     : Collectable(data, initData)
 {
-    sgl::utilities::UniformDistribution ran(MIN_UNITS, MAX_UNITS);
+    sgl::utilities::UniformDistribution ran(MIN_UNITS, MAX_UNITS, GetGame()->GetRandSeed());
     mNum = ran.GetNextValue();
 
     SetObjColors();

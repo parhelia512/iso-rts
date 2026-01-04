@@ -3,12 +3,13 @@
 namespace game
 {
 
+class Game;
 class GameMap;
 
 class CollectableGenerator
 {
 public:
-    CollectableGenerator(GameMap * gm, int turnsMin, int turnsMax);
+    CollectableGenerator(const Game * g, GameMap * gm, int turnsMin, int turnsMax);
     virtual ~CollectableGenerator();
 
     void SetCell(int row, int col);
@@ -28,6 +29,7 @@ private:
     virtual void OnGeneration() = 0;
 
 private:
+    const Game * mGame = nullptr;
     GameMap * mGameMap = nullptr;
 
     int mRegenTurns = 0;

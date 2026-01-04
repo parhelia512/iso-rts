@@ -8,6 +8,7 @@ namespace sgl
 namespace game
 {
 
+class Game;
 class GameMap;
 class Player;
 class ScreenGame;
@@ -15,29 +16,35 @@ class ScreenGame;
 class ObjectInitData
 {
 public:
-    ObjectInitData(GameMap * map, const sgl::graphic::ParticlesManager * pm,
+    ObjectInitData(Game * game, GameMap * map, const sgl::graphic::ParticlesManager * pm,
                    Player * p, ScreenGame * screen);
 
+    const Game * GetGame() const;
     GameMap * GetGameMap() const;
     const sgl::graphic::ParticlesManager * GetParticlesManager() const;
     Player * GetPlayer() const;
     ScreenGame * GetScreen() const;
 
 private:
+    const Game * mGame;
     GameMap * mGameMap = nullptr;
     const sgl::graphic::ParticlesManager * mPartMan;
     Player * mPlayer = nullptr;
     ScreenGame * mScreen = nullptr;
 };
 
-inline ObjectInitData::ObjectInitData(GameMap * map, const sgl::graphic::ParticlesManager * pm,
+inline ObjectInitData::ObjectInitData(Game * game, GameMap * map,
+                                      const sgl::graphic::ParticlesManager * pm,
                                       Player * p, ScreenGame * screen)
-    : mGameMap(map)
+    : mGame(game)
+    , mGameMap(map)
     , mPartMan(pm)
     , mPlayer(p)
     , mScreen(screen)
 {
 }
+
+inline const Game * ObjectInitData::GetGame() const { return mGame; }
 
 inline GameMap * ObjectInitData::GetGameMap() const { return mGameMap; }
 

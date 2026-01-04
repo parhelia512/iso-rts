@@ -1,5 +1,6 @@
 #include "GameObjectTools/Laser.h"
 
+#include "Game.h"
 #include "GameConstants.h"
 #include "GameData.h"
 #include "IsoObject.h"
@@ -20,9 +21,9 @@
 namespace game
 {
 
-Laser::Laser(const WeaponData & data, GameObject * owner, GameMap * gm,
-             const sgl::graphic::ParticlesManager *partMan)
-    : Weapon(data, owner, gm, partMan)
+Laser::Laser(const WeaponData & data, GameObject * owner, const Game * g,
+             GameMap * gm, const sgl::graphic::ParticlesManager *partMan)
+    : Weapon(data, owner, g, gm, partMan)
     , mPartUpdater(static_cast<UpdaterSingleLaser *>(partMan->GetUpdater(PU_SINGLE_LASER)))
 {
     using namespace sgl;
@@ -82,7 +83,7 @@ void Laser::OnShoot(float x0, float y0)
     const float maxProb = 100.f;
     const float probHit = GetProbabilityHit(mTarget);
 
-    auto dist = sgl::utilities::UniformRealDistribution(0.f, maxProb);
+    auto dist = sgl::utilities::UniformRealDistribution(0.f, maxProb, GetGame()->GetRandSeed());
     const float valHit = dist.GetNextValue();
 
     // 0 damage is miss
