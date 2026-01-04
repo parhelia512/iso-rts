@@ -77,6 +77,8 @@ public:
 
     void SetClearColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
 
+    // GAME STATE
+    int GetActiveStateId() const;
     void RequestNextActiveState(StateId sid);
 
     Difficulty GetDifficulty() const;

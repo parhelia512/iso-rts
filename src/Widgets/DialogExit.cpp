@@ -1,11 +1,12 @@
 #include "Widgets/DialogExit.h"
 
 #include "Game.h"
-#include "Screens/Screen.h"
+#include "Screens/ScreenGame.h"
 #include "States/StatesIds.h"
-#include <Tutorial/TutorialManager.h>
+#include "Tutorial/TutorialManager.h"
 #include "Widgets/DialogSettings.h"
 #include "Widgets/GameButton.h"
+#include "Widgets/GameHUD.h"
 #include "Widgets/GameUIData.h"
 #include "Widgets/WidgetsConstants.h"
 
@@ -297,10 +298,21 @@ DialogExit::DialogExit(DialogButtons buttons, Game * game, Screen * screen)
         btnX = (w - btn->GetWidth()) / 2;
         btn->SetPosition(btnX, btnY);
 
-        btn->AddOnClickFunction([game]
+        btn->AddOnClickFunction([this, game, screen]
         {
             game->GetTutorialManager()->AbortTutorial();
-            game->RequestNextActiveState(StateId::PLANET_MAP);
+
+            // fail mission if in game
+            if(game->GetActiveStateId() == StateId::GAME)
+            {
+                mButtonClose->Click();
+
+                auto HUD = static_cast<ScreenGame *>(screen)->GetHUD();
+                HUD->ShowDialogEndMission(false);
+            }
+            // just go to planet map screen otherwise
+            else
+                game->RequestNextActiveState(StateId::PLANET_MAP);
         });
 
         btnY += btn->GetHeight() + marginBtnV;
@@ -333,7 +345,7 @@ DialogExit::DialogExit(DialogButtons buttons, Game * game, Screen * screen)
         btnX = (w - btn->GetWidth()) / 2;
         btn->SetPosition(btnX, btnY);
 
-        btn->AddOnClickFunction([this, game, screen]
+        btn->AddOnClickFunction([this, game]
         {
             mButtonClose->Click();
 

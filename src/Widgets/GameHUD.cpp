@@ -458,6 +458,8 @@ void GameHUD::ShowDialogEndMission(bool won)
             mScreen->HandleGameOver();
     });
 
+    TemporaryClosePanels();
+
     // position dialog
     CenterWidget(dialog);
 }

@@ -225,6 +225,8 @@ int Game::GetResourcePriceSell(ResourceType t) const
         return 0;
 }
 
+int Game::GetActiveStateId() const { return mStateMan->GetActiveStateId(); }
+
 void Game::RequestNextActiveState(StateId sid) { mStateMan->RequestNextActiveState(sid); }
 
 void Game::SetMapDraggingSpeed(int val)
