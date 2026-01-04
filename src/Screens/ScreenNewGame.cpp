@@ -140,16 +140,11 @@ ScreenNewGame::ScreenNewGame(Game * game)
     // set game difficulty
     game->SetDifficulty(mDiff);
 
-#ifdef DEV_MODE
-    if(Game::QUICK_START)
-    {
-        game->RequestNextActiveState(StateId::GAME);
-        return ;
-    }
-#endif
+    // start game from first mission
+    game->SetCurrentPlanet(PLANET_1);
+    game->SetCurrentTerritory(0);
 
-    // move to game
-    game->RequestNextActiveState(StateId::PLANET_MAP);
+    game->RequestNextActiveState(StateId::GAME);
 }
 
 ScreenNewGame::~ScreenNewGame()

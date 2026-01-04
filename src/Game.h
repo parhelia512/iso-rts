@@ -53,8 +53,6 @@ class Game : public sgl::core::Application
 #ifdef DEV_MODE
 public:
     static bool GOD_MODE;
-
-    static bool QUICK_START;
 #endif
 
 public:

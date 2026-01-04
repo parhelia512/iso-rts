@@ -42,9 +42,6 @@ namespace game
 #ifdef DEV_MODE
 // this makes everything faster
 bool Game::GOD_MODE = false;
-
-// this allows to jump straight into a mission for quick testing
-bool Game::QUICK_START = false;
 #endif
 
 Game::Game(int argc, char * argv[])

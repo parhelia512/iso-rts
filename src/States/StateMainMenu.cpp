@@ -18,11 +18,6 @@ void StateMainMenu::OnActive()
 
     mGame->AddApplicationListener(mScreen);
     mGame->AddKeyboardListener(mScreen);
-
-#ifdef DEV_MODE
-    // reset quick start
-    Game::QUICK_START = false;
-#endif
 }
 
 void StateMainMenu::OnInactive()

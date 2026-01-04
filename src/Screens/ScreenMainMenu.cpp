@@ -237,8 +237,6 @@ void ScreenMainMenu::OnKeyUp(sgl::core::KeyboardEvent & event)
     {
         Game * game = GetGame();
 
-        Game::QUICK_START = true;
-
         srand(game->GetRandSeed());
         game->SetLocalPlayerFaction(static_cast<PlayerFaction>(rand() % NUM_FACTIONS));
         game->SetCurrentPlanet(PLANET_1);
