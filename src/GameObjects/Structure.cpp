@@ -14,7 +14,10 @@ Structure::Structure(const ObjectData & data, const ObjectInitData & initData)
     SetStructure(true);
     SetStatic(true);
 
-    HideIconEnergy();
+    if(GetFaction() != NO_FACTION)
+        ShowIconEnergy();
+    else
+        HideIconEnergy();
 }
 
 float Structure::GetTimeBuildUnit() const
