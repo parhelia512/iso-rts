@@ -22,6 +22,10 @@
 #include <cmath>
 #include <sstream>
 
+#ifdef DEV_MODE
+#include <iostream>
+#endif
+
 namespace
 {
 const char * packageFontsGame = "data/fonts/game.bin";
@@ -71,6 +75,10 @@ ScreenInit::ScreenInit(Game * game)
     mJobs.emplace_back([this]
     {
         GetGame()->RequestNextActiveState(StateId::MAIN_MENU);
+
+        #ifdef DEV_MODE
+        std::cout << "ScreenInit - LOADING TIME: " << mTimeLoad << " seconds" << std::endl;
+        #endif
     });
 
     // INIT STATUS LABEL
@@ -102,8 +110,10 @@ ScreenInit::~ScreenInit()
     GetGame()->SetCurrentCursor(CURSOR_DEFAULT);
 }
 
-void ScreenInit::Update(float update)
+void ScreenInit::Update(float delta)
 {
+    mTimeLoad += delta;
+
     mJobs[mCurrJob]();
 
     ++mCurrJob;

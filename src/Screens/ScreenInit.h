@@ -21,7 +21,7 @@ public:
     ScreenInit(Game * game);
     ~ScreenInit();
 
-    void Update(float update) override;
+    void Update(float delta) override;
     void Render() override;
 
 private:
@@ -54,6 +54,8 @@ private:
 
     std::vector<std::function<void()>> mJobs;
     unsigned int mCurrJob = 0;
+
+    float mTimeLoad = 0.f;
 };
 
 } // namespace game
