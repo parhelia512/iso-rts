@@ -46,6 +46,7 @@ constexpr int contY0 = 40;
 
 constexpr int minResW = 1024;
 constexpr float minResRatio = 1.25f;
+constexpr int minRefresh = 60;
 
 // ====== BUTTON CLOSE =====
 class ButtonCloseSettings : public sgl::sgui::ImageButton
@@ -850,7 +851,7 @@ void DialogSettings::CreatePanelVideo(sgl::sgui::Widget * parent)
             // display requirements
             const float ratio = static_cast<float>(dm.width) / static_cast<float>(dm.height);
 
-            if(ratio < minResRatio || dm.width < minResW)
+            if(ratio < minResRatio || dm.width < minResW || dm.refresh < minRefresh)
                 continue ;
 
             /// add combo item
@@ -864,25 +865,22 @@ void DialogSettings::CreatePanelVideo(sgl::sgui::Widget * parent)
 
             ++validModes;
         }
-
-        // fallback to first resolution if no good one is found
-        if(0 == validModes)
-        {
-            const graphic::DisplayMode dm = win->GetDisplayMode(d, 0);
-
-            /// add combo item
-            std::ostringstream oss;
-            oss << dm.width << "x" << dm.height << " @ " << dm.refresh << "Hz";
-            mComboRes->AddItem(new ComboBoxItemResolution(d, 0, oss.str().c_str()));
-
-            currIndex = 0;
-        }
-
-        mComboRes->SetActiveItem(currIndex);
-
-        // NOTE only handling display 0 for now, this might change later
-        break ;
     }
+
+    // fallback to first resolution if no good one is found
+    if(0 == validModes)
+    {
+        const graphic::DisplayMode dm = win->GetDisplayMode(0, 0);
+
+        /// add combo item
+        std::ostringstream oss;
+        oss << dm.width << "x" << dm.height << " @ " << dm.refresh << "Hz";
+        mComboRes->AddItem(new ComboBoxItemResolution(0, 0, oss.str().c_str()));
+
+        currIndex = 0;
+    }
+
+    mComboRes->SetActiveItem(currIndex);
 
     mComboRes->SetOnActiveChanged([this, win](int)
     {
@@ -967,7 +965,7 @@ void DialogSettings::UpdateCurrentResolution()
             // display requirements
             const float ratio = static_cast<float>(dm.width) / static_cast<float>(dm.height);
 
-            if(ratio < minResRatio || dm.width < minResW)
+            if(ratio < minResRatio || dm.width < minResW || dm.refresh < minRefresh)
                 continue ;
 
             // record current mode
@@ -976,16 +974,13 @@ void DialogSettings::UpdateCurrentResolution()
 
             ++validModes;
         }
-
-        // fallback to first resolution if no good one is found
-        if(0 == validModes)
-            currIndex = 0;
-
-        mComboRes->SetActiveItem(currIndex);
-
-        // NOTE only handling display 0 for now, this might change later
-        break ;
     }
+
+    // fallback to first resolution if no good one is found
+    if(0 == validModes)
+        currIndex = 0;
+
+    mComboRes->SetActiveItem(currIndex);
 }
 
 } // namespace game
