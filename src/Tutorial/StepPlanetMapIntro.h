@@ -8,7 +8,7 @@ namespace game
 class StepPlanetMapIntro : public TutorialInfoStep
 {
 public:
-    StepPlanetMapIntro();
+    StepPlanetMapIntro(bool won);
 };
 
 } // namespace game

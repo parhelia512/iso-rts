@@ -1,6 +1,9 @@
 #include "Tutorial/TutorialPlanetMap.h"
 
+#include "Game.h"
 #include "GameConstants.h"
+#include "MapsRegistry.h"
+#include "Player.h"
 #include "Screens/ScreenPlanetMap.h"
 #include "Tutorial/StepDelay.h"
 #include "Tutorial/StepPlanetMapConquerTerritory.h"
@@ -16,6 +19,12 @@
 
 #include <cassert>
 
+namespace
+{
+const unsigned int planet0 = 0;
+const unsigned int mission0 = 0;
+}
+
 namespace game
 {
 
@@ -25,8 +34,18 @@ TutorialPlanetMap::TutorialPlanetMap(Screen * screen)
 {
     assert(mScreen != nullptr);
 
+    const auto game = mScreen->GetGame();
+    const auto mr = game->GetMapsRegistry();
+    const auto localPlayer = game->GetLocalPlayer();
+    const PlayerFaction localFaction = localPlayer->GetFaction();
+
     AddStep([] { return new StepDelay(1.f); });
-    AddStep([] { return new StepPlanetMapIntro; });
+    AddStep([game, mr, localFaction]
+        {
+            const bool won = mr->GetMapOccupier(planet0, mission0) == localFaction;
+
+            return new StepPlanetMapIntro(won);
+        });
     AddStep([this] { return new StepPlanetMapSelectTerritory(mScreen->mPlanet); });
     AddStep([] { return new StepDelay(0.5f); });
     AddStep([this] { return new StepPlanetMapNoInfo(mScreen->mPanelInfo, mScreen->mPanelResources); });
