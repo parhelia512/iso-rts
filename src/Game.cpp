@@ -27,6 +27,7 @@
 #include <sgl/media/AudioPlayer.h>
 #include <sgl/sgui/Stage.h>
 #include <sgl/utilities/StateManager.h>
+#include <sgl/utilities/StringManager.h>
 
 #ifdef DEBUG
 #include <sgl/core/ModuleCore.h>
@@ -73,6 +74,11 @@ Game::Game(int argc, char * argv[])
 
     std::cout << std::endl;
 #endif
+
+    // -- INIT TEXT DATA --
+    auto sm = utilities::StringManager::Create();
+    sm->RegisterPackage("data/text/game.bin");
+    sm->LoadStringsFromPackage("en.txt");
 
     const std::string title = std::string("Virtualord - v. ") + std::string(VERSION);
     mWin = graphic::Window::Create(title.c_str(), 0, 0, this);
@@ -142,6 +148,8 @@ Game::~Game()
 
     graphic::Renderer::Destroy();
     graphic::Window::Destroy();
+
+    utilities::StringManager::Destroy();
 }
 
 void Game::InitGameData()

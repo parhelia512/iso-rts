@@ -18,6 +18,7 @@
 #include <sgl/media/AudioManager.h>
 #include <sgl/sgui/Label.h>
 #include <sgl/sgui/Stage.h>
+#include <sgl/utilities/StringManager.h>
 
 #include <cmath>
 #include <sstream>
@@ -131,8 +132,10 @@ void ScreenInit::UpdateStatus()
     // update status string
     const int perc = static_cast<int>(std::roundf(mCurrJob * 100.f / mJobs.size()));
 
+    auto sm = sgl::utilities::StringManager::Instance();
+
     std::ostringstream ss;
-    ss << "LOADING... " << perc << "%";
+    ss << sm->GetString("LOADING") <<"... " << perc << "%";
     mLabelStatus->SetText(ss.str().c_str());
 
     // update position
