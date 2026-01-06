@@ -354,6 +354,7 @@ void ScreenMainMenu::CreateChangelog()
                      "- Fixed possible crash when AI collects lootbox.\n"
                      "- Fixed possible crash when AI builds structure.\n"
                      "- Fixed possible crash when ending turn right after the tutorial.\n"
+                     "- Fixed mission progression in planet map.\n"
                      );
     textFix->SetPosition(contX, contY);
     textFix->SetColor(colorContent);

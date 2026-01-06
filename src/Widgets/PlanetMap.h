@@ -18,6 +18,24 @@ namespace game
 enum PlayerFaction : unsigned int;
 enum TerritoryStatus : unsigned int;
 
+/* MAP SCHEME
+ *
+ * full planet
+ *
+ *      0
+ * 2        3
+ * 6    8   7
+ * 4        5
+ *      1
+ *
+ * small planet
+ *
+ *      0
+ *  2   4   3
+ *      1
+ *
+ */
+
 class PlanetMap : public sgl::sgui::Widget
 {
 public:
