@@ -11,12 +11,13 @@
 namespace game
 {
 
-StepPlanetMapSelectTerritory::StepPlanetMapSelectTerritory(PlanetMap * planet)
+StepPlanetMapSelectTerritory::StepPlanetMapSelectTerritory(PlanetMap * planet, bool won)
     : TutorialInfoStep(TutorialConstants::infoPlanetMapW, TutorialConstants::infoPlanetMapH)
     , mFocusArea(new FocusArea)
 {
     // FOCUS
-    mTerritory = planet->GetButton(0);
+    const unsigned int buttonId = won ? 2 : 1;
+    mTerritory = planet->GetButton(buttonId);
 
     const int padding = 10;
     const int fX = planet->GetX() + mTerritory->GetX() - padding;

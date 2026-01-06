@@ -40,13 +40,16 @@ TutorialPlanetMap::TutorialPlanetMap(Screen * screen)
     const PlayerFaction localFaction = localPlayer->GetFaction();
 
     AddStep([] { return new StepDelay(1.f); });
-    AddStep([game, mr, localFaction]
+    AddStep([mr, localFaction]
         {
             const bool won = mr->GetMapOccupier(planet0, mission0) == localFaction;
-
             return new StepPlanetMapIntro(won);
         });
-    AddStep([this] { return new StepPlanetMapSelectTerritory(mScreen->mPlanet); });
+    AddStep([this, mr, localFaction]
+        {
+            const bool won = mr->GetMapOccupier(planet0, mission0) == localFaction;
+            return new StepPlanetMapSelectTerritory(mScreen->mPlanet, won);
+        });
     AddStep([] { return new StepDelay(0.5f); });
     AddStep([this] { return new StepPlanetMapNoInfo(mScreen->mPanelInfo, mScreen->mPanelResources); });
     AddStep([this] { return new StepPlanetMapExploreTerritory(mScreen->mPanelActions); });

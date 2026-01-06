@@ -34,7 +34,7 @@ StepPlanetMapConquerTerritoryStart::StepPlanetMapConquerTerritoryStart(PanelPlan
 
     info->SetPosition(TutorialConstants::infoPlanetMapX, TutorialConstants::infoPlanetMapY);
 
-    info->AddInfoEntry("Now click the button PROCEED to start your first mission.",
+    info->AddInfoEntry("Now click the button PROCEED to start your mission.",
                        TutorialConstants::colorTextAction, 0.f, false, false);
 
     info->SetFunctionOnFinished([this, fX, fY, fW, fH]
