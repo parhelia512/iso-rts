@@ -1,4 +1,4 @@
 build*
 *.user
 src/Version.h
-data/text/input/
+input/
