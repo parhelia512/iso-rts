@@ -34,6 +34,7 @@ class Player;
 class TutorialManager;
 
 enum GameCursorId : unsigned int;
+enum LanguageId : unsigned int;
 enum Planets : unsigned int;
 enum PlayerFaction : unsigned int;
 enum ResourceType : unsigned int;
@@ -101,6 +102,9 @@ public:
     PlayerFaction GetLocalPlayerFaction() const;
 
     // -- settings --
+    LanguageId GetLanguage() const;
+    void SetLanguage(LanguageId lang);
+
     int GetMapDraggingSpeed() const;
     void SetMapDraggingSpeed(int val);
     bool IsMapDragging() const;
@@ -160,6 +164,7 @@ private:
     unsigned int mRandSeed = 0;
 
     // SETTINGS
+    LanguageId mLanguage;
     int mMapDraggingSpeed = 5;
     int mMapScrollingSpeed = 6;
     bool mMapDragging = true;
@@ -222,6 +227,8 @@ inline PlayerFaction Game::GetLocalPlayerFaction() const
 {
     return mLocalFaction;
 }
+
+inline LanguageId Game::GetLanguage() const { return mLanguage; }
 
 inline int Game::GetMapDraggingSpeed() const { return mMapDraggingSpeed; }
 inline bool Game::IsMapDragging() const { return mMapDragging; }

@@ -24,6 +24,7 @@
 #include <sgl/sgui/Image.h>
 #include <sgl/sgui/ImageButton.h>
 #include <sgl/sgui/Label.h>
+#include <sgl/utilities/StringManager.h>
 
 #include <iostream>
 #include <sstream>
@@ -39,7 +40,7 @@ constexpr unsigned int colorTxtSlider = 0xadc2ccff;
 constexpr unsigned int sizeTxt = 22;
 
 constexpr int blockSettingW = 500;
-constexpr int blockSettingH = 100;
+constexpr int blockSettingH = 90;
 
 constexpr int contX0 = 30;
 constexpr int contY0 = 40;
@@ -532,7 +533,9 @@ void DialogSettings::CreatePanelGame(sgl::sgui::Widget * parent)
 {
     using namespace sgl;
 
-    const int h = 600;
+    auto sm = utilities::StringManager::Instance();
+
+    const int h = 650;
     auto panel = new PanelContentSettings(h, parent);
     mPanels[Panel::GAME] = panel;
 
@@ -682,6 +685,29 @@ void DialogSettings::CreatePanelGame(sgl::sgui::Widget * parent)
         mGame->SetTutorialEnabled(checked);
     });
 
+    // LANGUAGE
+    x = contX0;
+    y += blockSettingH;
+
+    label = new sgui::Label(sm->GetCString("LANGUAGE"), font, panel);
+    label->SetColor(colorTxt);
+    label->SetPosition(x, y);
+
+    auto comboLang = new SettingsComboBox(panel);
+
+    comboLang->AddItem(new SettingsComboBoxItem(sm->GetCString("ENG")));
+    comboLang->AddItem(new SettingsComboBoxItem(sm->GetCString("ITA")));
+
+    comboLang->SetActiveItem(mGame->GetLanguage());
+
+    x += blockSettingW;
+    y += (label->GetHeight() - comboLang->GetHeight()) * 0.5;
+    comboLang->SetPosition(x, y);
+
+    comboLang->SetOnActiveChanged([this](int ind)
+    {
+        mGame->SetLanguage(static_cast<LanguageId>(ind));
+    });
 }
 
 void DialogSettings::CreatePanelAudio(sgl::sgui::Widget *parent)

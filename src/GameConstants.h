@@ -41,6 +41,16 @@ enum GameCursorId : unsigned int
     CURSOR_NULL
 };
 
+enum LanguageId : unsigned int
+{
+    LANG_ENGLISH,
+    LANG_ITALIAN,
+
+    NUM_LANGUAGES,
+
+    LANG_NULL
+};
+
 enum MapLayers : unsigned int
 {
     CELL_OVERLAYS1,

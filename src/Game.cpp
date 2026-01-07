@@ -52,6 +52,7 @@ Game::Game(int argc, char * argv[])
     , mObjsRegistry(new ObjectsDataRegistry)
     , mLocalFaction(NO_FACTION)
     , mCurrPlanet(PLANET_UNKNOWN)
+    , mLanguage(LANG_NULL)
 #ifdef DEV_MODE
     // tutorial disabled in DEV MODE
     , mTutorialEnabled(false)
@@ -78,8 +79,9 @@ Game::Game(int argc, char * argv[])
     // -- INIT TEXT DATA --
     auto sm = utilities::StringManager::Create();
     sm->RegisterPackage("data/text/game.bin");
-    sm->LoadStringsFromPackage("en.txt");
-    //sm->LoadStringsFromPackage("it.txt");
+
+    //SetLanguage(LANG_ENGLISH);
+    SetLanguage(LANG_ITALIAN);
 
     const std::string title = std::string("Virtualord - v. ") + std::string(VERSION);
     mWin = graphic::Window::Create(title.c_str(), 0, 0, this);
@@ -330,7 +332,6 @@ void Game::ClearPlayers()
     mPlayers.clear();
 }
 
-
 Player * Game::GetPlayerByFaction(PlayerFaction faction) const
 {
     for(Player * p : mPlayers)
@@ -340,6 +341,24 @@ Player * Game::GetPlayerByFaction(PlayerFaction faction) const
     }
 
     return nullptr;
+}
+
+void Game::SetLanguage(LanguageId lang)
+{
+    if(lang == mLanguage)
+        return ;
+
+    mLanguage = lang;
+
+    auto sm = sgl::utilities::StringManager::Instance();
+
+    const char * languages[] =
+    {
+        "en.txt",
+        "it.txt",
+    };
+
+    sm->LoadStringsFromPackage(languages[lang]);
 }
 
 } // namespace game
