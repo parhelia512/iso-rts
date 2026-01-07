@@ -79,6 +79,7 @@ Game::Game(int argc, char * argv[])
     auto sm = utilities::StringManager::Create();
     sm->RegisterPackage("data/text/game.bin");
     sm->LoadStringsFromPackage("en.txt");
+    //sm->LoadStringsFromPackage("it.txt");
 
     const std::string title = std::string("Virtualord - v. ") + std::string(VERSION);
     mWin = graphic::Window::Create(title.c_str(), 0, 0, this);

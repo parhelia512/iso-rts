@@ -25,6 +25,7 @@
 #include <sgl/sgui/Stage.h>
 #include <sgl/sgui/TextArea.h>
 #include <sgl/utilities/System.h>
+#include <sgl/utilities/StringManager.h>
 
 namespace game
 {
@@ -33,6 +34,8 @@ ScreenMainMenu::ScreenMainMenu(Game * game)
     : Screen(game)
 {
     using namespace sgl;
+
+    auto sm = utilities::StringManager::Instance();
 
     game->SetClearColor(0x12, 0x12, 0x12, 0xFF);
 
@@ -43,6 +46,7 @@ ScreenMainMenu::ScreenMainMenu(Game * game)
 
     const int screenW = graphic::Renderer::Instance()->GetWidth();
     const int screenH = graphic::Renderer::Instance()->GetHeight();
+
 
     // -- BACKGROUND --
     auto tm = graphic::TextureManager::Instance();
@@ -55,7 +59,7 @@ ScreenMainMenu::ScreenMainMenu(Game * game)
     bb->SetX(screenW - bb->GetWidth());
 
     // -- BUTTON NEW GAME --
-    ButtonMainMenu * button = new ButtonMainMenu("NEW GAME", panelButtons);
+    ButtonMainMenu * button = new ButtonMainMenu(sm->GetCString("NEW_GAME"), panelButtons);
 
     button->AddOnClickFunction([game]
     {
@@ -67,7 +71,7 @@ ScreenMainMenu::ScreenMainMenu(Game * game)
     buttonY += button->GetHeight() + VMARGIN;
 
     // -- BUTTON SETTINGS --
-    button = new ButtonMainMenu("SETTINGS", panelButtons);
+    button = new ButtonMainMenu(sm->GetCString("SETTINGS"), panelButtons);
     button->SetY(buttonY);
 
     button->AddOnClickFunction([game]
@@ -78,7 +82,7 @@ ScreenMainMenu::ScreenMainMenu(Game * game)
     buttonY += button->GetHeight() + VMARGIN;
 
     // -- BUTTON EXIT --
-    button = new ButtonMainMenu("EXIT", panelButtons);
+    button = new ButtonMainMenu(sm->GetCString("EXIT"), panelButtons);
     button->SetY(buttonY);
 
     button->AddOnClickFunction([game] { game->Exit(); });
@@ -200,7 +204,7 @@ ScreenMainMenu::ScreenMainMenu(Game * game)
     graphic::Font * fntBold = fm->GetFont("Lato-Bold.ttf", 20, graphic::Font::NORMAL);
 
     const unsigned int colorDev = 0xf66455ff;
-    auto labelDEV = new sgui::Label("DEVELOPER MODE", fntBold);
+    auto labelDEV = new sgui::Label(sm->GetCString("DEV_MODE"), fntBold);
     labelDEV->SetColor(colorDev);
 
     const int labelDevX = screenW - labelDEV->GetWidth() - marginLabelH;

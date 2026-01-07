@@ -11,6 +11,7 @@
 #include <sgl/graphic/Text.h>
 #include <sgl/media/AudioManager.h>
 #include <sgl/media/AudioPlayer.h>
+#include <sgl/utilities/StringManager.h>
 
 namespace game
 {
@@ -27,22 +28,23 @@ ButtonMainMenuWishlist::ButtonMainMenuWishlist(sgl::sgui::Widget * parent)
     }
     , mBody(new sgl::graphic::Image)
 {
-    using namespace sgl::graphic;
+    using namespace sgl;
 
-    auto tm = TextureManager::Instance();
+    auto tm = graphic::TextureManager::Instance();
 
     RegisterRenderable(mBody);
 
     // ICON
-    Texture * tex = tm->GetSprite(SpriteFileMainMenuButtons, IND_MM_ICON_STEAM);
-    mIcon = new Image(tex);
+    graphic::Texture * tex = tm->GetSprite(SpriteFileMainMenuButtons, IND_MM_ICON_STEAM);
+    mIcon = new graphic::Image(tex);
     RegisterRenderable(mIcon);
 
     // TEXT LABEL
+    auto sm = utilities::StringManager::Instance();
     // TODO use setLabel after adding support for icon to PushButton
-    auto fm = FontManager::Instance();
-    Font * font = fm->GetFont(WidgetsConstants::FontFileButton, 18, Font::NORMAL);
-    mText = new Text("WISHLIST NOW", font, true);
+    auto fm = graphic::FontManager::Instance();
+    auto font = fm->GetFont(WidgetsConstants::FontFileButton, 18, graphic::Font::NORMAL);
+    mText = new graphic::Text(sm->GetCString("WL_NOW"), font, true);
     RegisterRenderable(mText);
 
     // init to normal state

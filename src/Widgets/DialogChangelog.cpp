@@ -13,6 +13,7 @@
 #include <sgl/sgui/ScrollArea.h>
 #include <sgl/sgui/Scrollbar.h>
 #include <sgl/sgui/TextArea.h>
+#include <sgl/utilities/StringManager.h>
 
 // anonymous namespace for local "private" classes
 namespace
@@ -207,11 +208,12 @@ ButtonChangelog::ButtonChangelog()
     SetSize(mBg->GetWidth(), mBg->GetHeight());
 
     // TEXT
+    auto sm = utilities::StringManager::Instance();
     auto fm = graphic::FontManager::Instance();
     auto font = fm->GetFont(WidgetsConstants::FontFileText, 20, graphic::Font::NORMAL);
     mLabel = new sgui::TextArea(GetWidth(), GetHeight(), font, false, this);
     mLabel->setTextAlignment(sgui::TextArea::ALIGN_H_CENTER, sgui::TextArea::ALIGN_V_CENTER);
-    mLabel->SetText("U\nP\nD\nA\nT\nE\nS");
+    mLabel->SetText(sm->GetCString("UPDATES_V"));
 
     UpdateLabel(sgui::AbstractButton::VisualState::NORMAL);
 }
@@ -262,9 +264,10 @@ DialogChangelog::DialogChangelog()
     SetSize(mBg->GetWidth(), mBg->GetHeight());
 
     // TITLE
+    auto sm = utilities::StringManager::Instance();
     auto fm = graphic::FontManager::Instance();
     auto font = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 28, graphic::Font::NORMAL);
-    mTitle = new graphic::Text("NEWS & UPDATES", font);
+    mTitle = new graphic::Text(sm->GetCString("NEWS_UPDATES"), font);
     mTitle->SetColor(WidgetsConstants::colorDialogTitle);
     RegisterRenderable(mTitle);
 
