@@ -210,7 +210,7 @@ ButtonChangelog::ButtonChangelog()
     // TEXT
     auto sm = utilities::StringManager::Instance();
     auto fm = graphic::FontManager::Instance();
-    auto font = fm->GetFont(WidgetsConstants::FontFileText, 20, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileText, 18, graphic::Font::NORMAL);
     mLabel = new sgui::TextArea(GetWidth(), GetHeight(), font, false, this);
     mLabel->setTextAlignment(sgui::TextArea::ALIGN_H_CENTER, sgui::TextArea::ALIGN_V_CENTER);
     mLabel->SetText(sm->GetCString("UPDATES_V"));
@@ -266,7 +266,7 @@ DialogChangelog::DialogChangelog()
     // TITLE
     auto sm = utilities::StringManager::Instance();
     auto fm = graphic::FontManager::Instance();
-    auto font = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 28, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 26, graphic::Font::NORMAL);
     mTitle = new graphic::Text(sm->GetCString("NEWS_UPDATES"), font);
     mTitle->SetColor(WidgetsConstants::colorDialogTitle);
     RegisterRenderable(mTitle);
