@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sgl/sgui/Widget.h>
+#include <sgl/utilities/StringsChangeListener.h>
 
 #include <functional>
 
@@ -20,7 +21,7 @@ namespace game
 
 class Game;
 
-class DialogSettings : public sgl::sgui::Widget
+class DialogSettings : public sgl::sgui::Widget, public sgl::utilities::StringsChangeListener
 {
 public:
     DialogSettings(Game * game);
@@ -39,6 +40,8 @@ private:
     void CreatePanelControls(sgl::sgui::Widget * parent);
 
     void UpdateCurrentResolution();
+
+    void OnStringsChanged() override;
 
 private:
     enum Panel : unsigned int

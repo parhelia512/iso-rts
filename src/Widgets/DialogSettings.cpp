@@ -426,6 +426,9 @@ DialogSettings::DialogSettings(Game * game)
 
     auto fm = graphic::FontManager::Instance();
     auto tm = graphic::TextureManager::Instance();
+    auto sm = utilities::StringManager::Instance();
+
+    sm->AddListener(this);
 
     // MAIN PANEL
     auto tex = tm->GetSprite(SpriteFileSettings, IND_SET_PANEL);
@@ -1007,6 +1010,11 @@ void DialogSettings::UpdateCurrentResolution()
         currIndex = 0;
 
     mComboRes->SetActiveItem(currIndex);
+}
+
+void DialogSettings::OnStringsChanged()
+{
+    std::cout << "DialogSettings::OnStringsChanged - LANG: " << mGame->GetLanguage() << std::endl;
 }
 
 } // namespace game
