@@ -5,8 +5,11 @@
 
 namespace sgl
 {
-    namespace graphic { class Text; }
-    namespace sgui { class Image; }
+    namespace sgui
+    {
+        class Image;
+        class Label;
+    }
 }
 
 namespace game
@@ -17,6 +20,8 @@ class ButtonPanelTab : public sgl::sgui::AbstractButton
 public:
     ButtonPanelTab(const char * text, sgl::sgui::Widget * parent);
 
+    void SetLabel(const char * text);
+
 private:
     void HandleMouseOver() override;
 
@@ -24,14 +29,12 @@ private:
 
     void OnStateChanged(sgl::sgui::AbstractButton::VisualState state) override;
 
-    void HandlePositionChanged() override;
-
     void UpdateGraphics(sgl::sgui::AbstractButton::VisualState state);
 
     void UpdatePositions();
 
 private:
-    sgl::graphic::Text * mLabel = nullptr;
+    sgl::sgui::Label * mLabel = nullptr;
 
     sgl::sgui::Image * mBar = nullptr;
 };

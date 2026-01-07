@@ -6,10 +6,10 @@
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
 #include <sgl/graphic/TextureManager.h>
-#include <sgl/graphic/Text.h>
 #include <sgl/media/AudioManager.h>
 #include <sgl/media/AudioPlayer.h>
 #include <sgl/sgui/Image.h>
+#include <sgl/sgui/Label.h>
 
 namespace game
 {
@@ -28,8 +28,7 @@ ButtonPanelTab::ButtonPanelTab(const char * text, sgl::sgui::Widget * parent)
     auto fm = graphic::FontManager::Instance();
     graphic::Font * font = fm->GetFont(WidgetsConstants::FontFileButton, 24, graphic::Font::NORMAL);
 
-    mLabel = new graphic::Text(text, font);
-    RegisterRenderable(mLabel);
+    mLabel = new sgui::Label(text, font, this);
 
     // BAR
     auto tm = graphic::TextureManager::Instance();
@@ -40,6 +39,13 @@ ButtonPanelTab::ButtonPanelTab(const char * text, sgl::sgui::Widget * parent)
 
     // UPDATE CONTENT
     UpdateGraphics(NORMAL);
+    UpdatePositions();
+}
+
+void ButtonPanelTab::SetLabel(const char * text)
+{
+    mLabel->SetText(text);
+
     UpdatePositions();
 }
 
@@ -64,11 +70,6 @@ void ButtonPanelTab::OnStateChanged(sgl::sgui::AbstractButton::VisualState state
     UpdateGraphics(state);
 }
 
-void ButtonPanelTab::HandlePositionChanged()
-{
-    UpdatePositions();
-}
-
 void ButtonPanelTab::UpdateGraphics(sgl::sgui::AbstractButton::VisualState state)
 {
     const unsigned int colors[NUM_VISUAL_STATES] =
@@ -87,12 +88,8 @@ void ButtonPanelTab::UpdateGraphics(sgl::sgui::AbstractButton::VisualState state
 
 void ButtonPanelTab::UpdatePositions()
 {
-    const int x0 = GetScreenX();
-    const int y0 = GetScreenY();
-
-    // LABEL
-    mLabel->SetPosition(x0 + (GetWidth() - mLabel->GetWidth()) * 0.5f,
-                        y0 + (GetHeight() - mLabel->GetHeight()) * 0.5f);
+    mLabel->SetPosition((GetWidth() - mLabel->GetWidth()) / 2,
+                        (GetHeight() - mLabel->GetHeight()) / 2);
 }
 
 } // namespace game

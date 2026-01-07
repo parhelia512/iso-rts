@@ -4,15 +4,18 @@
 #include <sgl/utilities/StringsChangeListener.h>
 
 #include <functional>
+#include <vector>
 
 namespace sgl
 {
     namespace graphic { class Image; }
     namespace sgui
     {
+        class AbstractButton;
         class AbstractButtonsGroup;
         class ComboBox;
         class ImageButton;
+        class Label;
     }
 }
 
@@ -55,6 +58,11 @@ private:
     };
 
 private:
+    std::vector<sgl::sgui::AbstractButton *> mButtonsTabs;
+    std::vector<sgl::sgui::Label *> mHeadersGame;
+    std::vector<sgl::sgui::Label *> mHeadersAudio;
+    std::vector<sgl::sgui::Label *> mHeadersVideo;
+
     Game * mGame = nullptr;
 
     sgl::sgui::AbstractButtonsGroup * mGroupButtons = nullptr;
@@ -65,7 +73,11 @@ private:
 
     sgl::sgui::ImageButton * mButtonBack = nullptr;
 
+    sgl::sgui::ComboBox * mComboLang = nullptr;
     sgl::sgui::ComboBox * mComboRes = nullptr;
+    sgl::sgui::ComboBox * mComboVMode = nullptr;
+
+    sgl::utilities::StringManager * mSM = nullptr;
 };
 
 } // namespace game
