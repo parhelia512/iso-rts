@@ -21,6 +21,7 @@
 #include <sgl/sgui/Label.h>
 #include <sgl/sgui/Stage.h>
 #include <sgl/sgui/TextArea.h>
+#include <sgl/utilities/StringManager.h>
 
 namespace game
 {
@@ -35,6 +36,7 @@ ScreenFactionSelection::ScreenFactionSelection(Game * game)
 
     auto tm = graphic::TextureManager::Instance();
     auto fm = graphic::FontManager::Instance();
+    auto sm = utilities::StringManager::Instance();
     graphic::Texture * tex = nullptr;
     graphic::Font * fnt = nullptr;
 
@@ -52,7 +54,7 @@ ScreenFactionSelection::ScreenFactionSelection(Game * game)
 
     const int marginL = 50;
     const int marginPanelsH = 15;
-    const int marginTxt = 10;
+    const int marginTxt = 6;
     const int marginFaction = 50;
 
     const int y0 = 5;
@@ -63,12 +65,12 @@ ScreenFactionSelection::ScreenFactionSelection(Game * game)
 
     // LABEL "SELECT YOUR FACTION"
     fnt = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 40, graphic::Font::NORMAL);
-    sgui::Label * labelTitle = new sgui::Label("SELECT YOUR FACTION", fnt, panelMain);
+    sgui::Label * labelTitle = new sgui::Label(sm->GetCString("SEL_FACTION"), fnt, panelMain);
     labelTitle->SetPosition(x, y);
     labelTitle->SetColor(WidgetsConstants::colorDialogTitle);
 
-    graphic::Font * fntFaction = fm->GetFont(WidgetsConstants::FontFilePanelTitle, 32, graphic::Font::NORMAL);
-    graphic::Font * fntTxt = fm->GetFont(WidgetsConstants::FontFileText, 20, graphic::Font::NORMAL);
+    auto fntFaction = fm->GetFont(WidgetsConstants::FontFilePanelTitle, 32, graphic::Font::NORMAL);
+    auto fntTxt = fm->GetFont(WidgetsConstants::FontFileText, 20, graphic::Font::NORMAL);
 
     // BUTTON BACK
     auto btnBack = new ButtonDialogBack(panelMain);
@@ -112,7 +114,7 @@ ScreenFactionSelection::ScreenFactionSelection(Game * game)
     const int txtW = panelTxt->GetWidth() - (marginTxt * 2);
     const int txtH = panelTxt->GetHeight() - marginTxt;
 
-    const char * desc1 = "Trained warriors and expert weapon makers. They hate the Domens.";
+    const char * desc1 = sm->GetCString("DESC_FACTION1");
     auto txtArea = new sgui::TextArea(txtW, txtH, desc1, fntTxt, false, panelTxt);
     txtArea->SetPosition(txtX, txtY);
     txtArea->SetColor(WidgetsConstants::colorPanelText);
@@ -167,7 +169,7 @@ ScreenFactionSelection::ScreenFactionSelection(Game * game)
     txtX = marginTxt;
     txtY = marginTxt;
 
-    const char * desc2 = "Masters of engineering and science. Long time enemies of the Zulox.";
+    const char * desc2 = sm->GetCString("DESC_FACTION2");
     txtArea = new sgui::TextArea(txtW, txtH, desc2, fntTxt, false, panelTxt);
     txtArea->SetPosition(txtX, txtY);
     txtArea->SetColor(WidgetsConstants::colorPanelText);
@@ -222,7 +224,7 @@ ScreenFactionSelection::ScreenFactionSelection(Game * game)
     txtX = marginTxt;
     txtY = marginTxt;
 
-    const char * desc3 = "Great explorers and very versatile. They have never fought other factions until now.";
+    const char * desc3 = sm->GetCString("DESC_FACTION3");
     txtArea = new sgui::TextArea(txtW, txtH, desc3, fntTxt, false, panelTxt);
     txtArea->SetPosition(txtX, txtY);
     txtArea->SetColor(WidgetsConstants::colorPanelText);
@@ -286,6 +288,7 @@ int ScreenFactionSelection::AddPanelStats(int x, int y, const std::array<int, NU
 
     auto tm = graphic::TextureManager::Instance();
     auto fm = graphic::FontManager::Instance();
+    auto sm = utilities::StringManager::Instance();
 
     graphic::Texture * tex = tm->GetSprite(SpriteFileFactionSelection, IND_FSEL_PANEL_ATTR);
     auto panel = new sgui::Image(tex, parent);
@@ -304,10 +307,10 @@ int ScreenFactionSelection::AddPanelStats(int x, int y, const std::array<int, NU
 
     const char * strHeader[NUM_FACTION_STATS] =
     {
-        "EXPLORATION",
-        "CONSTRUCTION",
-        "COMBAT",
-        "TECHNOLOGY"
+        sm->GetCString("EXPLORATION"),
+        sm->GetCString("CONSTRUCTION"),
+        sm->GetCString("COMBAT"),
+        sm->GetCString("TECHNOLOGY")
     };
 
     for(unsigned int i = 0; i < NUM_FACTION_STATS; ++i)

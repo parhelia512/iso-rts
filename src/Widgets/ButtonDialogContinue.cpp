@@ -7,6 +7,7 @@
 #include <sgl/graphic/FontManager.h>
 #include <sgl/media/AudioManager.h>
 #include <sgl/media/AudioPlayer.h>
+#include <sgl/utilities/StringManager.h>
 
 namespace game
 {
@@ -29,16 +30,17 @@ ButtonDialogContinue::ButtonDialogContinue(sgl::sgui::Widget * parent)
                  },
                  parent)
 {
-    using namespace sgl::graphic;
+    using namespace sgl;
 
     // set label font
-    auto fm = FontManager::Instance();
-    Font * font = fm->GetFont(WidgetsConstants::FontFileButton, 32, Font::NORMAL);
+    auto fm = graphic::FontManager::Instance();
+    auto font = fm->GetFont(WidgetsConstants::FontFileButton, 32, graphic::Font::NORMAL);
 
     SetLabelFont(font);
 
     // init label
-    SetLabel("CONTINUE");
+    auto sm = utilities::StringManager::Instance();
+    SetLabel(sm->GetCString("CONTINUE"));
 }
 
 void ButtonDialogContinue::HandleMouseOver()
