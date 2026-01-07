@@ -65,6 +65,8 @@ private:
 
     Game * mGame = nullptr;
 
+    sgl::sgui::Label * mTitle = nullptr;
+
     sgl::sgui::AbstractButtonsGroup * mGroupButtons = nullptr;
 
     sgl::sgui::Widget * mPanels[NUM_PANELS];

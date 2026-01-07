@@ -469,10 +469,10 @@ DialogSettings::DialogSettings(Game * game)
 
     // TITLE
     auto font = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 30, graphic::Font::NORMAL);
-    auto labelTitle = new sgui::Label(mSM->GetCString("SETTINGS"), font, this);
+    mTitle = new sgui::Label(mSM->GetCString("SETTINGS"), font, this);
 
-    labelTitle->SetColor(WidgetsConstants::colorDialogTitle);
-    labelTitle->SetPosition(marginContLeft, marginContTop);
+    mTitle->SetColor(WidgetsConstants::colorDialogTitle);
+    mTitle->SetPosition(marginContLeft, marginContTop);
 
     // BUTTONS PANEL
     mGroupButtons = new sgl::sgui::AbstractButtonsGroup;
@@ -726,8 +726,9 @@ void DialogSettings::CreatePanelGame(sgl::sgui::Widget * parent)
 
     mComboLang = new SettingsComboBox(panel);
 
-    mComboLang->AddItem(new SettingsComboBoxItem(mSM->GetCString("ENG")));
-    mComboLang->AddItem(new SettingsComboBoxItem(mSM->GetCString("ITA")));
+    mComboLang->AddItem(new SettingsComboBoxItem(mSM->GetCString("LANG_ENG")));
+    mComboLang->AddItem(new SettingsComboBoxItem(mSM->GetCString("LANG_ITA")));
+    mComboLang->AddItem(new SettingsComboBoxItem(mSM->GetCString("LANG_SPA")));
 
     mComboLang->SetActiveItem(mGame->GetLanguage());
 
@@ -1056,6 +1057,9 @@ void DialogSettings::OnStringsChanged()
 
     std::cout << "DialogSettings::OnStringsChanged - LANGUAGE: " << mGame->GetLanguage() << std::endl;
 
+    // TITLE
+    mTitle->SetText(mSM->GetCString("SETTINGS"));
+
     // BUTTONS TABS
     const char * strIdsButtonsTabs[] =
     {
@@ -1091,10 +1095,18 @@ void DialogSettings::OnStringsChanged()
         mHeadersGame[i]->SetText(mSM->GetCString(strIdsGame[i]));
 
     // PANEL GAME - language ComboBox
-    auto cbi = static_cast<SettingsComboBoxItem *>(mComboLang->GetItem(LANG_ENGLISH));
-    cbi->SetLabel(mSM->GetCString("ENG"));
-    cbi = static_cast<SettingsComboBoxItem *>(mComboLang->GetItem(LANG_ITALIAN));
-    cbi->SetLabel(mSM->GetCString("ITA"));
+    const char * strIdsLanguage[] =
+    {
+        "LANG_ENG",
+        "LANG_ITA",
+        "LANG_SPA",
+    };
+
+    for(unsigned int i = 0; i < NUM_LANGUAGES; ++i)
+    {
+        auto cbi = static_cast<SettingsComboBoxItem *>(mComboLang->GetItem(i));
+        cbi->SetLabel(mSM->GetCString(strIdsLanguage[i]));
+    }
 
     mComboLang->Refresh();
 
@@ -1126,7 +1138,7 @@ void DialogSettings::OnStringsChanged()
 
     // PANEL VIDEO - video mode ComboBox
     int ind = sgl::graphic::Window::VideoMode::VM_BORDERLESS;
-    cbi = static_cast<SettingsComboBoxItem *>(mComboVMode->GetItem(ind));
+    auto cbi = static_cast<SettingsComboBoxItem *>(mComboVMode->GetItem(ind));
     cbi->SetLabel(mSM->GetCString("BORDERLESS"));
 
     ind = sgl::graphic::Window::VideoMode::VM_FULLSCREEN;

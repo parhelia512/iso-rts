@@ -45,6 +45,7 @@ enum LanguageId : unsigned int
 {
     LANG_ENGLISH,
     LANG_ITALIAN,
+    LANG_SPANISH,
 
     NUM_LANGUAGES,
 

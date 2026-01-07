@@ -356,6 +356,7 @@ void Game::SetLanguage(LanguageId lang)
     {
         "en.txt",
         "it.txt",
+        "es.txt",
     };
 
     sm->LoadStringsFromPackage(languages[lang]);
