@@ -6,6 +6,7 @@
 #include "Widgets/Tutorial/PanelInfoTutorial.h"
 
 #include <sgl/sgui/AbstractButton.h>
+#include <sgl/utilities/StringManager.h>
 
 namespace game
 {
@@ -14,6 +15,8 @@ StepPlanetMapSendAI::StepPlanetMapSendAI(PanelPlanetActions * panel)
     : TutorialInfoStep(TutorialConstants::infoPlanetMapW, TutorialConstants::infoPlanetMapH)
     , mFocusArea(new FocusArea)
 {
+    auto sm = sgl::utilities::StringManager::Instance();
+
     // FOCUS
     auto btn = panel->GetButton(PanelPlanetActions::SEND_AI);
 
@@ -32,10 +35,9 @@ StepPlanetMapSendAI::StepPlanetMapSendAI(PanelPlanetActions * panel)
 
     info->SetPosition(TutorialConstants::infoPlanetMapX, TutorialConstants::infoPlanetMapY);
 
-    info->AddInfoEntry("Now that this territory is explored you can decide if you want to conquer it "
-                       "or not.", TutorialConstants::colorText, 7.f, true, true);
-    info->AddInfoEntry("You can send an AI general to do the job for you, but it will cost you "
-                       "a lot of resources.",
+    info->AddInfoEntry(sm->GetCString("TUT_PM_SEND_AI_1"),
+                       TutorialConstants::colorText, 7.f, true, true);
+    info->AddInfoEntry(sm->GetCString("TUT_PM_SEND_AI_2"),
                        TutorialConstants::colorText, 8.f, true, true, [this]
                        {
                            mFocusArea->SetBlinking(true);

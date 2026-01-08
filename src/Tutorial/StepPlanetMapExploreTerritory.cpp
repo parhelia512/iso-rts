@@ -7,6 +7,8 @@
 #include "Widgets/Tutorial/PanelInfoTutorial.h"
 
 #include <sgl/sgui/AbstractButton.h>
+#include <sgl/utilities/StringManager.h>
+
 
 namespace game
 {
@@ -15,6 +17,8 @@ StepPlanetMapExploreTerritory::StepPlanetMapExploreTerritory(PanelPlanetActions 
     : TutorialInfoStep(TutorialConstants::infoPlanetMapW, TutorialConstants::infoPlanetMapH)
     , mFocusArea(new FocusArea)
 {
+    auto sm = sgl::utilities::StringManager::Instance();
+
     // FOCUS
     mButton = panelActions->GetButton(PanelPlanetActions::EXPLORE);
 
@@ -34,7 +38,7 @@ StepPlanetMapExploreTerritory::StepPlanetMapExploreTerritory(PanelPlanetActions 
 
     info->SetPosition(TutorialConstants::infoPlanetMapX, TutorialConstants::infoPlanetMapY);
 
-    info->AddInfoEntry("Click the button EXPLORE to try to explore it.",
+    info->AddInfoEntry(sm->GetCString("TUT_PM_EXPLORE_TERRITORY_1"),
                        TutorialConstants::colorTextAction, 0.f, false, false, [this, fX, fY, fW, fH]
                        {
                            GetClickFilter()->SetScreenClickableArea(fX, fY, fW, fH);

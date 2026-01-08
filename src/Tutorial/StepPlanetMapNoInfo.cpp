@@ -6,6 +6,8 @@
 #include "Widgets/Tutorial/FocusArea.h"
 #include "Widgets/Tutorial/PanelInfoTutorial.h"
 
+#include <sgl/utilities/StringManager.h>
+
 namespace game
 {
 
@@ -15,6 +17,8 @@ StepPlanetMapNoInfo::StepPlanetMapNoInfo(const PanelPlanetInfo * panelInfo,
     , mFocusInfo(new FocusArea)
     , mFocusResources(new FocusArea)
 {
+    auto sm = sgl::utilities::StringManager::Instance();
+
     // FOCUS
     const int padding = 10;
 
@@ -43,9 +47,9 @@ StepPlanetMapNoInfo::StepPlanetMapNoInfo(const PanelPlanetInfo * panelInfo,
 
     info->SetPosition(TutorialConstants::infoPlanetMapX, TutorialConstants::infoPlanetMapY);
 
-    info->AddInfoEntry("The RESOURCES and INFO panels of this territory do not show any "
-                       "data yet.", TutorialConstants::colorText, 8.f, true, true);
-    info->AddInfoEntry("That's because this territory is still unexplored.",
+    info->AddInfoEntry(sm->GetCString("TUT_PM_NO_INFO_1"),
+                       TutorialConstants::colorText, 8.f, true, true);
+    info->AddInfoEntry(sm->GetCString("TUT_PM_NO_INFO_2"),
                        TutorialConstants::colorText, 6.f, true, true, [this]
                        {
                            mFocusInfo->SetVisible(false);

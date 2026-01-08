@@ -3,7 +3,7 @@
 #include "Tutorial/TutorialConstants.h"
 #include "Widgets/Tutorial/PanelInfoTutorial.h"
 
-#include <sgl/sgui/AbstractButton.h>
+#include <sgl/utilities/StringManager.h>
 
 namespace game
 {
@@ -11,14 +11,16 @@ namespace game
 StepPlanetMapExploreTerritoryInfo::StepPlanetMapExploreTerritoryInfo()
     : TutorialInfoStep(TutorialConstants::infoPlanetMapW, TutorialConstants::infoPlanetMapH)
 {
+    auto sm = sgl::utilities::StringManager::Instance();
+
     // INFO
     auto info = GetPanelInfo();
 
     info->SetPosition(TutorialConstants::infoPlanetMapX, TutorialConstants::infoPlanetMapY);
 
-    info->AddInfoEntry("As you can see, exploring a territory requires some resources.",
+    info->AddInfoEntry(sm->GetCString("TUT_PM_EXPLORE_TERRITORY_INFO_1"),
                        TutorialConstants::colorText, 7.f, true, true);
-    info->AddInfoEntry("But it's well worth it as it reveals some important data.",
+    info->AddInfoEntry(sm->GetCString("TUT_PM_EXPLORE_TERRITORY_INFO_2"),
                        TutorialConstants::colorText, 7.f, true, true);
 
     info->SetFunctionOnFinished([this]

@@ -9,6 +9,7 @@
 #include "Widgets/Tutorial/PanelInfoTutorial.h"
 
 #include <sgl/sgui/AbstractButton.h>
+#include <sgl/utilities/StringManager.h>
 
 namespace game
 {
@@ -21,6 +22,8 @@ StepPlanetMapExploreTerritorySuccess::StepPlanetMapExploreTerritorySuccess(const
     , mFocusInfo(new FocusArea)
     , mFocusResources(new FocusArea)
 {
+    auto sm = sgl::utilities::StringManager::Instance();
+
     // FOCUS
     mButton = panelExplore->GetButtonCancel();
 
@@ -60,9 +63,9 @@ StepPlanetMapExploreTerritorySuccess::StepPlanetMapExploreTerritorySuccess(const
 
     info->SetPosition(TutorialConstants::infoPlanetMapX, TutorialConstants::infoPlanetMapY);
 
-    info->AddInfoEntry("Exploration was successful and now you can see some data in the RESOURCES "
-                       "and INFO panels.", TutorialConstants::colorText, 8.f, true, true);
-    info->AddInfoEntry("Click the button CLOSE to go back to the actions panel.",
+    info->AddInfoEntry(sm->GetCString("TUT_PM_EXPLORE_TERRITORY_SUCCESS_1"),
+                       TutorialConstants::colorText, 8.f, true, true);
+    info->AddInfoEntry(sm->GetCString("TUT_PM_EXPLORE_TERRITORY_SUCCESS_2"),
                        TutorialConstants::colorTextAction, 0.f, false, false, [this, fX, fY, fW, fH]
                        {
                            GetClickFilter()->SetScreenClickableArea(fX, fY, fW, fH);

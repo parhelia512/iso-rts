@@ -7,6 +7,7 @@
 #include "Widgets/Tutorial/PanelInfoTutorial.h"
 
 #include <sgl/sgui/AbstractButton.h>
+#include <sgl/utilities/StringManager.h>
 
 namespace game
 {
@@ -15,6 +16,8 @@ StepPlanetMapConquerTerritory::StepPlanetMapConquerTerritory(PanelPlanetActions 
     : TutorialInfoStep(TutorialConstants::infoPlanetMapW, TutorialConstants::infoPlanetMapH)
     , mFocusArea(new FocusArea)
 {
+    auto sm = sgl::utilities::StringManager::Instance();
+
     // FOCUS
     mButton = panelActions->GetButton(PanelPlanetActions::CONQUER);
 
@@ -34,9 +37,9 @@ StepPlanetMapConquerTerritory::StepPlanetMapConquerTerritory(PanelPlanetActions 
 
     info->SetPosition(TutorialConstants::infoPlanetMapX, TutorialConstants::infoPlanetMapY);
 
-    info->AddInfoEntry("I would suggest you to conquer the territory yourself.",
+    info->AddInfoEntry(sm->GetCString("TUT_PM_CONQUER_TERRITORY_1"),
                        TutorialConstants::colorText, 6.f, true, true);
-    info->AddInfoEntry("To do that click the button CONQUER.",
+    info->AddInfoEntry(sm->GetCString("TUT_PM_CONQUER_TERRITORY_2"),
                        TutorialConstants::colorTextAction, 0.f, false, false, [this, fX, fY, fW, fH]
                        {
                            // CLICK FILTER

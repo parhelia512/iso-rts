@@ -7,6 +7,7 @@
 #include "Widgets/Tutorial/PanelInfoTutorial.h"
 
 #include <sgl/sgui/AbstractButton.h>
+#include <sgl/utilities/StringManager.h>
 
 namespace game
 {
@@ -15,6 +16,8 @@ StepPlanetMapSelectTerritory::StepPlanetMapSelectTerritory(PlanetMap * planet, b
     : TutorialInfoStep(TutorialConstants::infoPlanetMapW, TutorialConstants::infoPlanetMapH)
     , mFocusArea(new FocusArea)
 {
+    auto sm = sgl::utilities::StringManager::Instance();
+
     // FOCUS
     const unsigned int buttonId = won ? 2 : 1;
     mTerritory = planet->GetButton(buttonId);
@@ -34,9 +37,9 @@ StepPlanetMapSelectTerritory::StepPlanetMapSelectTerritory(PlanetMap * planet, b
 
     info->SetPosition(TutorialConstants::infoPlanetMapX, TutorialConstants::infoPlanetMapY);
 
-    info->AddInfoEntry("Let's start to explore a territory of this planet.",
+    info->AddInfoEntry(sm->GetCString("TUT_PM_SELECT_TERRITORY_1"),
                        TutorialConstants::colorText, 6.f, true, true);
-    info->AddInfoEntry("Select this one with the LEFT MOUSE BUTTON",
+    info->AddInfoEntry(sm->GetCString("TUT_PM_SELECT_TERRITORY_2"),
                        TutorialConstants::colorTextAction, 0.f, false, false);
 
     info->SetFunctionOnFinished([this, fX, fY, fW, fH]
