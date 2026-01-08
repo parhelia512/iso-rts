@@ -8,6 +8,7 @@
 
 #include <sgl/sgui/AbstractButton.h>
 #include <sgl/sgui/ButtonsGroup.h>
+#include <sgl/utilities/StringManager.h>
 
 namespace game
 {
@@ -16,6 +17,7 @@ StepGameEndTurn::StepGameEndTurn(const PanelTurnControl * panel)
     : TutorialInfoStep(600, 200)
     , mFocusArea(new FocusArea)
 {
+    auto sm = sgl::utilities::StringManager::Instance();
 
     // FOCUS
     mFocusArea->SetCornersColor(TutorialConstants::colorFocusElement);
@@ -26,10 +28,10 @@ StepGameEndTurn::StepGameEndTurn(const PanelTurnControl * panel)
 
     info->SetPosition(1250, 650);
 
-    info->AddInfoEntry("You can end a turn to restore your energy.",
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_END_TURN_1"),
                        TutorialConstants::colorText, 10.f, true, false);
 
-    info->AddInfoEntry("Click this button to END THIS TURN.",
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_END_TURN_2"),
                        TutorialConstants::colorTextAction, 0.f, false, false, [this, panel]
                        {
                            // FOCUS

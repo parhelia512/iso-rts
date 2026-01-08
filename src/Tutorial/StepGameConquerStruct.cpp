@@ -11,6 +11,7 @@
 #include "Widgets/Tutorial/PanelInfoTutorial.h"
 
 #include <sgl/core/event/MouseEvent.h>
+#include <sgl/utilities/StringManager.h>
 
 namespace game
 {
@@ -21,6 +22,7 @@ StepGameConquerStruct::StepGameConquerStruct(const Player * p, const GameObject 
     , mFocusArea(new FocusArea)
     , mEnergyGen(energyGen)
 {
+    auto sm = sgl::utilities::StringManager::Instance();
 
     // FOCUS
     auto isoObj = mEnergyGen->GetIsoObject();
@@ -38,14 +40,15 @@ StepGameConquerStruct::StepGameConquerStruct(const Player * p, const GameObject 
 
     info->SetPosition(1250, 200);
 
-    info->AddInfoEntry("When your units move they can also conquer structures.",
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_CONQUER_STRUCT_1"),
                        TutorialConstants::colorText, 7.f, true, false);
-    info->AddInfoEntry("For example we can conquer this ENERGY GENERATOR.", TutorialConstants::colorText, 7.f, true, false,
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_CONQUER_STRUCT_2"),
+                       TutorialConstants::colorText, 7.f, true, false,
                        [this]
                        {
                            mFocusArea->SetVisible(true);
                        });
-    info->AddInfoEntry("Click on this generator with the RIGHT MOUSE BUTTON to start the conquest.",
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_CONQUER_STRUCT_3"),
                        TutorialConstants::colorTextAction, 0.f, false, false,
                        [this, objX, objY, objW, objH, energyGen, isoMap, p]
                        {

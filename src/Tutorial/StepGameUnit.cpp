@@ -8,6 +8,8 @@
 #include "Widgets/Tutorial/PanelClickFilter.h"
 #include "Widgets/Tutorial/PanelInfoTutorial.h"
 
+#include <sgl/utilities/StringManager.h>
+
 namespace game
 {
 
@@ -15,6 +17,8 @@ StepGameUnit::StepGameUnit(const Player * p)
     : TutorialInfoStep(580, 200)
     , mFocusArea(new FocusArea)
 {
+    auto sm = sgl::utilities::StringManager::Instance();
+
     // FOCUS
     mFocusArea->SetVisible(false);
 
@@ -23,7 +27,7 @@ StepGameUnit::StepGameUnit(const Player * p)
 
     info->SetPosition(1250, 450);
 
-    info->AddInfoEntry("Now click on its cell with the LEFT MOUSE BUTTON to select it.",
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_UNIT_1"),
                        TutorialConstants::colorTextAction, 0.f, false, false, [this, p]
                        {
                            // FOCUS

@@ -7,6 +7,7 @@
 #include "Widgets/Tutorial/PanelInfoTutorial.h"
 
 #include <sgl/sgui/AbstractButton.h>
+#include <sgl/utilities/StringManager.h>
 
 namespace game
 {
@@ -16,6 +17,8 @@ StepGameMissionGoalsIcon::StepGameMissionGoalsIcon(PanelObjectActions * panel)
     , mFocusArea(new FocusArea)
     , mPanelActions(panel)
 {
+    auto sm = sgl::utilities::StringManager::Instance();
+
     // FOCUS
     mFocusArea->SetCornersColor(TutorialConstants::colorFocusAction);
     mFocusArea->SetBlinking(true);
@@ -26,9 +29,9 @@ StepGameMissionGoalsIcon::StepGameMissionGoalsIcon(PanelObjectActions * panel)
 
     info->SetPosition(290, 550);
 
-    info->AddInfoEntry("For example you can check your mission goals from here.",
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_MISSION_GOALS_ICON_1"),
                        TutorialConstants::colorText, 5.f, true, false);
-    info->AddInfoEntry("Click this button to open the mission goals dialog.",
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_MISSION_GOALS_ICON_2"),
                        TutorialConstants::colorTextAction, 0.f, false, false, [this, panel]
                        {
                            // FOCUS

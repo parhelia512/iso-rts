@@ -8,6 +8,8 @@
 #include "Widgets/Tutorial/PanelClickFilter.h"
 #include "Widgets/Tutorial/PanelInfoTutorial.h"
 
+#include <sgl/utilities/StringManager.h>
+
 namespace
 {
 const int destR = 62;
@@ -21,6 +23,8 @@ StepGameConquerCells::StepGameConquerCells(const Player * p, const IsoMap * isoM
     : TutorialInfoStep(600, 350)
     , mFocusArea(new FocusArea)
 {
+    auto sm = sgl::utilities::StringManager::Instance();
+
     // FOCUS
     mFocusArea->SetVisible(false);
 
@@ -29,14 +33,12 @@ StepGameConquerCells::StepGameConquerCells(const Player * p, const IsoMap * isoM
 
     info->SetPosition(1250, 350);
 
-    info->AddInfoEntry("Moving your mouse around will design a path for your unit to conquer.",
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_CONQUER_CELLS_1"),
                        TutorialConstants::colorText, 8.f, true, false);
-    info->AddInfoEntry("You can set anchor points clicking the RIGHT MOUSE BUTTON and finalize "
-                       "the path with a DOUBLE RIGHT CLICK.", TutorialConstants::colorText, 14.f,
-                       true, false);
-    info->AddInfoEntry("Now move your mouse inside this cell and double click the RIGHT MOUSE BUTTON "
-                       "to start the conquest.", TutorialConstants::colorTextAction,
-                       0.f, false, false, [this, p, isoMap]
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_CONQUER_CELLS_2"),
+                       TutorialConstants::colorText, 14.f, true, false);
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_CONQUER_CELLS_3"),
+                       TutorialConstants::colorTextAction, 0.f, false, false, [this, p, isoMap]
                        {
                            const sgl::core::Pointd2D pos = isoMap->GetCellPosition(destR, destC);
 

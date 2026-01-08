@@ -8,6 +8,8 @@
 #include "Widgets/Tutorial/PanelClickFilter.h"
 #include "Widgets/Tutorial/PanelInfoTutorial.h"
 
+#include <sgl/utilities/StringManager.h>
+
 namespace
 {
 const int destR = 57;
@@ -21,6 +23,8 @@ StepGameMoveUnit::StepGameMoveUnit(const Player * p, const IsoMap * isoMap)
     : TutorialInfoStep(600, 275)
     , mFocusArea(new FocusArea)
 {
+    auto sm = sgl::utilities::StringManager::Instance();
+
     // FOCUS
     mFocusArea->SetVisible(false);
 
@@ -29,10 +33,9 @@ StepGameMoveUnit::StepGameMoveUnit(const Player * p, const IsoMap * isoMap)
 
     info->SetPosition(450, 125);
 
-    info->AddInfoEntry("The default action of your units is MOVE, so let's do that.",
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_MOVE_UNIT_1"),
                        TutorialConstants::colorText, 7.f, true, false);
-    info->AddInfoEntry("Click inside this cell with the RIGHT MOUSE BUTTON to move next "
-                       "to that spiky structure.",
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_MOVE_UNIT_2"),
                        TutorialConstants::colorTextAction, 0.f, false, false, [this, p, isoMap]
                        {
                            const sgl::core::Pointd2D pos = isoMap->GetCellPosition(destR, destC);

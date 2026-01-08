@@ -9,6 +9,7 @@
 
 #include <sgl/sgui/AbstractButton.h>
 #include <sgl/sgui/ButtonsGroup.h>
+#include <sgl/utilities/StringManager.h>
 
 namespace game
 {
@@ -17,6 +18,8 @@ StepGameTurnEnergy::StepGameTurnEnergy(const GameHUD * HUD)
     : TutorialInfoStep(650, 350)
     , mFocusArea(new FocusArea)
 {
+    auto sm = sgl::utilities::StringManager::Instance();
+
     // FOCUS
     mFocusArea->SetCornersColor(TutorialConstants::colorFocusElement);
     mFocusArea->SetVisible(false);
@@ -26,11 +29,11 @@ StepGameTurnEnergy::StepGameTurnEnergy(const GameHUD * HUD)
 
     info->SetPosition(1250, 550);
 
-    info->AddInfoEntry("Now this energy generator is under your control.",
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_TURN_ENERGY_1"),
                        TutorialConstants::colorText, 9.f, true, true);
-    info->AddInfoEntry("Always remember that your faction has a limited amount of energy to spend "
-                       "each turn.", TutorialConstants::colorText, 10.f, true, false);
-    info->AddInfoEntry("This big bar down below shows your remaining faction energy.",
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_TURN_ENERGY_2"),
+                       TutorialConstants::colorText, 10.f, true, false);
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_TURN_ENERGY_3"),
                        TutorialConstants::colorText, 8.f, true, false, [this, HUD]
                        {
                            // FOCUS
@@ -45,8 +48,7 @@ StepGameTurnEnergy::StepGameTurnEnergy(const GameHUD * HUD)
                            mFocusArea->SetVisible(true);
                            mFocusArea->SetBlinking(true);
                        });
-    info->AddInfoEntry("You also need to consider the energy of your units or structures, "
-                       "which you can find in the object panel.",
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_TURN_ENERGY_4"),
                        TutorialConstants::colorText, 10.f, true, false, [this, HUD]
                        {
                            // FOCUS
@@ -61,7 +63,7 @@ StepGameTurnEnergy::StepGameTurnEnergy(const GameHUD * HUD)
                            mFocusArea->SetVisible(true);
                            mFocusArea->SetBlinking(true);
                        });
-    info->AddInfoEntry("Basic stats of your units are also available in their quick selection buttons",
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_TURN_ENERGY_5"),
                        TutorialConstants::colorText, 8.f, true, false,
                        [this, HUD]
                        {

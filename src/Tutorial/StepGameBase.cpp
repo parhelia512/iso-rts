@@ -7,6 +7,8 @@
 #include "Widgets/Tutorial/PanelClickFilter.h"
 #include "Widgets/Tutorial/PanelInfoTutorial.h"
 
+#include <sgl/utilities/StringManager.h>
+
 namespace game
 {
 
@@ -15,6 +17,8 @@ StepGameBase::StepGameBase(const Base * b)
     , mFocusArea(new FocusArea)
     , mBase(b)
 {
+    auto sm = sgl::utilities::StringManager::Instance();
+
     // FOCUS
     auto isoObj = mBase->GetIsoObject();
     const int objX = isoObj->GetX();
@@ -31,10 +35,12 @@ StepGameBase::StepGameBase(const Base * b)
 
     info->SetPosition(1150, 400);
 
-    info->AddInfoEntry("This is your base.", TutorialConstants::colorText, 4.f, true, false);
-    info->AddInfoEntry("You must protect it at all costs because if "
-                       "destroyed you are defeated.", TutorialConstants::colorText, 7.f, true, false);
-    info->AddInfoEntry("Select it with the LEFT MOUSE BUTTON", TutorialConstants::colorTextAction, 0.f, false, false);
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_BASE_1"),
+                       TutorialConstants::colorText, 4.f, true, false);
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_BASE_2"),
+                       TutorialConstants::colorText, 7.f, true, false);
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_BASE_3"),
+                       TutorialConstants::colorTextAction, 0.f, false, false);
 
     info->SetFunctionOnFinished([this, objX, objY, objW, objH]
     {

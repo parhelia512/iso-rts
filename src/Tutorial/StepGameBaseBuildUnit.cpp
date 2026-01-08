@@ -9,6 +9,7 @@
 
 #include <sgl/sgui/AbstractButton.h>
 #include <sgl/sgui/Stage.h>
+#include <sgl/utilities/StringManager.h>
 
 namespace game
 {
@@ -18,6 +19,8 @@ StepGameBaseBuildUnit::StepGameBaseBuildUnit(GameHUD * HUD)
     , mFocusArea(new FocusArea)
     , mHUD(HUD)
 {
+    auto sm = sgl::utilities::StringManager::Instance();
+
     // FOCUS
     mFocusArea->SetCornersColor(TutorialConstants::colorFocusAction);
     mFocusArea->SetBlinking(true);
@@ -28,11 +31,11 @@ StepGameBaseBuildUnit::StepGameBaseBuildUnit(GameHUD * HUD)
 
     info->SetPosition(40, 810);
 
-    info->AddInfoEntry("You can decide what unit to build using this dialog.",
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_BASE_BUILD_UNIT_1"),
+                       TutorialConstants::colorText, 8.f, true, false);
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_BASE_BUILD_UNIT_2"),
                        TutorialConstants::colorText, 7.f, true, false);
-    info->AddInfoEntry("Let's start with a worker unit.",
-                       TutorialConstants::colorText, 7.f, true, false);
-    info->AddInfoEntry("Click the button BUILD to create one.",
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_BASE_BUILD_UNIT_3"),
                        TutorialConstants::colorTextAction, 0.f, false, false, [this, HUD]
                        {
                            auto dialog = HUD->GetDialogNewElement();

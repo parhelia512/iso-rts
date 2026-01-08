@@ -3,25 +3,29 @@
 #include "Tutorial/TutorialConstants.h"
 #include "Widgets/Tutorial/PanelInfoTutorial.h"
 
+#include <sgl/utilities/StringManager.h>
+
 namespace game
 {
 
 StepGameStructDisconnected::StepGameStructDisconnected()
     : TutorialInfoStep(600, 350)
 {
+    auto sm = sgl::utilities::StringManager::Instance();
+
     // INFO
     auto info = GetPanelInfo();
 
     info->SetPosition(1250, 250);
 
-    info->AddInfoEntry("Now let's go back to your conquest!",
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_STRUCT_DISCONNECTED_1"),
                        TutorialConstants::colorText, 6.f, true, true);
-    info->AddInfoEntry("You might have noticed the blinking icon on top of the energy generator.",
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_STRUCT_DISCONNECTED_2"),
                        TutorialConstants::colorText, 7.f, true, false);
-    info->AddInfoEntry("That means that this structure is not connected to your base yet, hence "
-                       "it's not active.", TutorialConstants::colorText, 7.f, true, false);
-    info->AddInfoEntry("To connect a structure to your base you need to create a path of conquered "
-                       "cells with your unit.", TutorialConstants::colorText, 11.f, true, false);
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_STRUCT_DISCONNECTED_3"),
+                       TutorialConstants::colorText, 7.f, true, false);
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_STRUCT_DISCONNECTED_4"),
+                       TutorialConstants::colorText, 11.f, true, false);
 
     info->SetFunctionOnFinished([this]
     {

@@ -7,6 +7,7 @@
 #include "Widgets/Tutorial/PanelInfoTutorial.h"
 
 #include <sgl/sgui/AbstractButton.h>
+#include <sgl/utilities/StringManager.h>
 
 namespace game
 {
@@ -16,6 +17,8 @@ StepGameUnitConquerCellsIcon::StepGameUnitConquerCellsIcon(PanelObjectActions * 
     , mFocusArea(new FocusArea)
     , mPanelActions(panel)
 {
+    auto sm = sgl::utilities::StringManager::Instance();
+
     // FOCUS
     mFocusArea->SetCornersColor(TutorialConstants::colorFocusAction);
     mFocusArea->SetBlinking(true);
@@ -26,7 +29,7 @@ StepGameUnitConquerCellsIcon::StepGameUnitConquerCellsIcon(PanelObjectActions * 
 
     info->SetPosition(1100, 600);
 
-    info->AddInfoEntry("First click this button to set your unit's action to CELL CONQUEST.",
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_UNIT_CONQUE_CELLS_ICON_1"),
                        TutorialConstants::colorTextAction, 0.f, false, false, [this, panel]
                        {
                            // FOCUS

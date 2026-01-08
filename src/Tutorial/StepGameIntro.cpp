@@ -3,20 +3,24 @@
 #include "Tutorial/TutorialConstants.h"
 #include "Widgets/Tutorial/PanelInfoTutorial.h"
 
+#include <sgl/utilities/StringManager.h>
+
 namespace game
 {
 
 StepGameIntro::StepGameIntro()
     : TutorialInfoStep(550, 250)
 {
+    auto sm = sgl::utilities::StringManager::Instance();
+
     // INFO
     auto info = GetPanelInfo();
 
     info->SetPosition(200, 100);
 
-    info->AddInfoEntry("Welcome commander,",
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_INTRO_1"),
                        TutorialConstants::colorText, 4.f, true, false);
-    info->AddInfoEntry("I am your field assistant and I am going to guide you during your first mission.",
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_INTRO_2"),
                        TutorialConstants::colorText, 7.f, true, false);
 
     info->SetFunctionOnFinished([this]

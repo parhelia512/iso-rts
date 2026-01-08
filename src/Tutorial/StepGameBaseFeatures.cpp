@@ -6,6 +6,8 @@
 #include "Widgets/Tutorial/FocusArea.h"
 #include "Widgets/Tutorial/PanelInfoTutorial.h"
 
+#include <sgl/utilities/StringManager.h>
+
 namespace game
 {
 
@@ -14,6 +16,8 @@ StepGameBaseFeatures::StepGameBaseFeatures(const PanelSelectedObject * panelObj,
     : TutorialInfoStep(660, 250)
     , mFocusArea(new FocusArea)
 {
+    auto sm = sgl::utilities::StringManager::Instance();
+
     // FOCUS
     const int padding = 10;
     const int fX = panelObj->GetX();
@@ -30,15 +34,13 @@ StepGameBaseFeatures::StepGameBaseFeatures(const PanelSelectedObject * panelObj,
 
     info->SetPosition(150, 400);
 
-    info->AddInfoEntry("When you select something this panel will show all basic stats and "
-                       "it will give you access to the full info panel of that object.",
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_BASE_FEATURES_1"),
                        TutorialConstants::colorText, 13.f, true, false, [this]
                        {
                            mFocusArea->SetBlinking(true);
                            mFocusArea->SetVisible(true);
                        });
-    info->AddInfoEntry("At the bottom of the screen you will see all possible actions of "
-                       "the object you selected.",
+    info->AddInfoEntry(sm->GetCString("TUT_GAME_BASE_FEATURES_2"),
                        TutorialConstants::colorText, 9.f, true, false, [this, panelActions, padding]
                        {
                            const int fX = panelActions->GetX() - padding;
