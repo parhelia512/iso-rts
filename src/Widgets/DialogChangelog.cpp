@@ -211,9 +211,26 @@ ButtonChangelog::ButtonChangelog()
     auto sm = utilities::StringManager::Instance();
     auto fm = graphic::FontManager::Instance();
     auto font = fm->GetFont(WidgetsConstants::FontFileText, 18, graphic::Font::NORMAL);
+
+    // hack to make text vertical adding new lines after every character
+    const std::string & text = sm->GetString("UPDATES");
+    const unsigned int lenText = text.length();
+    const unsigned int endText = lenText - 1;
+    std::string vtext((lenText * 2) - 1, 0);
+
+    for(unsigned int i = 0; i < endText; ++i)
+    {
+        vtext[i * 2] = text[i];
+        vtext[(i * 2) + 1] = '\n';
+    }
+
+    // add last chracter
+    vtext[vtext.length() - 1] = text[lenText - 1];
+
+    // create text area
     mLabel = new sgui::TextArea(GetWidth(), GetHeight(), font, false, this);
     mLabel->setTextAlignment(sgui::TextArea::ALIGN_H_CENTER, sgui::TextArea::ALIGN_V_CENTER);
-    mLabel->SetText(sm->GetCString("UPDATES_V"));
+    mLabel->SetText(vtext.c_str());
 
     UpdateLabel(sgui::AbstractButton::VisualState::NORMAL);
 }
