@@ -60,8 +60,8 @@ StepPlanetMapExploreTerritorySuccess::StepPlanetMapExploreTerritorySuccess(const
 
     info->SetPosition(TutorialConstants::infoPlanetMapX, TutorialConstants::infoPlanetMapY);
 
-    info->AddInfoEntry("Exploration was successful and now you can see several detailed "
-                       "info in the RESOURCES and INFO panels.", TutorialConstants::colorText, 8.f, true, true);
+    info->AddInfoEntry("Exploration was successful and now you can see some data in the RESOURCES "
+                       "and INFO panels.", TutorialConstants::colorText, 8.f, true, true);
     info->AddInfoEntry("Click the button CLOSE to go back to the actions panel.",
                        TutorialConstants::colorTextAction, 0.f, false, false, [this, fX, fY, fW, fH]
                        {

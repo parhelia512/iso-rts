@@ -36,8 +36,8 @@ StepPlanetMapSelectTerritory::StepPlanetMapSelectTerritory(PlanetMap * planet, b
 
     info->AddInfoEntry("Let's start to explore a territory of this planet.",
                        TutorialConstants::colorText, 6.f, true, true);
-    info->AddInfoEntry("Select this one in the top with the LEFT MOUSE BUTTON", TutorialConstants::colorTextAction,
-                       0.f, false, false);
+    info->AddInfoEntry("Select this one with the LEFT MOUSE BUTTON",
+                       TutorialConstants::colorTextAction, 0.f, false, false);
 
     info->SetFunctionOnFinished([this, fX, fY, fW, fH]
     {

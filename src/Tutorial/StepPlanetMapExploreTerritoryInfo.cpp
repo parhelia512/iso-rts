@@ -16,9 +16,9 @@ StepPlanetMapExploreTerritoryInfo::StepPlanetMapExploreTerritoryInfo()
 
     info->SetPosition(TutorialConstants::infoPlanetMapX, TutorialConstants::infoPlanetMapY);
 
-    info->AddInfoEntry("As you can see exploring a territory requires to spend some resources.",
+    info->AddInfoEntry("As you can see, exploring a territory requires some resources.",
                        TutorialConstants::colorText, 7.f, true, true);
-    info->AddInfoEntry("But it's well worth it as it reveals all the important details.",
+    info->AddInfoEntry("But it's well worth it as it reveals some important data.",
                        TutorialConstants::colorText, 7.f, true, true);
 
     info->SetFunctionOnFinished([this]
