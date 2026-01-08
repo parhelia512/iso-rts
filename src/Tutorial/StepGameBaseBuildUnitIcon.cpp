@@ -28,8 +28,6 @@ StepGameBaseBuildUnitIcon::StepGameBaseBuildUnitIcon(PanelObjectActions * panel)
 
     info->AddInfoEntry("You can also create worker units with your base.",
                        TutorialConstants::colorText, 5.f, true, false);
-    info->AddInfoEntry("Let's create a new one now.",
-                       TutorialConstants::colorText, 4.f, true, false);
     info->AddInfoEntry("Click this button to open the new units dialog.",
                        TutorialConstants::colorTextAction, 0.f, false, false, [this, panel]
                        {

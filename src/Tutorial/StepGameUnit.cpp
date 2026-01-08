@@ -23,8 +23,7 @@ StepGameUnit::StepGameUnit(const Player * p)
 
     info->SetPosition(1250, 450);
 
-    info->AddInfoEntry("Well done commander, this is your first unit!", TutorialConstants::colorText, 5.f, true, false);
-    info->AddInfoEntry("Now select it by clicking on its cell with the LEFT MOUSE BUTTON.",
+    info->AddInfoEntry("Now click on its cell with the LEFT MOUSE BUTTON to select it.",
                        TutorialConstants::colorTextAction, 0.f, false, false, [this, p]
                        {
                            // FOCUS

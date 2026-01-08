@@ -38,14 +38,14 @@ StepGameConquerStruct::StepGameConquerStruct(const Player * p, const GameObject 
 
     info->SetPosition(1250, 200);
 
-    info->AddInfoEntry("When your unit action is set to MOVE you can also conquer structures.",
+    info->AddInfoEntry("When your units move they can also conquer structures.",
                        TutorialConstants::colorText, 7.f, true, false);
     info->AddInfoEntry("For example we can conquer this ENERGY GENERATOR.", TutorialConstants::colorText, 7.f, true, false,
                        [this]
                        {
                            mFocusArea->SetVisible(true);
                        });
-    info->AddInfoEntry("Click on the generator with the RIGHT MOUSE BUTTON to start the conquest.",
+    info->AddInfoEntry("Click on this generator with the RIGHT MOUSE BUTTON to start the conquest.",
                        TutorialConstants::colorTextAction, 0.f, false, false,
                        [this, objX, objY, objW, objH, energyGen, isoMap, p]
                        {

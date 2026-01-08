@@ -30,12 +30,13 @@ StepGameConquerCells::StepGameConquerCells(const Player * p, const IsoMap * isoM
     info->SetPosition(1250, 350);
 
     info->AddInfoEntry("Moving your mouse around will design a path for your unit to conquer.",
-                       TutorialConstants::colorText, 7.f, true, false);
+                       TutorialConstants::colorText, 8.f, true, false);
     info->AddInfoEntry("You can set anchor points clicking the RIGHT MOUSE BUTTON and finalize "
-                       "the path with a double click.", TutorialConstants::colorText, 14.f, true, false);
-    info->AddInfoEntry("Now move your mouse inside this cell and double click the RIGHT MOUSE BUTTON to "
-                       "start the conquest.", TutorialConstants::colorTextAction, 0.f, false, false,
-                       [this, p, isoMap]
+                       "the path with a DOUBLE RIGHT CLICK.", TutorialConstants::colorText, 14.f,
+                       true, false);
+    info->AddInfoEntry("Now move your mouse inside this cell and double click the RIGHT MOUSE BUTTON "
+                       "to start the conquest.", TutorialConstants::colorTextAction,
+                       0.f, false, false, [this, p, isoMap]
                        {
                            const sgl::core::Pointd2D pos = isoMap->GetCellPosition(destR, destC);
 

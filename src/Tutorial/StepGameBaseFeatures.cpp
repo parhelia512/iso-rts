@@ -30,16 +30,15 @@ StepGameBaseFeatures::StepGameBaseFeatures(const PanelSelectedObject * panelObj,
 
     info->SetPosition(150, 400);
 
-    info->AddInfoEntry("Well done commander, you selected your base!",
-                       TutorialConstants::colorText, 5.f, true, true);
-    info->AddInfoEntry("When you select something this panel will appear in the top-left corner showing "
-                       "several stats and giving you access to the full info panel for that object.",
+    info->AddInfoEntry("When you select something this panel will show all basic stats and "
+                       "it will give you access to the full info panel of that object.",
                        TutorialConstants::colorText, 13.f, true, false, [this]
                        {
                            mFocusArea->SetBlinking(true);
                            mFocusArea->SetVisible(true);
                        });
-    info->AddInfoEntry("At the bottom of the screen you will see all the actions of the object you selected.",
+    info->AddInfoEntry("At the bottom of the screen you will see all possible actions of "
+                       "the object you selected.",
                        TutorialConstants::colorText, 9.f, true, false, [this, panelActions, padding]
                        {
                            const int fX = panelActions->GetX() - padding;

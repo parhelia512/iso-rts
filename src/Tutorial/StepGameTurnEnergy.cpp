@@ -26,12 +26,12 @@ StepGameTurnEnergy::StepGameTurnEnergy(const GameHUD * HUD)
 
     info->SetPosition(1250, 550);
 
-    info->AddInfoEntry("Well done commander!\nNow this energy generator is under your control and we "
-                       "can keep going.", TutorialConstants::colorText, 9.f, true, true);
-    info->AddInfoEntry("Always remember that your faction has a limited amount of energy to spend for "
-                       "units and structures each turn.", TutorialConstants::colorText, 10.f, true, false);
-    info->AddInfoEntry("The big bar in this panel shows your remaining faction energy.", TutorialConstants::colorText,
-                       8.f, true, false, [this, HUD]
+    info->AddInfoEntry("Now this energy generator is under your control.",
+                       TutorialConstants::colorText, 9.f, true, true);
+    info->AddInfoEntry("Always remember that your faction has a limited amount of energy to spend "
+                       "each turn.", TutorialConstants::colorText, 10.f, true, false);
+    info->AddInfoEntry("This big bar down below shows your remaining faction energy.",
+                       TutorialConstants::colorText, 8.f, true, false, [this, HUD]
                        {
                            // FOCUS
                            const auto panel = HUD->GetPanelTurnControl();
@@ -45,8 +45,9 @@ StepGameTurnEnergy::StepGameTurnEnergy(const GameHUD * HUD)
                            mFocusArea->SetVisible(true);
                            mFocusArea->SetBlinking(true);
                        });
-    info->AddInfoEntry("You also need to consider the energy of your units or structures, which you can "
-                       "track in the object panel.", TutorialConstants::colorText, 10.f, true, false, [this, HUD]
+    info->AddInfoEntry("You also need to consider the energy of your units or structures, "
+                       "which you can find in the object panel.",
+                       TutorialConstants::colorText, 10.f, true, false, [this, HUD]
                        {
                            // FOCUS
                            const auto panel = HUD->GetPanelSelectedObject();
@@ -60,7 +61,8 @@ StepGameTurnEnergy::StepGameTurnEnergy(const GameHUD * HUD)
                            mFocusArea->SetVisible(true);
                            mFocusArea->SetBlinking(true);
                        });
-    info->AddInfoEntry("You can also see it in the quick selection button.", TutorialConstants::colorText, 8.f, true, false,
+    info->AddInfoEntry("Basic stats of your units are also available in their quick selection buttons",
+                       TutorialConstants::colorText, 8.f, true, false,
                        [this, HUD]
                        {
                            // FOCUS

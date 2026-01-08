@@ -29,11 +29,10 @@ StepGameMoveUnit::StepGameMoveUnit(const Player * p, const IsoMap * isoMap)
 
     info->SetPosition(450, 125);
 
-    info->AddInfoEntry("Now that your unit is selected you can do several things with it.",
+    info->AddInfoEntry("The default action of your units is MOVE, so let's do that.",
                        TutorialConstants::colorText, 7.f, true, false);
-    info->AddInfoEntry("The default action is MOVE, so let's start with that.",
-                       TutorialConstants::colorText, 7.f, true, false);
-    info->AddInfoEntry("Click inside this cell with the RIGHT MOUSE BUTTON to move next to that spiky structure.",
+    info->AddInfoEntry("Click inside this cell with the RIGHT MOUSE BUTTON to move next "
+                       "to that spiky structure.",
                        TutorialConstants::colorTextAction, 0.f, false, false, [this, p, isoMap]
                        {
                            const sgl::core::Pointd2D pos = isoMap->GetCellPosition(destR, destC);

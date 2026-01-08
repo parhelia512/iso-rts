@@ -28,9 +28,9 @@ StepGameBaseBuildUnit::StepGameBaseBuildUnit(GameHUD * HUD)
 
     info->SetPosition(40, 810);
 
-    info->AddInfoEntry("You can choose what unit you want to build using this dialog.",
+    info->AddInfoEntry("You can decide what unit to build using this dialog.",
                        TutorialConstants::colorText, 7.f, true, false);
-    info->AddInfoEntry("You can only build worker units for now, so let's do that!",
+    info->AddInfoEntry("Let's start with a worker unit.",
                        TutorialConstants::colorText, 7.f, true, false);
     info->AddInfoEntry("Click the button BUILD to create one.",
                        TutorialConstants::colorTextAction, 0.f, false, false, [this, HUD]
