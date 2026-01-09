@@ -2,6 +2,8 @@
 
 #include "GameConstants.h"
 
+#include <sgl/utilities/StringManager.h>
+
 #include <cstddef>
 #include <sstream>
 
@@ -38,32 +40,18 @@ const MissionGoalType MissionGoal::TYPE_MINE_ENERGY = h{}(STR_MINE_ENERGY);
 const MissionGoalType MissionGoal::TYPE_MINE_MATERIAL = h{}(STR_MINE_MATERIAL);
 const MissionGoalType MissionGoal::TYPE_RESIST_TIME = h{}(STR_RESIST_TIME);
 
-const std::unordered_map<MissionGoalType, std::string> MissionGoal::TITLE =
-{
-    { TYPE_NULL, "UNKNOWN" },
-    { TYPE_COLLECT_BLOBS, "COLLECT BLOBS" },
-    { TYPE_COLLECT_DIAMONDS, "COLLECT DIAMONDS" },
-    { TYPE_COMPLETE_TUTORIAL, "COMPLETE THE TUTORIAL" },
-    { TYPE_DESTROY_ENEMY_BASE, "DESTROY ENEMY BASE" },
-    { TYPE_DESTROY_ALL_ENEMIES, "DESTROY ALL ENEMIES" },
-    { TYPE_GAIN_MONEY, "GAIN MONEY" },
-    { TYPE_MINE_ENERGY, "MINE ENERGY" },
-    { TYPE_MINE_MATERIAL, "MINE MATERIAL" },
-    { TYPE_RESIST_TIME, "WAIT AND HOLD" },
-};
-
 const std::unordered_map<MissionGoalType, std::string> MissionGoal::DESCRIPTION =
 {
-    { TYPE_NULL, "UNKNOWN" },
-    { TYPE_COLLECT_BLOBS, "COLLECT %VAL% BLOBS" },
-    { TYPE_COLLECT_DIAMONDS, "COLLECT %VAL% DIAMONDS" },
-    { TYPE_COMPLETE_TUTORIAL, "FOLLOW AND PLAY EVERY STEP OF THE TUTORIAL FOR THIS MAP" },
-    { TYPE_DESTROY_ENEMY_BASE, "DESTROY ALL ENEMY BASE" },
-    { TYPE_DESTROY_ALL_ENEMIES, "DESTROY ALL ENEMY UNITS" },
-    { TYPE_GAIN_MONEY, "GAIN %VAL% MONEY" },
-    { TYPE_MINE_ENERGY, "MINE %VAL% UNITS OF ENERGY" },
-    { TYPE_MINE_MATERIAL, "MINE %VAL% UNITS OF MATERIAL" },
-    { TYPE_RESIST_TIME, "WAIT AND HOLD FOR %VAL% MINUTES" },
+    { TYPE_NULL, "MG_UNKNOWN" },
+    { TYPE_COLLECT_BLOBS, "MG_COLLECT_BLOBS" },
+    { TYPE_COLLECT_DIAMONDS, "MG_COLLECT_DIAMONDS" },
+    { TYPE_COMPLETE_TUTORIAL, "MG_COMPLETE_TUTORIAL" },
+    { TYPE_DESTROY_ENEMY_BASE, "MG_DESTROY_ENEMY_BASE" },
+    { TYPE_DESTROY_ALL_ENEMIES, "MG_DESTROY_ALL_ENEMIES" },
+    { TYPE_GAIN_MONEY, "MG_GAIN_MONEY" },
+    { TYPE_MINE_ENERGY, "MG_MINE_ENERGY" },
+    { TYPE_MINE_MATERIAL, "MG_MINE_MATERIAL" },
+    { TYPE_RESIST_TIME, "MG_RESIST_TIME" },
 };
 
 const std::unordered_map<MissionGoalType, std::string> MissionGoal::STRINGS =
@@ -127,12 +115,14 @@ void MissionGoal::SetRewardCollected()
 
 const std::string MissionGoal::GetDescription() const
 {
+    auto sm = sgl::utilities::StringManager::Instance();
+
     const auto it = DESCRIPTION.find(mType);
 
     if(it == DESCRIPTION.end())
-        return DESCRIPTION.find(TYPE_NULL)->second;
+        return sm->GetString(DESCRIPTION.find(TYPE_NULL)->second);
 
-    const std::string & d = it->second;
+    const std::string & d = sm->GetString(it->second);
     const size_t indTag = d.find(TAG_VALUE);
 
     if(indTag != std::string::npos)

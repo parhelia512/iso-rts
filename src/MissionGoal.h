@@ -69,6 +69,7 @@ public:
     void SetRewardByType(MissionReward r, int val);
 
     // STRINGS
+    // NOTE return string is already transformed with quantity and translated
     const std::string GetDescription() const;
 
 private:
@@ -85,7 +86,6 @@ private:
     static const std::string STR_RESIST_TIME;
 
     static const std::string TAG_VALUE;
-    static const std::unordered_map<MissionGoalType, std::string> TITLE;
     static const std::unordered_map<MissionGoalType, std::string> DESCRIPTION;
     static const std::unordered_map<MissionGoalType, std::string> STRINGS;
 
