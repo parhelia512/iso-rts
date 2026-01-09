@@ -28,6 +28,7 @@
 #include <sgl/sgui/Image.h>
 #include <sgl/sgui/Label.h>
 #include <sgl/sgui/TextArea.h>
+#include <sgl/utilities/StringManager.h>
 
 #include <cassert>
 
@@ -338,6 +339,7 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
 
     auto fm = graphic::FontManager::Instance();
     auto tm = graphic::TextureManager::Instance();
+    auto sm = utilities::StringManager::Instance();
 
     const int marginL = 40;
     const int marginT = 8;
@@ -416,9 +418,9 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
     auto font = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 28, sgl::graphic::Font::NORMAL);
 
     if(ETYPE_STRUCTURES == type)
-        mTitle = new sgui::Label("CREATE NEW STRUCTURE", font, this);
+        mTitle = new sgui::Label(sm->GetCString("CREATE_NEW_STRUCTURE"), font, this);
     else
-        mTitle = new sgui::Label("CREATE NEW UNIT", font, this);
+        mTitle = new sgui::Label(sm->GetCString("CREATE_NEW_UNIT"), font, this);
 
     mTitle->SetColor(0xf1f2f4ff);
     mTitle->SetPosition(marginL, marginT);
@@ -501,7 +503,7 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
     const int marginPanelDataV = 5;
 
     // header DESCRIPTION
-    auto headerDesc = new sgui::Label("DESCRIPTION", fontHeader, panelInfo);
+    auto headerDesc = new sgui::Label(sm->GetCString("DESCRIPTION"), fontHeader, panelInfo);
     headerDesc->SetColor(colorHeader);
     headerDesc->SetPosition(marginPanelXY0, marginPanelXY0);
 
@@ -517,7 +519,7 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
     contY += mDescription->GetHeight() + marginPanelBlock;
 
     // header category
-    auto headerCat = new sgui::Label("CATEGORY", fontHeader, panelInfo);
+    auto headerCat = new sgui::Label(sm->GetCString("CATEGORY"), fontHeader, panelInfo);
     headerCat->SetColor(colorHeader);
     headerCat->SetPosition(marginPanelXY0, contY);
 
@@ -531,7 +533,7 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
     contY += mCategory->GetHeight() + marginPanelBlock;
 
     // header cost
-    headerCat = new sgui::Label("COST", fontHeader, panelInfo);
+    headerCat = new sgui::Label(sm->GetCString("COST"), fontHeader, panelInfo);
     headerCat->SetColor(colorHeader);
     headerCat->SetPosition(marginPanelXY0, contY);
 
@@ -622,7 +624,7 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
     }
 
     // BUTTON BUILD
-    mBtnBuild = new ButtonDialogAction("BUILD", "B", core::KeyboardEvent::KEY_B, this);
+    mBtnBuild = new ButtonDialogAction(sm->GetCString("BUILD"), "B", core::KeyboardEvent::KEY_B, this);
     const ObjectVisualAttribute * lastPanel = mVisAtt[NUM_VIS_ATT - 1];
     const int btnX = lastPanel->GetX() + lastPanel->GetWidth() - mBtnBuild->GetWidth();
     const int marginBtnTop = 15;
@@ -637,25 +639,25 @@ DialogNewElement::DialogNewElement(ElemType type, Player * player,
         const int btnY = 55;
         int btnX = marginL;
 
-        auto btn = new ButtonPanelTab("GENERIC", this);
+        auto btn = new ButtonPanelTab(sm->GetCString("GENERIC_STRUCT"), this);
         btn->SetPosition(btnX, btnY);
         mButtonsStructures->AddButton(btn);
 
         btnX += btn->GetWidth();
 
-        btn = new ButtonPanelTab("DEFENSE", this);
+        btn = new ButtonPanelTab(sm->GetCString("DEFENSE"), this);
         btn->SetPosition(btnX, btnY);
         mButtonsStructures->AddButton(btn);
 
         btnX += btn->GetWidth();
 
-        btn = new ButtonPanelTab("RESOURCES", this);
+        btn = new ButtonPanelTab(sm->GetCString("RESOURCES"), this);
         btn->SetPosition(btnX, btnY);
         mButtonsStructures->AddButton(btn);
 
         btnX += btn->GetWidth();
 
-        btn = new ButtonPanelTab("TECHNOLOGY", this);
+        btn = new ButtonPanelTab(sm->GetCString("TECHNOLOGY"), this);
         btn->SetPosition(btnX, btnY);
         mButtonsStructures->AddButton(btn);
 
