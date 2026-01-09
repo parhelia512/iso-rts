@@ -32,7 +32,6 @@ enum ObjClass : unsigned int
     OCMU_SOLDIER,
 
     // UNITS
-    OCU_GENERIC,
     OCU_MEDIC,
     OCU_SOLDIER,
     OCU_SPAWNER,

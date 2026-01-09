@@ -737,6 +737,7 @@ void DialogNewElement::UpdateSlots()
     const int limitData = leftData < NUM_SLOTS ? leftData : NUM_SLOTS;
 
     auto tm = sgl::graphic::TextureManager::Instance();
+    auto sm = sgl::utilities::StringManager::Instance();
 
     for(int i = 0; i < limitData; ++i)
     {
@@ -748,7 +749,7 @@ void DialogNewElement::UpdateSlots()
         const ObjectData & data = mDataReg->GetObjectData(t);
 
         auto tex = tm->GetSprite(data.GetIconTexFile(), data.GetIconTexId(f));
-        slot->SetData(ObjectData::TITLES.at(t).c_str(), tex);
+        slot->SetData(sm->GetCString(ObjectData::TITLES.at(t)), tex);
 
         // check first
         slot->SetChecked(false);
@@ -794,11 +795,13 @@ void DialogNewElement::ShowData(int ind)
     const PlayerFaction f = mPlayer->GetFaction();
     const ObjectData & data = mDataReg->GetObjectData(t);
 
+    auto sm = sgl::utilities::StringManager::Instance();
+
     // DESCRIPTION
-    mDescription->SetText(ObjectData::DESCRIPTIONS.at(t).c_str());
+    mDescription->SetText(sm->GetCString(ObjectData::DESCRIPTIONS.at(t)));
 
     // CLASS
-    mCategory->SetText(ObjectData::STR_CLASS[data.GetClass()]);
+    mCategory->SetText(sm->GetCString(ObjectData::STR_CLASS[data.GetClass()]));
 
     // COSTS
     const auto & costs = data.GetCosts();
@@ -814,7 +817,7 @@ void DialogNewElement::ShowData(int ind)
         const int val = data.GetAttribute(static_cast<ObjAttId>(i));
 
         if(val > 0)
-            mVisAtt[attsAdded++]->SetData(ObjectData::STR_ATTRIBUTES[i], val);
+            mVisAtt[attsAdded++]->SetData(sm->GetCString(ObjectData::STR_ATTRIBUTES[i]), val);
     }
 
     // WEAPON ATTRIBUTES

@@ -19,11 +19,11 @@ PanelObjectActions::PanelObjectActions(sgl::sgui::Widget * parent)
 
     // create all buttons
     mButtons[BTN_BUILD_UNIT_BARRACKS] = new ObjectActionButton(ObjectActionButton::UNITS, "U", KeyboardEvent::KEY_U,
-                                                               "Create a new soldier", this);
+                                                               "Create a new unit", this);
     mButtons[BTN_BUILD_UNIT_BASE] = new ObjectActionButton(ObjectActionButton::UNITS, "U", KeyboardEvent::KEY_U,
-                                                           "Create a new worker", this);
+                                                           "Create a new unit", this);
     mButtons[BTN_BUILD_UNIT_HOSPITAL] = new ObjectActionButton(ObjectActionButton::UNITS, "U", KeyboardEvent::KEY_U,
-                                                               "Create a new medic", this);
+                                                               "Create a new unit", this);
     mButtons[BTN_MISSION_GOALS] = new ObjectActionButton(ObjectActionButton::MISSION_GOALS, "G", KeyboardEvent::KEY_G,
                                                          "Show mission goals", this);
     mButtons[BTN_MOVE] = new ObjectActionButton(ObjectActionButton::MOVE, "M", KeyboardEvent::KEY_M,
