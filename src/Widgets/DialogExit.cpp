@@ -19,6 +19,7 @@
 #include <sgl/media/AudioManager.h>
 #include <sgl/media/AudioPlayer.h>
 #include <sgl/sgui/ImageButton.h>
+#include <sgl/utilities/StringManager.h>
 #include <sgl/utilities/System.h>
 
 // anonymous namespace for local "private" classes
@@ -112,9 +113,10 @@ public:
 
         // TEXT LABEL
         // TODO use setLabel after adding support for icon to PushButton
+        auto sm = utilities::StringManager::Instance();
         auto fm = graphic::FontManager::Instance();
         auto font = fm->GetFont(WidgetsConstants::FontFileButton, 18, graphic::Font::NORMAL);
-        mText = new graphic::Text("WISHLIST NOW", font, true);
+        mText = new graphic::Text(sm->GetCString("WL_NOW"), font, true);
         RegisterRenderable(mText);
 
         // init to normal state
@@ -236,6 +238,7 @@ DialogExit::DialogExit(DialogButtons buttons, Game * game, Screen * screen)
 
     auto fm = graphic::FontManager::Instance();
     auto tm = graphic::TextureManager::Instance();
+    auto sm = utilities::StringManager::Instance();
 
     const int marginL = 40;
     const int marginT = 8;
@@ -255,7 +258,7 @@ DialogExit::DialogExit(DialogButtons buttons, Game * game, Screen * screen)
 
     // TITLE
     auto font = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 28, graphic::Font::NORMAL);
-    mTitle = new graphic::Text("LEAVE", font);
+    mTitle = new graphic::Text(sm->GetCString("LEAVE"), font);
     mTitle->SetColor(WidgetsConstants::colorDialogTitle);
     RegisterRenderable(mTitle);
 
@@ -270,7 +273,7 @@ DialogExit::DialogExit(DialogButtons buttons, Game * game, Screen * screen)
     if(buttons & BTN_SETTINGS)
     {
         btn = new ButtonDialogExit(this);
-        btn->SetLabel("SETTINGS");
+        btn->SetLabel(sm->GetCString("SETTINGS"));
 
         btnX = (w - btn->GetWidth()) / 2;
         btn->SetPosition(btnX, btnY);
@@ -293,7 +296,7 @@ DialogExit::DialogExit(DialogButtons buttons, Game * game, Screen * screen)
     if(buttons & BTN_PLANET_MAP)
     {
         btn = new ButtonDialogExit(this);
-        btn->SetLabel("PLANET MAP");
+        btn->SetLabel(sm->GetCString("PLANET_MAP"));
 
         btnX = (w - btn->GetWidth()) / 2;
         btn->SetPosition(btnX, btnY);
@@ -322,7 +325,7 @@ DialogExit::DialogExit(DialogButtons buttons, Game * game, Screen * screen)
     if(buttons & BTN_MAIN_MENU)
     {
         btn = new ButtonDialogExit(this);
-        btn->SetLabel("MAIN MENU");
+        btn->SetLabel(sm->GetCString("MAIN_MENU"));
 
         btnX = (w - btn->GetWidth()) / 2;
         btn->SetPosition(btnX, btnY);
@@ -340,7 +343,7 @@ DialogExit::DialogExit(DialogButtons buttons, Game * game, Screen * screen)
     if(buttons & BTN_QUIT_TUTORIAL)
     {
         btn = new ButtonDialogExit(this);
-        btn->SetLabel("QUIT TUTORIAL");
+        btn->SetLabel(sm->GetCString("QUIT_TUTORIAL"));
 
         btnX = (w - btn->GetWidth()) / 2;
         btn->SetPosition(btnX, btnY);
