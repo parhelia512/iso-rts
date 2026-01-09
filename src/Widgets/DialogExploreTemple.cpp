@@ -8,6 +8,7 @@
 #include "Widgets/GameUIData.h"
 #include "Widgets/WidgetsConstants.h"
 
+#include <sgl/core/event/KeyboardEvent.h>
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
 #include <sgl/graphic/Image.h>
@@ -18,6 +19,7 @@
 #include <sgl/sgui/Image.h>
 #include <sgl/sgui/Label.h>
 #include <sgl/sgui/TextArea.h>
+#include <sgl/utilities/StringManager.h>
 
 #include <sstream>
 
@@ -81,6 +83,7 @@ DialogExploreTemple::DialogExploreTemple(Player * player, Temple * temple)
 
     auto fm = graphic::FontManager::Instance();
     auto tm = graphic::TextureManager::Instance();
+    auto sm = utilities::StringManager::Instance();
 
     const int headerFontSize = 22;
     const unsigned int colorHeader = 0x9dcbe2ff;
@@ -98,7 +101,7 @@ DialogExploreTemple::DialogExploreTemple(Player * player, Temple * temple)
     // TITLE
     auto fontTitle = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 32, graphic::Font::NORMAL);
 
-    sgui::Label * title = new sgui::Label("EXPLORE ABANDONED TEMPLE", fontTitle, this);
+    sgui::Label * title = new sgui::Label(sm->GetCString("EXPL_TEMPLE"), fontTitle, this);
 
     const int titleX = (w - title->GetWidth()) / 2;
     const int titleY = 10;
@@ -133,7 +136,7 @@ DialogExploreTemple::DialogExploreTemple(Player * player, Temple * temple)
     auto fontLabel = fm->GetFont(WidgetsConstants::FontFileText, sliderLabelFontSize, graphic::Font::NORMAL);
 
     // HEADER INVEST
-    mHeaderInvest = new graphic::Text("INVEST RESOURCES", fontHeader);
+    mHeaderInvest = new graphic::Text(sm->GetCString("INVEST_RES"), fontHeader);
     mHeaderInvest->SetColor(colorHeader);
     RegisterRenderable(mHeaderInvest);
 
@@ -254,14 +257,14 @@ DialogExploreTemple::DialogExploreTemple(Player * player, Temple * temple)
     });
 
     // -- OUTCOME PANEL --
-    mHeaderTurns = new graphic::Text("TURNS REQUIRED", fontHeader);
+    mHeaderTurns = new graphic::Text(sm->GetCString("TURNS_REQUIRED"), fontHeader);
     mHeaderTurns->SetColor(colorHeader);
     RegisterRenderable(mHeaderTurns);
 
     mLabelTurns = new sgui::Label(fontLabel, this);
     mLabelTurns->SetColor(colorLabel);
 
-    mHeaderSuccess = new graphic::Text("SUCCESS PROBABILITY", fontHeader);
+    mHeaderSuccess = new graphic::Text(sm->GetCString("SUCCESS_PROB"), fontHeader);
     mHeaderSuccess->SetColor(colorHeader);
     RegisterRenderable(mHeaderSuccess);
 
@@ -273,11 +276,12 @@ DialogExploreTemple::DialogExploreTemple(Player * player, Temple * temple)
 
     // BUTTON ABORT
     mBtnAbort = new ButtonExploreTemple(this);
-    mBtnAbort->SetLabel("ABORT");
+    mBtnAbort->SetLabel(sm->GetCString("ABORT"));
+    mBtnAbort->SetShortcutKey(sgl::core::KeyboardEvent::KEY_ESCAPE);
 
     // BUTTON EXPLORE
     mBtnExplore = new ButtonExploreTemple(this);
-    mBtnExplore->SetLabel("EXPLORE");
+    mBtnExplore->SetLabel(sm->GetCString("EXPLORE"));
 
     // position buttons
     const int button1X0 = marginSide + (blockW - mBtnAbort->GetWidth()) / 2;
@@ -389,6 +393,7 @@ DialogExploreTempleOutcome::DialogExploreTempleOutcome(Player * player, Temple *
 
     auto fm = graphic::FontManager::Instance();
     auto tm = graphic::TextureManager::Instance();
+    auto sm = utilities::StringManager::Instance();
 
     const int headerFontSize = 22;
     const int labelFontSize = 22;
@@ -411,9 +416,11 @@ DialogExploreTempleOutcome::DialogExploreTempleOutcome(Player * player, Temple *
     SetSize(w, h);
 
     // TITLE
-    auto fontTitle = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 32, graphic::Font::NORMAL);
+    auto fontTitle = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 32,
+                                 graphic::Font::NORMAL);
 
-    sgui::Label * title = new sgui::Label("TEMPLE EXPLORATION OUTCOME", fontTitle, this);
+    sgui::Label * title = new sgui::Label(sm->GetCString("TEMPLE_OUTCOME"),
+                                          fontTitle, this);
 
     const int titleX = (w - title->GetWidth()) / 2;
     const int titleY = 10;
@@ -434,12 +441,10 @@ DialogExploreTempleOutcome::DialogExploreTempleOutcome(Player * player, Temple *
     // EXPLORATION GAVE NOTHING
     if(oc == Temple::EXP_OUTC_NOTHING)
     {
-        const char * text = "The exploration failed, but at least nothing bad happened!\n\n"
-                            "You can try again, good luck.";
-        textDesc->SetText(text);
+        textDesc->SetText(sm->GetCString("TO_DESC_NOTHING"));
 
         mBtnClose = new ButtonExploreTemple(this);
-        mBtnClose->SetLabel("LEAVE");
+        mBtnClose->SetLabel(sm->GetCString("LEAVE"));
 
         const int buttonX = (w - mBtnClose->GetWidth()) / 2;
         const int buttonY = h - marginButtonsB - mBtnClose->GetHeight();
@@ -461,7 +466,8 @@ DialogExploreTempleOutcome::DialogExploreTempleOutcome(Player * player, Temple *
         mBtnOutcome2 = new ButtonExploreTemple(this);
 
         // -- HEADER --
-        auto fontHeader = fm->GetFont(WidgetsConstants::FontFileHeader, headerFontSize, graphic::Font::NORMAL);
+        auto fontHeader = fm->GetFont(WidgetsConstants::FontFileHeader, headerFontSize,
+                                      graphic::Font::NORMAL);
 
         // -- OUTCOME TEXT --
         const int outcAreaW = w / 2 - (marginSide * 2);
@@ -478,30 +484,24 @@ DialogExploreTempleOutcome::DialogExploreTempleOutcome(Player * player, Temple *
         // GOOD OUTCOME
         if(oc == Temple::EXP_OUTC_GOOD)
         {
-            const char * text = "The exploration revealed a powerful talisman that can be used to "
-                                "help your mission.\n"
-                                "Pick your reward between these 2.";
-            textDesc->SetText(text);
+            textDesc->SetText(sm->GetCString("TO_DESC_GOOD"));
 
-            mHeaderOutc1 = new graphic::Text("REWARD 1", fontHeader);
-            mHeaderOutc2 = new graphic::Text("REWARD 2", fontHeader);
+            mHeaderOutc1 = new graphic::Text(sm->GetCString("REWARD_1"), fontHeader);
+            mHeaderOutc2 = new graphic::Text(sm->GetCString("REWARD_2"), fontHeader);
 
-            mBtnOutcome1->SetLabel("REWARD 1");
-            mBtnOutcome2->SetLabel("REWARD 2");
+            mBtnOutcome1->SetLabel(sm->GetCString("SELECT"));
+            mBtnOutcome2->SetLabel(sm->GetCString("SELECT"));
         }
         // BAD OUTCOME
         else
         {
-            const char * text = "The exploration failed and unlocked a powerful curse that will "
-                                "punish your attempt.\n"
-                                "Pick your punishment between these 2.";
-            textDesc->SetText(text);
+            textDesc->SetText(sm->GetCString("TO_DESC_BAD"));
 
-            mHeaderOutc1 = new graphic::Text("CURSE 1", fontHeader);
-            mHeaderOutc2 = new graphic::Text("CURSE 2", fontHeader);
+            mHeaderOutc1 = new graphic::Text(sm->GetCString("CURSE_1"), fontHeader);
+            mHeaderOutc2 = new graphic::Text(sm->GetCString("CURSE_2"), fontHeader);
 
-            mBtnOutcome1->SetLabel("CURSE 1");
-            mBtnOutcome2->SetLabel("CURSE 2");
+            mBtnOutcome1->SetLabel(sm->GetCString("SELECT"));
+            mBtnOutcome2->SetLabel(sm->GetCString("SELECT"));
         }
 
         RegisterRenderable(mHeaderOutc1);

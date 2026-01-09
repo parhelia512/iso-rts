@@ -8,6 +8,7 @@
 
 #include <sgl/graphic/TextureManager.h>
 #include <sgl/utilities/LoadedDie.h>
+#include <sgl/utilities/StringManager.h>
 #include <sgl/utilities/UniformDistribution.h>
 
 #include <vector>
@@ -48,7 +49,7 @@ void Temple::SetInvestedResources(int money, int material, int blobs, int diamon
     if(mInvestedDiamonds > mMaxDiamonds)
         mInvestedDiamonds = mMaxDiamonds;
 
-    const int maxTurns = 16;
+    const int maxTurns = 10;
     const int minTurns = 1;
     const float maxSuccess = 100.f;
     const float minSuccess = 0.f;
@@ -114,33 +115,35 @@ const char * Temple::GetExplorationOutcomeString(ExplorationOutcome o) const
     if(o >= NUM_EXPLORATION_OUTCOMES)
         return nullptr;
 
-    static const char * strings[NUM_EXPLORATION_OUTCOMES] =
+    auto sm = sgl::utilities::StringManager::Instance();
+
+    const char * strings[NUM_EXPLORATION_OUTCOMES] =
     {
         // -- REWARDS --
         // INCREASE EXISTING RESOURCES
-        "Your money will be increased 10 times.",
-        "Your energy and material will be maximized.",
-        "Your blobs and diamonds will be maximized.",
-        "All your resources will be maximized.",
+        sm->GetCString("TOR_MONEY_INC"),
+        sm->GetCString("TOR_ENERGY_AND_MATERIAL_MAX"),
+        sm->GetCString("TOR_BLOBS_AND_DIAMONDS_MAX"),
+        sm->GetCString("TOR_ALL_RES_MAX"),
         // INCREASE PRODUCTION
-        "The production of all your current energy generators will double.",
-        "The production of all your current material generators will double.",
+        sm->GetCString("TOR_ENERGY_GEN_DOUBLE"),
+        sm->GetCString("TOR_MATERIAL_GEN_DOUBLE"),
         // MAXIMIZE COLLECTIBLES
-        "All existing blobs on the map will be maximized.",
-        "All existing diamonds on the map will be maximized.",
+        sm->GetCString("TOR_MAP_BLOBS_MAX"),
+        sm->GetCString("TOR_MAP_DIAMONDS_MAX"),
 
         // -- PUNISHMENTS --
         // DECREASE EXISTING RESOURCES
-        "Your money will go down to 0.",
-        "Your energy and material will go down to 0.",
-        "Your blobs and diamonds will go down to 0.",
-        "All your resources will go down to 0.",
+        sm->GetCString("TOP_MONEY_0"),
+        sm->GetCString("TOP_ENERGY_AND_MATERIAL_0"),
+        sm->GetCString("TOP_BLOBS_AND_DIAMONDS_0"),
+        sm->GetCString("TOP_ALL_RES_0"),
         // DECREASE PRODUCTION
-        "The production of all your current energy generators will halve.",
-        "The production of all your current material generators will halve.",
+        sm->GetCString("TOR_ENERGY_GEN_HALF"),
+        sm->GetCString("TOR_MATERIAL_GEN_HALF"),
         // MINIMIZE COLLECTIBLES
-        "All existing blobs on the map will be minimized.",
-        "All existing diamonds on the map will be minimized.",
+        sm->GetCString("TOR_MAP_BLOBS_MIN"),
+        sm->GetCString("TOR_MAP_DIAMONDS_MIN"),
     };
 
     return strings[o];

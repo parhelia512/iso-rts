@@ -457,6 +457,11 @@ void GameHUD::ShowDialogExit()
     if(mDialogExit != nullptr)
         return ;
 
+    // special case, do not open exit dialog if temple outcome is on screen
+    // as dialog explore temple outcome can't be closed if no option is selected
+    if(mDialogExploreTempleOutcome != nullptr)
+        return ;
+
     mScreen->ShowScreenOverlay();
 
     ++mVisibleDialogs;
@@ -532,6 +537,8 @@ void GameHUD::ShowDialogExploreTemple(Player * player, Temple * temple)
     mScreen->SetPause(true);
 
     mDialogExploreTemple = new DialogExploreTemple(player, temple);
+
+    mDialogExploreTemple->SetFocus();
 
     mDialogExploreTemple->SetFunctionOnCancel([this]
     {
@@ -983,6 +990,7 @@ void GameHUD::ShowDialogExploreTempleOutcome(Player * player, Temple * temple)
     mScreen->SetPause(true);
 
     mDialogExploreTempleOutcome = new DialogExploreTempleOutcome(player, temple);
+    mDialogExploreTempleOutcome->SetFocus();
 
     mDialogExploreTempleOutcome->SetFunctionOnClose([this]
     {
