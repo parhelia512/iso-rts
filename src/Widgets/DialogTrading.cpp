@@ -19,6 +19,7 @@
 #include <sgl/sgui/Image.h>
 #include <sgl/sgui/ImageButton.h>
 #include <sgl/sgui/Label.h>
+#include <sgl/utilities/StringManager.h>
 #include <sgl/utilities/System.h>
 
 #include <sstream>
@@ -217,6 +218,7 @@ DialogTrading::DialogTrading(Game * g, Player * p)
 
     auto fm = graphic::FontManager::Instance();
     auto tm = graphic::TextureManager::Instance();
+    auto sm = utilities::StringManager::Instance();
 
     // BACKGROUND
     graphic::Texture * tex = tm->GetSprite(SpriteFileDialogTrading, ID_DLG_TRADING_BG);
@@ -236,7 +238,7 @@ DialogTrading::DialogTrading(Game * g, Player * p)
     // TITLE
     auto fontTitle = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 32, graphic::Font::NORMAL);
 
-    sgui::Label * title = new sgui::Label("TRADE YOUR RESOURCES", fontTitle, this);
+    sgui::Label * title = new sgui::Label(sm->GetCString("TRADE_UR_RES"), fontTitle, this);
 
     const int titleX = (w - title->GetWidth()) / 2;
     const int titleY = 5;
@@ -260,7 +262,7 @@ DialogTrading::DialogTrading(Game * g, Player * p)
     auto fontHeader = fm->GetFont(WidgetsConstants::FontFileHeader, 22, graphic::Font::NORMAL);
 
     // RESOURCE
-    sgui::Label * header = new sgui::Label("RESOURCE", fontHeader, this);
+    sgui::Label * header = new sgui::Label(sm->GetCString("RESOURCE"), fontHeader, this);
     header->SetColor(colorHeader);
 
     int headerX = hbX0 + (hbW0 - header->GetWidth()) / 2;
@@ -268,7 +270,7 @@ DialogTrading::DialogTrading(Game * g, Player * p)
     header->SetPosition(headerX, headerY);
 
     // STOCK
-    header = new sgui::Label("STOCK", fontHeader, this);
+    header = new sgui::Label(sm->GetCString("STOCK"), fontHeader, this);
     header->SetColor(colorHeader);
 
     headerX = hbX1 + (hbW1 - header->GetWidth()) / 2;
@@ -276,7 +278,7 @@ DialogTrading::DialogTrading(Game * g, Player * p)
     header->SetPosition(headerX, headerY);
 
     // BUY
-    header = new sgui::Label("BUY", fontHeader, this);
+    header = new sgui::Label(sm->GetCString("BUY"), fontHeader, this);
     header->SetColor(colorHeader);
 
     headerX = hbX2 + (hbW2 - header->GetWidth()) / 2;
@@ -284,7 +286,7 @@ DialogTrading::DialogTrading(Game * g, Player * p)
     header->SetPosition(headerX, headerY);
 
     // SELL
-    header = new sgui::Label("SELL", fontHeader, this);
+    header = new sgui::Label(sm->GetCString("SELL"), fontHeader, this);
     header->SetColor(colorHeader);
 
     headerX = hbX3 + (hbW3 - header->GetWidth()) / 2;
@@ -387,7 +389,7 @@ DialogTrading::DialogTrading(Game * g, Player * p)
     // BUTTON BUY
     const int marginBtnR = 20;
 
-    auto btnBuy = new ButtonAction("BUY", "B", core::KeyboardEvent::KEY_B, this);
+    auto btnBuy = new ButtonAction(sm->GetCString("BUY"), "B", core::KeyboardEvent::KEY_B, this);
     dataX = hbX2 + hbW2 - btnBuy->GetWidth() - marginBtnR;
     dataY = dbY4 + (dbH - btnBuy->GetHeight()) / 2;
     btnBuy->SetPosition(dataX, dataY);
@@ -429,7 +431,7 @@ DialogTrading::DialogTrading(Game * g, Player * p)
     mLabelTotSell->SetPosition(dataX, dataY);
 
     // BUTTON SELL
-    auto btnSell = new ButtonAction("SELL", "S", core::KeyboardEvent::KEY_S, this);
+    auto btnSell = new ButtonAction(sm->GetCString("SELL"), "S", core::KeyboardEvent::KEY_S, this);
 
     dataX = hbX3 + hbW3 - btnSell->GetWidth() - marginBtnR;
     dataY = dbY4 + (dbH - btnSell->GetHeight()) / 2;
@@ -472,6 +474,7 @@ void DialogTrading::AddResBlock(int x0, int y0, ResourceType res, sgl::graphic::
 
     auto fm = graphic::FontManager::Instance();
     auto tm = graphic::TextureManager::Instance();
+    auto sm = utilities::StringManager::Instance();
 
     const unsigned int texIds[NUM_RESOURCES] =
     {
@@ -486,10 +489,10 @@ void DialogTrading::AddResBlock(int x0, int y0, ResourceType res, sgl::graphic::
 
     const char * text[NUM_RESOURCES] =
     {
-        "ENERGY",
-        "MATERIAL",
-        "DIAMONDS",
-        "BLOBS",
+        sm->GetCString("ENERGY"),
+        sm->GetCString("MATERIAL"),
+        sm->GetCString("DIAMONDS"),
+        sm->GetCString("BLOBS"),
     };
 
     auto data = new sgui::Label(text[res], font, this);
