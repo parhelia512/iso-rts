@@ -21,6 +21,7 @@
 #include <sgl/sgui/Image.h>
 #include <sgl/sgui/Label.h>
 #include <sgl/sgui/TextArea.h>
+#include <sgl/utilities/StringManager.h>
 
 #include <cassert>
 
@@ -47,6 +48,7 @@ DialogNewMiniUnitsSquad::DialogNewMiniUnitsSquad(GameObject * spawner, Player * 
 
     auto fm = graphic::FontManager::Instance();
     auto tm = graphic::TextureManager::Instance();
+    auto sm = utilities::StringManager::Instance();
 
     // BACKGROUND
     graphic::Texture * tex = tm->GetTexture(SpriteFileDialogNewMiniUnits);
@@ -67,7 +69,7 @@ DialogNewMiniUnitsSquad::DialogNewMiniUnitsSquad(GameObject * spawner, Player * 
 
     auto font = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 28, graphic::Font::NORMAL);
 
-    auto title = new sgui::Label("CREATE MINI UNITS SQUADS", font, this);
+    auto title = new sgui::Label(sm->GetCString("CREATE_MU_SQUADS"), font, this);
     title->SetColor(WidgetsConstants::colorDialogTitle);
     title->SetPosition(marginL, marginT);
 
@@ -80,7 +82,7 @@ DialogNewMiniUnitsSquad::DialogNewMiniUnitsSquad(GameObject * spawner, Player * 
     // BUTTON BUILD
     const int btnX = 940;
     const int btnY = 510;
-    mBtnBuild = new ButtonDialogAction("SPAWN", "S", core::KeyboardEvent::KEY_S, this);
+    mBtnBuild = new ButtonDialogAction(sm->GetCString("SPAWN"), "S", core::KeyboardEvent::KEY_S, this);
     mBtnBuild->SetPosition(btnX, btnY);
 
     UpdateData();
@@ -168,6 +170,7 @@ void DialogNewMiniUnitsSquad::CreatePanelDescription()
 
     auto fm = graphic::FontManager::Instance();
     auto tm = graphic::TextureManager::Instance();
+    auto sm = utilities::StringManager::Instance();
 
     auto fontHeader = fm->GetFont(WidgetsConstants::FontFilePanelHeader, 20, graphic::Font::NORMAL);
     auto fontText = fm->GetFont(WidgetsConstants::FontFileText, 18, graphic::Font::NORMAL);
@@ -177,7 +180,7 @@ void DialogNewMiniUnitsSquad::CreatePanelDescription()
 
     // -- DESCRIPTION --
     // HEADER DESCRIPTION
-    auto header = new sgui::Label("DESCRIPTION", fontHeader, this);
+    auto header = new sgui::Label(sm->GetCString("DESCRIPTION"), fontHeader, this);
     header->SetColor(WidgetsConstants::colorPanelHeader);
     header->SetPosition(x, y);
 
@@ -200,7 +203,7 @@ void DialogNewMiniUnitsSquad::CreatePanelDescription()
     const int marginIconToNextR = 140;
 
     // HEADER COST
-    header = new sgui::Label("UNITARY COST", fontHeader, this);
+    header = new sgui::Label(sm->GetCString("UNITARY_COST"), fontHeader, this);
     header->SetColor(WidgetsConstants::colorPanelHeader);
     header->SetPosition(x, y);
 
@@ -303,6 +306,7 @@ void DialogNewMiniUnitsSquad::CreatePanelConfig()
 
     auto fm = graphic::FontManager::Instance();
     auto tm = graphic::TextureManager::Instance();
+    auto sm = utilities::StringManager::Instance();
 
     auto fontHeader = fm->GetFont(WidgetsConstants::FontFilePanelHeader, 20, graphic::Font::NORMAL);
     auto fontText = fm->GetFont(WidgetsConstants::FontFileText, 18, graphic::Font::NORMAL);
@@ -316,7 +320,7 @@ void DialogNewMiniUnitsSquad::CreatePanelConfig()
 
     // -- ELEMENTS --
     // HEADER ELEMENTS
-    auto header = new sgui::Label("ELEMENTS", fontHeader, this);
+    auto header = new sgui::Label(sm->GetCString("ELEMENTS"), fontHeader, this);
     header->SetColor(WidgetsConstants::colorPanelHeader);
     header->SetPosition(x, y);
 
@@ -355,7 +359,7 @@ void DialogNewMiniUnitsSquad::CreatePanelConfig()
 
     // -- SQUADS --
     // HEADER SQUADS
-    header = new sgui::Label("SQUADS", fontHeader, this);
+    header = new sgui::Label(sm->GetCString("SQUADS"), fontHeader, this);
     header->SetColor(WidgetsConstants::colorPanelHeader);
     header->SetPosition(x, y);
 
@@ -396,7 +400,7 @@ void DialogNewMiniUnitsSquad::CreatePanelConfig()
     const int marginIconToNextR = 150;
 
     // HEADER TOTAL COST
-    header = new sgui::Label("TOTAL COST", fontHeader, this);
+    header = new sgui::Label(sm->GetCString("TOTAL_COST"), fontHeader, this);
     header->SetColor(WidgetsConstants::colorPanelHeader);
     header->SetPosition(x, y);
 
@@ -572,6 +576,8 @@ void DialogNewMiniUnitsSquad::UpdateData()
     // ATTRIBUTES
     const unsigned int numPanelAttributes = mAttributes.size();
 
+    auto sm = sgl::utilities::StringManager::Instance();
+
     unsigned int attAdded = 0;
 
     for(unsigned int i = 0; i < NUM_OBJ_ATTRIBUTES; ++i)
@@ -579,7 +585,7 @@ void DialogNewMiniUnitsSquad::UpdateData()
         const int val = data.GetAttribute(static_cast<ObjAttId>(i));
 
         if(val > 0)
-            mAttributes[attAdded++]->SetData(ObjectData::STR_ATTRIBUTES[i], val);
+            mAttributes[attAdded++]->SetData(sm->GetCString(ObjectData::STR_ATTRIBUTES[i]), val);
 
         // it shouldn't happen, but just in case
         if(numPanelAttributes == attAdded)
@@ -599,7 +605,7 @@ void DialogNewMiniUnitsSquad::UpdateData()
             const auto attId = static_cast<ObjAttId>(FIRST_WEAPON_ATTRIBUTE + i);
 
             const int val = wAttributes.at(attId);
-            mAttributes[attAdded++]->SetData(ObjectData::STR_ATTRIBUTES[attId], val);
+            mAttributes[attAdded++]->SetData(sm->GetCString(ObjectData::STR_ATTRIBUTES[attId]), val);
         }
     }
 

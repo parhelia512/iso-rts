@@ -833,7 +833,7 @@ void DialogNewElement::ShowData(int ind)
             const auto attId = static_cast<ObjAttId>(FIRST_WEAPON_ATTRIBUTE + i);
 
             const int val = wAttributes.at(attId);
-            mVisAtt[attsAdded++]->SetData(ObjectData::STR_ATTRIBUTES[attId], val);
+            mVisAtt[attsAdded++]->SetData(sm->GetCString(ObjectData::STR_ATTRIBUTES[attId]), val);
         }
     }
 
