@@ -20,6 +20,7 @@
 #include <sgl/sgui/Image.h>
 #include <sgl/sgui/ImageButton.h>
 #include <sgl/sgui/Label.h>
+#include <sgl/utilities/StringManager.h>
 #include <sgl/utilities/System.h>
 
 #include <cmath>
@@ -85,12 +86,14 @@ public:
     {
         using namespace sgl;
 
+        auto sm = utilities::StringManager::Instance();
+
         // HEADER
         const char * HEADERS[NUM_VISUAL_STAT_TYPES] =
         {
-            "ENERGY",
-            "HEALTH",
-            "EXPERIENCE"
+            sm->GetCString("ENERGY"),
+            sm->GetCString("HEALTH"),
+            sm->GetCString("EXPERIENCE"),
         };
 
         auto fm = graphic::FontManager::Instance();
@@ -229,6 +232,7 @@ DialogObject::DialogObject(const ObjectsDataRegistry * odr)
 
     auto fm = graphic::FontManager::Instance();
     auto tm = graphic::TextureManager::Instance();
+    auto sm = utilities::StringManager::Instance();
 
     // BACKGROUND
     graphic::Texture * tex = tm->GetSprite(SpriteFileDialogObject, ID_DLG_OBJ_BG);
@@ -266,7 +270,7 @@ DialogObject::DialogObject(const ObjectsDataRegistry * odr)
     const int statBlockH = 50;
 
     int statY = statY0;
-    mStatRank = new ObjectExtendedVisualRank("RANK", this);
+    mStatRank = new ObjectExtendedVisualRank(sm->GetCString("LEVEL"), this);
     mStatRank->SetPosition(statX0, statY);
 
     statY += statBlockH;
@@ -321,11 +325,12 @@ void DialogObject::SetObject(GameObject * obj)
     const PlayerFaction faction = obj->GetFaction();
     const GameObjectTypeId type = obj->GetObjectType();
 
+    auto sm = utilities::StringManager::Instance();
     auto tm = graphic::TextureManager::Instance();
     sgl::graphic::Texture * tex = nullptr;
 
     // TITLE
-    mTitle->SetText(ObjectData::TITLES.at(type).c_str());
+    mTitle->SetText(sm->GetCString(ObjectData::TITLES.at(type)));
 
     // IMAGE
     const ObjectData & data = mObjDataReg->GetObjectData(type);
@@ -371,7 +376,7 @@ void DialogObject::SetObject(GameObject * obj)
 
         if(val > 0)
         {
-            mVisAtt[statsAdded]->SetData(ObjectData::STR_ATTRIBUTES[i], val);
+            mVisAtt[statsAdded]->SetData(sm->GetCString(ObjectData::STR_ATTRIBUTES[i]), val);
             ++statsAdded;
         }
     }

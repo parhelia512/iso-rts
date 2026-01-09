@@ -170,18 +170,6 @@ GameHUD::GameHUD(ScreenGame * screen)
         OpenPanelSelectedObject();
     });
 
-    // DIALOG OBJECT
-    mDialogObj = new DialogObject(odr);
-    mDialogObj->SetVisible(false);
-
-    // position dialog
-    CenterWidget(mDialogObj);
-
-    mDialogObj->SetFunctionOnClose([this]
-    {
-        HideDialogObject();
-    });
-
     // PANEL HIT
     mPanelHit = new PanelHit;
     mPanelHit->SetVisible(false);
@@ -1033,7 +1021,8 @@ void GameHUD::HideDialogObject()
     --mVisibleDialogs;
 
     // hide dialog
-    mDialogObj->SetVisible(false);
+    mDialogObj->DeleteLater();
+    mDialogObj = nullptr;
 
     ReopenPanels();
 
@@ -1045,6 +1034,9 @@ void GameHUD::HideDialogObject()
 
 void GameHUD::ShowDialogObject(GameObject * obj)
 {
+    if(mDialogObj != nullptr)
+        return ;
+
     ++mVisibleDialogs;
 
     mScreen->ShowScreenOverlay();
@@ -1052,12 +1044,20 @@ void GameHUD::ShowDialogObject(GameObject * obj)
     // pause game
     mScreen->SetPause(true);
 
-    // show dialog
+    // DIALOG OBJECT
+    const ObjectsDataRegistry * odr = mScreen->GetGame()->GetObjectsRegistry();
+    mDialogObj = new DialogObject(odr);
+
+    mDialogObj->SetFunctionOnClose([this]
+        {
+            HideDialogObject();
+        });
+
     mDialogObj->SetObject(obj);
-    mDialogObj->SetVisible(true);
     mDialogObj->SetFocus();
 
-    sgl::sgui::Stage::Instance()->MoveChildToFront(mDialogObj);
+    // position dialog
+    CenterWidget(mDialogObj);
 
     TemporaryClosePanels();
 }
