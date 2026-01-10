@@ -23,7 +23,6 @@ GameSimpleTooltip::GameSimpleTooltip(const char * text)
 {
     using namespace sgl;
 
-    auto fm = graphic::FontManager::Instance();
     auto tm = graphic::TextureManager::Instance();
 
     const int marginL = 40;
@@ -45,13 +44,10 @@ GameSimpleTooltip::GameSimpleTooltip(const char * text)
     RegisterRenderable(mBgRight);
 
     // LABEL
-    auto font = fm->GetFont(WidgetsConstants::FontFileText, 16, graphic::Font::NORMAL);
-    mLabel = new graphic::Text(text, font);
-    mLabel->SetColor(0x98bbd9ff);
-    RegisterRenderable(mLabel);
+    SetText(text);
 
     // SET SIZES
-    const int contentW = mLabel->GetWidth() + (marginCont * 2) - mBgLeft->GetWidth() - mBgRight->GetWidth();
+    const int contentW = mLabel->GetWidth() + (marginCont * 2);
     const int w = mBgLeft->GetWidth() + contentW + mBgRight->GetWidth();
     const int h = mBgCont->GetHeight();
 
@@ -60,6 +56,30 @@ GameSimpleTooltip::GameSimpleTooltip(const char * text)
     SetSize(w, h);
 
     SetPositions();
+}
+
+void GameSimpleTooltip::SetText(const char * text)
+{
+    using namespace sgl;
+
+    const bool init = mLabel == nullptr;
+
+    if(!init)
+    {
+        UnregisterRenderable(mLabel);
+        delete mLabel;
+    }
+
+    const unsigned int color = 0x98bbd9ff;
+    auto fm = graphic::FontManager::Instance();
+    auto font = fm->GetFont(WidgetsConstants::FontFileText, 16, graphic::Font::NORMAL);
+
+    mLabel = new graphic::Text(text, font);
+    mLabel->SetColor(color);
+    RegisterRenderable(mLabel);
+
+    if(!init)
+        SetPositions();
 }
 
 void GameSimpleTooltip::HandlePositionChanged()
@@ -87,7 +107,8 @@ void GameSimpleTooltip::SetPositions()
     mBgRight->SetPosition(x, y);
 
     // LABEL
-    const int labelX = x0 + marginCont;
+    const int labelX = mBgCont->GetX() +
+                       (mBgCont->GetWidth() - mLabel->GetWidth()) / 2;
     const int labelY = y0 + (mBgCont->GetHeight() - mLabel->GetHeight()) / 2;
 
     mLabel->SetPosition(labelX, labelY);

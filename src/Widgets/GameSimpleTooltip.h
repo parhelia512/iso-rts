@@ -21,6 +21,8 @@ class GameSimpleTooltip : public sgl::sgui::Widget
 public:
     GameSimpleTooltip(const char * text);
 
+    void SetText(const char * text);
+
 protected:
     void HandlePositionChanged() override;
 
