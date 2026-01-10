@@ -1055,8 +1055,6 @@ void DialogSettings::OnStringsChanged()
 {
     using namespace  sgl;
 
-    std::cout << "DialogSettings::OnStringsChanged - LANGUAGE: " << mGame->GetLanguage() << std::endl;
-
     // TITLE
     mTitle->SetText(mSM->GetCString("SETTINGS"));
 

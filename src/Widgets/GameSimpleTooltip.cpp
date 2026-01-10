@@ -13,7 +13,7 @@
 
 namespace
 {
-    constexpr int marginCont = 30;
+    constexpr int marginCont = 10;
 }
 
 namespace game

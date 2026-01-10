@@ -1,5 +1,7 @@
 #include <sgl/sgui/Widget.h>
 
+#include <sgl/utilities/StringsChangeListener.h>
+
 #include <functional>
 
 namespace sgl
@@ -17,9 +19,11 @@ namespace game
 {
 
 class GameObject;
+class GameSimpleTooltip;
 class ObjectsDataRegistry;
 
-class PanelSelectedObject : public sgl::sgui::Widget
+class PanelSelectedObject : public sgl::sgui::Widget,
+                            public sgl::utilities::StringsChangeListener
 {
 
 public:
@@ -36,6 +40,8 @@ private:
     void PositionElements();
 
     void UpdateStats();
+
+    void OnStringsChanged() override;
 
 private:
     const ObjectsDataRegistry * mObjDataReg;
@@ -54,10 +60,12 @@ private:
     unsigned int mFuncValuesChangedId = 0;
 
     // buttons function
-    sgl::sgui::ImageButton * mButtonAutoAttack = nullptr;
-    sgl::sgui::ImageButton * mButtonAutoMove = nullptr;
+    // sgl::sgui::ImageButton * mButtonAutoAttack = nullptr;
+    // sgl::sgui::ImageButton * mButtonAutoMove = nullptr;
     sgl::sgui::ImageButton * mButtonShowInfo = nullptr;
     sgl::sgui::ImageButton * mButtonShowUpgrade = nullptr;
+
+    GameSimpleTooltip * mTooltipExp = nullptr;
 
     GameObject * mObj = nullptr;
 };

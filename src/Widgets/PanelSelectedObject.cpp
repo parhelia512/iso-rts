@@ -20,6 +20,9 @@
 #include <sgl/sgui/Image.h>
 #include <sgl/sgui/ImageButton.h>
 #include <sgl/sgui/TextArea.h>
+#include <sgl/utilities/StringManager.h>
+
+#include <array>
 
 #include <cmath>
 
@@ -62,7 +65,8 @@ public:
 };
 
 // ========== OBJECT STAT ==========
-class ObjectVisualStat : public sgl::sgui::Widget
+class ObjectVisualStat : public sgl::sgui::Widget,
+                         public sgl::utilities::StringsChangeListener
 {
 public:
     enum VisualStatType : unsigned int
@@ -77,6 +81,7 @@ public:
 public:
     ObjectVisualStat(VisualStatType type, sgl::sgui::Widget * parent)
         : sgl::sgui::Widget(parent)
+        , mType(type)
     {
         using namespace sgl;
 
@@ -120,15 +125,18 @@ public:
         mDigits->SetPosition(w - mDigits->GetWidth(), (h - mDigits->GetHeight()) / 2);
 
         // TOOLTIP
+        auto sm = utilities::StringManager::Instance();
+        sm->AddListener(this);
+
         const char * tooltipText[NUM_VISUAL_STAT_TYPES] =
         {
-            "Energy",
-            "Health",
-            "Experience"
+            sm->GetCString("TT_ENERGY"),
+            sm->GetCString("TT_HEALTH"),
+            sm->GetCString("TT_EXPERIENCE"),
         };
 
-        auto tt = new GameSimpleTooltip(tooltipText[type]);
-        SetTooltip(tt);
+        mTooltip = new GameSimpleTooltip(tooltipText[type]);
+        SetTooltip(mTooltip);
         SetTooltipDelay(WidgetsConstants::timeTooltipButtonDelay);
     }
 
@@ -150,19 +158,37 @@ public:
     }
 
 private:
+    void OnStringsChanged() override
+    {
+        auto sm = sgl::utilities::StringManager::Instance();
+
+        const char * tooltipText[NUM_VISUAL_STAT_TYPES] =
+        {
+            sm->GetCString("TT_ENERGY"),
+            sm->GetCString("TT_HEALTH"),
+            sm->GetCString("TT_EXPERIENCE"),
+        };
+
+        mTooltip->SetText(tooltipText[mType]);
+    }
+
+private:
     sgl::sgui::Image * mIcon = nullptr;
     ProgressBarObjectVisualStat * mBar = nullptr;
     DigitsDisplay * mDigits = nullptr;
+    GameSimpleTooltip * mTooltip = nullptr;
+    VisualStatType mType;
 };
 
 // ========== BUTTON OBJECT FUNCTION ==========
-class ButtonObjectFunction : public sgl::sgui::ImageButton
+class ButtonObjectFunction : public sgl::sgui::ImageButton,
+                             public sgl::utilities::StringsChangeListener
 {
 public:
     enum ObjFunction : unsigned int
     {
-        OBJFUN_AUTO_ATTACK,
-        OBJFUN_AUTO_MOVE,
+        // OBJFUN_AUTO_ATTACK,
+        // OBJFUN_AUTO_MOVE,
         OBJFUN_SHOW_INFO,
         OBJFUN_SHOW_UPGRADE,
 
@@ -178,16 +204,17 @@ public:
                                      ID_PAN_SELOBJ_BTN_ACTION_PUSHED,
                                      ID_PAN_SELOBJ_BTN_ACTION_CHECKED
                                  }, SpriteFilePanelSelectedObject, parent)
+        , mType(f)
     {
         using namespace sgl;
 
-        SetCheckable(OBJFUN_AUTO_ATTACK == f || OBJFUN_AUTO_MOVE == f);
+        //SetCheckable(OBJFUN_AUTO_ATTACK == f || OBJFUN_AUTO_MOVE == f);
 
         // ICON
         const unsigned int textIds[NUM_OBJECT_FUNCTIONS] =
         {
-            ID_PAN_SELOBJ_ICON_ACT_ATTACK,
-            ID_PAN_SELOBJ_ICON_ACT_MOVE,
+            // ID_PAN_SELOBJ_ICON_ACT_ATTACK,
+            // ID_PAN_SELOBJ_ICON_ACT_MOVE,
             ID_PAN_SELOBJ_ICON_ACT_INFO,
             ID_PAN_SELOBJ_ICON_ACT_UPGRADE,
         };
@@ -200,17 +227,20 @@ public:
                           (GetHeight() - mIcon->GetHeight()) / 2);
 
         // TOOLTIP
+        auto sm = utilities::StringManager::Instance();
+        sm->AddListener(this);
+
         const char * tooltipText[NUM_OBJECT_FUNCTIONS] =
-            {
-                "If checked enables automatic attack when spotting an enemy during their turn",
-                "If checked enables automatic move when spotting an enemy during their turn",
-                "Show the info panel of this object",
-                "Show the upgrade panel of this object"
-            };
+        {
+            // "If checked enables automatic attack when spotting an enemy during their turn",
+            // "If checked enables automatic move when spotting an enemy during their turn",
+            sm->GetCString("TT_SHOW_INFO"),
+            sm->GetCString("TT_SHOW_UPGRADE"),
+        };
 
         const int ttTime = 3500;
-        auto tt = new GameSimpleTooltip(tooltipText[f]);
-        SetTooltip(tt);
+        mTooltip = new GameSimpleTooltip(tooltipText[f]);
+        SetTooltip(mTooltip);
         SetTooltipDelay(WidgetsConstants::timeTooltipButtonDelay);
         SetTooltipShowingTime(ttTime);
     }
@@ -248,8 +278,25 @@ private:
         player->PlaySound("UI/button_over-01.ogg");
     }
 
+    void OnStringsChanged() override
+    {
+        auto sm = sgl::utilities::StringManager::Instance();
+
+        const char * tooltipText[NUM_OBJECT_FUNCTIONS] =
+        {
+                // "If checked enables automatic attack when spotting an enemy during their turn",
+                // "If checked enables automatic move when spotting an enemy during their turn",
+                sm->GetCString("TT_SHOW_INFO"),
+                sm->GetCString("TT_SHOW_UPGRADE"),
+        };
+
+        mTooltip->SetText(tooltipText[mType]);
+    }
+
 private:
     sgl::sgui::Image * mIcon = nullptr;
+    GameSimpleTooltip * mTooltip = nullptr;
+    ObjFunction mType;
 };
 
 } // namespace
@@ -266,6 +313,8 @@ PanelSelectedObject::PanelSelectedObject(const ObjectsDataRegistry * odr, sgl::s
 
     auto tm = graphic::TextureManager::Instance();
     auto fm = graphic::FontManager::Instance();
+    auto sm = utilities::StringManager::Instance();
+    sm->AddListener(this);
 
     // BACKGROUND
     auto tex = tm->GetSprite(SpriteFilePanelSelectedObject, ID_PAN_SELOBJ_BG);
@@ -298,7 +347,8 @@ PanelSelectedObject::PanelSelectedObject(const ObjectsDataRegistry * odr, sgl::s
 
     const int sizeTitle = 16;
 
-    auto fntTitle = fm->GetFont(WidgetsConstants::FontFilePanelTitle, sizeTitle, graphic::Font::NORMAL);
+    auto fntTitle = fm->GetFont(WidgetsConstants::FontFilePanelTitle, sizeTitle,
+                                graphic::Font::NORMAL);
 
     mTitle = new sgui::TextArea(titleW, titleH, fntTitle, true, this);
     mTitle->SetColor(WidgetsConstants::colorPanelTitle);
@@ -308,8 +358,8 @@ PanelSelectedObject::PanelSelectedObject(const ObjectsDataRegistry * odr, sgl::s
     // LEVEL
     mBarLvl = new sgui::Image(this);
 
-    auto tt = new GameSimpleTooltip("Experience level");
-    mBarLvl->SetTooltip(tt);
+    mTooltipExp = new GameSimpleTooltip(sm->GetCString("TT_EXP_LVL"));
+    mBarLvl->SetTooltip(mTooltipExp);
     mBarLvl->SetTooltipDelay(WidgetsConstants::timeTooltipButtonDelay);
 
     // STATS
@@ -331,17 +381,15 @@ PanelSelectedObject::PanelSelectedObject(const ObjectsDataRegistry * odr, sgl::s
     mStatExperience->SetPosition(statX, statY);
 
     // BUTTONS FUNCTION
-    mButtonAutoAttack = new ButtonObjectFunction(ButtonObjectFunction::OBJFUN_AUTO_ATTACK, this);
-    mButtonAutoAttack->AddOnToggleFunction([this](bool checked)
-    {
-        // TODO
-    });
+    // mButtonAutoAttack = new ButtonObjectFunction(ButtonObjectFunction::OBJFUN_AUTO_ATTACK, this);
+    // mButtonAutoAttack->AddOnToggleFunction([this](bool checked)
+    // {
+    // });
 
-    mButtonAutoMove = new ButtonObjectFunction(ButtonObjectFunction::OBJFUN_AUTO_MOVE, this);
-    mButtonAutoMove->AddOnToggleFunction([this](bool checked)
-    {
-        // TODO
-    });
+    // mButtonAutoMove = new ButtonObjectFunction(ButtonObjectFunction::OBJFUN_AUTO_MOVE, this);
+    // mButtonAutoMove->AddOnToggleFunction([this](bool checked)
+    // {
+    // });
 
     mButtonShowInfo = new ButtonObjectFunction(ButtonObjectFunction::OBJFUN_SHOW_INFO, this);
     mButtonShowInfo->AddOnClickFunction([this]
@@ -357,16 +405,16 @@ PanelSelectedObject::PanelSelectedObject(const ObjectsDataRegistry * odr, sgl::s
 
     const int marginButtonFun = 5;
     const int buttonFunX0 = contentX0 + marginButtonFun;
-    const int buttonFunY0 = contentY0 + contentH - mButtonAutoAttack->GetHeight() - marginButtonFun;
+    const int buttonFunY0 = contentY0 + contentH - mButtonShowInfo->GetHeight() - marginButtonFun;
 
-    int buttonFunX = buttonFunX0;
+    // mButtonAutoAttack->SetPosition(buttonFunX, buttonFunY);
+
+    // buttonFunX += mButtonAutoAttack->GetWidth();
+    // mButtonAutoMove->SetPosition(buttonFunX, buttonFunY);
+
+    int buttonFunX = contentX0 + contentW - mButtonShowInfo->GetWidth() - marginButtonFun;
     int buttonFunY = buttonFunY0;
-    mButtonAutoAttack->SetPosition(buttonFunX, buttonFunY);
 
-    buttonFunX += mButtonAutoAttack->GetWidth();
-    mButtonAutoMove->SetPosition(buttonFunX, buttonFunY);
-
-    buttonFunX = contentX0 + contentW - mButtonShowInfo->GetWidth() - marginButtonFun;
     mButtonShowInfo->SetPosition(buttonFunX, buttonFunY);
     mButtonShowUpgrade->SetPosition(buttonFunX, buttonFunY);
 }
@@ -400,6 +448,8 @@ void PanelSelectedObject::SetObject(GameObject * obj)
     if(obj == mObj)
         return ;
 
+    auto sm = utilities::StringManager::Instance();
+
     // UPDATE SELECTED OBJECT
     if(mObj != nullptr)
         mObj->RemoveFunctionOnValueChanged(mFuncValuesChangedId);
@@ -419,7 +469,7 @@ void PanelSelectedObject::SetObject(GameObject * obj)
     sgl::graphic::Texture * tex = nullptr;
 
     // TITLE
-    mTitle->SetText(ObjectData::TITLES.at(type).c_str());
+    mTitle->SetText(sm->GetCString(ObjectData::TITLES.at(type)));
 
     // BAR LEVEL
     const int maxLvl = 10;
@@ -498,12 +548,12 @@ void PanelSelectedObject::SetObject(GameObject * obj)
     // BUTTONS FUNCTION
     const bool showAutoActions = obj->GetObjectCategory() == ObjectData::CAT_UNIT;
 
-    mButtonAutoAttack->SetVisible(showAutoActions);
-    mButtonAutoMove->SetVisible(showAutoActions);
+    // mButtonAutoAttack->SetVisible(showAutoActions);
+    // mButtonAutoMove->SetVisible(showAutoActions);
 
     // TODO get values from object when implementing auto action
-    mButtonAutoAttack->SetChecked(false);
-    mButtonAutoMove->SetChecked(false);
+    // mButtonAutoAttack->SetChecked(false);
+    // mButtonAutoMove->SetChecked(false);
 }
 
 void PanelSelectedObject::HandlePositionChanged()
@@ -536,6 +586,18 @@ void PanelSelectedObject::UpdateStats()
 
     mButtonShowInfo->SetVisible(showInfo);
     mButtonShowUpgrade->SetVisible(showUpgrade);
+}
+
+void PanelSelectedObject::OnStringsChanged()
+{
+    auto sm = sgl::utilities::StringManager::Instance();
+
+    // TITLE
+    const GameObjectTypeId type = mObj->GetObjectType();
+    mTitle->SetText(sm->GetCString(ObjectData::TITLES.at(type)));
+
+    // tooltip exp level
+    mTooltipExp->SetText(sm->GetCString("TT_EXP_LVL"));
 }
 
 } // namespace game
