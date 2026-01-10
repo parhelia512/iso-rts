@@ -18,6 +18,8 @@
 #include <sgl/sgui/Image.h>
 #include <sgl/sgui/ImageButton.h>
 #include <sgl/sgui/Label.h>
+#include <sgl/utilities/StringsChangeListener.h>
+#include <sgl/utilities/StringManager.h>
 
 #include <cmath>
 
@@ -28,7 +30,7 @@ namespace
 using namespace game;
 
 // ========== BUTTON END TURN ==========
-class ButtonEndTurn : public sgl::sgui::ImageButton
+class ButtonEndTurn : public sgl::sgui::ImageButton, sgl::utilities::StringsChangeListener
 {
 public:
     ButtonEndTurn(sgl::sgui::Widget * parent)
@@ -42,13 +44,23 @@ public:
     {
         using namespace sgl;
 
+        auto sm = utilities::StringManager::Instance();
+        sm->AddListener(this);
+
         // tooltip
-        auto tt = new GameSimpleTooltip("End your turn");
-        SetTooltip(tt);
+        mTooltip = new GameSimpleTooltip(sm->GetCString("END_TURN"));
+        SetTooltip(mTooltip);
         SetTooltipDelay(WidgetsConstants::timeTooltipButtonDelay);
 
         // shortcut
         SetShortcutKey(core::KeyboardEvent::KEY_SPACE, core::KeyboardEvent::MOD_SHIFT);
+    }
+
+    void OnStringsChanged() override
+    {
+        auto sm = sgl::utilities::StringManager::Instance();
+
+        mTooltip->SetText(sm->GetCString("END_TURN"));
     }
 
     void HandleMouseOver() override
@@ -66,6 +78,9 @@ public:
         auto player = sgl::media::AudioManager::Instance()->GetPlayer();
         player->PlaySound("UI/button_over-01.ogg");
     }
+
+private:
+    GameSimpleTooltip * mTooltip = nullptr;
 };
 
 } // namespace
