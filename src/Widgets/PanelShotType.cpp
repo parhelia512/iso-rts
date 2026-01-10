@@ -22,21 +22,21 @@ PanelShotType::PanelShotType()
     // BUTTON QUICK SHOT
     const int tooltipTime1 = 3000;
     auto btn = new ButtonObjectActionOption("QUICK SHOT", "1", core::KeyboardEvent::KEY_1, this);
-    btn->SetTooltipText("Low energy cost, but lower accuracy", tooltipTime1);
+    btn->CreateTooltip("Low energy cost, but lower accuracy", tooltipTime1);
 
     AddButton(btn);
 
     // BUTTON AIMED SHOT
     const int tooltipTime2 = 4000;
     btn = new ButtonObjectActionOption("AIMED SHOT", "2", core::KeyboardEvent::KEY_2, this);
-    btn->SetTooltipText("High energy cost, but high accuracy and higher probability of fatal shot",
+    btn->CreateTooltip("High energy cost, but high accuracy and higher probability of fatal shot",
                         tooltipTime2);
 
     AddButton(btn);
 
     // BUTTON BURST SHOT
     btn = new ButtonObjectActionOption("BURST", "3", core::KeyboardEvent::KEY_3, this);
-    btn->SetTooltipText("Multiple shots, but low accuracy",
+    btn->CreateTooltip("Multiple shots, but low accuracy",
                         tooltipTime1);
     AddButton(btn);
 

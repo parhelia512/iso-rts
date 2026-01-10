@@ -1,18 +1,17 @@
 #pragma once
 
 #include <sgl/sgui/Widget.h>
+#include <sgl/utilities/StringsChangeListener.h>
 
 #include <functional>
-
-namespace sgl
-{
-    namespace sgui { class AbstractButton; }
-}
 
 namespace game
 {
 
-class PanelSelfDestruction : public sgl::sgui::Widget
+class ButtonObjectActionOption;
+
+class PanelSelfDestruction : public sgl::sgui::Widget,
+                             public sgl::utilities::StringsChangeListener
 {
 public:
     PanelSelfDestruction();
@@ -22,8 +21,11 @@ public:
     void AddFunctionOnBlowup(const std::function<void()> & f);
 
 private:
-    sgl::sgui::AbstractButton * mBtnDestroy = nullptr;
-    sgl::sgui::AbstractButton * mBtnBlowup = nullptr;
+    void OnStringsChanged() override;
+
+private:
+    ButtonObjectActionOption * mBtnDestroy = nullptr;
+    ButtonObjectActionOption * mBtnBlowup = nullptr;
 };
 
 } // namespace game

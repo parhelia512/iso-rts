@@ -27,19 +27,17 @@ ButtonObjectActionOption::ButtonObjectActionOption(const char * text, const char
     mBody = new sgl::graphic::Image;
     RegisterRenderable(mBody);
 
-    // LABEL
-    auto font = fm->GetFont(WidgetsConstants::FontFileButton, 17, graphic::Font::NORMAL);
-    mLabel = new graphic::Text(text, font);
-    RegisterRenderable(mLabel);
-
     // SHORTCUT
-    font = fm->GetFont(WidgetsConstants::FontFileShortcut, 12, graphic::Font::NORMAL);
+    auto font = fm->GetFont(WidgetsConstants::FontFileShortcut, 12, graphic::Font::NORMAL);
     mShortcut = new graphic::Text(shortcut, font, true);
     mShortcut->SetColor(WidgetsConstants::colorShortcut);
 
     RegisterRenderable(mShortcut);
 
     SetShortcutKey(shortcutKey);
+
+    // LABEL
+    SetText(text);
 
     // INIT
     InitState(sgui::AbstractButton::NORMAL);
@@ -48,12 +46,42 @@ ButtonObjectActionOption::ButtonObjectActionOption(const char * text, const char
     SetPositions();
 }
 
-void ButtonObjectActionOption::SetTooltipText(const char * text, int timeShowing)
+void ButtonObjectActionOption::SetText(const char * text)
 {
-    auto tt = new GameSimpleTooltip(text);
-    SetTooltip(tt);
+    using namespace sgl;
+
+    const bool init = mLabel == nullptr;
+
+    if(!init)
+    {
+        UnregisterRenderable(mLabel);
+        delete mLabel;
+    }
+
+    auto fm = graphic::FontManager::Instance();
+
+    auto font = fm->GetFont(WidgetsConstants::FontFileButton, 17, graphic::Font::NORMAL);
+    mLabel = new graphic::Text(text, font);
+    RegisterRenderable(mLabel);
+
+    if(!init)
+        SetPositions();
+}
+
+void ButtonObjectActionOption::CreateTooltip(const char * text, int timeShowing)
+{
+    if(mTooltip != nullptr)
+        return ;
+
+    mTooltip = new GameSimpleTooltip(text);
+    SetTooltip(mTooltip);
     SetTooltipDelay(WidgetsConstants::timeTooltipButtonDelay);
     SetTooltipShowingTime(timeShowing);
+}
+
+void ButtonObjectActionOption::SetTooltipText(const char * text)
+{
+    mTooltip->SetText(text);
 }
 
 void ButtonObjectActionOption::HandleMouseOver()
