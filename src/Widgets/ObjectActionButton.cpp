@@ -71,13 +71,18 @@ ObjectActionButton::ObjectActionButton(ActionIcon icon, const char * shortcut, i
     RegisterRenderable(mShortcut);
 
     // TOOLTIP
-    auto tt = new GameSimpleTooltip(tooltip);
-    SetTooltip(tt);
+    mTooltip = new GameSimpleTooltip(tooltip);
+    SetTooltip(mTooltip);
     SetTooltipDelay(WidgetsConstants::timeTooltipButtonDelay);
     SetTooltipShowingTime(2000);
 
     // set initial visual state
     SetState(NORMAL);
+}
+
+void ObjectActionButton::SetTooltipText(const char * text)
+{
+    mTooltip->SetText(text);
 }
 
 void ObjectActionButton::HandleMouseOver()

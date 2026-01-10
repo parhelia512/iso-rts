@@ -45,26 +45,13 @@ GameSimpleTooltip::GameSimpleTooltip(const char * text)
 
     // LABEL
     SetText(text);
-
-    // SET SIZES
-    const int contentW = mLabel->GetWidth() + (marginCont * 2);
-    const int w = mBgLeft->GetWidth() + contentW + mBgRight->GetWidth();
-    const int h = mBgCont->GetHeight();
-
-    mBgCont->SetWidth(contentW);
-
-    SetSize(w, h);
-
-    SetPositions();
 }
 
 void GameSimpleTooltip::SetText(const char * text)
 {
     using namespace sgl;
 
-    const bool init = mLabel == nullptr;
-
-    if(!init)
+    if(mLabel != nullptr)
     {
         UnregisterRenderable(mLabel);
         delete mLabel;
@@ -78,8 +65,17 @@ void GameSimpleTooltip::SetText(const char * text)
     mLabel->SetColor(color);
     RegisterRenderable(mLabel);
 
-    if(!init)
-        SetPositions();
+    // SET SIZES
+    const int contentW = mLabel->GetWidth() + (marginCont * 2);
+    const int w = mBgLeft->GetWidth() + contentW + mBgRight->GetWidth();
+    const int h = mBgCont->GetHeight();
+
+    mBgCont->SetWidth(contentW);
+
+    SetSize(w, h);
+
+    // reposition
+    SetPositions();
 }
 
 void GameSimpleTooltip::HandlePositionChanged()

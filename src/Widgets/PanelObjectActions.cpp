@@ -6,6 +6,7 @@
 
 #include <sgl/core/event/KeyboardEvent.h>
 #include <sgl/graphic/Renderer.h>
+#include <sgl/utilities/StringManager.h>
 
 namespace game
 {
@@ -15,49 +16,71 @@ PanelObjectActions::PanelObjectActions(sgl::sgui::Widget * parent)
 {
     using namespace sgl::core;
 
+    auto sm = sgl::utilities::StringManager::Instance();
+    sm->AddListener(this);
+
     SetResizePolicy(ResizePolicy::DYNAMIC);
 
     // create all buttons
-    mButtons[BTN_BUILD_UNIT_BARRACKS] = new ObjectActionButton(ObjectActionButton::UNITS, "U", KeyboardEvent::KEY_U,
-                                                               "Create a new unit", this);
-    mButtons[BTN_BUILD_UNIT_BASE] = new ObjectActionButton(ObjectActionButton::UNITS, "U", KeyboardEvent::KEY_U,
-                                                           "Create a new unit", this);
-    mButtons[BTN_BUILD_UNIT_HOSPITAL] = new ObjectActionButton(ObjectActionButton::UNITS, "U", KeyboardEvent::KEY_U,
-                                                               "Create a new unit", this);
-    mButtons[BTN_MISSION_GOALS] = new ObjectActionButton(ObjectActionButton::MISSION_GOALS, "G", KeyboardEvent::KEY_G,
-                                                         "Show mission goals", this);
-    mButtons[BTN_MOVE] = new ObjectActionButton(ObjectActionButton::MOVE, "M", KeyboardEvent::KEY_M,
-                                                "Move your unit", this);
-    mButtons[BTN_ATTACK] = new ObjectActionButton(ObjectActionButton::ATTACK, "K", KeyboardEvent::KEY_K,
-                                                  "Attack a target", this);
-    mButtons[BTN_HEAL_HOSPITAL] = new ObjectActionButton(ObjectActionButton::HEAL, "H", KeyboardEvent::KEY_H,
-                                                         "Heal a target", this);
-    mButtons[BTN_HEAL_UNIT] = new ObjectActionButton(ObjectActionButton::HEAL, "H", KeyboardEvent::KEY_H,
-                                                     "Heal a target", this);
-    mButtons[BTN_CONQUER_CELL] = new ObjectActionButton(ObjectActionButton::CONQUER_CELL, "C", KeyboardEvent::KEY_C,
-                                                        "Conquer cells", this);
-    mButtons[BTN_BUILD_WALL] = new ObjectActionButton(ObjectActionButton::BUILD_WALL, "L", KeyboardEvent::KEY_L,
-                                                      "Build a wall", this);
-    mButtons[BTN_BUILD_STRUCT] = new ObjectActionButton(ObjectActionButton::BUILD_STRUCT, "B", KeyboardEvent::KEY_B,
-                                                        "Build a structure", this);
-    mButtons[BTN_UPGRADE] = new ObjectActionButton(ObjectActionButton::UPGRADE, "U", KeyboardEvent::KEY_U,
-                                                   "Upgrade", this);
-    mButtons[BTN_OPEN_GATE] = new ObjectActionButton(ObjectActionButton::OPEN_GATE, "G", KeyboardEvent::KEY_G,
-                                                     "Open the gate", this);
-    mButtons[BTN_CLOSE_GATE] = new ObjectActionButton(ObjectActionButton::CLOSE_GATE, "G", KeyboardEvent::KEY_G,
-                                                      "Close the gate", this);
-    mButtons[BTN_TRADE] = new ObjectActionButton(ObjectActionButton::TRADE, "T", KeyboardEvent::KEY_T,
-                                                      "Trade your resources", this);
-    mButtons[BTN_SPAWN] = new ObjectActionButton(ObjectActionButton::SPAWN, "N", KeyboardEvent::KEY_N,
-                                                 "Spawn mini units", this);
-    mButtons[BTN_SET_TARGET] = new ObjectActionButton(ObjectActionButton::SET_TARGET, "T",
-                                                        KeyboardEvent::KEY_T, "Set target destination", this);
+    mButtons[BTN_BUILD_UNIT_BARRACKS] =
+        new ObjectActionButton(ObjectActionButton::UNITS, "U", KeyboardEvent::KEY_U,
+                               sm->GetCString("TT_NEW_UNIT"), this);
+    mButtons[BTN_BUILD_UNIT_BASE] =
+        new ObjectActionButton(ObjectActionButton::UNITS, "U", KeyboardEvent::KEY_U,
+                               sm->GetCString("TT_NEW_UNIT"), this);
+    mButtons[BTN_BUILD_UNIT_HOSPITAL] =
+        new ObjectActionButton(ObjectActionButton::UNITS, "U", KeyboardEvent::KEY_U,
+                               sm->GetCString("TT_NEW_UNIT"), this);
+    mButtons[BTN_MISSION_GOALS] =
+        new ObjectActionButton(ObjectActionButton::MISSION_GOALS, "G", KeyboardEvent::KEY_G,
+                               sm->GetCString("TT_SHOW_GOALS"), this);
+    mButtons[BTN_MOVE] =
+        new ObjectActionButton(ObjectActionButton::MOVE, "M", KeyboardEvent::KEY_M,
+                               sm->GetCString("TT_MOVE_UNIT"), this);
+    mButtons[BTN_ATTACK] =
+        new ObjectActionButton(ObjectActionButton::ATTACK, "K", KeyboardEvent::KEY_K,
+                               sm->GetCString("TT_ATTACK_TARGET"), this);
+    mButtons[BTN_HEAL_HOSPITAL] =
+        new ObjectActionButton(ObjectActionButton::HEAL, "H", KeyboardEvent::KEY_H,
+                               sm->GetCString("TT_HEAL_TARGET"), this);
+    mButtons[BTN_HEAL_UNIT] =
+        new ObjectActionButton(ObjectActionButton::HEAL, "H", KeyboardEvent::KEY_H,
+                               sm->GetCString("TT_HEAL_TARGET"), this);
+    mButtons[BTN_CONQUER_CELL] =
+        new ObjectActionButton(ObjectActionButton::CONQUER_CELL, "C", KeyboardEvent::KEY_C,
+                               sm->GetCString("TT_CONQ_CELLS"), this);
+    mButtons[BTN_BUILD_WALL] =
+        new ObjectActionButton(ObjectActionButton::BUILD_WALL, "L", KeyboardEvent::KEY_L,
+                               sm->GetCString("TT_BUIL_WALL"), this);
+    mButtons[BTN_BUILD_STRUCT] =
+        new ObjectActionButton(ObjectActionButton::BUILD_STRUCT, "B", KeyboardEvent::KEY_B,
+                               sm->GetCString("TT_BUILD_STRUCT"), this);
+    mButtons[BTN_UPGRADE] =
+        new ObjectActionButton(ObjectActionButton::UPGRADE, "U", KeyboardEvent::KEY_U,
+                               sm->GetCString("TT_UPGRADE"), this);
+    mButtons[BTN_OPEN_GATE] =
+        new ObjectActionButton(ObjectActionButton::OPEN_GATE, "G", KeyboardEvent::KEY_G,
+                               sm->GetCString("TT_OPEN_GATE"), this);
+    mButtons[BTN_CLOSE_GATE] =
+        new ObjectActionButton(ObjectActionButton::CLOSE_GATE, "G", KeyboardEvent::KEY_G,
+                               sm->GetCString("TT_CLOSE_GATE"), this);
+    mButtons[BTN_TRADE] =
+        new ObjectActionButton(ObjectActionButton::TRADE, "T", KeyboardEvent::KEY_T,
+                               sm->GetCString("TT_TRADE_RES"), this);
+    mButtons[BTN_SPAWN] =
+        new ObjectActionButton(ObjectActionButton::SPAWN, "N", KeyboardEvent::KEY_N,
+                               sm->GetCString("TT_SPAWN_MU"), this);
+    mButtons[BTN_SET_TARGET] =
+        new ObjectActionButton(ObjectActionButton::SET_TARGET, "T", KeyboardEvent::KEY_T,
+                               sm->GetCString("TT_SET_DEST"), this);
 
     // keep these 2 last
-    mButtons[BTN_SELF_DESTROY] = new ObjectActionButton(ObjectActionButton::SELF_DESTROY, "E",
-                                                        KeyboardEvent::KEY_E, "Self destruction", this);
-    mButtons[BTN_CANCEL] = new ObjectActionButton(ObjectActionButton::CANCEL, "X", KeyboardEvent::KEY_X,
-                                                  "Cancel current action", this);
+    mButtons[BTN_SELF_DESTROY] =
+        new ObjectActionButton(ObjectActionButton::SELF_DESTROY, "E", KeyboardEvent::KEY_E,
+                               sm->GetCString("TT_SELF_DESTR"), this);
+    mButtons[BTN_CANCEL] =
+        new ObjectActionButton(ObjectActionButton::CANCEL, "X", KeyboardEvent::KEY_X,
+                               sm->GetCString("TT_CANCEL"), this);
 }
 
 PanelObjectActions::~PanelObjectActions()
@@ -215,6 +238,31 @@ const sgl::sgui::AbstractButton * PanelObjectActions::GetButton(Button btnId)
         return mButtons[btnId];
     else
         return nullptr;
+}
+
+void PanelObjectActions::OnStringsChanged()
+{
+    auto sm = sgl::utilities::StringManager::Instance();
+
+    mButtons[BTN_BUILD_UNIT_BARRACKS]->SetTooltipText(sm->GetCString("TT_NEW_UNIT"));
+    mButtons[BTN_BUILD_UNIT_BASE]->SetTooltipText(sm->GetCString("TT_NEW_UNIT"));
+    mButtons[BTN_BUILD_UNIT_HOSPITAL]->SetTooltipText(sm->GetCString("TT_NEW_UNIT"));
+    mButtons[BTN_MISSION_GOALS]->SetTooltipText(sm->GetCString("TT_SHOW_GOALS"));
+    mButtons[BTN_MOVE]->SetTooltipText(sm->GetCString("TT_MOVE_UNIT"));
+    mButtons[BTN_ATTACK]->SetTooltipText(sm->GetCString("TT_ATTACK_TARGET"));
+    mButtons[BTN_HEAL_HOSPITAL]->SetTooltipText(sm->GetCString("TT_HEAL_TARGET"));
+    mButtons[BTN_HEAL_UNIT]->SetTooltipText(sm->GetCString("TT_HEAL_TARGET"));
+    mButtons[BTN_CONQUER_CELL]->SetTooltipText(sm->GetCString("TT_CONQ_CELLS"));
+    mButtons[BTN_BUILD_WALL]->SetTooltipText(sm->GetCString("TT_BUIL_WALL"));
+    mButtons[BTN_BUILD_STRUCT]->SetTooltipText(sm->GetCString("TT_BUILD_STRUCT"));
+    mButtons[BTN_UPGRADE]->SetTooltipText(sm->GetCString("TT_UPGRADE"));
+    mButtons[BTN_OPEN_GATE]->SetTooltipText(sm->GetCString("TT_OPEN_GATE"));
+    mButtons[BTN_CLOSE_GATE]->SetTooltipText(sm->GetCString("TT_CLOSE_GATE"));
+    mButtons[BTN_TRADE]->SetTooltipText(sm->GetCString("TT_TRADE_RES"));
+    mButtons[BTN_SPAWN]->SetTooltipText(sm->GetCString("TT_SPAWN_MU"));
+    mButtons[BTN_SET_TARGET]->SetTooltipText(sm->GetCString("TT_SET_DEST"));
+    mButtons[BTN_SELF_DESTROY]->SetTooltipText(sm->GetCString("TT_SELF_DESTR"));
+    mButtons[BTN_CANCEL]->SetTooltipText(sm->GetCString("TT_CANCEL"));
 }
 
 } // namespace game

@@ -14,6 +14,8 @@ namespace sgl
 namespace game
 {
 
+class GameSimpleTooltip;
+
 class ObjectActionButton : public sgl::sgui::AbstractButton
 {
 public:
@@ -43,6 +45,8 @@ public:
     ObjectActionButton(ActionIcon icon, const char * shortcut, int shortcutKey,
                        const char * tooltip, sgl::sgui::Widget * parent);
 
+    void SetTooltipText(const char * text);
+
 private:
     void HandleMouseOver() override;
     void HandleButtonDown() override;
@@ -55,6 +59,8 @@ private:
     sgl::graphic::Image * mBody = nullptr;
     sgl::graphic::Image * mIcon = nullptr;
     sgl::graphic::Text * mShortcut = nullptr;
+
+    GameSimpleTooltip * mTooltip = nullptr;
 
     ActionIcon mIconId;
 };

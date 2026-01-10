@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sgl/sgui/Widget.h>
+#include <sgl/utilities/StringsChangeListener.h>
 
 #include <array>
 #include <functional>
@@ -17,7 +18,8 @@ namespace game
 class GameObject;
 class ObjectActionButton;
 
-class PanelObjectActions : public sgl::sgui::Widget
+class PanelObjectActions : public sgl::sgui::Widget,
+                           public sgl::utilities::StringsChangeListener
 {
 public:
     enum Button : unsigned int
@@ -61,6 +63,9 @@ public:
     void SetActionsEnabled(bool val);
 
     const sgl::sgui::AbstractButton * GetButton(Button btnId);
+
+private:
+    void OnStringsChanged() override;
 
 private:
     std::array<ObjectActionButton *, NUM_BUTTONS> mButtons;
