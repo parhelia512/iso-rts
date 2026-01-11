@@ -25,6 +25,7 @@ class ResourceTooltip : public sgl::sgui::Widget
 public:
     ResourceTooltip(const char * title);
 
+    void SetTitle(const char * text);
     void SetValues(int resIn, int resOut);
 
 protected:

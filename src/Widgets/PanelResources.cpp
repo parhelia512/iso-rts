@@ -13,6 +13,7 @@
 #include <sgl/graphic/Image.h>
 #include <sgl/graphic/Texture.h>
 #include <sgl/graphic/TextureManager.h>
+#include <sgl/utilities/StringManager.h>
 
 #include <sgl/sgui/Image.h>
 
@@ -25,9 +26,14 @@ PanelResources::PanelResources(Player * player, GameMap * gm, sgl::sgui::Widget 
     , mPlayer(player)
     , mGameMap(gm)
 {
-    RegisterRenderable(mBg);
+    auto sm = sgl::utilities::StringManager::Instance();
+    sm->AddListener(this);
 
+    RegisterRenderable(mBg);
     SetBg();
+
+    mGameTooltips.assign(Player::Stat::NUM_PSTATS, nullptr);
+    mSimpleTooltips.assign(Player::Stat::NUM_PSTATS, nullptr);
 
     // TODO change this to have dynamic slots added/removed at runtime
     const int slotW = 150;
@@ -56,7 +62,8 @@ PanelResources::PanelResources(Player * player, GameMap * gm, sgl::sgui::Widget 
 
     if(mGameMap)
     {
-        auto tt = AssignResourceTooltip(srd, "MONEY / TURN");
+        auto tt = AssignResourceTooltip(srd, sm->GetCString("MONEY_TURN"));
+        mGameTooltips[st] = tt;
 
         srd->SetFunctionOnShowingTooltip([this, tt]
         {
@@ -66,7 +73,7 @@ PanelResources::PanelResources(Player * player, GameMap * gm, sgl::sgui::Widget 
         });
     }
     else
-        AssignSimpleTooltip(srd, "MONEY");
+        mSimpleTooltips[st] = AssignSimpleTooltip(srd, sm->GetCString("MONEY"));
 
     mCallbackValIds[st] = player->AddOnResourceChanged(st, [srd](const StatValue *, int, int newVal)
     {
@@ -86,7 +93,8 @@ PanelResources::PanelResources(Player * player, GameMap * gm, sgl::sgui::Widget 
 
     if(mGameMap)
     {
-        auto tt = AssignResourceTooltip(rd, "ENERGY / TURN");
+        auto tt = AssignResourceTooltip(rd, sm->GetCString("ENERGY_TURN"));
+        mGameTooltips[st] = tt;
 
         rd->SetFunctionOnShowingTooltip([this, tt]
         {
@@ -96,7 +104,7 @@ PanelResources::PanelResources(Player * player, GameMap * gm, sgl::sgui::Widget 
         });
     }
     else
-        AssignSimpleTooltip(rd, "ENERGY");
+        mSimpleTooltips[st] = AssignSimpleTooltip(rd, sm->GetCString("ENERGY"));
 
     mCallbackValIds[st] = player->AddOnResourceChanged(st, [rd](const StatValue *, int, int newVal)
     {
@@ -120,7 +128,8 @@ PanelResources::PanelResources(Player * player, GameMap * gm, sgl::sgui::Widget 
 
     if(mGameMap)
     {
-        auto tt = AssignResourceTooltip(rd, "MATERIAL / TURN");
+        auto tt = AssignResourceTooltip(rd, sm->GetCString("MATERIAL_TURN"));
+        mGameTooltips[st] = tt;
 
         rd->SetFunctionOnShowingTooltip([this, tt]
         {
@@ -130,7 +139,7 @@ PanelResources::PanelResources(Player * player, GameMap * gm, sgl::sgui::Widget 
         });
     }
     else
-        AssignSimpleTooltip(rd, "MATERIAL");
+        mSimpleTooltips[st] = AssignSimpleTooltip(rd, sm->GetCString("MATERIAL"));
 
     mCallbackValIds[st] = player->AddOnResourceChanged(st, [rd](const StatValue *, int, int newVal)
     {
@@ -154,7 +163,8 @@ PanelResources::PanelResources(Player * player, GameMap * gm, sgl::sgui::Widget 
 
     if(mGameMap)
     {
-        auto tt = AssignResourceTooltip(rd, "DIAMONDS / TURN");
+        auto tt = AssignResourceTooltip(rd, sm->GetCString("DIAMONDS_TURN"));
+        mGameTooltips[st] = tt;
 
         rd->SetFunctionOnShowingTooltip([this, tt]
         {
@@ -164,7 +174,7 @@ PanelResources::PanelResources(Player * player, GameMap * gm, sgl::sgui::Widget 
         });
     }
     else
-        AssignSimpleTooltip(rd, "DIAMONDS");
+        mSimpleTooltips[st] = AssignSimpleTooltip(rd, sm->GetCString("DIAMONDS"));
 
     mCallbackValIds[st] = player->AddOnResourceChanged(st, [rd](const StatValue *, int, int newVal)
     {
@@ -188,7 +198,8 @@ PanelResources::PanelResources(Player * player, GameMap * gm, sgl::sgui::Widget 
 
     if(mGameMap)
     {
-        auto tt = AssignResourceTooltip(rd, "BLOBS / TURN");
+        auto tt = AssignResourceTooltip(rd, sm->GetCString("BLOBS_TURN"));
+        mGameTooltips[st] = tt;
 
         rd->SetFunctionOnShowingTooltip([this, tt]
         {
@@ -198,7 +209,7 @@ PanelResources::PanelResources(Player * player, GameMap * gm, sgl::sgui::Widget 
         });
     }
     else
-        AssignSimpleTooltip(rd, "BLOBS");
+        mSimpleTooltips[st] = AssignSimpleTooltip(rd, sm->GetCString("BLOBS"));
 
     mCallbackValIds[st] = player->AddOnResourceChanged(st, [rd](const StatValue * val, int, int newVal)
     {
@@ -255,24 +266,48 @@ ResourceTooltip * PanelResources::AssignResourceTooltip(sgl::sgui::Widget * targ
     const int showingMs = 5000;
 
     auto tt = new ResourceTooltip(text);
-    SetTooltip(tt, target, showingMs);
+    CreateTooltip(tt, target, showingMs);
 
     return tt;
 }
 
-void PanelResources::AssignSimpleTooltip(sgl::sgui::Widget * target, const char * text)
+GameSimpleTooltip * PanelResources::AssignSimpleTooltip(sgl::sgui::Widget * target, const char * text)
 {
     const int showingMs = 2000;
 
     auto tt = new GameSimpleTooltip(text);
-    SetTooltip(tt, target, showingMs);
+    CreateTooltip(tt, target, showingMs);
+
+    return tt;
 }
 
-void PanelResources::SetTooltip(sgl::sgui::Widget * tt, sgl::sgui::Widget * target, int showingMs)
+void PanelResources::CreateTooltip(sgl::sgui::Widget * tt, sgl::sgui::Widget * target, int showingMs)
 {
     target->SetTooltip(tt);
     target->SetTooltipDelay(WidgetsConstants::timeTooltipButtonDelay);
     target->SetTooltipShowingTime(showingMs);
+}
+
+void PanelResources::OnStringsChanged()
+{
+    auto sm = sgl::utilities::StringManager::Instance();
+
+    if(mGameMap)
+    {
+        mGameTooltips[Player::Stat::MONEY]->SetTitle(sm->GetCString("MONEY_TURN"));
+        mGameTooltips[Player::Stat::ENERGY]->SetTitle(sm->GetCString("ENERGY_TURN"));
+        mGameTooltips[Player::Stat::MATERIAL]->SetTitle(sm->GetCString("MATERIAL_TURN"));
+        mGameTooltips[Player::Stat::BLOBS]->SetTitle(sm->GetCString("BLOBS_TURN"));
+        mGameTooltips[Player::Stat::DIAMONDS]->SetTitle(sm->GetCString("DIAMONDS_TURN"));
+    }
+    else
+    {
+        mSimpleTooltips[Player::Stat::MONEY]->SetText(sm->GetCString("MONEY"));
+        mSimpleTooltips[Player::Stat::ENERGY]->SetText(sm->GetCString("ENERGY"));
+        mSimpleTooltips[Player::Stat::MATERIAL]->SetText(sm->GetCString("MATERIAL"));
+        mSimpleTooltips[Player::Stat::BLOBS]->SetText(sm->GetCString("BLOBS"));
+        mSimpleTooltips[Player::Stat::DIAMONDS]->SetText(sm->GetCString("DIAMONDS"));
+    }
 }
 
 void PanelResources::HandlePositionChanged()

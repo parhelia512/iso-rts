@@ -32,10 +32,7 @@ ResourceTooltip::ResourceTooltip(const char * title)
     SetSize(mBg->GetWidth(), mBg->GetHeight());
 
     // TITLE
-    auto fontTitle = fm->GetFont(WidgetsConstants::FontFilePanelTitle, 18, graphic::Font::NORMAL);
-    mTitle = new graphic::Text(title, fontTitle);
-    mTitle->SetColor(WidgetsConstants::colorTooltipTitle);
-    RegisterRenderable(mTitle);
+    SetTitle(title);
 
     // LABELS
     auto fontLabel = fm->GetFont(WidgetsConstants::FontFileText, 18, graphic::Font::NORMAL);
@@ -51,6 +48,30 @@ ResourceTooltip::ResourceTooltip(const char * title)
 
     // init labels
     SetValues(0, 0);
+}
+
+void ResourceTooltip::SetTitle(const char * text)
+{
+    using namespace sgl;
+
+    const bool init = mTitle == nullptr;
+
+    if(!init)
+    {
+        UnregisterRenderable(mTitle);
+        delete mTitle;
+    }
+
+    auto fm = graphic::FontManager::Instance();
+    auto fontTitle = fm->GetFont(WidgetsConstants::FontFilePanelTitle, 18,
+                                 graphic::Font::NORMAL);
+
+    mTitle = new graphic::Text(text, fontTitle);
+    mTitle->SetColor(WidgetsConstants::colorTooltipTitle);
+    RegisterRenderable(mTitle);
+
+    if(!init)
+        SetPositions();
 }
 
 void ResourceTooltip::SetValues(int resIn, int resOut)

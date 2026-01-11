@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sgl/sgui/Widget.h>
+#include <sgl/utilities/StringsChangeListener.h>
 
 #include <vector>
 
@@ -13,10 +14,11 @@ namespace game
 {
 
 class GameMap;
+class GameSimpleTooltip;
 class Player;
 class ResourceTooltip;
 
-class PanelResources : public sgl::sgui::Widget
+class PanelResources : public sgl::sgui::Widget, public sgl::utilities::StringsChangeListener
 {
 public:
     PanelResources(Player * player, GameMap * gm, sgl::sgui::Widget * parent);
@@ -29,8 +31,10 @@ private:
     void SetBg();
 
     ResourceTooltip * AssignResourceTooltip(sgl::sgui::Widget * target, const char * text);
-    void AssignSimpleTooltip(sgl::sgui::Widget * target, const char * text);
-    void SetTooltip(sgl::sgui::Widget * tt, sgl::sgui::Widget * target, int showingMs);
+    GameSimpleTooltip * AssignSimpleTooltip(sgl::sgui::Widget * target, const char * text);
+    void CreateTooltip(sgl::sgui::Widget * tt, sgl::sgui::Widget * target, int showingMs);
+
+    void OnStringsChanged() override;
 
 private:
     sgl::graphic::Image * mBg = nullptr;
@@ -40,6 +44,9 @@ private:
 
     std::vector<unsigned int> mCallbackValIds;
     std::vector<unsigned int> mCallbackRangeIds;
+
+    std::vector<ResourceTooltip *> mGameTooltips;
+    std::vector<GameSimpleTooltip *> mSimpleTooltips;
 };
 
 } // namespace game
