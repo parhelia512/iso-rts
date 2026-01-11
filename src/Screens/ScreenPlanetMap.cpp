@@ -103,52 +103,52 @@ ScreenPlanetMap::ScreenPlanetMap(Game * game)
     UpdatePlanetButtons();
 
     mPlanet->SetFunctionOnToggle([this](unsigned int ind, bool enabled)
-                                 {
-                                     if(!enabled)
-                                         return;
+        {
+            if(!enabled)
+                return;
 
-                                     // enable panels
-                                     mPanelActions->SetEnabled(true);
-                                     mPanelInfo->SetEnabled(true);
+            // enable panels
+            mPanelActions->SetEnabled(true);
+            mPanelInfo->SetEnabled(true);
 
-                                     // make sure panel actions is visible
-                                     mPanelActions->SetVisible(true);
-                                     mPanelExplore->SetVisible(false);
-                                     mPanelConquer->SetVisible(false);
-                                     mPanelConquerAI->SetVisible(false);
+            // make sure panel actions is visible
+            mPanelActions->SetVisible(true);
+            mPanelExplore->SetVisible(false);
+            mPanelConquer->SetVisible(false);
+            mPanelConquerAI->SetVisible(false);
 
-                                     auto game = GetGame();
-                                     const int planetId = game->GetCurrentPlanet();
-                                     auto mapReg = game->GetMapsRegistry();
+            auto game = GetGame();
+            const int planetId = game->GetCurrentPlanet();
+            auto mapReg = game->GetMapsRegistry();
 
-                                     const TerritoryStatus status = mapReg->GetMapStatus(planetId, ind);
-                                     const PlayerFaction occupier = mapReg->GetMapOccupier(planetId, ind);
-                                     const bool playerOccupier = game->GetLocalPlayerFaction() == occupier;
-                                     mPanelActions->UpdateButtons(status, playerOccupier);
+            const TerritoryStatus status = mapReg->GetMapStatus(planetId, ind);
+            const PlayerFaction occupier = mapReg->GetMapOccupier(planetId, ind);
+            const bool playerOccupier = game->GetLocalPlayerFaction() == occupier;
+            mPanelActions->UpdateButtons(status, playerOccupier);
 
-                                     if(status == TER_ST_FREE || status == TER_ST_OCCUPIED)
-                                         ShowInfo(ind);
-                                     else if(status == TER_ST_OCCUPIED_UNEXPLORED)
-                                     {
-                                         const unsigned int size = 0;
-                                         const int value = 0;
+            if(status == TER_ST_FREE || status == TER_ST_OCCUPIED)
+                ShowInfo(ind);
+            else if(status == TER_ST_OCCUPIED_UNEXPLORED)
+            {
+                const unsigned int size = 0;
+                const int value = 0;
 
-                                         mPanelInfo->SetEnabled(true);
-                                         mPanelInfo->SetData(size, size, status, occupier, value, MC_UNKNOWN);
-                                     }
-                                     else
-                                     {
-                                         const unsigned int size = 0;
-                                         const int value = 0;
+                mPanelInfo->SetEnabled(true);
+                mPanelInfo->SetData(size, size, status, occupier, value, MC_UNKNOWN);
+            }
+            else
+            {
+                const unsigned int size = 0;
+                const int value = 0;
 
-                                         mPanelResources->SetEnabled(false);
+                mPanelResources->SetEnabled(false);
 
-                                         mPanelInfo->SetData(size, size, status, occupier, value, MC_UNKNOWN);
-                                     }
+                mPanelInfo->SetData(size, size, status, occupier, value, MC_UNKNOWN);
+            }
 
-                                     mPanelExplore->ShowAction();
-                                     mPanelConquerAI->ShowAction();
-                                 });
+            mPanelExplore->ShowAction();
+            mPanelConquerAI->ShowAction();
+        });
 
     // -- MAIN PANELS --
     const int mainPanelsY0 = planetY;
@@ -161,7 +161,8 @@ ScreenPlanetMap::ScreenPlanetMap(Game * game)
 
     // PANEL ACTIONS
     mPanelActions = new PanelPlanetActions;
-    const int panActionsY = mPanelResources->GetY() + mPanelResources->GetHeight() + mainPanelsMarginH;
+    const int panActionsY = mPanelResources->GetY() + mPanelResources->GetHeight() +
+                            mainPanelsMarginH;
     mPanelActions->SetY(panActionsY);
     mPanelActions->SetEnabled(false);
 
@@ -233,7 +234,8 @@ ScreenPlanetMap::ScreenPlanetMap(Game * game)
                 const int value = 0;
 
                 mPanelInfo->SetEnabled(true);
-                mPanelInfo->SetData(size, size, TER_ST_OCCUPIED_UNEXPLORED, occupier, value, MC_UNKNOWN);
+                mPanelInfo->SetData(size, size, TER_ST_OCCUPIED_UNEXPLORED,
+                                    occupier, value, MC_UNKNOWN);
             }
 
             mPanelExplore->ShowResult(res);
@@ -283,8 +285,10 @@ ScreenPlanetMap::ScreenPlanetMap(Game * game)
     });
 
     // PANEL ACTION CONQUER AI
-    mPanelConquerAI = new PanelPlanetActionConquerAI(player, costConquestMoney, costConquestEnergy,
-                                                     costConquestMaterial, costConquestDiamonds);
+    mPanelConquerAI = new PanelPlanetActionConquerAI(player, costConquestMoney,
+                                                     costConquestEnergy,
+                                                     costConquestMaterial,
+                                                     costConquestDiamonds);
     mPanelConquerAI->SetY(panActionsY);
     mPanelConquerAI->SetVisible(false);
 
@@ -324,11 +328,16 @@ ScreenPlanetMap::ScreenPlanetMap(Game * game)
             const int multRes1 = 100;
             const int multRes2 = 10;
 
-            player->SumResource(Player::Stat::MONEY, multMoney * mapReg->GetMapValue(planetId, territory));
-            player->SumResource(Player::Stat::ENERGY, multRes1 * mapReg->GetMapEnergy(planetId, territory));
-            player->SumResource(Player::Stat::MATERIAL, multRes1 * mapReg->GetMapMaterial(planetId, territory));
-            player->SumResource(Player::Stat::BLOBS, multRes2 * mapReg->GetMapBlobs(planetId, territory));
-            player->SumResource(Player::Stat::DIAMONDS, multRes2 * mapReg->GetMapDiamonds(planetId, territory));
+            player->SumResource(Player::Stat::MONEY,
+                                multMoney * mapReg->GetMapValue(planetId, territory));
+            player->SumResource(Player::Stat::ENERGY,
+                                multRes1 * mapReg->GetMapEnergy(planetId, territory));
+            player->SumResource(Player::Stat::MATERIAL,
+                                multRes1 * mapReg->GetMapMaterial(planetId, territory));
+            player->SumResource(Player::Stat::BLOBS,
+                                multRes2 * mapReg->GetMapBlobs(planetId, territory));
+            player->SumResource(Player::Stat::DIAMONDS,
+                                multRes2 * mapReg->GetMapDiamonds(planetId, territory));
 
             // update UI
             mPlanet->SetButtonState(territory, pf, status);
@@ -344,7 +353,8 @@ ScreenPlanetMap::ScreenPlanetMap(Game * game)
 
             if(NO_FACTION == faction)
             {
-                utilities::UniformDistribution dist(FACTION_1, FACTION_3, game->GetRandSeed());
+                utilities::UniformDistribution dist(FACTION_1, FACTION_3,
+                                                    game->GetRandSeed());
 
                 int f = dist.GetNextValue();
 
@@ -492,10 +502,14 @@ void ScreenPlanetMap::ShowInfo(int territory)
 
     // PANEL RESOURCES
     mPanelResources->SetEnabled(true);
-    mPanelResources->SetResourceValue(RES_ENERGY, mapReg->GetMapEnergy(planetId, territory));
-    mPanelResources->SetResourceValue(RES_MATERIAL1, mapReg->GetMapMaterial(planetId, territory));
-    mPanelResources->SetResourceValue(RES_BLOBS, mapReg->GetMapBlobs(planetId, territory));
-    mPanelResources->SetResourceValue(RES_DIAMONDS, mapReg->GetMapDiamonds(planetId, territory));
+    mPanelResources->SetResourceValue(RES_ENERGY,
+                                      mapReg->GetMapEnergy(planetId, territory));
+    mPanelResources->SetResourceValue(RES_MATERIAL1,
+                                      mapReg->GetMapMaterial(planetId, territory));
+    mPanelResources->SetResourceValue(RES_BLOBS,
+                                      mapReg->GetMapBlobs(planetId, territory));
+    mPanelResources->SetResourceValue(RES_DIAMONDS,
+                                      mapReg->GetMapDiamonds(planetId, territory));
 
     // PANEL INFO
     const int rows = mapReg->GetMapRows(planetId, territory);

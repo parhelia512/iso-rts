@@ -13,9 +13,13 @@
 #include <sgl/sgui/Image.h>
 #include <sgl/sgui/Label.h>
 #include <sgl/sgui/TextArea.h>
+#include <sgl/utilities/StringManager.h>
 
 namespace
 {
+    constexpr int marginL = 20;
+    constexpr int marginT = 15;
+
     constexpr int textSize = 18;
 }
 
@@ -29,6 +33,8 @@ PanelPlanetActionConquer::PanelPlanetActionConquer()
 
     auto tm = graphic::TextureManager::Instance();
     auto fm = graphic::FontManager::Instance();
+    auto sm = utilities::StringManager::Instance();
+    sm->AddListener(this);
 
     // BACKGROUND
     graphic::Texture * tex = tm->GetSprite(SpriteFilePlanetMap2, IND_PM_PANEL_ACTIONS);
@@ -40,19 +46,19 @@ PanelPlanetActionConquer::PanelPlanetActionConquer()
     // TITLE
     graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFilePanelTitle,
                                       WidgetsConstants::FontSizePlanetMapTitle, graphic::Font::NORMAL);
-    mTitle = new graphic::Text("CONQUER", fnt);
+    mTitle = new sgui::Label(sm->GetCString("CONQUER"), fnt, this);
     mTitle->SetColor(WidgetsConstants::colorPanelTitle);
-    RegisterRenderable(mTitle);
+    mTitle->SetPosition(marginL, marginT);
 
     // CONTENT
     CreateContentStart();
 
     // BUTTONS
     mButtonOk = new ButtonPlanetMap(this);
-    mButtonOk->SetLabel("PROCEED");
+    mButtonOk->SetLabel(sm->GetCString("PROCEED"));
 
     mButtonCancel = new SecondaryButtonPlanetMap(this);
-    mButtonCancel->SetLabel("CANCEL");
+    mButtonCancel->SetLabel(sm->GetCString("CANCEL"));
 
     // position elements
     UpdatePositions();
@@ -82,6 +88,8 @@ void PanelPlanetActionConquer::CreateContentStart()
 {
     using namespace sgl;
 
+    auto sm = utilities::StringManager::Instance();
+
     mContentStart = new sgui::Widget(this);
 
     auto fm = graphic::FontManager::Instance();
@@ -95,10 +103,9 @@ void PanelPlanetActionConquer::CreateContentStart()
     const int marginR = 20;
     const int contW = w - marginL - marginR;
     const int contH = 100;
-    const char * txt = "Start a mission to conquer the territory.\n\n"
-                       "You will personally lead the construction of a new base and your troops in battle.";
-    auto text = new sgui::TextArea(contW, contH, txt, fnt, false, mContentStart);
-    text->SetColor(WidgetsConstants::colorPanelText);
+    const char * txt = sm->GetCString("DESC_ACT_CONQUER");
+    mDesc = new sgui::TextArea(contW, contH, txt, fnt, false, mContentStart);
+    mDesc->SetColor(WidgetsConstants::colorPanelText);
 }
 
 void PanelPlanetActionConquer::HandlePositionChanged()
@@ -113,8 +120,6 @@ void PanelPlanetActionConquer::UpdatePositions()
     const int w = GetWidth();
     const int h = GetHeight();
 
-    const int marginL = 20;
-    const int marginT = 15;
     const int marginTextT = 20;
 
     int x;
@@ -122,12 +127,6 @@ void PanelPlanetActionConquer::UpdatePositions()
 
     // BACKGROUND
     mBg->SetPosition(x0, y0);
-
-    // TITLE
-    x = x0 + marginL;
-    y = y0 + marginT;
-
-    mTitle->SetPosition(x, y);
 
     // CONTENT
     x = marginL;
@@ -147,6 +146,18 @@ void PanelPlanetActionConquer::UpdatePositions()
     y -= spacingButtons + mButtonOk->GetHeight();
 
     mButtonOk->SetPosition(x, y);
+}
+
+void PanelPlanetActionConquer::OnStringsChanged()
+{
+    auto sm = sgl::utilities::StringManager::Instance();
+
+    mTitle->SetText(sm->GetCString("CONQUER"));
+
+    mButtonOk->SetLabel(sm->GetCString("PROCEED"));
+    mButtonCancel->SetLabel(sm->GetCString("CANCEL"));
+
+    mDesc->SetText(sm->GetCString("DESC_ACT_CONQUER"));
 }
 
 } // namespace game
