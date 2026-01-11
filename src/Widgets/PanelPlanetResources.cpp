@@ -10,9 +10,9 @@
 #include <sgl/graphic/Image.h>
 #include <sgl/graphic/Texture.h>
 #include <sgl/graphic/TextureManager.h>
-#include <sgl/sgui/Label.h>
-
 #include <sgl/sgui/Image.h>
+#include <sgl/sgui/Label.h>
+#include <sgl/utilities/StringManager.h>
 
 namespace game
 {
@@ -24,6 +24,8 @@ PanelPlanetResources::PanelPlanetResources()
 
     auto tm = graphic::TextureManager::Instance();
     auto fm = graphic::FontManager::Instance();
+    auto sm = utilities::StringManager::Instance();
+    sm->AddListener(this);
 
     // BACKGROUND
     sgl::graphic::Texture * tex = tm->GetSprite(SpriteFilePlanetMap2, IND_PM_PANEL_RESOURCES);
@@ -39,9 +41,9 @@ PanelPlanetResources::PanelPlanetResources()
 
     graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFilePanelTitle,
                                       WidgetsConstants::FontSizePlanetMapTitle, graphic::Font::NORMAL);
-    auto label = new sgui::Label("RESOURCES", fnt, this);
-    label->SetColor(WidgetsConstants::colorPanelTitle);
-    label->SetPosition(marginHeaderX, marginHeaderY);
+    mTitle = new sgui::Label(sm->GetCString("RESOURCES"), fnt, this);
+    mTitle->SetColor(WidgetsConstants::colorPanelTitle);
+    mTitle->SetPosition(marginHeaderX, marginHeaderY);
 
     // ICONS
     mIcons.assign(NUM_RESOURCES, nullptr);
@@ -198,6 +200,13 @@ void PanelPlanetResources::UpdatePositions()
 
         mBars[i]->SetPosition(barX, barY);
     }
+}
+
+void PanelPlanetResources::OnStringsChanged()
+{
+    auto sm = sgl::utilities::StringManager::Instance();
+
+    mTitle->SetText(sm->GetCString("RESOURCES"));
 }
 
 } // namespace game
