@@ -1,21 +1,19 @@
 #pragma once
 
 #include <sgl/sgui/Widget.h>
+#include <sgl/utilities/StringsChangeListener.h>
 
 #include <functional>
 
 namespace sgl
 {
-    namespace graphic
-    {
-        class Image;
-        class Text;
-    }
+    namespace graphic { class Image; }
 
     namespace sgui
     {
         class AbstractButton;
         class Label;
+        class TextArea;
     }
 }
 
@@ -28,7 +26,8 @@ class Player;
 
 enum TerritoryStatus : unsigned int;
 
-class PanelPlanetActionExplore : public sgl::sgui::Widget
+class PanelPlanetActionExplore : public sgl::sgui::Widget,
+                                 public sgl::utilities::StringsChangeListener
 {
 public:
     PanelPlanetActionExplore(Player * player, int money, int energy, int material);
@@ -51,9 +50,11 @@ private:
 
     void UpdatePositions();
 
+    void OnStringsChanged() override;
+
 private:
     sgl::graphic::Image * mBg = nullptr;
-    sgl::graphic::Text * mTitle = nullptr;
+    sgl::sgui::Label * mTitle = nullptr;
 
     sgl::sgui::Widget * mContentStart = nullptr;
     sgl::sgui::Widget * mContentFailure = nullptr;
@@ -62,6 +63,8 @@ private:
     sgl::sgui::Label * mLabelMoney = nullptr;
     sgl::sgui::Label * mLabelEnergy = nullptr;
     sgl::sgui::Label * mLabelMaterial = nullptr;
+
+    sgl::sgui::TextArea * mTextRes = nullptr;
 
     ButtonPlanetMap * mButtonOk = nullptr;
     SecondaryButtonPlanetMap * mButtonCancel = nullptr;

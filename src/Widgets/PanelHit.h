@@ -31,7 +31,6 @@ private:
 
     void UpdatePositions();
 
-private:
     void OnStringsChanged() override;
 
 private:
