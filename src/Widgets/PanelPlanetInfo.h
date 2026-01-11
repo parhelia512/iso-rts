@@ -1,14 +1,11 @@
 #pragma once
 
 #include <sgl/sgui/Widget.h>
+#include <sgl/utilities/StringsChangeListener.h>
 
 namespace sgl
 {
-    namespace graphic
-    {
-        class Image;
-        class Text;
-    }
+    namespace graphic { class Image; }
 
     namespace sgui { class Label; }
 }
@@ -20,7 +17,7 @@ enum MissionCategory : unsigned int;
 enum PlayerFaction : unsigned int;
 enum TerritoryStatus : unsigned int;
 
-class PanelPlanetInfo : public sgl::sgui::Widget
+class PanelPlanetInfo : public sgl::sgui::Widget, public sgl::utilities::StringsChangeListener
 {
 public:
     PanelPlanetInfo();
@@ -43,18 +40,22 @@ private:
     void UpdateTerritoryValue();
     void UpdateMissionType();
 
-private:
-    sgl::graphic::Text * mTitle = nullptr;
-    sgl::graphic::Text * mHeaderSize = nullptr;
-    sgl::graphic::Text * mHeaderStatus = nullptr;
-    sgl::graphic::Text * mHeaderValue = nullptr;
-    sgl::graphic::Text * mHeaderOccupier = nullptr;
-    sgl::graphic::Text * mHeaderMission = nullptr;
+    void OnStringsChanged() override;
 
-    sgl::graphic::Text * mLabelSize = nullptr;
-    sgl::graphic::Text * mLabelStatus = nullptr;
-    sgl::graphic::Text * mLabelOccupier = nullptr;
-    sgl::graphic::Text * mLabelMission = nullptr;
+private:
+    sgl::sgui::Label * mTitle = nullptr;
+
+    sgl::sgui::Label * mHeaderSize = nullptr;
+    sgl::sgui::Label * mHeaderStatus = nullptr;
+    sgl::sgui::Label * mHeaderValue = nullptr;
+    sgl::sgui::Label * mHeaderOccupier = nullptr;
+    sgl::sgui::Label * mHeaderMission = nullptr;
+
+    sgl::sgui::Label * mLabelSize = nullptr;
+    sgl::sgui::Label * mLabelStatus = nullptr;
+    sgl::sgui::Label * mLabelOccupier = nullptr;
+    sgl::sgui::Label * mLabelMission = nullptr;
+
     sgl::graphic::Image * mBarValue = nullptr;
 
     sgl::graphic::Image * mBg = nullptr;

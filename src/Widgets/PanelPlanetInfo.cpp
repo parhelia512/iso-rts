@@ -7,9 +7,10 @@
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
 #include <sgl/graphic/Image.h>
-#include <sgl/graphic/Text.h>
 #include <sgl/graphic/Texture.h>
 #include <sgl/graphic/TextureManager.h>
+#include <sgl/sgui/Label.h>
+#include <sgl/utilities/StringManager.h>
 
 #include <sgl/sgui/Image.h>
 
@@ -28,6 +29,8 @@ PanelPlanetInfo::PanelPlanetInfo()
 
     auto tm = graphic::TextureManager::Instance();
     auto fm = graphic::FontManager::Instance();
+    auto sm = utilities::StringManager::Instance();
+    sm->AddListener(this);
 
     // BACKGROUND
     graphic::Texture * tex = tm->GetSprite(SpriteFilePlanetMap2, IND_PM_PANEL_INFO);
@@ -38,61 +41,54 @@ PanelPlanetInfo::PanelPlanetInfo()
 
     // TITLE
     graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFilePanelTitle,
-                                      WidgetsConstants::FontSizePlanetMapTitle, graphic::Font::NORMAL);
-    mTitle = new graphic::Text("INFO", fnt);
+                                      WidgetsConstants::FontSizePlanetMapTitle,
+                                      graphic::Font::NORMAL);
+    mTitle = new sgui::Label(sm->GetCString("INFO"), fnt, this);
     mTitle->SetColor(WidgetsConstants::colorPanelTitle);
-    RegisterRenderable(mTitle);
 
     // -- DATA --
     graphic::Font * fntHeader = fm->GetFont(WidgetsConstants::FontFilePanelHeader,
-                                            WidgetsConstants::FontSizePlanetMapHeader, graphic::Font::NORMAL);
+                                            WidgetsConstants::FontSizePlanetMapHeader,
+                                            graphic::Font::NORMAL);
     graphic::Font * fntData = fm->GetFont(WidgetsConstants::FontFileText,
-                                          WidgetsConstants::FontSizePlanetMapText, graphic::Font::NORMAL);
+                                          WidgetsConstants::FontSizePlanetMapText,
+                                          graphic::Font::NORMAL);
 
     // LINE SIZE
-    mHeaderSize = new graphic::Text("SIZE", fntHeader);
+    mHeaderSize = new sgui::Label(sm->GetCString("SIZE"), fntHeader, this);
     mHeaderSize->SetColor(WidgetsConstants::colorPanelHeader);
-    RegisterRenderable(mHeaderSize);
 
-    mLabelSize = new graphic::Text("?", fntData);
+    mLabelSize = new sgui::Label("?", fntData, this);
     mLabelSize->SetColor(WidgetsConstants::colorPanelText);
-    RegisterRenderable(mLabelSize);
 
     // LINE STATUS
-    mHeaderStatus = new graphic::Text("STATUS", fntHeader);
+    mHeaderStatus = new sgui::Label(sm->GetCString("STATUS"), fntHeader, this);
     mHeaderStatus->SetColor(WidgetsConstants::colorPanelHeader);
-    RegisterRenderable(mHeaderStatus);
 
-    mLabelStatus = new graphic::Text("?", fntData);
+    mLabelStatus = new sgui::Label("?", fntData, this);
     mLabelStatus->SetColor(WidgetsConstants::colorPanelText);
-    RegisterRenderable(mLabelStatus);
 
     // LINE VALUE
-    mHeaderValue = new graphic::Text("VALUE", fntHeader);
+    mHeaderValue = new sgui::Label(sm->GetCString("VALUE"), fntHeader, this);
     mHeaderValue->SetColor(WidgetsConstants::colorPanelHeader);
-    RegisterRenderable(mHeaderValue);
 
     tex = tm->GetSprite(SpriteFilePlanetMap, IND_PM_STARS_0);
     mBarValue = new graphic::Image(tex);
     RegisterRenderable(mBarValue);
 
     // LINE OCCUPIER
-    mHeaderOccupier = new graphic::Text("OCCUPIER", fntHeader);
+    mHeaderOccupier = new sgui::Label(sm->GetCString("OCCUPIER"), fntHeader, this);
     mHeaderOccupier->SetColor(WidgetsConstants::colorPanelHeader);
-    RegisterRenderable(mHeaderOccupier);
 
-    mLabelOccupier = new graphic::Text("?", fntData);
+    mLabelOccupier = new sgui::Label("?", fntData, this);
     mLabelOccupier->SetColor(WidgetsConstants::colorPanelText);
-    RegisterRenderable(mLabelOccupier);
 
     // LINE MISSION
-    mHeaderMission = new graphic::Text("MISSION", fntHeader);
+    mHeaderMission = new sgui::Label(sm->GetCString("MISSION"), fntHeader, this);
     mHeaderMission->SetColor(WidgetsConstants::colorPanelHeader);
-    RegisterRenderable(mHeaderMission);
 
-    mLabelMission = new graphic::Text("?", fntData);
+    mLabelMission = new sgui::Label("?", fntData, this);
     mLabelMission->SetColor(WidgetsConstants::colorPanelText);
-    RegisterRenderable(mLabelMission);
 
     // position elements
     UpdatePositions();
@@ -183,8 +179,8 @@ void PanelPlanetInfo::UpdatePositions()
     mBg->SetPosition(x, y);
 
     // TITLE
-    x = x0 + marginL;
-    y = y0 + marginT;
+    x = marginL;
+    y = marginT;
 
     mTitle->SetPosition(x, y);
 
@@ -193,144 +189,108 @@ void PanelPlanetInfo::UpdatePositions()
     const int marginDataB = 25;
 
     // LINE SIZE
-    x = x0 + (w - mHeaderSize->GetWidth()) / 2;
+    x = (w - mHeaderSize->GetWidth()) / 2;
     y += mTitle->GetHeight() + marginTitleB;
     mHeaderSize->SetPosition(x, y);
 
-    x = x0 + (w - mLabelSize->GetWidth()) / 2;
+    x = (w - mLabelSize->GetWidth()) / 2;
     y += mHeaderSize->GetHeight() + marginHeaderB;
     mLabelSize->SetPosition(x, y);
 
     // LINE STATUS
-    x = x0 + (w - mHeaderStatus->GetWidth()) / 2;
+    x = (w - mHeaderStatus->GetWidth()) / 2;
     y += mLabelSize->GetHeight() + marginDataB;
     mHeaderStatus->SetPosition(x, y);
 
-    x = x0 + (w - mLabelStatus->GetWidth()) / 2;
+    x = (w - mLabelStatus->GetWidth()) / 2;
     y += mHeaderStatus->GetHeight() + marginHeaderB;
     mLabelStatus->SetPosition(x, y);
 
     // LINE VALUE
-    x = x0 + (w - mHeaderValue->GetWidth()) / 2;
+    x = (w - mHeaderValue->GetWidth()) / 2;
     y += mHeaderStatus->GetHeight() + marginDataB;
     mHeaderValue->SetPosition(x, y);
 
     x = x0 + (w - mBarValue->GetWidth()) / 2;
-    y += mHeaderValue->GetHeight() + marginHeaderB;
+    y += y0 + mHeaderValue->GetHeight() + marginHeaderB;
     mBarValue->SetPosition(x, y);
 
+    y -= y0;
+
     // LINE OCCUPIER
-    x = x0 + (w - mHeaderOccupier->GetWidth()) / 2;
+    x = (w - mHeaderOccupier->GetWidth()) / 2;
     y += mBarValue->GetHeight() + marginDataB;
     mHeaderOccupier->SetPosition(x, y);
 
-    x = x0 + (w - mLabelOccupier->GetWidth()) / 2;
+    x = (w - mLabelOccupier->GetWidth()) / 2;
     y += mHeaderOccupier->GetHeight() + marginHeaderB;
     mLabelOccupier->SetPosition(x, y);
 
     // LINE MISSION
-    x = x0 + (w - mHeaderMission->GetWidth()) / 2;
+    x = (w - mHeaderMission->GetWidth()) / 2;
     y += mLabelOccupier->GetHeight() + marginDataB;
     mHeaderMission->SetPosition(x, y);
 
-    x = x0 + (w - mLabelMission->GetWidth()) / 2;
+    x = (w - mLabelMission->GetWidth()) / 2;
     y += mHeaderMission->GetHeight() + marginHeaderB;
     mLabelMission->SetPosition(x, y);
 }
 
 void PanelPlanetInfo::UpdateTerritorySize()
 {
-    using namespace sgl;
-
-    // delete current text
-    UnregisterRenderable(mLabelSize);
-    delete mLabelSize;
-
-    // create new text
-    auto fm = graphic::FontManager::Instance();
-
-    graphic::Font * fntData = fm->GetFont(WidgetsConstants::FontFileText,
-                                          WidgetsConstants::FontSizePlanetMapText, graphic::Font::NORMAL);
-
     if(mRows > 0 && mCols > 0)
     {
         std::ostringstream s;
         s << mRows << "x" << mCols;
 
-        mLabelSize = new graphic::Text(s.str().c_str(), fntData);
+        mLabelSize->SetText(s.str().c_str());
     }
     else
-        mLabelSize = new graphic::Text("?", fntData);
+        mLabelSize->SetText("?");
 
     mLabelSize->SetColor(WidgetsConstants::colorPanelText);
-    RegisterRenderable(mLabelSize);
 }
 
 void PanelPlanetInfo::UpdateTerritoryStatus()
 {
-    using namespace sgl;
-
-    // delete current text
-    UnregisterRenderable(mLabelStatus);
-    delete mLabelStatus;
-
-    // create new text
-    auto fm = graphic::FontManager::Instance();
-
-    graphic::Font * fntData = fm->GetFont(WidgetsConstants::FontFileText,
-                                          WidgetsConstants::FontSizePlanetMapText, graphic::Font::NORMAL);
-
     if(mStatus < NUM_TERRITORY_STATUSES)
     {
+        auto sm = sgl::utilities::StringManager::Instance();
+
         const char * statuses[] =
         {
-            "UNEXPLORED",
-            "FREE",
-            "OCCUPIED",
-            "OCCUPIED",
-            "UNREACHABLE",
-            "UNAVAILABLE"
+            sm->GetCString("TS_UNEXPLORED"),
+            sm->GetCString("TS_FREE"),
+            sm->GetCString("TS_OCCUPIED"),
+            sm->GetCString("TS_OCCUPIED"),
+            sm->GetCString("TS_UNREACHABLE"),
+            sm->GetCString("TS_UNAVAILABLE"),
         };
 
-        mLabelStatus = new graphic::Text(statuses[mStatus], fntData);
+        mLabelStatus->SetText(statuses[mStatus]);
     }
     else
-        mLabelStatus = new graphic::Text("?", fntData);
+        mLabelStatus->SetText("?");
 
     mLabelStatus->SetColor(WidgetsConstants::colorPanelText);
-    RegisterRenderable(mLabelStatus);
 }
 
 void PanelPlanetInfo::UpdateTerritoryOccupier()
 {
-    using namespace sgl;
-
-    // delete current text
-    UnregisterRenderable(mLabelOccupier);
-    delete mLabelOccupier;
-
-    // create new text
-    auto fm = graphic::FontManager::Instance();
-
-    graphic::Font * fntData = fm->GetFont(WidgetsConstants::FontFileText,
-                                          WidgetsConstants::FontSizePlanetMapText, graphic::Font::NORMAL);
-
     if(mOccupier < NUM_FACTIONS)
     {
-        mLabelOccupier = new graphic::Text(FACTIONS_NAME[mOccupier], fntData);
+        mLabelOccupier->SetText(FACTIONS_NAME[mOccupier]);
         mLabelOccupier->SetColor(PLAYER_COLOR[mOccupier]);
     }
     else
     {
         if(mStatus != TER_ST_UNKNOWN && mStatus != TER_ST_UNEXPLORED)
-            mLabelOccupier = new graphic::Text("-", fntData);
+            mLabelOccupier->SetText("-");
         else
-            mLabelOccupier = new graphic::Text("?", fntData);
+            mLabelOccupier->SetText("?");
 
         mLabelOccupier->SetColor(WidgetsConstants::colorPanelText);
     }
-
-    RegisterRenderable(mLabelOccupier);
 }
 
 void PanelPlanetInfo::UpdateTerritoryValue()
@@ -344,28 +304,35 @@ void PanelPlanetInfo::UpdateTerritoryValue()
 
 void PanelPlanetInfo::UpdateMissionType()
 {
-    using namespace sgl;
-
-    // delete current text
-    UnregisterRenderable(mLabelMission);
-    delete mLabelMission;
-
-    // create new text
-    auto fm = graphic::FontManager::Instance();
-
-    graphic::Font * fntData = fm->GetFont(WidgetsConstants::FontFileText,
-                                          WidgetsConstants::FontSizePlanetMapText, graphic::Font::NORMAL);
+    auto sm = sgl::utilities::StringManager::Instance();
 
     if(mMission < NUM_MISSION_CATEGORIES)
-        mLabelMission = new graphic::Text(MISSION_CATEGORY_TITLE[mMission], fntData);
+        mLabelMission->SetText(sm->GetCString(MISSION_CATEGORY_TITLE[mMission]));
     else if(MISSION_COMPLETED == mMission)
-        mLabelMission = new graphic::Text("-", fntData);
+        mLabelMission->SetText("-");
     // UNKNOWN
     else
-        mLabelMission = new graphic::Text("?", fntData);
+        mLabelMission->SetText("?");
 
     mLabelMission->SetColor(WidgetsConstants::colorPanelText);
-    RegisterRenderable(mLabelMission);
+}
+
+void PanelPlanetInfo::OnStringsChanged()
+{
+    auto sm = sgl::utilities::StringManager::Instance();
+
+    mTitle->SetText(sm->GetCString("INFO"));
+
+    mHeaderSize->SetText(sm->GetCString("SIZE"));
+    mHeaderStatus->SetText(sm->GetCString("STATUS"));
+    mHeaderValue->SetText(sm->GetCString("VALUE"));
+    mHeaderOccupier->SetText(sm->GetCString("OCCUPIER"));
+    mHeaderMission->SetText(sm->GetCString("MISSION"));
+
+    UpdateTerritoryStatus();
+    UpdateMissionType();
+
+    UpdatePositions();
 }
 
 } // namespace game

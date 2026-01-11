@@ -12,10 +12,10 @@ const char * FACTIONS_NAME[NUM_FACTIONS] =
 
 const char * MISSION_CATEGORY_TITLE[NUM_MISSION_CATEGORIES] =
 {
-    "RESOURCE COLLECTION",
+    "RES_COLLECTION",
     "CONSTRUCTION",
     "DESTRUCTION",
-    "RESOURCE PRODUCTION",
+    "RES_PRODUCTION",
     "RESCUE",
     "RESISTANCE",
     "TUTORIAL"
@@ -23,7 +23,7 @@ const char * MISSION_CATEGORY_TITLE[NUM_MISSION_CATEGORIES] =
 
 const char * PLANETS_NAME[NUM_PLANETS] =
 {
-    "Osiris V"
+    "Tutoria 50"
 };
 
 } // namespace game
