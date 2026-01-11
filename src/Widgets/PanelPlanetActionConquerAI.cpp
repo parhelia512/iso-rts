@@ -8,12 +8,12 @@
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
 #include <sgl/graphic/Image.h>
-#include <sgl/graphic/Text.h>
 #include <sgl/graphic/Texture.h>
 #include <sgl/graphic/TextureManager.h>
 #include <sgl/sgui/Image.h>
 #include <sgl/sgui/Label.h>
 #include <sgl/sgui/TextArea.h>
+#include <sgl/utilities/StringManager.h>
 
 namespace
 {
@@ -23,7 +23,8 @@ namespace
 namespace game
 {
 
-PanelPlanetActionConquerAI::PanelPlanetActionConquerAI(Player * player, int money, int energy, int material, int diamonds)
+PanelPlanetActionConquerAI::PanelPlanetActionConquerAI(Player * player, int money, int energy,
+                                                       int material, int diamonds)
     : sgl::sgui::Widget(nullptr)
     , mPlayer(player)
     , mCostMoney(money)
@@ -35,6 +36,8 @@ PanelPlanetActionConquerAI::PanelPlanetActionConquerAI(Player * player, int mone
 
     auto tm = graphic::TextureManager::Instance();
     auto fm = graphic::FontManager::Instance();
+    auto sm = utilities::StringManager::Instance();
+    sm->AddListener(this);
 
     // BACKGROUND
     graphic::Texture * tex = tm->GetSprite(SpriteFilePlanetMap2, IND_PM_PANEL_ACTIONS);
@@ -46,9 +49,8 @@ PanelPlanetActionConquerAI::PanelPlanetActionConquerAI(Player * player, int mone
     // TITLE
     graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFilePanelTitle,
                                       WidgetsConstants::FontSizePlanetMapTitle, graphic::Font::NORMAL);
-    mTitle = new graphic::Text("SEND AI", fnt);
+    mTitle = new sgui::Label(sm->GetCString("SEND_AI"), fnt, this);
     mTitle->SetColor(WidgetsConstants::colorPanelTitle);
-    RegisterRenderable(mTitle);
 
     // CONTENT
     CreateContentStart(money, energy, material, diamonds);
@@ -60,10 +62,10 @@ PanelPlanetActionConquerAI::PanelPlanetActionConquerAI(Player * player, int mone
 
     // BUTTONS
     mButtonOk = new ButtonPlanetMap(this);
-    mButtonOk->SetLabel("PROCEED");
+    mButtonOk->SetLabel(sm->GetCString("PROCEED"));
 
     mButtonCancel = new SecondaryButtonPlanetMap(this);
-    mButtonCancel->SetLabel("CANCEL");
+    mButtonCancel->SetLabel(sm->GetCString("CANCEL"));
 
     // position elements
     UpdatePositions();
@@ -71,6 +73,8 @@ PanelPlanetActionConquerAI::PanelPlanetActionConquerAI(Player * player, int mone
 
 void PanelPlanetActionConquerAI::ShowAction()
 {
+    auto sm = sgl::utilities::StringManager::Instance();
+
     // show content
     mContentStart->SetVisible(true);
     mContentFailure->SetVisible(false);
@@ -96,11 +100,13 @@ void PanelPlanetActionConquerAI::ShowAction()
     mButtonOk->SetVisible(true);
     mButtonOk->SetEnabled(canConquer);
 
-    mButtonCancel->SetLabel("CANCEL");
+    mButtonCancel->SetLabel(sm->GetCString("CANCEL"));
 }
 
 void PanelPlanetActionConquerAI::ShowResult(bool success)
 {
+    auto sm = sgl::utilities::StringManager::Instance();
+
     mContentStart->SetVisible(false);
 
     mContentFailure->SetVisible(!success);
@@ -108,7 +114,7 @@ void PanelPlanetActionConquerAI::ShowResult(bool success)
 
     mButtonOk->SetVisible(false);
 
-    mButtonCancel->SetLabel("CLOSE");
+    mButtonCancel->SetLabel(sm->GetCString("CLOSE"));
 }
 
 void PanelPlanetActionConquerAI::AddOnButtonOkClickFunction(const std::function<void()> & f)
@@ -129,20 +135,22 @@ void PanelPlanetActionConquerAI::CreateContentStart(int money, int energy, int m
 
     auto fm = graphic::FontManager::Instance();
     auto tm = graphic::TextureManager::Instance();
+    auto sm = utilities::StringManager::Instance();
 
     const int w = GetWidth();
 
     // DESCRIPTION
-    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFileText, textSize, graphic::Font::NORMAL);
+    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFileText, textSize,
+                                      graphic::Font::NORMAL);
 
     const int marginL = 20;
     const int marginR = 20;
     const int contW = w - marginL - marginR;
     const int contH = 80;
-    const char * txt = "Send an AI general to conquer the territory.\n\n"
-                       "This will cost you:";
-    auto text = new sgui::TextArea(contW, contH, txt, fnt, false, mContentStart);
-    text->SetColor(WidgetsConstants::colorPanelText);
+
+    mTextDesc = new sgui::TextArea(contW, contH, sm->GetCString("PCAI_DESC"),
+                                   fnt, false, mContentStart);
+    mTextDesc->SetColor(WidgetsConstants::colorPanelText);
 
     // COSTS
     auto contCosts = new sgui::Widget(mContentStart);
@@ -204,7 +212,7 @@ void PanelPlanetActionConquerAI::CreateContentStart(int money, int energy, int m
 
     // position row
     x = (w - contCosts->GetWidth()) * 0.5f - marginL;
-    y = text->GetHeight();
+    y = mTextDesc->GetHeight();
     contCosts->SetPosition(x, y);
 }
 
@@ -215,6 +223,7 @@ void PanelPlanetActionConquerAI::CreateContentFailure()
     mContentFailure = new sgui::Widget(this);
 
     auto fm = graphic::FontManager::Instance();
+    auto sm = utilities::StringManager::Instance();
 
     const int w = GetWidth();
 
@@ -225,11 +234,10 @@ void PanelPlanetActionConquerAI::CreateContentFailure()
     const int marginR = 20;
     const int contW = w - marginL - marginR;
     const int contH = 100;
-    const char * txt = "Sorry Commander,\n"
-                       "but the conquest failed.\n\n"
-                       "Your enemy has prevailed.";
-    auto text = new sgui::TextArea(contW, contH, txt, fnt, false, mContentFailure);
-    text->SetColor(WidgetsConstants::colorPanelText);
+
+    mTextResFail = new sgui::TextArea(contW, contH, sm->GetCString("PCAI_FAILED"),
+                                      fnt, false, mContentFailure);
+    mTextResFail->SetColor(WidgetsConstants::colorPanelText);
 }
 
 void PanelPlanetActionConquerAI::CreateContentSuccess()
@@ -239,21 +247,22 @@ void PanelPlanetActionConquerAI::CreateContentSuccess()
     mContentSuccess = new sgui::Widget(this);
 
     auto fm = graphic::FontManager::Instance();
+    auto sm = utilities::StringManager::Instance();
 
     const int w = GetWidth();
 
     // DESCRIPTION
-    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFileText, textSize, graphic::Font::NORMAL);
+    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFileText, textSize,
+                                      graphic::Font::NORMAL);
 
     const int marginL = 20;
     const int marginR = 20;
     const int contW = w - marginL - marginR;
     const int contH = 120;
-    const char * txt = "Good news Commander,\n"
-                       "the conquest was successful!\n\n"
-                       "Your resources have been replenished.";
-    auto text = new sgui::TextArea(contW, contH, txt, fnt, false, mContentSuccess);
-    text->SetColor(WidgetsConstants::colorPanelText);
+
+    mTextResSuccess = new sgui::TextArea(contW, contH, sm->GetCString("PCAI_SUCCESS"),
+                                         fnt, false, mContentSuccess);
+    mTextResSuccess->SetColor(WidgetsConstants::colorPanelText);
 }
 
 void PanelPlanetActionConquerAI::HandlePositionChanged()
@@ -279,8 +288,8 @@ void PanelPlanetActionConquerAI::UpdatePositions()
     mBg->SetPosition(x0, y0);
 
     // TITLE
-    x = x0 + marginL;
-    y = y0 + marginT;
+    x = marginL;
+    y = marginT;
 
     mTitle->SetPosition(x, y);
 
@@ -304,6 +313,30 @@ void PanelPlanetActionConquerAI::UpdatePositions()
     y -= spacingButtons + mButtonOk->GetHeight();
 
     mButtonOk->SetPosition(x, y);
+}
+
+void PanelPlanetActionConquerAI::OnStringsChanged()
+{
+    auto sm = sgl::utilities::StringManager::Instance();
+
+    mTitle->SetText(sm->GetCString("SEND_AI"));
+
+    mButtonOk->SetLabel(sm->GetCString("PROCEED"));
+
+    if(mContentStart->IsVisible())
+    {
+        mButtonCancel->SetLabel(sm->GetCString("CANCEL"));
+        mTextDesc->SetText(sm->GetCString("PCAI_DESC"));
+    }
+    else
+    {
+        mButtonCancel->SetLabel(sm->GetCString("CLOSE"));
+
+        if(mTextResFail != nullptr)
+            mTextResFail->SetText(sm->GetCString("PCAI_FAILED"));
+        if(mTextResSuccess != nullptr)
+            mTextResSuccess->SetText(sm->GetCString("PCAI_SUCCESS"));
+    }
 }
 
 } // namespace game

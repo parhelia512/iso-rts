@@ -64,7 +64,9 @@ private:
     sgl::sgui::Label * mLabelEnergy = nullptr;
     sgl::sgui::Label * mLabelMaterial = nullptr;
 
-    sgl::sgui::TextArea * mTextRes = nullptr;
+    sgl::sgui::TextArea * mTextDesc = nullptr;
+    sgl::sgui::TextArea * mTextResFail = nullptr;
+    sgl::sgui::TextArea * mTextResSuccess = nullptr;
 
     ButtonPlanetMap * mButtonOk = nullptr;
     SecondaryButtonPlanetMap * mButtonCancel = nullptr;

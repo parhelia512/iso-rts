@@ -1,20 +1,18 @@
 #pragma once
 
 #include <sgl/sgui/Widget.h>
+#include <sgl/utilities/StringsChangeListener.h>
 
 #include <functional>
 
 namespace sgl
 {
-    namespace graphic
-    {
-        class Image;
-        class Text;
-    }
+    namespace graphic { class Image; }
 
     namespace sgui
     {
         class Label;
+        class TextArea;
     }
 }
 
@@ -27,7 +25,8 @@ class Player;
 
 enum TerritoryStatus : unsigned int;
 
-class PanelPlanetActionConquerAI : public sgl::sgui::Widget
+class PanelPlanetActionConquerAI : public sgl::sgui::Widget,
+                                   public sgl::utilities::StringsChangeListener
 {
 public:
     PanelPlanetActionConquerAI(Player * player, int money, int energy, int material, int diamonds);
@@ -47,9 +46,11 @@ private:
 
     void UpdatePositions();
 
+    void OnStringsChanged() override;
+
 private:
     sgl::graphic::Image * mBg = nullptr;
-    sgl::graphic::Text * mTitle = nullptr;
+    sgl::sgui::Label * mTitle = nullptr;
 
     sgl::sgui::Widget * mContentStart = nullptr;
     sgl::sgui::Widget * mContentFailure = nullptr;
@@ -59,6 +60,10 @@ private:
     sgl::sgui::Label * mLabelEnergy = nullptr;
     sgl::sgui::Label * mLabelMaterial = nullptr;
     sgl::sgui::Label * mLabelDiamonds = nullptr;
+
+    sgl::sgui::TextArea * mTextDesc = nullptr;
+    sgl::sgui::TextArea * mTextResFail = nullptr;
+    sgl::sgui::TextArea * mTextResSuccess = nullptr;
 
     ButtonPlanetMap * mButtonOk = nullptr;
     SecondaryButtonPlanetMap * mButtonCancel = nullptr;

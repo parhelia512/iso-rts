@@ -23,7 +23,8 @@ namespace
 namespace game
 {
 
-PanelPlanetActionExplore::PanelPlanetActionExplore(Player * player, int money, int energy, int material)
+PanelPlanetActionExplore::PanelPlanetActionExplore(Player * player, int money,
+                                                   int energy, int material)
     : sgl::sgui::Widget(nullptr)
     , mPlayer(player)
     , mCostMoney(money)
@@ -140,6 +141,7 @@ void PanelPlanetActionExplore::CreateContentStart(int money, int energy, int mat
 
     auto fm = graphic::FontManager::Instance();
     auto tm = graphic::TextureManager::Instance();
+    auto sm = utilities::StringManager::Instance();
 
     const int w = GetWidth();
 
@@ -150,9 +152,10 @@ void PanelPlanetActionExplore::CreateContentStart(int money, int energy, int mat
     const int marginR = 20;
     const int contW = w - marginL - marginR;
     const int contH = 80;
-    const char * txt = "";
-    auto text = new sgui::TextArea(contW, contH, txt, fnt, false, mContentStart);
-    text->SetColor(WidgetsConstants::colorPanelText);
+
+    mTextDesc = new sgui::TextArea(contW, contH, sm->GetCString("PA_EXPLORE_DESC"),
+                                   fnt, false, mContentStart);
+    mTextDesc->SetColor(WidgetsConstants::colorPanelText);
 
     // COSTS
     auto contCosts = new sgui::Widget(mContentStart);
@@ -197,7 +200,7 @@ void PanelPlanetActionExplore::CreateContentStart(int money, int energy, int mat
     mLabelMaterial->SetPosition(x, y);
 
     x = (w - contCosts->GetWidth()) * 0.5f - marginL;
-    y = text->GetHeight();
+    y = mTextDesc->GetHeight();
     contCosts->SetPosition(x, y);
 }
 
@@ -221,9 +224,9 @@ void PanelPlanetActionExplore::CreateContentFailure()
     const int contW = w - marginL - marginR;
     const int contH = 100;
 
-    mTextRes = new sgui::TextArea(contW, contH, sm->GetCString("PA_EXPLORE_FAILED"),
-                                  fnt, false, mContentFailure);
-    mTextRes->SetColor(WidgetsConstants::colorPanelText);
+    mTextResFail = new sgui::TextArea(contW, contH, sm->GetCString("PA_EXPLORE_FAILED"),
+                                      fnt, false, mContentFailure);
+    mTextResFail->SetColor(WidgetsConstants::colorPanelText);
 }
 
 void PanelPlanetActionExplore::CreateContentSuccess()
@@ -238,16 +241,17 @@ void PanelPlanetActionExplore::CreateContentSuccess()
     const int w = GetWidth();
 
     // DESCRIPTION
-    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFileText, textSize, graphic::Font::NORMAL);
+    graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFileText, textSize,
+                                      graphic::Font::NORMAL);
 
     const int marginL = 20;
     const int marginR = 20;
     const int contW = w - marginL - marginR;
     const int contH = 100;
 
-    mTextRes = new sgui::TextArea(contW, contH, sm->GetCString("PA_EXPLORE_SUCCESS"),
-                                  fnt, false, mContentSuccess);
-    mTextRes->SetColor(WidgetsConstants::colorPanelText);
+    mTextResSuccess = new sgui::TextArea(contW, contH, sm->GetCString("PA_EXPLORE_SUCCESS"),
+                                         fnt, false, mContentSuccess);
+    mTextResSuccess->SetColor(WidgetsConstants::colorPanelText);
 }
 
 void PanelPlanetActionExplore::HandlePositionChanged()
@@ -309,14 +313,19 @@ void PanelPlanetActionExplore::OnStringsChanged()
     mButtonOk->SetLabel(sm->GetCString("PROCEED"));
 
     if(mContentStart->IsVisible())
+    {
         mButtonCancel->SetLabel(sm->GetCString("CANCEL"));
+        mTextDesc->SetText(sm->GetCString("PA_EXPLORE_DESC"));
+    }
     else
+    {
         mButtonCancel->SetLabel(sm->GetCString("CLOSE"));
 
-    if(mContentFailure != nullptr)
-        mTextRes->SetText(sm->GetCString("PA_EXPLORE_FAILED"));
-    else if(mContentSuccess != nullptr)
-        mTextRes->SetText(sm->GetCString("PA_EXPLORE_SUCCESS"));
+        if(mTextResFail != nullptr)
+            mTextResFail->SetText(sm->GetCString("PA_EXPLORE_FAILED"));
+        if(mTextResSuccess != nullptr)
+            mTextResSuccess->SetText(sm->GetCString("PA_EXPLORE_SUCCESS"));
+    }
 }
 
 } // namespace game
