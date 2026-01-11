@@ -29,25 +29,12 @@ ButtonPlanetMap::ButtonPlanetMap(sgl::sgui::Widget * parent) :
     SetLabelFont(fnt);
 }
 
-void ButtonPlanetMap::CreateTooltip(const char * text)
-{
-    if(mTooltip != nullptr)
-        return ;
-
-    const int timeShowing = 2500;
-
-    mTooltip = new GameSimpleTooltip(text);
-    SetTooltip(mTooltip);
-    SetTooltipDelay(WidgetsConstants::timeTooltipButtonDelay);
-    SetTooltipShowingTime(timeShowing);
-}
-
 void ButtonPlanetMap::SetTooltipText(const char * text)
 {
     if(mTooltip == nullptr)
-        return ;
-
-    mTooltip->SetText(text);
+        CreateTooltip(text);
+    else
+        mTooltip->SetText(text);
 }
 
 void ButtonPlanetMap::HandleMouseOver()
@@ -64,6 +51,16 @@ void ButtonPlanetMap::HandleButtonDown()
 
     auto player = sgl::media::AudioManager::Instance()->GetPlayer();
     player->PlaySound("UI/button_click-01.ogg");
+}
+
+void ButtonPlanetMap::CreateTooltip(const char * text)
+{
+    const int timeShowing = 2500;
+
+    mTooltip = new GameSimpleTooltip(text);
+    SetTooltip(mTooltip);
+    SetTooltipDelay(WidgetsConstants::timeTooltipButtonDelay);
+    SetTooltipShowingTime(timeShowing);
 }
 
 // -- SECONDARY BUTTON --

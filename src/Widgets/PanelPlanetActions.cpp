@@ -11,6 +11,14 @@
 #include <sgl/graphic/Text.h>
 #include <sgl/graphic/Texture.h>
 #include <sgl/graphic/TextureManager.h>
+#include <sgl/sgui/Label.h>
+#include <sgl/utilities/StringManager.h>
+
+namespace
+{
+constexpr int marginL = 20;
+constexpr int marginT = 15;
+}
 
 namespace game
 {
@@ -22,6 +30,8 @@ PanelPlanetActions::PanelPlanetActions()
 
     auto tm = graphic::TextureManager::Instance();
     auto fm = graphic::FontManager::Instance();
+    auto sm = utilities::StringManager::Instance();
+    sm->AddListener(this);
 
     // BACKGROUND
     graphic::Texture * tex = tm->GetSprite(SpriteFilePlanetMap2, IND_PM_PANEL_ACTIONS);
@@ -33,22 +43,22 @@ PanelPlanetActions::PanelPlanetActions()
     // TITLE
     graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFilePanelTitle,
                                       WidgetsConstants::FontSizePlanetMapTitle, graphic::Font::NORMAL);
-    mTitle = new graphic::Text("ACTIONS", fnt);
+    mTitle = new sgui::Label(sm->GetCString("ACTIONS"), fnt, this);
     mTitle->SetColor(WidgetsConstants::colorPanelTitle);
-    RegisterRenderable(mTitle);
+    mTitle->SetPosition(marginL, marginT);
 
     // BUTTONS
     mButtons[EXPLORE] = new ButtonPlanetMap(this);
-    mButtons[EXPLORE]->SetLabel("EXPLORE");
-    mButtons[EXPLORE]->SetTooltipText("Send scouts to explore the territory");
+    mButtons[EXPLORE]->SetLabel(sm->GetCString("EXPLORE"));
+    mButtons[EXPLORE]->SetTooltipText(sm->GetCString("TT_PA_EXPLORE"));
 
     mButtons[CONQUER] = new ButtonPlanetMap(this);
-    mButtons[CONQUER]->SetLabel("CONQUER");
-    mButtons[CONQUER]->SetTooltipText("Start a mission to conquer the territory");
+    mButtons[CONQUER]->SetLabel(sm->GetCString("CONQUER"));
+    mButtons[CONQUER]->SetTooltipText(sm->GetCString("TT_PA_CONQUER"));
 
     mButtons[SEND_AI] = new ButtonPlanetMap(this);
-    mButtons[SEND_AI]->SetLabel("SEND AI");
-    mButtons[SEND_AI]->SetTooltipText("Send an AI to conquer the territory");
+    mButtons[SEND_AI]->SetLabel(sm->GetCString("SEND_AI"));
+    mButtons[SEND_AI]->SetTooltipText(sm->GetCString("TT_PA_SEND_AI"));
 
     // position elements
     UpdatePositions();
@@ -102,20 +112,11 @@ void PanelPlanetActions::UpdatePositions()
     const int x0 = GetScreenX();
     const int y0 = GetScreenY();
 
-    const int marginL = 20;
-    const int marginT = 15;
-
     int x;
     int y;
 
     // BACKGROUND
     mBg->SetPosition(x0, y0);
-
-    // TITLE
-    x = x0 + marginL;
-    y = y0 + marginT;
-
-    mTitle->SetPosition(x, y);
 
     // BUTTONS
     const int marginButtons = 40;
@@ -135,4 +136,19 @@ void PanelPlanetActions::UpdatePositions()
     mButtons[SEND_AI]->SetPosition(x, y);
 }
 
+void PanelPlanetActions::OnStringsChanged()
+{
+    auto sm = sgl::utilities::StringManager::Instance();
+
+    mTitle->SetText(sm->GetCString("ACTIONS"));
+
+    mButtons[EXPLORE]->SetLabel(sm->GetCString("EXPLORE"));
+    mButtons[EXPLORE]->SetTooltipText(sm->GetCString("TT_PA_EXPLORE"));
+
+    mButtons[CONQUER]->SetLabel(sm->GetCString("CONQUER"));
+    mButtons[CONQUER]->SetTooltipText(sm->GetCString("TT_PA_CONQUER"));
+
+    mButtons[SEND_AI]->SetLabel(sm->GetCString("SEND_AI"));
+    mButtons[SEND_AI]->SetTooltipText(sm->GetCString("TT_PA_SEND_AI"));
+}
 } // namespace game

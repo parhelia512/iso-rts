@@ -82,6 +82,9 @@ ObjectActionButton::ObjectActionButton(ActionIcon icon, const char * shortcut, i
 
 void ObjectActionButton::SetTooltipText(const char * text)
 {
+    if(mTooltip == nullptr)
+        return ;
+
     mTooltip->SetText(text);
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sgl/sgui/Widget.h>
+#include <sgl/utilities/StringsChangeListener.h>
 
 #include <functional>
 
@@ -12,7 +13,11 @@ namespace sgl
         class Text;
     }
 
-    namespace sgui { class AbstractButton; }
+    namespace sgui
+    {
+        class AbstractButton;
+        class Label;
+    }
 }
 
 namespace game
@@ -22,7 +27,8 @@ class ButtonPlanetMap;
 
 enum TerritoryStatus : unsigned int;
 
-class PanelPlanetActions : public sgl::sgui::Widget
+class PanelPlanetActions : public sgl::sgui::Widget,
+                           public sgl::utilities::StringsChangeListener
 {
 public:
     enum Button : unsigned int
@@ -51,9 +57,12 @@ private:
 
     void UpdatePositions();
 
+    void OnStringsChanged() override;
+
 private:
     sgl::graphic::Image * mBg = nullptr;
-    sgl::graphic::Text * mTitle = nullptr;
+
+    sgl::sgui::Label * mTitle = nullptr;
 
     ButtonPlanetMap * mButtons[NUM_BUTTONS];
 };
