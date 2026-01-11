@@ -593,8 +593,11 @@ void PanelSelectedObject::OnStringsChanged()
     auto sm = sgl::utilities::StringManager::Instance();
 
     // TITLE
-    const GameObjectTypeId type = mObj->GetObjectType();
-    mTitle->SetText(sm->GetCString(ObjectData::TITLES.at(type)));
+    if(mObj != nullptr)
+    {
+        const GameObjectTypeId type = mObj->GetObjectType();
+        mTitle->SetText(sm->GetCString(ObjectData::TITLES.at(type)));
+    }
 
     // tooltip exp level
     mTooltipExp->SetText(sm->GetCString("TT_EXP_LVL"));
