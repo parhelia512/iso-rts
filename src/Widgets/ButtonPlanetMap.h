@@ -5,16 +5,22 @@
 namespace game
 {
 
+class GameSimpleTooltip;
+
 class ButtonPlanetMap : public GameButton
 {
 public:
     ButtonPlanetMap(sgl::sgui::Widget * parent);
 
+    void CreateTooltip(const char * text);
     void SetTooltipText(const char * text);
 
 private:
     void HandleMouseOver() override;
     void HandleButtonDown() override;
+
+private:
+    GameSimpleTooltip * mTooltip = nullptr;
 };
 
 class SecondaryButtonPlanetMap : public GameButton

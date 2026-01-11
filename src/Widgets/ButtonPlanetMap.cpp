@@ -29,14 +29,25 @@ ButtonPlanetMap::ButtonPlanetMap(sgl::sgui::Widget * parent) :
     SetLabelFont(fnt);
 }
 
-void ButtonPlanetMap::SetTooltipText(const char * text)
+void ButtonPlanetMap::CreateTooltip(const char * text)
 {
+    if(mTooltip != nullptr)
+        return ;
+
     const int timeShowing = 2500;
 
-    auto tt = new GameSimpleTooltip(text);
-    SetTooltip(tt);
+    mTooltip = new GameSimpleTooltip(text);
+    SetTooltip(mTooltip);
     SetTooltipDelay(WidgetsConstants::timeTooltipButtonDelay);
     SetTooltipShowingTime(timeShowing);
+}
+
+void ButtonPlanetMap::SetTooltipText(const char * text)
+{
+    if(mTooltip == nullptr)
+        return ;
+
+    mTooltip->SetText(text);
 }
 
 void ButtonPlanetMap::HandleMouseOver()
