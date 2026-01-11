@@ -8,6 +8,7 @@
 #include <sgl/graphic/FontManager.h>
 #include <sgl/media/AudioManager.h>
 #include <sgl/media/AudioPlayer.h>
+#include <sgl/utilities/StringManager.h>
 
 namespace game
 {
@@ -106,13 +107,16 @@ ButtonLeavePlanet::ButtonLeavePlanet(sgl::sgui::Widget * parent)
 {
     using namespace sgl;
 
+    auto sm = utilities::StringManager::Instance();
+    sm->AddListener(this);
+
     const int size = 20;
 
     auto fm = graphic::FontManager::Instance();
     graphic::Font * fnt = fm->GetFont(WidgetsConstants::FontFileButton, size, sgl::graphic::Font::NORMAL);
     SetLabelFont(fnt);
 
-    SetLabel("LEAVE THE PLANET");
+    SetLabel(sm->GetCString("LEAVE_PLANET"));
 }
 
 void ButtonLeavePlanet::HandleMouseOver()
@@ -130,4 +134,12 @@ void ButtonLeavePlanet::HandleButtonDown()
     auto player = sgl::media::AudioManager::Instance()->GetPlayer();
     player->PlaySound("UI/button_click-01.ogg");
 }
+
+void ButtonLeavePlanet::OnStringsChanged()
+{
+    auto sm = sgl::utilities::StringManager::Instance();
+
+    SetLabel(sm->GetCString("LEAVE_PLANET"));
+}
+
 } // namespace game

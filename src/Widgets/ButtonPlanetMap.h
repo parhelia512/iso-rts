@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameButton.h"
+#include <sgl/utilities/StringsChangeListener.h>
 
 namespace game
 {
@@ -34,10 +35,13 @@ private:
     void HandleButtonDown() override;
 };
 
-class ButtonLeavePlanet : public GameButton
+class ButtonLeavePlanet : public GameButton, public sgl::utilities::StringsChangeListener
 {
 public:
     ButtonLeavePlanet(sgl::sgui::Widget * parent);
+
+private:
+    void OnStringsChanged() override;
 
 private:
     void HandleMouseOver() override;
