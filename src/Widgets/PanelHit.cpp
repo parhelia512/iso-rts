@@ -9,9 +9,9 @@
 #include <sgl/graphic/FontManager.h>
 #include <sgl/graphic/Image.h>
 #include <sgl/graphic/TextureManager.h>
-
 #include <sgl/sgui/Image.h>
 #include <sgl/sgui/Label.h>
+#include <sgl/utilities/StringManager.h>
 
 #include <iomanip>
 #include <sstream>
@@ -26,8 +26,10 @@ PanelHit::PanelHit()
 
     auto tm = graphic::TextureManager::Instance();
     auto fm = graphic::FontManager::Instance();
+    auto sm = utilities::StringManager::Instance();
+    sm->AddListener(this);
 
-    const int sizeHeader = 16;
+    const int sizeHeader = 15;
     auto fontHeader = fm->GetFont(WidgetsConstants::FontFilePanelHeader,
                                   sizeHeader, graphic::Font::NORMAL);
 
@@ -49,11 +51,11 @@ PanelHit::PanelHit()
     SetSize(w, h);
 
     // HIT
-    auto labelHeader = new sgui::Label("hit", fontHeader, this);
-    labelHeader->SetColor(WidgetsConstants::colorPanelHeader);
-    labelHeader->SetPosition((w - labelHeader->GetWidth()) / 2, y);
+    mHeaderHit = new sgui::Label(sm->GetCString("PH_HIT"), fontHeader, this);
+    mHeaderHit->SetColor(WidgetsConstants::colorPanelHeader);
+    mHeaderHit->SetPosition((w - mHeaderHit->GetWidth()) / 2, y);
 
-    y += labelHeader->GetHeight();
+    y += mHeaderHit->GetHeight();
 
     mLabelHit = new sgui::Label(fontText, this);
     mLabelHit->SetY(y);
@@ -61,11 +63,11 @@ PanelHit::PanelHit()
     y += marginBlockB;
 
     // FATAL
-    labelHeader = new sgui::Label("fatal", fontHeader, this);
-    labelHeader->SetColor(WidgetsConstants::colorPanelHeader);
-    labelHeader->SetPosition((w - labelHeader->GetWidth()) / 2, y);
+    mHeaderFatal = new sgui::Label(sm->GetCString("PH_FATAL"), fontHeader, this);
+    mHeaderFatal->SetColor(WidgetsConstants::colorPanelHeader);
+    mHeaderFatal->SetPosition((w - mHeaderFatal->GetWidth()) / 2, y);
 
-    y += labelHeader->GetHeight();
+    y += mHeaderFatal->GetHeight();
 
     mLabelFatal = new sgui::Label(fontText, this);
     mLabelFatal->SetY(y);
@@ -73,11 +75,11 @@ PanelHit::PanelHit()
     y += marginBlockB;
 
     // COST
-    labelHeader = new sgui::Label("cost", fontHeader, this);
-    labelHeader->SetColor(WidgetsConstants::colorPanelHeader);
-    labelHeader->SetPosition((w - labelHeader->GetWidth()) / 2, y);
+    mHeaderCost = new sgui::Label(sm->GetCString("PH_COST"), fontHeader, this);
+    mHeaderCost->SetColor(WidgetsConstants::colorPanelHeader);
+    mHeaderCost->SetPosition((w - mHeaderCost->GetWidth()) / 2, y);
 
-    y += labelHeader->GetHeight();
+    y += mHeaderCost->GetHeight();
 
     tex = tm->GetSprite(SpriteFileGameUIShared, ID_UIS_ICON_W_RES_ENERGY_16);
     mIconCost = new sgui::Image(tex, this);
@@ -168,6 +170,22 @@ void PanelHit::HandlePositionChanged()
 void PanelHit::UpdatePositions()
 {
     mBg->SetPosition(GetScreenX(), GetScreenY());
+}
+
+void PanelHit::OnStringsChanged()
+{
+    auto sm = sgl::utilities::StringManager::Instance();
+
+    const int w = GetWidth();
+
+    mHeaderHit->SetText(sm->GetCString("PH_HIT"));
+    mHeaderHit->SetX((w - mHeaderHit->GetWidth()) / 2);
+
+    mHeaderFatal->SetText(sm->GetCString("PH_FATAL"));
+    mHeaderFatal->SetX((w - mHeaderFatal->GetWidth()) / 2);
+
+    mHeaderCost->SetText(sm->GetCString("PH_COST"));
+    mHeaderCost->SetX((w - mHeaderCost->GetWidth()) / 2);
 }
 
 } // namespace sgl
