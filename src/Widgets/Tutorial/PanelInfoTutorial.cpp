@@ -14,6 +14,7 @@
 #include <sgl/graphic/TextureManager.h>
 #include <sgl/sgui/Label.h>
 #include <sgl/sgui/TextArea.h>
+#include <sgl/utilities/StringManager.h>
 
 namespace game
 {
@@ -34,6 +35,9 @@ PanelInfoTutorial::PanelInfoTutorial(int w, int h)
     using namespace sgl;
 
     auto tm = graphic::TextureManager::Instance();
+    auto sm = utilities::StringManager::Instance();
+    sm->AddListener(this);
+
     graphic::Texture * tex = nullptr;
 
     // CREATE BACKGROUND CORNERS
@@ -91,7 +95,7 @@ PanelInfoTutorial::PanelInfoTutorial(int w, int h)
     auto fm = graphic::FontManager::Instance();
     auto font = fm->GetFont(WidgetsConstants::FontFileText, 18, graphic::Font::NORMAL);
 
-    mLabelContinue = new sgui::Label("LEFT CLICK here or press SPACE to continue", font, this);
+    mLabelContinue = new sgui::Label(sm->GetCString("TUT_CONTINUE_INFO"), font, this);
     mLabelContinue->SetColor(TutorialConstants::colorTextContinue);
 
     const int labelX = (w - mLabelContinue->GetWidth()) / 2;
@@ -350,6 +354,13 @@ void PanelInfoTutorial::OnUpdate(float delta)
             }
         }
     }
+}
+
+void PanelInfoTutorial::OnStringsChanged()
+{
+    auto sm = sgl::utilities::StringManager::Instance();
+
+    mLabelContinue->SetText(sm->GetCString("TUT_CONTINUE_INFO"));
 }
 
 } // namespace game

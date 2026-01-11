@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sgl/sgui/Widget.h>
+#include <sgl/utilities/StringsChangeListener.h>
 
 #include <array>
 #include <functional>
@@ -19,7 +20,7 @@ namespace sgl
 namespace game
 {
 
-class PanelInfoTutorial : public sgl::sgui::Widget
+class PanelInfoTutorial : public sgl::sgui::Widget, public sgl::utilities::StringsChangeListener
 {
 public:
     PanelInfoTutorial(int w, int h);
@@ -46,6 +47,8 @@ private:
     void PositionElements();
 
     void OnUpdate(float delta) override;
+
+    void OnStringsChanged() override;
 
 private:
     enum BgParts : unsigned int
