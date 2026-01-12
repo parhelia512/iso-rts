@@ -3013,6 +3013,8 @@ void ScreenGame::ShowActiveUnitIndicators(Unit * unit, const Cell2D & cell)
         ShowBuildWallIndicator(unit, cell);
     else if(action == GameObjectActionType::BUILD_STRUCTURE)
         ShowBuildStructureIndicator(unit, cell);
+    else if(action == GameObjectActionType::ATTACK)
+        UpdatePanelHit(unit);
 }
 
 void ScreenGame::ShowActiveMiniUnitIndicators(MiniUnit * mu, const Cell2D & cell)
@@ -3458,7 +3460,7 @@ void ScreenGame::ShowMoveIndicator(GameObject * obj, const Cell2D & dest)
 
     Cell2D destFinal;
 
-    if(destObj != nullptr)
+    if(destObj != nullptr && !destGC.walkable)
     {
         // can't be conquered or adjacent -> no move
         if(!destObj->CanBeConquered() || mGameMap->AreObjectsAdjacent(obj, destObj))
@@ -3577,12 +3579,7 @@ void ScreenGame::UpdateCurrentCell()
         return;
 
     if(sel->GetObjectCategory() == ObjectData::CAT_UNIT)
-    {
         ShowActiveUnitIndicators(static_cast<Unit *>(sel), cell);
-
-        if(sel->GetActiveAction() == ATTACK)
-            UpdatePanelHit(sel);
-    }
     else if(sel->GetObjectCategory() == ObjectData::CAT_MINI_UNIT)
         ShowActiveMiniUnitIndicators(static_cast<MiniUnit *>(sel), cell);
 }
