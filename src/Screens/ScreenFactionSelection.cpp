@@ -54,7 +54,8 @@ ScreenFactionSelection::ScreenFactionSelection(Game * game)
 
     const int marginL = 50;
     const int marginPanelsH = 15;
-    const int marginTxt = 6;
+    const int marginTxtH = 10;
+    const int marginTxtV = 6;
     const int marginFaction = 50;
 
     const int y0 = 5;
@@ -109,10 +110,10 @@ ScreenFactionSelection::ScreenFactionSelection(Game * game)
     auto panelTxt = new sgui::Image(tex, panelCol);
     panelTxt->SetPosition(x, y);
 
-    int txtX = marginTxt;
-    int txtY = marginTxt;
-    const int txtW = panelTxt->GetWidth() - (marginTxt * 2);
-    const int txtH = panelTxt->GetHeight() - marginTxt;
+    int txtX = marginTxtH;
+    int txtY = marginTxtV;
+    const int txtW = panelTxt->GetWidth() - (marginTxtH * 2);
+    const int txtH = panelTxt->GetHeight() - marginTxtV;
 
     const char * desc1 = sm->GetCString("DESC_FACTION1");
     auto txtArea = new sgui::TextArea(txtW, txtH, desc1, fntTxt, false, panelTxt);
@@ -166,8 +167,8 @@ ScreenFactionSelection::ScreenFactionSelection(Game * game)
     panelTxt = new sgui::Image(tex, panelCol);
     panelTxt->SetPosition(x, y);
 
-    txtX = marginTxt;
-    txtY = marginTxt;
+    txtX = marginTxtH;
+    txtY = marginTxtV;
 
     const char * desc2 = sm->GetCString("DESC_FACTION2");
     txtArea = new sgui::TextArea(txtW, txtH, desc2, fntTxt, false, panelTxt);
@@ -221,8 +222,8 @@ ScreenFactionSelection::ScreenFactionSelection(Game * game)
     panelTxt = new sgui::Image(tex, panelCol);
     panelTxt->SetPosition(x, y);
 
-    txtX = marginTxt;
-    txtY = marginTxt;
+    txtX = marginTxtH;
+    txtY = marginTxtV;
 
     const char * desc3 = sm->GetCString("DESC_FACTION3");
     txtArea = new sgui::TextArea(txtW, txtH, desc3, fntTxt, false, panelTxt);
