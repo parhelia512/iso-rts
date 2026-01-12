@@ -188,6 +188,7 @@ enum TutorialState : unsigned int
     TS_TODO,
     TS_IN_PROGRESS,
     TS_DONE,
+    TS_ABORTED,
 
     NUM_TUTORIAL_STATES,
 

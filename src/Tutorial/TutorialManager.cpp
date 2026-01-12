@@ -72,7 +72,7 @@ void TutorialManager::AbortTutorial()
     if(nullptr == mActiveTutorial)
         return ;
 
-    SetTutorialState(mActiveTutorial->GetId(), TS_TODO);
+    SetTutorialState(mActiveTutorial->GetId(), TS_ABORTED);
 
     delete mActiveTutorial;
     mActiveTutorial = nullptr;

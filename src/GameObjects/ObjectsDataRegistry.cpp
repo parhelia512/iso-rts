@@ -1,7 +1,6 @@
 #include "GameObjects/ObjectsDataRegistry.h"
 
 #include "GameData.h"
-#include "GameObject.h"
 
 namespace game
 {
