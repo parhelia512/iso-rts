@@ -48,6 +48,7 @@
 #include <sgl/sgui/ButtonsGroup.h>
 #include <sgl/sgui/Image.h>
 #include <sgl/sgui/Stage.h>
+#include <sgl/utilities/StringManager.h>
 
 namespace game
 {
@@ -56,6 +57,9 @@ GameHUD::GameHUD(ScreenGame * screen)
     : mScreen(screen)
 {
     using namespace sgl;
+
+    auto sm = utilities::StringManager::Instance();
+    sm->AddListener(this);
 
     const int rendW = graphic::Renderer::Instance()->GetWidth();
     const int rendH = graphic::Renderer::Instance()->GetHeight();
@@ -770,27 +774,29 @@ void GameHUD::ShowTurnControlText(const char * text)
 
 void GameHUD::UpdatePanelTurnControl()
 {
+    auto sm = sgl::utilities::StringManager::Instance();
+
     // GAME PAUSED
     if(mScreen->mPaused)
     {
-        ShowTurnControlText("GAME PAUSED");
+        ShowTurnControlText(sm->GetCString("GAME_PAUSED"));
         return ;
     }
 
     // ENEMY TURN
     if(!mScreen->IsCurrentTurnLocal())
     {
-        ShowTurnControlText("ENEMY TURN");
+        ShowTurnControlText(sm->GetCString("ENEMY_TURN"));
         return ;
     }
 
     // LOCAL TURN
     if(TURN_STAGE_MINI_UNITS_MOVE == mScreen->mTurnStage)
-        ShowTurnControlText("MINI UNITS MOVING");
+        ShowTurnControlText(sm->GetCString("MU_MOVING"));
     else if(TURN_STAGE_MINI_UNITS_ATTACK == mScreen->mTurnStage)
-        ShowTurnControlText("MINI UNITS SHOOTING");
+        ShowTurnControlText(sm->GetCString("MU_SHOOTING"));
     else if(TURN_STAGE_TOWERS_ATTACK == mScreen->mTurnStage)
-        ShowTurnControlText("TOWERS SHOOTING");
+        ShowTurnControlText(sm->GetCString("TOWERS_SHOOTING"));
     else
         ShowTurnControlPanel();
 }
@@ -1158,6 +1164,11 @@ void GameHUD::CenterWidget(sgl::sgui::Widget * w)
     const int posX = (renderer->GetWidth() - w->GetWidth()) / 2;
     const int posY = (renderer->GetHeight() - w->GetHeight()) / 2;
     w->SetPosition(posX, posY);
+}
+
+void GameHUD::OnStringsChanged()
+{
+    UpdatePanelTurnControl();
 }
 
 } // namespace game

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sgl/sgui/Widget.h>
+#include <sgl/utilities/StringsChangeListener.h>
 
 namespace sgl
 {
@@ -48,7 +49,7 @@ struct Cell2D;
 enum PlayerFaction : unsigned int;
 
 // UI
-class GameHUD : public sgl::sgui::Widget
+class GameHUD : public sgl::sgui::Widget, public sgl::utilities::StringsChangeListener
 {
 public:
     GameHUD(ScreenGame * screen);
@@ -135,6 +136,8 @@ private:
     GameMapProgressBar * CreateProgressBar(float time, PlayerFaction faction);
 
     void CenterWidget(sgl::sgui::Widget * w);
+
+    void OnStringsChanged() override;
 
 private:
     PanelHit * mPanelHit = nullptr;
