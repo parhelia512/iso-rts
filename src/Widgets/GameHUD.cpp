@@ -429,16 +429,17 @@ void GameHUD::ShowDialogEndMission(bool won)
     const unsigned int played = mScreen->GetPlayTimeInSec();
 
     // create dialog
-    auto dialog = new DialogEndMission(played, territory, killed, pf, won);
-    dialog->SetFocus();
+    mDialogEnd = new DialogEndMission(played, territory, killed, pf, won);
+    mDialogEnd->SetFocus();
 
-    dialog->SetFunctionOnClose([this, dialog, won]
+    mDialogEnd->SetFunctionOnClose([this, won]
     {
         mScreen->HideScreenOverlay();
 
         --mVisibleDialogs;
 
-        dialog->DeleteLater();
+        mDialogEnd->DeleteLater();
+        mDialogEnd = nullptr;
 
         if(won)
             mScreen->HandleGameWon();
@@ -449,7 +450,7 @@ void GameHUD::ShowDialogEndMission(bool won)
     TemporaryClosePanels();
 
     // position dialog
-    CenterWidget(dialog);
+    CenterWidget(mDialogEnd);
 }
 
 void GameHUD::ShowDialogExit()
@@ -457,9 +458,10 @@ void GameHUD::ShowDialogExit()
     if(mDialogExit != nullptr)
         return ;
 
-    // special case, do not open exit dialog if temple outcome is on screen
+    // special cases, do not open exit dialog if temple outcome is on screen
     // as dialog explore temple outcome can't be closed if no option is selected
-    if(mDialogExploreTempleOutcome != nullptr)
+    // OR if showing dialog exit as mission is over
+    if(mDialogExploreTempleOutcome != nullptr || mDialogEnd != nullptr)
         return ;
 
     mScreen->ShowScreenOverlay();

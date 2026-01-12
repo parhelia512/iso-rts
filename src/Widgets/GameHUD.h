@@ -18,6 +18,7 @@ class ButtonMinimap;
 class ButtonPanelSelectedObject;
 class CameraMapController;
 class CountdownLabel;
+class DialogEndMission;
 class DialogExit;
 class DialogExploreTemple;
 class DialogExploreTempleOutcome;
@@ -147,6 +148,7 @@ private:
     sgl::sgui::ButtonsGroup * mGroupUnitSel = nullptr;
     CountdownLabel * mCountdownLabel = nullptr;
 
+    DialogEndMission * mDialogEnd = nullptr;
     DialogExit * mDialogExit = nullptr;
     DialogExploreTemple * mDialogExploreTemple = nullptr;
     DialogExploreTempleOutcome * mDialogExploreTempleOutcome = nullptr;

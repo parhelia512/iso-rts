@@ -15,6 +15,7 @@
 #include <sgl/media/AudioPlayer.h>
 #include <sgl/sgui/ImageButton.h>
 #include <sgl/sgui/Label.h>
+#include <sgl/utilities/StringManager.h>
 
 #include <sstream>
 
@@ -40,9 +41,11 @@ public:
         const int size = 24;
 
         auto fm = graphic::FontManager::Instance();
+        auto sm = utilities::StringManager::Instance();
+
         auto fnt = fm->GetFont(WidgetsConstants::FontFileButton, size, graphic::Font::NORMAL);
         SetLabelFont(fnt);
-        SetLabel("CONTINUE");
+        SetLabel(sm->GetCString("CONTINUE"));
 
         SetShortcutKey(sgl::core::KeyboardEvent::KEY_RETURN);
     }
@@ -77,6 +80,7 @@ DialogEndMission::DialogEndMission(int time, int territoryConquered, int enemies
 
     auto fm = graphic::FontManager::Instance();
     auto tm = graphic::TextureManager::Instance();
+    auto sm = utilities::StringManager::Instance();
 
     // BACKGROUND
     graphic::Texture * tex = tm->GetSprite(SpriteFileDialogEndMission, IND_DIA_EM_BG);
@@ -100,9 +104,9 @@ DialogEndMission::DialogEndMission(int time, int territoryConquered, int enemies
     sgui::Label * title = nullptr;
 
     if(victory)
-        title = new sgui::Label("VICTORY", font, this);
+        title = new sgui::Label(sm->GetCString("VICTORY"), font, this);
     else
-        title = new sgui::Label("DEFEAT", font, this);
+        title = new sgui::Label(sm->GetCString("DEFEAT"), font, this);
 
     const int titleX = (w - title->GetWidth()) / 2;
     const int titleY = 10;
@@ -123,7 +127,7 @@ DialogEndMission::DialogEndMission(int time, int territoryConquered, int enemies
     font = fm->GetFont(WidgetsConstants::FontFileText, 24, graphic::Font::NORMAL);
 
     // TIME DEPLOYED
-    auto label = new sgui::Label("TIME DEPLOYED", font, this);
+    auto label = new sgui::Label(sm->GetCString("MISSION_TIME"), font, this);
     label->SetColor(colorHeader);
     label->SetPosition(widgetX, widgetY);
 
@@ -160,7 +164,7 @@ DialogEndMission::DialogEndMission(int time, int territoryConquered, int enemies
     ss.clear();
 
     // TERRITORY CONQUERED
-    label = new sgui::Label("TERRITORY CONQUERED", font, this);
+    label = new sgui::Label(sm->GetCString("TERRITORY_CONQUERED"), font, this);
     label->SetColor(colorHeader);
     label->SetPosition(widgetX, widgetY);
 
@@ -178,7 +182,7 @@ DialogEndMission::DialogEndMission(int time, int territoryConquered, int enemies
     ss.clear();
 
     // ENEMIES DESTROYED
-    label = new sgui::Label("ENEMIES DESTROYED", font, this);
+    label = new sgui::Label(sm->GetCString("ENEMIES_DESTROYED"), font, this);
     label->SetColor(colorHeader);
     label->SetPosition(widgetX, widgetY);
 
@@ -196,7 +200,7 @@ DialogEndMission::DialogEndMission(int time, int territoryConquered, int enemies
     ss.clear();
 
     // CASUALTIES
-    label = new sgui::Label("CASUALTIES", font, this);
+    label = new sgui::Label(sm->GetCString("CASUALTIES"), font, this);
     label->SetColor(colorHeader);
     label->SetPosition(widgetX, widgetY);
 
