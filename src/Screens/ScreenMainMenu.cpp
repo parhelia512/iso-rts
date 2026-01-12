@@ -328,6 +328,8 @@ void ScreenMainMenu::CreateChangelog()
                          "- Show path overlay when planning unit's move.\n"
                          "- Collecting blobs and diamonds show the number collected.\n"
                          "- New SFX for laser weapon, unit and mini-unit.\n"
+                         "- Added multi-language support.\n"
+                         "- Added Italian and Spanish translations.\n"
                          );
     textNewFeat->SetPosition(contX, contY);
     textNewFeat->SetColor(colorContent);
