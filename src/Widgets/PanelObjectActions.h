@@ -51,7 +51,6 @@ public:
 
 public:
     PanelObjectActions(sgl::sgui::Widget * parent);
-    ~PanelObjectActions();
 
     void ClearObject();
     void SetObject(GameObject * obj);
@@ -72,6 +71,9 @@ private:
 
     GameObject * mObj = nullptr;
 };
+
+
+inline void PanelObjectActions::ClearObject() { mObj = nullptr; }
 
 inline bool PanelObjectActions::HasObjectSet() const { return mObj != nullptr; }
 

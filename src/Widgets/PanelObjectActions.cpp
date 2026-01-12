@@ -83,14 +83,6 @@ PanelObjectActions::PanelObjectActions(sgl::sgui::Widget * parent)
                                sm->GetCString("TT_CANCEL"), this);
 }
 
-PanelObjectActions::~PanelObjectActions()
-{
-}
-
-void PanelObjectActions::ClearObject()
-{
-}
-
 void PanelObjectActions::SetObject(GameObject * obj)
 {
     mObj = obj;

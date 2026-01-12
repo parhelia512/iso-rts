@@ -359,6 +359,7 @@ void ScreenMainMenu::CreateChangelog()
                      "- Fixed possible crash when AI builds structure.\n"
                      "- Fixed possible crash when ending turn right after the tutorial.\n"
                      "- Fixed mission progression in planet map.\n"
+                     "- Fixed object actions panel appearing with no object selected.\n"
                      );
     textFix->SetPosition(contX, contY);
     textFix->SetColor(colorContent);
