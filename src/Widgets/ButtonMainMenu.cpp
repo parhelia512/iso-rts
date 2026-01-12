@@ -33,7 +33,7 @@ ButtonMainMenu::ButtonMainMenu(const char * text, sgl::sgui::Widget * parent)
             });
 
     auto fm = FontManager::Instance();
-    Font * font = fm->GetFont(WidgetsConstants::FontFileButton, 34, Font::NORMAL);
+    Font * font = fm->GetFont(WidgetsConstants::FontFileButton, 32, Font::NORMAL);
 
     SetLabelFont(font);
 
