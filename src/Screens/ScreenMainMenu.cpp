@@ -330,41 +330,26 @@ void ScreenMainMenu::CreateChangelog()
                          "- New SFX for laser weapon, unit and mini-unit.\n"
                          "- Added multi-language support.\n"
                          "- Added Italian and Spanish translations.\n"
+                         "\nCHANGES\n"
+                         "- Unit movements are limited to visible cells.\n"
+                         "- New look&feel for tutorial panels.\n"
+                         "- New game starts directly playing first mission.\n"
+                         "- Quitting to planet map screen makes mission fail.\n"
+                         "\nFIXES\n"
+                         "- Fixed energy cost computation of unit moves.\n"
+                         "- Hide path overlay when not needed during tutorial.\n"
+                         "- Get rid of random focus area in top-left corner of planet map tutorial.\n"
+                         "- Fixed many memory leaks.\n"
+                         "- Fixed unit disappearing when building structure.\n"
+                         "- Fixed possible crash when AI collects lootbox.\n"
+                         "- Fixed possible crash when AI builds structure.\n"
+                         "- Fixed possible crash when ending turn right after the tutorial.\n"
+                         "- Fixed mission progression in planet map.\n"
+                         "- Fixed object actions panel appearing with no object selected.\n"
+                         "- Tutorial is not repeated after quitting it.\n"
                          );
     textNewFeat->SetPosition(contX, contY);
     textNewFeat->SetColor(colorContent);
-
-    contY += textNewFeat->GetHeight() + paddingV;
-
-    // CONTENT BLOCK: CHANGES
-    auto textChange = new sgui::TextArea(contentW, minBlockH, font, true, content);
-    textChange->SetText("CHANGES\n"
-                        "- Unit movements are limited to visible cells.\n"
-                        "- New look&feel for tutorial panels.\n"
-                        "- New game starts directly playing first mission.\n"
-                        "- Quitting to planet map screen makes mission fail.\n"
-                        );
-    textChange->SetPosition(contX, contY);
-    textChange->SetColor(colorContent);
-
-    contY += textChange->GetHeight() + paddingV;
-
-    // CONTENT BLOCK: FIXES
-    auto textFix = new sgui::TextArea(contentW, minBlockH, font, true, content);
-    textFix->SetText("FIXES\n"
-                     "- Fixed energy cost computation of unit moves.\n"
-                     "- Hide path overlay when not needed during tutorial.\n"
-                     "- Get rid of random focus area in top-left corner of planet map tutorial.\n"
-                     "- Fixed many memory leaks.\n"
-                     "- Fixed unit disappearing when building structure.\n"
-                     "- Fixed possible crash when AI collects lootbox.\n"
-                     "- Fixed possible crash when AI builds structure.\n"
-                     "- Fixed possible crash when ending turn right after the tutorial.\n"
-                     "- Fixed mission progression in planet map.\n"
-                     "- Fixed object actions panel appearing with no object selected.\n"
-                     );
-    textFix->SetPosition(contX, contY);
-    textFix->SetColor(colorContent);
 
     // set content
     mDialogChangelog->SetContent(content);
