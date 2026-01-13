@@ -405,9 +405,6 @@ void GameHUD::HideDialogMissionGoals()
 
     mScreen->HideScreenOverlay();
 
-    // hide dialog
-    mDialogMissionGoals->SetVisible(false);
-
     --mVisibleDialogs;
 
     // schedule dialog deletion
