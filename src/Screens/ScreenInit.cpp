@@ -327,7 +327,7 @@ void ScreenInit::SetupTextures()
     // DIALOG EXIT
     mJobs.emplace_back([this, tm]
     {
-        std::vector<sgl::core::Rectd> rects
+        const std::vector<sgl::core::Rectd> rects
         {
             // BACKGROUND
             { 0, 0, 600, 400 },
@@ -361,7 +361,7 @@ void ScreenInit::SetupTextures()
     // DIALOG EXPLORE TEMPLE
     mJobs.emplace_back([this, tm]
     {
-        std::vector<sgl::core::Rectd> rects
+        const std::vector<sgl::core::Rectd> rects
         {
             // BACKGROUND
             { 0, 0, 850, 500 },
@@ -392,7 +392,7 @@ void ScreenInit::SetupTextures()
     // DIALOG MISSION GOALS
     mJobs.emplace_back([this, tm]
     {
-        std::vector<sgl::core::Rectd> rects
+        const std::vector<sgl::core::Rectd> rects
         {
             // BACKGROUNDS
             { 0, 0, 1280, 95 },
@@ -436,7 +436,7 @@ void ScreenInit::SetupTextures()
 
     mJobs.emplace_back([this, tm]
     {
-        std::vector<sgl::core::Rectd> rects
+        const std::vector<sgl::core::Rectd> rects
         {
             // BACKGROUND
             { 0, 0, 1280, 10 },
@@ -448,7 +448,7 @@ void ScreenInit::SetupTextures()
     // DIALOG OBJECT
     mJobs.emplace_back([this, tm]
     {
-        std::vector<sgl::core::Rectd> rects
+        const std::vector<sgl::core::Rectd> rects
         {
             // DIALOG
             { 0, 0, 860, 525 },
@@ -498,7 +498,7 @@ void ScreenInit::SetupTextures()
     // DIALOG TRADING
     mJobs.emplace_back([this, tm]
     {
-        std::vector<sgl::core::Rectd> rects
+        const std::vector<sgl::core::Rectd> rects
         {
             // DIALOG
             { 0, 0, 1340, 560 },
@@ -537,10 +537,38 @@ void ScreenInit::SetupTextures()
         tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_UI_GAME], SpriteFileDialogTrading, rects);
     });
 
+    // DIALOG UPGRADE
+    mJobs.emplace_back([this, tm]
+    {
+        const std::vector<sgl::core::Rectd> rects
+        {
+            // DIALOG
+            { 0, 0, 970, 620 },
+            { 0, 621, 600, 40 },
+            { 0, 662, 600, 40 },
+            // VALUE BAR
+            { 601, 621, 14, 18 },
+            { 601, 640, 14, 18 },
+            { 601, 659, 14, 18 },
+            //BUTTON -
+            { 616, 621, 42, 30 },
+            { 659, 621, 42, 30 },
+            { 702, 621, 42, 30 },
+            { 745, 621, 42, 30 },
+            //BUTTON +
+            { 616, 652, 42, 30 },
+            { 659, 652, 42, 30 },
+            { 702, 652, 42, 30 },
+            { 745, 652, 42, 30 },
+        };
+
+        tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_UI_GAME], SpriteFileDialogUpgrade, rects);
+    });
+
     // GAME UI
     mJobs.emplace_back([this, tm]
     {
-        std::vector<sgl::core::Rectd> rects
+        const std::vector<sgl::core::Rectd> rects
         {
             // GOAL COMPLETED
             { 0, 0, 72, 72 },
@@ -553,7 +581,7 @@ void ScreenInit::SetupTextures()
 
         tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_UI_GAME], SpriteFileGameUI, rects);
 
-        std::vector<sgl::core::Rectd> rectsExp
+        const std::vector<sgl::core::Rectd> rectsExp
         {
             // SCREEN OVERLAY BG
             { 0, 0, 10, 10 },
@@ -565,7 +593,7 @@ void ScreenInit::SetupTextures()
     // GAME UI SHARED GRAPHICS
     mJobs.emplace_back([this, tm]
     {
-        std::vector<sgl::core::Rectd> rects
+        const std::vector<sgl::core::Rectd> rects
         {
             // ICONS WHITE RESOURCES 24x24
             { 0, 0, 24, 24 },
@@ -589,7 +617,7 @@ void ScreenInit::SetupTextures()
     // MAIN MENU
     mJobs.emplace_back([this, tm]
     {
-        std::vector<sgl::core::Rectd> rects
+        const std::vector<sgl::core::Rectd> rects
         {
             // CHANGELOG DIALOG
             { 0, 0, 35, 450 },
@@ -607,7 +635,7 @@ void ScreenInit::SetupTextures()
     // MAIN MENU BUTTONS
     mJobs.emplace_back([this, tm]
     {
-        std::vector<sgl::core::Rectd> rects
+        const std::vector<sgl::core::Rectd> rects
         {
             // PRIMARY BUTTON
             { 0, 0, 360, 70 },
@@ -637,7 +665,7 @@ void ScreenInit::SetupTextures()
     // FACTION SELECTION
     mJobs.emplace_back([this, tm]
     {
-        std::vector<sgl::core::Rectd> rects
+        const std::vector<sgl::core::Rectd> rects
         {
             // PANELS
             { 0, 0, 1102, 970 },

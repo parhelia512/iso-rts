@@ -28,6 +28,7 @@
 #include "Widgets/DialogNewMiniUnitsSquad.h"
 #include "Widgets/DialogObject.h"
 #include "Widgets/DialogTrading.h"
+#include "Widgets/DialogUpgrade.h"
 #include "Widgets/GameMapProgressBar.h"
 #include "Widgets/MiniMap.h"
 #include "Widgets/PanelHit.h"
@@ -888,6 +889,47 @@ void GameHUD::HideDialogTrading()
     // schedule dialog deletion
     mDialogTrading->DeleteLater();
     mDialogTrading = nullptr;
+
+    // un-pause game
+    mScreen->SetPause(false);
+}
+
+void GameHUD::ShowDialogUpgrade(GameObject * obj)
+{
+    if(mDialogUpgrade != nullptr)
+        return ;
+
+    mScreen->ShowScreenOverlay();
+
+    ++mVisibleDialogs;
+
+    mScreen->SetPause(true);
+
+    mDialogUpgrade = new DialogUpgrade(obj);
+    mDialogUpgrade->SetFocus();
+
+    mDialogUpgrade->SetFunctionOnClose([this]
+    {
+        HideDialogUpgrade();
+    });
+
+    TemporaryClosePanels();
+
+    // position dialog
+    CenterWidget(mDialogUpgrade);
+}
+
+void GameHUD::HideDialogUpgrade()
+{
+    --mVisibleDialogs;
+
+    mScreen->HideScreenOverlay();
+
+    ReopenPanels();
+
+    // schedule dialog deletion
+    mDialogUpgrade->DeleteLater();
+    mDialogUpgrade = nullptr;
 
     // un-pause game
     mScreen->SetPause(false);

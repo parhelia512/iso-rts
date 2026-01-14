@@ -305,6 +305,31 @@ enum SpriteIdDialogTrading : unsigned int
     ID_DLG_TRADING_BTN_PLUS_DISABLED,
 };
 
+// DIALOG UPGRADE
+extern const char SpriteFileDialogUpgrade[];
+
+enum SpriteIdDialogUpgrade : unsigned int
+{
+    // DIALOG
+    ID_DLG_UP_BG,
+    ID_DLG_UP_ATT_BG,
+    ID_DLG_UP_ATT_DISABLED_BG,
+    // VALUE BAR
+    ID_DLG_UP_VAL_BAR_PIP_OFF,
+    ID_DLG_UP_VAL_BAR_PIP_ON,
+    ID_DLG_UP_VAL_BAR_PIP_NEW,
+    //BUTTON -
+    ID_DLG_UP_BTN_MINUS_NORMAL,
+    ID_DLG_UP_BTN_MINUS_DISABLED,
+    ID_DLG_UP_BTN_MINUS_OVER,
+    ID_DLG_UP_BTN_MINUS_PUSHED,
+    //BUTTON +
+    ID_DLG_UP_BTN_PLUS_NORMAL,
+    ID_DLG_UP_BTN_PLUS_DISABLED,
+    ID_DLG_UP_BTN_PLUS_OVER,
+    ID_DLG_UP_BTN_PLUS_PUSHED,
+};
+
 // GENERIC GAME UI
 extern const char SpriteFileGameUI[];
 

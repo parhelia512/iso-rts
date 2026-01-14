@@ -14,6 +14,7 @@ const char SpriteFileDialogNewElementExp[] = "UI/new_element_dalog-exp.png";
 const char SpriteFileDialogNewMiniUnits[] = "UI/dialog_new_miniunits_squad.png";
 const char SpriteFileDialogObject[] = "UI/dialog_object.png";
 const char SpriteFileDialogTrading[] = "UI/dialog_trading.png";
+const char SpriteFileDialogUpgrade[] = "UI/dialog_upgrade.png";
 const char SpriteFileFactionSelection[] = "UI/faction_selection.png";
 const char SpriteFileGameUI[] = "UI/game_UI.png";
 const char SpriteFileGameUIExp[] = "UI/game_UI-exp.png";

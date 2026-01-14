@@ -28,6 +28,7 @@ class DialogNewElement;
 class DialogNewMiniUnitsSquad;
 class DialogObject;
 class DialogTrading;
+class DialogUpgrade;
 class GameMapProgressBar;
 class GameObject;
 class MiniMap;
@@ -109,6 +110,9 @@ public:
     void ShowDialogTrading();
     void HideDialogTrading();
 
+    void ShowDialogUpgrade(GameObject * obj);
+    void HideDialogUpgrade();
+
     void SetLocalActionsEnabled(bool enabled);
 
     GameMapProgressBar * CreateProgressBarInCell(const Cell2D & cell, float time, PlayerFaction faction);
@@ -160,6 +164,7 @@ private:
     DialogNewMiniUnitsSquad * mDialogNewMiniUnits = nullptr;
     DialogObject * mDialogObj = nullptr;
     DialogTrading * mDialogTrading = nullptr;
+    DialogUpgrade * mDialogUpgrade = nullptr;
 
     PanelSelectedObject * mPanelSelObj = nullptr;
     ButtonPanelSelectedObject * mButtonPanelSelObj = nullptr;

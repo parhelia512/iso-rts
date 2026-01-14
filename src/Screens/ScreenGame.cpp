@@ -927,6 +927,14 @@ void ScreenGame::OnKeyUp(sgl::core::KeyboardEvent & event)
     // DEBUG: ALT + U -> toggle UI
     else if(event.IsModAltDown() && key == KeyboardEvent::KEY_U)
         mHUD->SetVisible(!mHUD->IsVisible());
+    // DEBUG: CTRL+P -> Upgrade screen
+    else if(event.IsModCtrlDown() && key == KeyboardEvent::KEY_P)
+    {
+        auto selObj = GetGame()->GetLocalPlayer()->GetSelectedObject();
+
+        if(selObj != nullptr)
+            mHUD->ShowDialogUpgrade(selObj);
+    }
     // DEBUG: SHIFT/CTRL + V -> add/remove visibility to whole map
     else if(key == KeyboardEvent::KEY_V)
     {
