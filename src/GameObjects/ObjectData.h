@@ -11,6 +11,8 @@
 namespace game
 {
 
+class GameObject;
+
 enum ObjClass : unsigned int
 {
     // STRUCTURES
@@ -157,7 +159,7 @@ public:
     int GetAttribute(ObjAttId attID) const;
     const std::array<int, NUM_OBJ_COSTS> & GetCosts() const;
 
-    unsigned int GetIconTexId(PlayerFaction f) const;
+    unsigned int GetIconTexId(PlayerFaction f, const GameObject * obj = nullptr) const;
     const char * GetIconTexFile() const;
 
     GameObjectTypeId GetType() const;

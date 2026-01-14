@@ -1,7 +1,8 @@
 #include "ObjectData.h"
 
 #include "GameConstants.h"
-#include "GameObjects/GameObject.h"
+#include "GameData.h"
+#include "GameObjects/MiniUnit.h"
 #include "GameObjectTools/WeaponData.h"
 
 namespace game
@@ -293,12 +294,19 @@ const char * ObjectData::STR_ATTRIBUTES[NUM_OBJ_ATTRIBUTES] =
 const ObjectData ObjectData::NullObj({}, {}, {}, nullptr, ObjectData::TYPE_NULL, ObjectData::CAT_NULL,
                                      OC_NULL, OCAT_UNDEFINED, WeaponData::TYPE_NULL, 0, 0);
 
-unsigned int ObjectData::GetIconTexId(PlayerFaction f) const
+unsigned int ObjectData::GetIconTexId(PlayerFaction f, const GameObject * obj) const
 {
-    if(f < mIconTexIds.size())
-        return mIconTexIds[f];
-    else
+    if(f >= mIconTexIds.size())
         return mIconTexIds.back();
+
+    if(obj != nullptr && mCategory == CAT_MINI_UNIT)
+    {
+        const auto mu = static_cast<const MiniUnit *>(obj);
+        const unsigned int texInd0 = mIconTexIds[f];
+        return  texInd0 + NUM_MUNIT_SPRITES_PER_SQUAD * (mu->GetNumElements() - 1);
+    }
+    else
+        return mIconTexIds[f];
 }
 
 } // namespace game

@@ -86,7 +86,8 @@ void LootBox::Collected(Player * collector)
         OT_MONEY,
     };
 
-    static_assert(NUM_OUTPUT_TYPES == NUM_LB_PRIZES);
+    static_assert(static_cast<unsigned int>(NUM_OUTPUT_TYPES) ==
+                  static_cast<unsigned int>(NUM_LB_PRIZES));
 
     DataParticleOutput pd(mPrizeQuantity, ot[mPrizeType], x0, y0, speed, decaySpeed);
 

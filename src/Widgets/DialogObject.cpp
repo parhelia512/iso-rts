@@ -334,18 +334,8 @@ void DialogObject::SetObject(GameObject * obj)
 
     // IMAGE
     const ObjectData & data = mObjDataReg->GetObjectData(type);
-
-    // MiniUnits are a special case as preview is based on num of elements
-    if(data.GetCategory() == ObjectData::CAT_MINI_UNIT)
-    {
-        const auto mu = static_cast<MiniUnit *>(obj);
-        const unsigned int texInd0 = data.GetIconTexId(faction);
-        const unsigned int texInd = texInd0 + NUM_MUNIT_SPRITES_PER_SQUAD * (mu->GetNumElements() - 1);
-
-        tex = tm->GetSprite(data.GetIconTexFile(), texInd);
-    }
-    else
-        tex = tm->GetSprite(data.GetIconTexFile(), data.GetIconTexId(faction));
+    const unsigned int texInd = data.GetIconTexId(faction, obj);
+    tex = tm->GetSprite(data.GetIconTexFile(), texInd);
 
     mImg->SetTexture(tex);
 
