@@ -83,6 +83,41 @@ DialogUpgrade::DialogUpgrade(GameObject * obj, const ObjectsDataRegistry * odr)
     mImg = new sgui::Image(tex, this);
     mImg->SetPosition(panelImgX + (panelImgW - mImg->GetWidth()) / 2,
                       panelImgY + (panelImgH - mImg->GetHeight()) / 2);
+
+    // -- DATA --
+    const int panelDataX = 35;
+    const int panelDataY = 290;
+    const int panelDataW = 300;
+    const int panelDataH = 260;
+    const int paddingDataL = 20;
+    const int paddingDataT = 20;
+    const int blockDataH = 85;
+
+    const int sizeHeader = 18;
+    auto fontHeader = fm->GetFont(WidgetsConstants::FontFileHeader,
+                                  sizeHeader, graphic::Font::NORMAL);
+
+    // LEVEL
+    const int dataX = panelDataX + paddingDataL;
+    int dataY = panelDataY + paddingDataT;
+
+    auto header = new sgui::Label(sm->GetCString("LEVEL"), fontHeader, this);
+    header->SetColor(WidgetsConstants::colorDialogHeader2);
+    header->SetPosition(dataX, dataY);
+
+    // NEXT LEVEL
+    dataY = header->GetY() + blockDataH;
+
+    header = new sgui::Label(sm->GetCString("NEXT_LEVEL"), fontHeader, this);
+    header->SetColor(WidgetsConstants::colorDialogHeader2);
+    header->SetPosition(dataX, dataY);
+
+    // UPGRADE POINTS
+    dataY = header->GetY() + blockDataH;
+
+    header = new sgui::Label(sm->GetCString("UP_POINTS"), fontHeader, this);
+    header->SetColor(WidgetsConstants::colorDialogHeader2);
+    header->SetPosition(dataX, dataY);
 }
 
 void DialogUpgrade::SetFunctionOnClose(const std::function<void()> & f)
