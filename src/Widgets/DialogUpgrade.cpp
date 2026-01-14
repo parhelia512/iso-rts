@@ -34,7 +34,7 @@ namespace game
 {
 
 // ===== DIALOG =====
-DialogUpgrade::DialogUpgrade(GameObject * obj)
+DialogUpgrade::DialogUpgrade(GameObject * obj, const ObjectsDataRegistry * odr)
     : mObj(obj)
 {
     using namespace sgl;
@@ -71,7 +71,18 @@ DialogUpgrade::DialogUpgrade(GameObject * obj)
     mTitle->SetPosition(marginL, marginTitleT);
 
     // IMAGE
-    mImg = new sgui::Image(this);
+    const ObjectData & data = odr->GetObjectData(obj->GetObjectType());
+    const unsigned int texInd = data.GetIconTexId(obj->GetFaction(), obj);
+    tex = tm->GetSprite(data.GetIconTexFile(), texInd);
+
+    const int panelImgX = 35;
+    const int panelImgY = 70;
+    const int panelImgW = 300;
+    const int panelImgH = 220;
+
+    mImg = new sgui::Image(tex, this);
+    mImg->SetPosition(panelImgX + (panelImgW - mImg->GetWidth()) / 2,
+                      panelImgY + (panelImgH - mImg->GetHeight()) / 2);
 }
 
 void DialogUpgrade::SetFunctionOnClose(const std::function<void()> & f)

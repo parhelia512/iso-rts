@@ -905,7 +905,8 @@ void GameHUD::ShowDialogUpgrade(GameObject * obj)
 
     mScreen->SetPause(true);
 
-    mDialogUpgrade = new DialogUpgrade(obj);
+    const ObjectsDataRegistry * odr = mScreen->GetGame()->GetObjectsRegistry();
+    mDialogUpgrade = new DialogUpgrade(obj, odr);
     mDialogUpgrade->SetFocus();
 
     mDialogUpgrade->SetFunctionOnClose([this]

@@ -20,11 +20,12 @@ namespace game
 
 class ButtonDialogClose;
 class GameObject;
+class ObjectsDataRegistry;
 
 class DialogUpgrade : public sgl::sgui::Widget
 {
 public:
-    DialogUpgrade(GameObject * obj);
+    DialogUpgrade(GameObject * obj, const ObjectsDataRegistry * odr);
 
     void SetFunctionOnClose(const std::function<void()> & f);
 
