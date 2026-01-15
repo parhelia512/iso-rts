@@ -1919,6 +1919,10 @@ bool ScreenGame::SetupNewMiniUnits(GameObjectTypeId type, GameObject * gen, Game
 
         SetObjectActionCompleted(gen);
 
+        // stop sound
+        auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+        ap->FadeOutSound("game/build-04.ogg", 125);
+
         if(squads > 1)
             SetupNewMiniUnits(type, gen, group, mLocalPlayer, squads - 1, elements);
     });
@@ -1932,6 +1936,13 @@ bool ScreenGame::SetupNewMiniUnits(GameObjectTypeId type, GameObject * gen, Game
     // disable actions panel (if action is done by local player)
     if(player->IsLocal())
         mHUD->SetLocalActionsEnabled(false);
+
+    // play sound
+    if(gen->IsVisible())
+    {
+        auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+        ap->PlaySoundLoop("game/build-04.ogg");
+    }
 
     return true;
 }
@@ -1975,6 +1986,10 @@ bool ScreenGame::SetupNewUnit(GameObjectTypeId type, GameObject * gen, Player * 
             AddObjectToMinimap(cell, type, player->GetFaction());
 
         SetObjectActionCompleted(gen);
+
+        // stop sound
+        auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+        ap->FadeOutSound("game/build-03.ogg", 250);
     });
 
     // store active action
@@ -1986,6 +2001,13 @@ bool ScreenGame::SetupNewUnit(GameObjectTypeId type, GameObject * gen, Player * 
     // disable actions panel (if action is done by local player)
     if(player->IsLocal())
         mHUD->SetLocalActionsEnabled(false);
+
+    // play sound
+    if(gen->IsVisible())
+    {
+        auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+        ap->PlaySoundLoop("game/build-03.ogg");
+    }
 
     return true;
 }
