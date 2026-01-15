@@ -306,6 +306,11 @@ int GameObject::GetAttribute(ObjAttId attID) const
     return (it != mAttributes.end()) ? it->second : 0;
 }
 
+void GameObject::Upgrade(const std::vector<int> & attChanges)
+{
+    // TODO
+}
+
 float GameObject::GetSpeed() const
 {
 #ifdef DEV_MODE

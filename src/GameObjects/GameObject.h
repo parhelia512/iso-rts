@@ -152,6 +152,7 @@ public:
 
     // ATTRIBUTES
     int GetAttribute(ObjAttId attID) const;
+    void Upgrade(const std::vector<int> & attChanges);
 
     float GetSpeed() const;
 

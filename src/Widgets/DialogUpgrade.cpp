@@ -1,20 +1,17 @@
 #include "Widgets/DialogUpgrade.h"
 
-#include "Game.h"
-#include "GameData.h"
-#include "GameObjects/MiniUnit.h"
+#include "GameObjects/GameObject.h"
 #include "GameObjects/ObjectsDataRegistry.h"
+#include "Widgets/ButtonDialogAction.h"
 #include "Widgets/ButtonDialogClose.h"
 #include "Widgets/GameUIData.h"
-#include "Widgets/ObjectVisualAttribute.h"
-#include "Widgets/ProgressBarObjectVisualStat.h"
 #include "Widgets/WidgetsConstants.h"
 
 #include <sgl/core/event/KeyboardEvent.h>
 #include <sgl/graphic/Font.h>
 #include <sgl/graphic/FontManager.h>
 #include <sgl/graphic/Image.h>
-#include <sgl/graphic/Text.h>
+#include <sgl/graphic/Texture.h>
 #include <sgl/graphic/TextureManager.h>
 #include <sgl/media/AudioManager.h>
 #include <sgl/media/AudioPlayer.h>
@@ -22,14 +19,82 @@
 #include <sgl/sgui/ImageButton.h>
 #include <sgl/sgui/Label.h>
 #include <sgl/utilities/StringManager.h>
-#include <sgl/utilities/System.h>
 
 #include <sstream>
 
 // anonymous namespace for local "private" classes
 namespace
 {
-}
+
+using namespace game;
+
+class ButtonDec : public sgl::sgui::ImageButton
+{
+public:
+    ButtonDec (ObjAttId attId, sgl::sgui::Widget * parent)
+    : sgl::sgui::ImageButton({ ID_DLG_UP_BTN_MINUS_NORMAL, ID_DLG_UP_BTN_MINUS_DISABLED,
+                               ID_DLG_UP_BTN_MINUS_OVER, ID_DLG_UP_BTN_MINUS_PUSHED,
+                               ID_DLG_UP_BTN_MINUS_PUSHED }, SpriteFileDialogUpgrade, parent)
+    , mAttId(attId)
+    {
+    }
+
+    void HandleMouseOver()
+    {
+        sgl::sgui::ImageButton::HandleMouseOver();
+
+        auto player = sgl::media::AudioManager::Instance()->GetPlayer();
+        player->PlaySound("UI/button_over-02.ogg");
+    }
+
+    void HandleButtonDown()
+    {
+        sgl::sgui::ImageButton::HandleButtonDown();
+
+        auto player = sgl::media::AudioManager::Instance()->GetPlayer();
+        player->PlaySound("UI/button_click-02.ogg");
+    }
+
+    ObjAttId GetAttributeId() const { return mAttId; }
+
+private:
+    ObjAttId mAttId;
+};
+
+class ButtonInc : public sgl::sgui::ImageButton
+{
+public:
+    ButtonInc (ObjAttId attId, sgl::sgui::Widget * parent)
+    : sgl::sgui::ImageButton({ ID_DLG_UP_BTN_PLUS_NORMAL, ID_DLG_UP_BTN_PLUS_DISABLED,
+                               ID_DLG_UP_BTN_PLUS_OVER, ID_DLG_UP_BTN_PLUS_PUSHED,
+                               ID_DLG_UP_BTN_PLUS_PUSHED }, SpriteFileDialogUpgrade, parent)
+    , mAttId(attId)
+    {
+    }
+
+    void HandleMouseOver()
+    {
+        sgl::sgui::ImageButton::HandleMouseOver();
+
+        auto player = sgl::media::AudioManager::Instance()->GetPlayer();
+        player->PlaySound("UI/button_over-02.ogg");
+    }
+
+    void HandleButtonDown()
+    {
+        sgl::sgui::ImageButton::HandleButtonDown();
+
+        auto player = sgl::media::AudioManager::Instance()->GetPlayer();
+        player->PlaySound("UI/button_click-02.ogg");
+    }
+
+    ObjAttId GetAttributeId() const { return mAttId; }
+
+private:
+    ObjAttId mAttId;
+};
+
+} // namespace
 
 namespace game
 {
@@ -55,24 +120,21 @@ ValueUpgradeBar::ValueUpgradeBar(int maxVal, sgl::sgui::Widget * parent)
     }
 }
 
-void ValueUpgradeBar::SetValue(int numOn, int numNew)
+void ValueUpgradeBar::SetValue(int val)
 {
     using namespace sgl;
+
+    if(val == mValue)
+        return;
+
+    mValue = val;
 
     auto tm = graphic::TextureManager::Instance();
 
     // ON
     auto tex = tm->GetSprite(SpriteFileDialogUpgrade, ID_DLG_UP_VAL_BAR_PIP_ON);
 
-    for(int i = 0; i < numOn; ++i)
-        mImgs[i]->SetTexture(tex);
-
-    // NEW
-    const unsigned int lastNew = numOn + numNew;
-
-    tex = tm->GetSprite(SpriteFileDialogUpgrade, ID_DLG_UP_VAL_BAR_PIP_NEW);
-
-    for(int i = numOn; i < lastNew; ++i)
+    for(int i = 0; i < val; ++i)
         mImgs[i]->SetTexture(tex);
 
     // OFF
@@ -80,8 +142,40 @@ void ValueUpgradeBar::SetValue(int numOn, int numNew)
 
     tex = tm->GetSprite(SpriteFileDialogUpgrade, ID_DLG_UP_VAL_BAR_PIP_OFF);
 
-    for(int i = lastNew; i < tot; ++i)
+    for(int i = val; i < tot; ++i)
         mImgs[i]->SetTexture(tex);
+}
+
+void ValueUpgradeBar::AddNew()
+{
+    if((mValue + mNumNew) == mImgs.size())
+        return ;
+
+    // update current graphics
+    const unsigned int ind = mValue + mNumNew;
+
+    auto tm = sgl::graphic::TextureManager::Instance();
+    auto tex = tm->GetSprite(SpriteFileDialogUpgrade, ID_DLG_UP_VAL_BAR_PIP_NEW);
+    mImgs[ind]->SetTexture(tex);
+
+    // update value
+    ++mNumNew;
+}
+
+void ValueUpgradeBar::RemNew()
+{
+    if(mNumNew == 0)
+        return ;
+
+    // update current graphics
+    const unsigned int ind = mValue + mNumNew - 1;
+
+    auto tm = sgl::graphic::TextureManager::Instance();
+    auto tex = tm->GetSprite(SpriteFileDialogUpgrade, ID_DLG_UP_VAL_BAR_PIP_OFF);
+    mImgs[ind]->SetTexture(tex);
+
+    // update value
+    --mNumNew;
 }
 
 // ===== DIALOG =====
@@ -93,6 +187,9 @@ DialogUpgrade::DialogUpgrade(GameObject * obj, const ObjectsDataRegistry * odr)
     auto fm = graphic::FontManager::Instance();
     auto tm = graphic::TextureManager::Instance();
     auto sm = utilities::StringManager::Instance();
+
+    // init changes vector
+    mChangesToApply.assign(NUM_BASIC_ATTRIBUTES, 0);
 
     // BACKGROUND
     graphic::Texture * tex = tm->GetSprite(SpriteFileDialogUpgrade, ID_DLG_UP_BG);
@@ -209,6 +306,8 @@ DialogUpgrade::DialogUpgrade(GameObject * obj, const ObjectsDataRegistry * odr)
     const int areaAttX = 335;
     const int areaAttY = 70;
     const int paddingAttL = 10;
+    const int barX = 390;
+    const int marginButton = 15;
 
     const unsigned int maxAtt = 12;
 
@@ -221,7 +320,8 @@ DialogUpgrade::DialogUpgrade(GameObject * obj, const ObjectsDataRegistry * odr)
 
     for(unsigned int i = 0; i < NUM_BASIC_ATTRIBUTES; ++i)
     {
-        const int val = obj->GetAttribute(static_cast<ObjAttId>(i));
+        const auto attId = static_cast<ObjAttId>(i);
+        const int val = obj->GetAttribute(attId);
 
         if(val <= 0)
             continue;
@@ -238,8 +338,47 @@ DialogUpgrade::DialogUpgrade(GameObject * obj, const ObjectsDataRegistry * odr)
 
         // attribute bar
         auto bar = new ValueUpgradeBar(static_cast<int>(MAX_STAV_VAL), bg);
-        bar->SetValue(val, 0);
-        bar->SetPosition(380, (bg->GetHeight() - bar->GetHeight()) / 2);
+        bar->SetValue(val);
+        bar->SetPosition(barX, (bg->GetHeight() - bar->GetHeight()) / 2);
+
+        // decrement
+        auto btnDec = new ButtonDec(attId, bg);
+        mButtonsDec.emplace_back(btnDec);
+        btnDec->SetEnabled(false);
+        btnDec->SetPosition(barX - btnDec->GetWidth() - marginButton,
+                            (bg->GetHeight() - btnDec->GetHeight()) / 2);
+
+        // increment
+        auto btnInc = new ButtonInc(attId, bg);
+        mButtonsInc.emplace_back(btnInc);
+        btnInc->SetPosition(barX + bar->GetWidth() + marginButton,
+                            (bg->GetHeight() - btnInc->GetHeight()) / 2);
+
+        // decrement and increment click handling
+        btnDec->AddOnClickFunction([this, bar, btnDec, i]
+        {
+            bar->RemNew();
+
+            --mChangesToApply[i];
+            ++mPointsToAssign;
+
+            if(0 == mChangesToApply[i])
+                btnDec->SetEnabled(false);
+
+            OnPointsChanged();
+        });
+
+        btnInc->AddOnClickFunction([this, bar, btnDec, i]
+        {
+            bar->AddNew();
+
+            btnDec->SetEnabled(true);
+
+            ++mChangesToApply[i];
+            --mPointsToAssign;
+
+            OnPointsChanged();
+        });
 
         // move to next
         attY += bg->GetHeight();
@@ -260,6 +399,21 @@ DialogUpgrade::DialogUpgrade(GameObject * obj, const ObjectsDataRegistry * odr)
 
         attY += bg->GetHeight();
     }
+
+    // BUTTON UPGRADE
+    const int btnX1 = areaAttX + tex->GetWidth();
+    const int btnY = 567;
+    mBtnUpgrade = new ButtonDialogAction(sm->GetCString("UPGRADE"),
+                                           "U", core::KeyboardEvent::KEY_U, this);
+    mBtnUpgrade->SetEnabled(false);
+    mBtnUpgrade->SetPosition(btnX1 - mBtnUpgrade->GetWidth(), btnY);
+
+    mBtnUpgrade->AddOnClickFunction([this]
+    {
+        mObj->Upgrade(mChangesToApply);
+
+        mBtnClose->Click();
+    });
 }
 
 void DialogUpgrade::SetFunctionOnClose(const std::function<void()> & f)
@@ -279,6 +433,41 @@ void DialogUpgrade::SetPositions()
 
     // BACKGROUND
     mBg->SetPosition(x0, y0);
+}
+
+void DialogUpgrade::OnPointsChanged()
+{
+    // no more points to assign
+    if(0 == mPointsToAssign)
+    {
+        // disable buttons INC
+        for(auto b : mButtonsInc)
+            b->SetEnabled(false);
+
+        // enable button UPGRADE
+        mBtnUpgrade->SetEnabled(true);
+    }
+    else
+    {
+        // enable buttons INC
+        const int MAX_SLOTS = static_cast<int>(MAX_STAV_VAL);
+        const unsigned int numButtons = mButtonsInc.size();
+
+        for(unsigned int i = 0; i < numButtons; ++i)
+        {
+            const ObjAttId attId = static_cast<ButtonInc *>(mButtonsInc[i])->GetAttributeId();
+
+            const int used = mObj->GetAttribute(attId) + mChangesToApply[i];
+
+            if(used < MAX_SLOTS)
+                mButtonsInc[i]->SetEnabled(true);
+        }
+
+        // disable button UPGRADE
+        mBtnUpgrade->SetEnabled(false);
+    }
+
+    mLabelPoints->SetText(std::to_string(mPointsToAssign).c_str());
 }
 
 } // namespace game
