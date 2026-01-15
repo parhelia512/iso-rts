@@ -40,15 +40,23 @@ private:
 private:
     sgl::graphic::Image * mBg = nullptr;
     ButtonDialogClose * mBtnClose = nullptr;
-    sgl::sgui::Label * mTitle = nullptr;
-    sgl::sgui::Image * mImg = nullptr;
 
-    sgl::sgui::Widget * mStatRank = nullptr;
-    sgl::sgui::Widget * mStatExperience = nullptr;
-    sgl::sgui::Widget * mStatEnergy = nullptr;
-    sgl::sgui::Widget * mStatHealth = nullptr;
+    sgl::sgui::Label * mLabelPoints = nullptr;
 
     GameObject * mObj = nullptr;
+
+    int mPointsToAssign = 0;
+};
+
+class ValueUpgradeBar : public sgl::sgui::Widget
+{
+public:
+    ValueUpgradeBar(int maxVal, sgl::sgui::Widget * parent);
+
+    void SetValue(int numOn, int numNew);
+
+private:
+    std::vector<sgl::sgui::Image *> mImgs;
 };
 
 } // namespace game
