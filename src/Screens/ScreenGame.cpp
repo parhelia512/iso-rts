@@ -2060,11 +2060,8 @@ bool ScreenGame::SetupStructureConquest(Unit * unit, const Cell2D & start, const
         // clear action data once the action is completed
         SetObjectActionCompleted(unit);
 
-        if(unit->IsVisible())
-        {
-            auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
-            ap->FadeOutSound("game/conquer-02.ogg", 250);
-        }
+        auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+        ap->FadeOutSound("game/conquer-02.ogg", 250);
     });
 
     // store active action
@@ -2130,11 +2127,8 @@ bool ScreenGame::SetupStructureBuilding(Unit * unit, const Cell2D & cellTarget, 
         // clear action data once the action is completed
         SetObjectActionCompleted(unit);
 
-        if(unit->IsVisible())
-        {
-            auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
-            ap->FadeOutSound("game/build-01.ogg", 250);
-        }
+        auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+        ap->FadeOutSound("game/build-01.ogg", 250);
     });
 
     // store active action

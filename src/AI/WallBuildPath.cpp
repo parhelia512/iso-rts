@@ -118,11 +118,8 @@ bool WallBuildPath::InitNextBuild()
 
         --mNextCell;
 
-        if(mUnit->IsVisible())
-        {
-            auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
-            ap->FadeOutSound("game/build-02.ogg", 200);
-        }
+        auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+        ap->FadeOutSound("game/build-02.ogg", 200);
 
         InitNextMove();
     });

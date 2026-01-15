@@ -162,11 +162,8 @@ bool ConquerPath::InitNextConquest()
 
         mUnit->ActionStepCompleted(CONQUER_CELL);
 
-        if(mUnit->IsVisible())
-        {
-            auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
-            ap->FadeOutSound("game/conquer-01.ogg", 200);
-        }
+        auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+        ap->FadeOutSound("game/conquer-01.ogg", 200);
 
         ++mNextCell;
 
