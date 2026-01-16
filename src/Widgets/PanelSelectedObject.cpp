@@ -391,32 +391,26 @@ PanelSelectedObject::PanelSelectedObject(const ObjectsDataRegistry * odr, sgl::s
     // {
     // });
 
-    mButtonShowInfo = new ButtonObjectFunction(ButtonObjectFunction::OBJFUN_SHOW_INFO, this);
-    mButtonShowInfo->AddOnClickFunction([this]
-    {
-        // TODO
-    });
+    mButtonInfo = new ButtonObjectFunction(ButtonObjectFunction::OBJFUN_SHOW_INFO, this);
 
-    mButtonShowUpgrade = new ButtonObjectFunction(ButtonObjectFunction::OBJFUN_SHOW_UPGRADE, this);
-    mButtonShowUpgrade->AddOnClickFunction([this]
-    {
-        // TODO
-    });
+    mButtonUpgrade = new ButtonObjectFunction(ButtonObjectFunction::OBJFUN_SHOW_UPGRADE, this);
 
     const int marginButtonFun = 5;
     const int buttonFunX0 = contentX0 + marginButtonFun;
-    const int buttonFunY0 = contentY0 + contentH - mButtonShowInfo->GetHeight() - marginButtonFun;
+    const int buttonFunY0 = contentY0 + contentH - mButtonInfo->GetHeight() - marginButtonFun;
 
     // mButtonAutoAttack->SetPosition(buttonFunX, buttonFunY);
 
     // buttonFunX += mButtonAutoAttack->GetWidth();
     // mButtonAutoMove->SetPosition(buttonFunX, buttonFunY);
 
-    int buttonFunX = contentX0 + contentW - mButtonShowInfo->GetWidth() - marginButtonFun;
+    int buttonFunX = contentX0 + contentW - mButtonInfo->GetWidth() - marginButtonFun;
     int buttonFunY = buttonFunY0;
 
-    mButtonShowInfo->SetPosition(buttonFunX, buttonFunY);
-    mButtonShowUpgrade->SetPosition(buttonFunX, buttonFunY);
+    mButtonInfo->SetPosition(buttonFunX, buttonFunY);
+
+    buttonFunX -= marginButtonFun + mButtonUpgrade->GetWidth();
+    mButtonUpgrade->SetPosition(buttonFunX, buttonFunY);
 }
 
 void PanelSelectedObject::AddFunctionOnClose(const std::function<void()> & f)
@@ -426,7 +420,7 @@ void PanelSelectedObject::AddFunctionOnClose(const std::function<void()> & f)
 
 void PanelSelectedObject::AddFunctionOnShowInfo(const std::function<void()> & f)
 {
-    mButtonShowInfo->AddOnClickFunction(f);
+    mButtonInfo->AddOnClickFunction(f);
 }
 
 void PanelSelectedObject::ClearObject()
@@ -570,12 +564,9 @@ void PanelSelectedObject::UpdateStats()
     static_cast<ObjectVisualStat *>(mStatHealth)->SetValue(mObj->GetHealth(), mObj->GetMaxHealth());
     static_cast<ObjectVisualStat *>(mStatExperience)->SetValue(exp, maxExp);
 
-    // INFO / UPGRADE BUTTON
-    const bool showInfo = exp < maxExp;
-    const bool showUpgrade = !showInfo;
-
-    mButtonShowInfo->SetVisible(showInfo);
-    mButtonShowUpgrade->SetVisible(showUpgrade);
+    // UPGRADE BUTTON
+    const bool showUpgrade = exp >= maxExp;
+    mButtonUpgrade->SetVisible(showUpgrade);
 }
 
 void PanelSelectedObject::OnStringsChanged()

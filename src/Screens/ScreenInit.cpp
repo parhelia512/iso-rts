@@ -837,7 +837,7 @@ void ScreenInit::SetupTextures()
             { 454, 0, 32, 32 },
             { 487, 0, 32, 32 },
             { 454, 33, 32, 32 },
-            { 454, 33, 32, 32 },
+            { 487, 33, 32, 32 },
         };
 
         tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_UI_GAME], SpriteFilePanelSelectedObject, rects);
