@@ -423,6 +423,11 @@ void PanelSelectedObject::AddFunctionOnShowInfo(const std::function<void()> & f)
     mButtonInfo->AddOnClickFunction(f);
 }
 
+void PanelSelectedObject::AddFunctionOnShowUpgrade(const std::function<void()> & f)
+{
+    mButtonUpgrade->AddOnClickFunction(f);
+}
+
 void PanelSelectedObject::ClearObject()
 {
     if(nullptr == mObj)

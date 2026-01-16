@@ -167,6 +167,11 @@ GameHUD::GameHUD(ScreenGame * screen)
         ShowDialogObject(player->GetSelectedObject());
     });
 
+    mPanelSelObj->AddFunctionOnShowUpgrade([this]
+    {
+        ShowDialogUpgrade(mPanelSelObj->GetObject());
+    });
+
     mButtonPanelSelObj = new ButtonPanelSelectedObject(this);
     mButtonPanelSelObj->SetVisible(false);
 
