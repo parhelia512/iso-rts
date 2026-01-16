@@ -42,6 +42,7 @@ private:
     void PositionElements();
 
     void UpdateStats();
+    void UpdateBarLevel();
 
     void OnStringsChanged() override;
 

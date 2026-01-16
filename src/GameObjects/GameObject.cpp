@@ -263,22 +263,48 @@ void GameObject::ActionStepCompleted(GameObjectActionType action)
     SumExperience(GetActionExperienceGain(action));
 }
 
-void GameObject::SetExperience(int val)
+int GameObject::GetExperienceToLevel(int level) const
 {
-    if(val > mExpToNextLvl)
-        val = mExpToNextLvl;
+    // TODO use different values according to difficulty level
+    // increments
+    //  0, 50, 100, 150, 250, 400, 650, 1050, 1700, 2750
+    //  0, 50, 150, 200, 350, 550, 900, 1450, 2350, 3800
+    //  0, 50, 200, 250, 450, 700, 1150, 1850, 3000, 4850
+    const int points[MAX_LEVEL] =
+    {
+      //0, 50, 150, 300, 550, 950, 1600, 2650, 4350, 7100
+        0, 50, 200, 400, 750, 1300, 2200, 3650, 6000, 9800
+      //0, 50, 250, 500, 950, 1650, 2800, 4650, 7650, 12500
+    };
 
-    if(val == mExp)
-        return ;
-
-    mExp = val;
-
-    NotifyValueChanged();
+    if(level < MAX_LEVEL)
+        return points[level];
+    else
+        return points[MAX_LEVEL - 1];
 }
 
 void GameObject::SumExperience(int val)
 {
     SetExperience(val + mExp);
+}
+
+
+void GameObject::UpgradeLevel(const std::vector<int> & attChanges)
+{
+    // can't upgrade yet or already at max level -> exit
+    if(mExp < GetExperienceToNextLevel() || mExpLevel == MAX_LEVEL)
+        return;
+
+    // increase level
+    ++mExpLevel;
+
+    // update attributes
+    const unsigned int numAtt = attChanges.size();
+
+    for(unsigned int i = 0; i < numAtt; ++i)
+        mAttributes[static_cast<ObjAttId>(i)] += attChanges[i];
+
+    NotifyValueChanged();
 }
 
 unsigned int GameObject::AddFunctionOnValueChanged(const std::function<void()> & f)
@@ -304,11 +330,6 @@ int GameObject::GetAttribute(ObjAttId attID) const
     const auto it = mAttributes.find(attID);
 
     return (it != mAttributes.end()) ? it->second : 0;
-}
-
-void GameObject::Upgrade(const std::vector<int> & attChanges)
-{
-    // TODO
 }
 
 float GameObject::GetSpeed() const
@@ -766,6 +787,16 @@ void GameObject::SetEnergy(float val)
 
     if(diff > minDelta)
         NotifyValueChanged();
+}
+
+void GameObject::SetExperience(int val)
+{
+    if(val == mExp)
+        return ;
+
+    mExp = val;
+
+    NotifyValueChanged();
 }
 
 void GameObject::SetHealth(float val)

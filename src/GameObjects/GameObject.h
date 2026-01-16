@@ -63,6 +63,8 @@ public:
     // -- OBJECT VARIANT --
     static const GameObjectVariantId VAR_0;
 
+    static const int MAX_LEVEL = 10;
+
 public:
     GameObject(const ObjectData & data, const ObjectInitData & initData);
     virtual ~GameObject();
@@ -141,18 +143,17 @@ public:
     void ActionStepCompleted(GameObjectActionType action);
 
     int GetExperience() const;
+    int GetExperienceToLevel(int level) const;
     int GetExperienceToNextLevel() const;
     int GetExperienceLevel() const;
-    int GetMaxExperienceLevel() const;
-    void SetExperience(int val);
     void SumExperience(int val);
+    void UpgradeLevel(const std::vector<int> & attChanges);
 
     unsigned int AddFunctionOnValueChanged(const std::function<void()> & f);
     void RemoveFunctionOnValueChanged(unsigned int fId);
 
     // ATTRIBUTES
     int GetAttribute(ObjAttId attID) const;
-    void Upgrade(const std::vector<int> & attChanges);
 
     float GetSpeed() const;
 
@@ -226,6 +227,7 @@ private:
     void SetEnergy(float val);
     void SetMaxEnergy(float val);
     void SetRegenerationPower(float val);
+    void SetExperience(int val);
 
     void SetMaxHealth(float max);
     void SetHealth(float val);
@@ -271,7 +273,6 @@ private:
 
     int mExpLevel = 0;
     int mExp = 0;
-    int mExpToNextLvl = 1000;
 
     float mMaxEnergy = 100.f;
     float mEnergy = 100.f;
@@ -369,9 +370,11 @@ inline float GameObject::GetEnergyForActionStep(GameObjectActionType action) con
 }
 
 inline int GameObject::GetExperience() const { return mExp; }
-inline int GameObject::GetExperienceToNextLevel() const { return mExpToNextLvl; }
+inline int GameObject::GetExperienceToNextLevel() const
+{
+    return GetExperienceToLevel(mExpLevel + 1);
+}
 inline int GameObject::GetExperienceLevel() const { return mExpLevel; }
-inline int GameObject::GetMaxExperienceLevel() const { return 10; }
 
 inline void GameObject::SetSpeed(float speed) { mSpeed = speed; }
 

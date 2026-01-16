@@ -110,7 +110,7 @@ public:
         const int sizeFont = 16;
         const unsigned int colorDigits = 0x70a9c2ff;
         const unsigned int colorZeros = 0x35677dff;
-        mDigits = new DigitsDisplay(4, sizeFont, std::string(), this);
+        mDigits = new DigitsDisplay(5, sizeFont, std::string(), this);
         mDigits->SetColorDigits(colorDigits);
         mDigits->SetColorZeros(colorZeros);
 
@@ -119,10 +119,12 @@ public:
         const int h = mIcon->GetHeight();
         SetSize(w, h);
 
-        const int barX = (w - mBar->GetWidth()) / 2;
-        mBar->SetPosition(barX, (h - mBar->GetHeight()) / 2);
+        const int digitsX = w - mDigits->GetWidth();
+        mDigits->SetPosition(digitsX, (h - mDigits->GetHeight()) / 2);
 
-        mDigits->SetPosition(w - mDigits->GetWidth(), (h - mDigits->GetHeight()) / 2);
+        const int barMargin = 10;
+        const int barX = digitsX - barMargin - mBar->GetWidth();
+        mBar->SetPosition(barX, (h - mBar->GetHeight()) / 2);
 
         // TOOLTIP
         auto sm = utilities::StringManager::Instance();
@@ -471,11 +473,7 @@ void PanelSelectedObject::SetObject(GameObject * obj)
     mTitle->SetText(sm->GetCString(ObjectData::TITLES.at(type)));
 
     // BAR LEVEL
-    const int maxLvl = 10;
-
-    const unsigned int barLvlTexId = ID_PAN_SELOBJ_SBAR_0 + obj->GetExperienceLevel();
-    tex = tm->GetSprite(SpriteFilePanelSelectedObject, barLvlTexId);
-    mBarLvl->SetTexture(tex);
+    UpdateBarLevel();
 
     const int marginBarLvlV = 10;
     const int barLvlX = mTitle->GetX() + (mTitle->GetWidth() - mBarLvl->GetWidth()) / 2;
@@ -564,14 +562,28 @@ void PanelSelectedObject::UpdateStats()
     const int exp = mObj->GetExperience();
     const int maxExp = mObj->GetExperienceToNextLevel();
 
+    // LEVEL
+    UpdateBarLevel();
+
     // STAT BARS
     static_cast<ObjectVisualStat *>(mStatEnergy)->SetValue(mObj->GetEnergy(), mObj->GetMaxEnergy());
     static_cast<ObjectVisualStat *>(mStatHealth)->SetValue(mObj->GetHealth(), mObj->GetMaxHealth());
     static_cast<ObjectVisualStat *>(mStatExperience)->SetValue(exp, maxExp);
 
     // UPGRADE BUTTON
-    const bool showUpgrade = exp >= maxExp;
+    const bool showUpgrade = exp >= maxExp &&
+                             (mObj->GetExperienceLevel() + 1) < GameObject::MAX_LEVEL;
+
     mButtonUpgrade->SetVisible(showUpgrade);
+}
+
+void PanelSelectedObject::UpdateBarLevel()
+{
+    auto tm = sgl::graphic::TextureManager::Instance();
+
+    const unsigned int barLvlTexId = ID_PAN_SELOBJ_SBAR_1 + mObj->GetExperienceLevel();
+    auto tex = tm->GetSprite(SpriteFilePanelSelectedObject, barLvlTexId);
+    mBarLvl->SetTexture(tex);
 }
 
 void PanelSelectedObject::OnStringsChanged()

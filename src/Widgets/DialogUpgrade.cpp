@@ -264,26 +264,10 @@ DialogUpgrade::DialogUpgrade(GameObject * obj, const ObjectsDataRegistry * odr)
     dataY += header->GetHeight() + marginHeaderV;
 
     const int level = obj->GetExperienceLevel();
-    const unsigned int barLvlTexId = ID_DLG_OBJ_SBAR_0 + level;
+    const unsigned int barLvlTexId = ID_DLG_OBJ_SBAR_1 + level;
     tex = tm->GetSprite(SpriteFileDialogObject, barLvlTexId);
     auto levelBar = new sgui::Image(tex, this);
     levelBar->SetPosition(dataX, dataY);
-
-    // NEXT LEVEL
-    dataY = header->GetY() + blockDataH;
-
-    header = new sgui::Label(sm->GetCString("NEXT_LEVEL"), fontHeader, this);
-    header->SetColor(WidgetsConstants::colorDialogHeader2);
-    header->SetPosition(dataX, dataY);
-
-    dataY += header->GetHeight() + marginHeaderV2;
-
-    std::ostringstream ss;
-    ss << obj->GetExperience() << " / " << obj->GetExperienceToNextLevel();
-
-    auto label = new sgui::Label(ss.str().c_str(), fontText, this);
-    label->SetColor(WidgetsConstants::colorDialogText);
-    label->SetPosition(dataX, dataY);
 
     // UPGRADE POINTS
     dataY = header->GetY() + blockDataH;
@@ -294,7 +278,7 @@ DialogUpgrade::DialogUpgrade(GameObject * obj, const ObjectsDataRegistry * odr)
 
     dataY += header->GetHeight() + marginHeaderV2;
 
-    const int points[] = { 2, 2, 2, 3, 3, 3, 4, 4, 4, 5 };
+    const int points[] = { 1, 1, 2, 2, 2, 3, 3, 3, 3 };
 
     mPointsToAssign = points[level];
 
@@ -348,13 +332,6 @@ DialogUpgrade::DialogUpgrade(GameObject * obj, const ObjectsDataRegistry * odr)
         btnDec->SetPosition(barX - btnDec->GetWidth() - marginButton,
                             (bg->GetHeight() - btnDec->GetHeight()) / 2);
 
-        // increment
-        auto btnInc = new ButtonInc(attId, bg);
-        mButtonsInc.emplace_back(btnInc);
-        btnInc->SetPosition(barX + bar->GetWidth() + marginButton,
-                            (bg->GetHeight() - btnInc->GetHeight()) / 2);
-
-        // decrement and increment click handling
         btnDec->AddOnClickFunction([this, bar, btnDec, i]
         {
             bar->RemNew();
@@ -367,6 +344,15 @@ DialogUpgrade::DialogUpgrade(GameObject * obj, const ObjectsDataRegistry * odr)
 
             OnPointsChanged();
         });
+
+        // increment
+        auto btnInc = new ButtonInc(attId, bg);
+        mButtonsInc.emplace_back(btnInc);
+        btnInc->SetPosition(barX + bar->GetWidth() + marginButton,
+                            (bg->GetHeight() - btnInc->GetHeight()) / 2);
+
+        const bool enable = val < static_cast<int>(MAX_STAV_VAL);
+        btnInc->SetEnabled(enable);
 
         btnInc->AddOnClickFunction([this, bar, btnDec, i]
         {
@@ -410,7 +396,7 @@ DialogUpgrade::DialogUpgrade(GameObject * obj, const ObjectsDataRegistry * odr)
 
     mBtnUpgrade->AddOnClickFunction([this]
     {
-        mObj->Upgrade(mChangesToApply);
+        mObj->UpgradeLevel(mChangesToApply);
 
         auto player = sgl::media::AudioManager::Instance()->GetPlayer();
         player->PlaySound("game/upgrade-01.ogg");
@@ -463,11 +449,10 @@ void DialogUpgrade::OnPointsChanged()
         for(unsigned int i = 0; i < numButtons; ++i)
         {
             const ObjAttId attId = static_cast<ButtonInc *>(mButtonsInc[i])->GetAttributeId();
-
             const int used = mObj->GetAttribute(attId) + mChangesToApply[i];
+            const bool enable = used < MAX_SLOTS;
 
-            if(used < MAX_SLOTS)
-                mButtonsInc[i]->SetEnabled(true);
+            mButtonsInc[i]->SetEnabled(enable);
         }
 
         // disable button UPGRADE

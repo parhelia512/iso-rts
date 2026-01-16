@@ -196,7 +196,7 @@ public:
         mData->SetText(ss.str().c_str());
 
         // BAR
-        const unsigned int barLvlTexId = ID_DLG_OBJ_SBAR_0 + val;
+        const unsigned int barLvlTexId = ID_DLG_OBJ_SBAR_1 + val;
         auto tm = sgl::graphic::TextureManager::Instance();
         sgl::graphic::Texture * tex = tm->GetSprite(SpriteFileDialogObject, barLvlTexId);
         mBar->SetTexture(tex);
@@ -254,7 +254,7 @@ DialogObject::DialogObject(const ObjectsDataRegistry * odr)
     const int marginL = 30;
 
     // TITLE
-    const int marginTitleT = 14;
+    const int marginTitleT = 10;
 
     auto font = fm->GetFont(WidgetsConstants::FontFileDialogTitle, 28, sgl::graphic::Font::NORMAL);
     mTitle = new sgui::Label(font, this);
@@ -351,11 +351,13 @@ void DialogObject::SetObject(GameObject * obj)
 
     // VISUAL STATS
     static_cast<ObjectExtendedVisualRank *>(mStatRank)->SetValue(obj->GetExperienceLevel(),
-                                                                 obj->GetMaxExperienceLevel());
+                                                                 GameObject::MAX_LEVEL);
     static_cast<ObjectExtendedVisualStat *>(mStatExperience)->SetValue(obj->GetExperience(),
                                                                        obj->GetExperienceToNextLevel());
-    static_cast<ObjectExtendedVisualStat *>(mStatEnergy)->SetValue(obj->GetEnergy(), obj->GetMaxEnergy());
-    static_cast<ObjectExtendedVisualStat *>(mStatHealth)->SetValue(obj->GetHealth(), obj->GetMaxHealth());
+    static_cast<ObjectExtendedVisualStat *>(mStatEnergy)->SetValue(obj->GetEnergy(),
+                                                                   obj->GetMaxEnergy());
+    static_cast<ObjectExtendedVisualStat *>(mStatHealth)->SetValue(obj->GetHealth(),
+                                                                   obj->GetMaxHealth());
 
     // ATTRIBUTES
     int statsAdded = 0;
