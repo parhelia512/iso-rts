@@ -412,8 +412,15 @@ DialogUpgrade::DialogUpgrade(GameObject * obj, const ObjectsDataRegistry * odr)
     {
         mObj->Upgrade(mChangesToApply);
 
+        auto player = sgl::media::AudioManager::Instance()->GetPlayer();
+        player->PlaySound("game/upgrade-01.ogg");
+
         mBtnClose->Click();
     });
+
+    // play sound
+    auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+    ap->PlaySound("UI/dialog_open-01.ogg");
 }
 
 void DialogUpgrade::SetFunctionOnClose(const std::function<void()> & f)

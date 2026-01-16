@@ -289,6 +289,7 @@ void ScreenInit::SetupSFX()
         am->CreateSound(packageSoundsGame, "game/miniunit_move-01.ogg");
         am->CreateSound(packageSoundsGame, "game/unit_move-01.ogg");
         am->CreateSound(packageSoundsGame, "game/unit_move-02.ogg");
+        am->CreateSound(packageSoundsGame, "game/upgrade-01.ogg");
     });
 
     // TEST SFX
