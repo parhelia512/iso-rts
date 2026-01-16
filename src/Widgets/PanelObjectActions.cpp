@@ -56,7 +56,7 @@ PanelObjectActions::PanelObjectActions(sgl::sgui::Widget * parent)
         new ObjectActionButton(ObjectActionButton::BUILD_STRUCT, "B", KeyboardEvent::KEY_B,
                                sm->GetCString("TT_BUILD_STRUCT"), this);
     mButtons[BTN_UPGRADE] =
-        new ObjectActionButton(ObjectActionButton::UPGRADE, "U", KeyboardEvent::KEY_U,
+        new ObjectActionButton(ObjectActionButton::UPGRADE, "P", KeyboardEvent::KEY_P,
                                sm->GetCString("TT_UPGRADE"), this);
     mButtons[BTN_OPEN_GATE] =
         new ObjectActionButton(ObjectActionButton::OPEN_GATE, "G", KeyboardEvent::KEY_G,
@@ -85,7 +85,14 @@ PanelObjectActions::PanelObjectActions(sgl::sgui::Widget * parent)
 
 void PanelObjectActions::SetObject(GameObject * obj)
 {
+    ClearObserving();
+
     mObj = obj;
+
+    mFuncValuesChangedId = mObj->AddFunctionOnValueChanged([this]
+    {
+        OnUpdateStats();
+    });
 
     // reset all buttons
     for(ObjectActionButton * btn : mButtons)
@@ -180,28 +187,7 @@ void PanelObjectActions::SetObject(GameObject * obj)
         mButtons[BTN_CANCEL]->SetVisible(false);
 
     // POSITION BUTTONS
-    const int marginH = 15;
-    int x = 0;
-
-    for(ObjectActionButton * btn : mButtons)
-    {
-        if(btn->IsVisible())
-        {
-            btn->SetX(x);
-
-            x += btn->GetWidth() + marginH;
-        }
-    }
-
-    // update position
-    const int rendW = sgl::graphic::Renderer::Instance()->GetWidth();
-    const int rendH = sgl::graphic::Renderer::Instance()->GetHeight();
-    const int marginB = 150;
-
-    const int panelX = (rendW - GetWidth()) * 0.5f;
-    const int panelY = rendH - GetHeight() - marginB;
-
-    SetPosition(panelX, panelY);
+    UpdatePositions();
 }
 
 unsigned int PanelObjectActions::AddButtonFunction(Button btnId, const std::function<void()> & f)
@@ -255,6 +241,54 @@ void PanelObjectActions::OnStringsChanged()
     mButtons[BTN_SET_TARGET]->SetTooltipText(sm->GetCString("TT_SET_DEST"));
     mButtons[BTN_SELF_DESTROY]->SetTooltipText(sm->GetCString("TT_SELF_DESTR"));
     mButtons[BTN_CANCEL]->SetTooltipText(sm->GetCString("TT_CANCEL"));
+}
+
+void PanelObjectActions::OnUpdateStats()
+{
+    const int exp = mObj->GetExperience();
+    const int maxExp = mObj->GetExperienceToNextLevel();
+    const bool showUpgrade = exp >= maxExp &&
+                             (mObj->GetExperienceLevel() + 1) < GameObject::MAX_LEVEL;
+
+    mButtons[BTN_UPGRADE]->SetVisible(showUpgrade);
+
+    UpdatePositions();
+}
+
+void PanelObjectActions::ClearObserving()
+{
+    if(mObj == nullptr)
+        return ;
+
+    mObj->RemoveFunctionOnValueChanged(mFuncValuesChangedId);
+
+    mFuncValuesChangedId = 0;
+}
+
+void PanelObjectActions::UpdatePositions()
+{
+    const int marginH = 15;
+    int x = 0;
+
+    for(ObjectActionButton * btn : mButtons)
+    {
+        if(btn->IsVisible())
+        {
+            btn->SetX(x);
+
+            x += btn->GetWidth() + marginH;
+        }
+    }
+
+    // update position
+    const int rendW = sgl::graphic::Renderer::Instance()->GetWidth();
+    const int rendH = sgl::graphic::Renderer::Instance()->GetHeight();
+    const int marginB = 150;
+
+    const int panelX = (rendW - GetWidth()) * 0.5f;
+    const int panelY = rendH - GetHeight() - marginB;
+
+    SetPosition(panelX, panelY);
 }
 
 } // namespace game

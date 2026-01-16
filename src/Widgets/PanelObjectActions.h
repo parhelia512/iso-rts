@@ -66,14 +66,25 @@ public:
 private:
     void OnStringsChanged() override;
 
+    void OnUpdateStats();
+
+    void ClearObserving();
+
+    void UpdatePositions();
+
 private:
     std::array<ObjectActionButton *, NUM_BUTTONS> mButtons;
 
     GameObject * mObj = nullptr;
+
+    unsigned int mFuncValuesChangedId = 0;
 };
 
-
-inline void PanelObjectActions::ClearObject() { mObj = nullptr; }
+inline void PanelObjectActions::ClearObject()
+{
+    ClearObserving();
+    mObj = nullptr;
+}
 
 inline bool PanelObjectActions::HasObjectSet() const { return mObj != nullptr; }
 

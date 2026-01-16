@@ -781,7 +781,8 @@ void ScreenGame::CreateUI()
     // upgrade
     panelObjActions->AddButtonFunction(PanelObjectActions::BTN_UPGRADE, [this]
     {
-        // TODO
+        GameObject * selObj = mLocalPlayer->GetSelectedObject();
+        mHUD->ShowDialogUpgrade(selObj);
     });
 
     // cancel
