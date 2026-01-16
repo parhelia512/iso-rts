@@ -924,6 +924,14 @@ void ScreenGame::OnKeyUp(sgl::core::KeyboardEvent & event)
             CenterCameraOverPlayerBase();
     }
 #ifdef DEV_MODE
+    // DEBUG: SHIFT+E -> add Experience to selected object
+    else if(event.IsModShiftDown() && key == KeyboardEvent::KEY_E)
+    {
+        auto selObj = GetGame()->GetLocalPlayer()->GetSelectedObject();
+
+        if(selObj != nullptr)
+            selObj->SumExperience(1000);
+    }
     // DEBUG: ALT + U -> toggle UI
     else if(event.IsModAltDown() && key == KeyboardEvent::KEY_U)
         mHUD->SetVisible(!mHUD->IsVisible());
