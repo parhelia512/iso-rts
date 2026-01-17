@@ -29,8 +29,7 @@ MiniUnit::MiniUnit(const ObjectData & data, const ObjectInitData & initData, int
 {
     // set actual speed
     const float maxSpeed = 10.f;
-    const float speed = maxSpeed * GetAttribute(OBJ_ATT_SPEED) / MAX_STAV_VAL;
-    SetSpeed(speed);
+    SetMaxSpeed(maxSpeed);
 
     // health
     const float maxHealthValue = maxSingleHealthValue * mElements;

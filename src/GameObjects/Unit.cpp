@@ -28,20 +28,9 @@ Unit::Unit(const ObjectData & data, const ObjectInitData & initData)
 {
     SetDefaultAction(MOVE);
 
-    // set healing range converting attribute
-    const int maxHealVal = 11;
-    const int HealRanges[maxHealVal] = { 0, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4 };
-    mRangeHealing = HealRanges[GetAttribute(OBJ_ATT_HEALING_RANGE)];
-
-    // set healing power converting attribute
-    const float HealPowers[maxHealVal] = { 0.f, 1.f, 2.f, 2.f, 3.f, 3.f, 4.f, 4.f, 5.f, 5.f, 6.f };
-    mHealingPower = HealPowers[GetAttribute(OBJ_ATT_HEALING_POWER)];
-
-    // SET CONCRETE ATTRIBUTES
-    // set actual speed
+    // speed
     const float maxSpeed = 5.f;
-    const float speed = maxSpeed * static_cast<float>(GetAttribute(OBJ_ATT_SPEED)) / MAX_STAV_VAL;
-    SetSpeed(speed);
+    SetMaxSpeed(maxSpeed);
 
     // health
     const float maxHealthValue = 250.f;
@@ -84,13 +73,27 @@ bool Unit::CanHeal() const
            GetAttribute(OBJ_ATT_HEALING_POWER) > 0;
 }
 
+int Unit::GetHealingRange() const
+{
+    const int HealRanges[] = { 0, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4 };
+    return HealRanges[GetAttribute(OBJ_ATT_HEALING_RANGE)];
+}
+
+float Unit::GetHealingPower() const
+{
+    const float HealPowers[] = { 0.f, 1.f, 2.f, 2.f, 3.f, 3.f, 4.f, 4.f, 5.f, 5.f, 6.f };
+    return HealPowers[GetAttribute(OBJ_ATT_HEALING_POWER)];
+}
+
 bool Unit::IsTargetHealingInRange(GameObject * obj) const
 {
+    const int range = GetHealingRange();
+
     for(int r = obj->GetRow1(); r <= obj->GetRow0(); ++r)
     {
         for(int c = obj->GetCol1(); c <= obj->GetCol0(); ++c)
         {
-            if(std::abs(GetRow0() - r) <= mRangeHealing && std::abs(GetCol0() - c) <= mRangeHealing)
+            if(std::abs(GetRow0() - r) <= range && std::abs(GetCol0() - c) <= range)
                 return true;
         }
     }
@@ -297,7 +300,7 @@ void Unit::Heal()
         tX,
         tY,
         speed,
-        mHealingPower,
+        GetHealingPower(),
         GetFaction()
     };
 

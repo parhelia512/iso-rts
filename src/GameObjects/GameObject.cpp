@@ -377,10 +377,10 @@ float GameObject::GetSpeed() const
 {
 #ifdef DEV_MODE
     if(Game::GOD_MODE && IsFactionLocal())
-        return mSpeed * 10.f;
+        return 10.f;
 #endif
 
-    return mSpeed;
+    return mMaxSpeed * GetAttribute(OBJ_ATT_SPEED) / MAX_STAV_VAL;
 }
 
 void GameObject::SetWeapon(Weapon * w)

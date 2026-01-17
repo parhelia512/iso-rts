@@ -655,7 +655,7 @@ void ScreenGame::CreateUI()
         HideActionPanels();
 
         // show healing range overlay
-        const int range = unit->GetRangeHealing();
+        const int range = unit->GetHealingRange();
         ShowHealingIndicators(unit, range);
     });
 

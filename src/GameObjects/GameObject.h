@@ -204,7 +204,7 @@ protected:
     void SetCanBeConquered(bool val);
     void SetStatic(bool val);
 
-    void SetSpeed(float speed);
+    void SetMaxSpeed(float val);
 
     void NotifyValueChanged();
 
@@ -292,7 +292,7 @@ private:
     float mEnergyRegPower = 1.f;
     float mMaxHealth = 100.f;
     float mHealth = 100.f;
-    float mSpeed = 0.f;
+    float mMaxSpeed = 0.f;
 
     bool mStructure = false;
     // set to TRUE for elements that stay visible under FOGOW
@@ -368,6 +368,8 @@ inline void GameObject::SetStructure(bool val) { mStructure = val; }
 inline void GameObject::SetCanBeConquered(bool val) { mCanBeConq = val; }
 inline void GameObject::SetStatic(bool val) { mStatic = val; }
 
+inline void GameObject::SetMaxSpeed(float val) { mMaxSpeed = val; }
+
 inline float GameObject::GetHealth() const { return mHealth; }
 inline float GameObject::GetMaxHealth() const { return mMaxHealth; }
 
@@ -388,8 +390,6 @@ inline int GameObject::GetExperienceToNextLevel() const
     return GetExperienceToLevel(mExpLevel + 1);
 }
 inline int GameObject::GetExperienceLevel() const { return mExpLevel; }
-
-inline void GameObject::SetSpeed(float speed) { mSpeed = speed; }
 
 inline const Weapon * GameObject::GetWeapon() const { return mWeapon; }
 

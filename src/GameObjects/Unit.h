@@ -21,7 +21,8 @@ public:
 
     // heal
     bool CanHeal() const;
-    int GetRangeHealing() const;
+    int GetHealingRange() const;
+    float GetHealingPower() const;
     void ClearTargetHealing();
     bool IsTargetHealingInRange(GameObject * obj) const;
     bool SetTargetHealing(GameObject * obj);
@@ -63,8 +64,6 @@ private:
     // healing
     float mTimeHealing = 0.5f;
     float mTimerHealing = 0.f;
-    float mHealingPower = 1.f;
-    int mRangeHealing = 1;
     GameObject * mTargetHealing = nullptr;
 
     ScreenGame * mScreen = nullptr;
@@ -72,7 +71,6 @@ private:
     GameObjectTypeId mStructToBuild;
 };
 
-inline int Unit::GetRangeHealing() const { return mRangeHealing; }
 inline void Unit::ClearTargetHealing() { mTargetHealing = nullptr; }
 
 inline void Unit::SetStructureToBuild(GameObjectTypeId type) { mStructToBuild = type; }
