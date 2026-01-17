@@ -345,6 +345,9 @@ void GameObject::UpgradeLevel(const std::vector<int> & attChanges)
     for(unsigned int i = 0; i < numAtt; ++i)
         mAttributes[static_cast<ObjAttId>(i)] += attChanges[i];
 
+    // notify object and observers
+    OnAttributeChanged();
+
     NotifyValueChanged();
 }
 
@@ -708,6 +711,10 @@ void GameObject::OnLinkedChanged()
     UpdateVisibilityLevel(defMaxVisibility, defMaxVisibilityLinked);
 }
 
+void GameObject::OnAttributeChanged()
+{
+}
+
 void GameObject::NotifyValueChanged()
 {
     for(const auto & it : mOnValueChanged)
@@ -810,12 +817,16 @@ float GameObject::GetActionExperienceGain(GameObjectActionType action) const
 
 void GameObject::ShowIconUpgrade()
 {
+    // only show for local player
+    if(!IsFactionLocal())
+        return;
+
     if(mIconUpgrade == nullptr)
         mIconUpgrade = new IconUpgrade(mFaction);
 
     // play sound
-    auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
-    ap->PlaySound("game/upgrade_notification-01.ogg");
+        auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+        ap->PlaySound("game/upgrade_notification-01.ogg");
 
     PositionIconUpgrade();
 }

@@ -194,6 +194,7 @@ protected:
 
     virtual void OnFactionChanged();
     virtual void OnLinkedChanged();
+    virtual void OnAttributeChanged();
 
     const Game * GetGame() const;
     GameMap * GetGameMap() const;

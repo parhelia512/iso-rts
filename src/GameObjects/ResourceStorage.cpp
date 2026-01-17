@@ -63,6 +63,30 @@ void ResourceStorage::OnLinkedChanged()
     p->SumResourceMax(statIds[mResource], diff);
 }
 
+void ResourceStorage::OnAttributeChanged()
+{
+    const int oldCapacity = mCapacity;
+
+    UpdateCapacity();
+
+    // update owner's capacity
+    if(oldCapacity != mCapacity && IsLinked())
+    {
+        const int diff = mCapacity - oldCapacity;
+
+        const Player::Stat statIds[NUM_RESOURCES] =
+            {
+                Player::Stat::ENERGY,
+                Player::Stat::MATERIAL,
+                Player::Stat::DIAMONDS,
+                Player::Stat::BLOBS
+            };
+
+        Player * p = GetOwner();
+        p->SumResourceMax(statIds[mResource], diff);
+    }
+}
+
 void ResourceStorage::UpdateCapacity()
 {
     const bool mainRes = RES_ENERGY == mResource || RES_MATERIAL1 == mResource;

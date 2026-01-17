@@ -18,6 +18,7 @@ private:
     void UpdateGraphics() override;
 
     void OnLinkedChanged() override;
+    void OnAttributeChanged() override;
 
     void UpdateCapacity();
 
