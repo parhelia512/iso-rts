@@ -21,6 +21,8 @@
 #include <sgl/core/Math.h>
 #include <sgl/graphic/ParticlesManager.h>
 #include <sgl/graphic/TextureManager.h>
+#include <sgl/media/AudioManager.h>
+#include <sgl/media/AudioPlayer.h>
 #include <sgl/utilities/UniformDistribution.h>
 
 #include <cstdlib>
@@ -332,6 +334,10 @@ void GameObject::UpgradeLevel(const std::vector<int> & attChanges)
 
     // increase level
     ++mExpLevel;
+
+    // hide icon upgrade if exp is below new next level or reached max
+    if(mExp < GetExperienceToNextLevel() || mExpLevel == MAX_LEVEL)
+        HideIconUpgrade();
 
     // update attributes
     const unsigned int numAtt = attChanges.size();
@@ -806,6 +812,10 @@ void GameObject::ShowIconUpgrade()
 {
     if(mIconUpgrade == nullptr)
         mIconUpgrade = new IconUpgrade(mFaction);
+
+    // play sound
+    auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+    ap->PlaySound("game/upgrade_notification-01.ogg");
 
     PositionIconUpgrade();
 }
