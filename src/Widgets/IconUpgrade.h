@@ -5,10 +5,12 @@
 namespace game
 {
 
+enum PlayerFaction : unsigned int;
+
 class IconUpgrade : public sgl::sgui::Image
 {
 public:
-    IconUpgrade();
+    IconUpgrade(PlayerFaction f);
 };
 
 } // namespace game

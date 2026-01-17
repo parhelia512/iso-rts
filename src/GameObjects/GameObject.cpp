@@ -805,7 +805,7 @@ float GameObject::GetActionExperienceGain(GameObjectActionType action) const
 void GameObject::ShowIconUpgrade()
 {
     if(mIconUpgrade == nullptr)
-        mIconUpgrade = new IconUpgrade;
+        mIconUpgrade = new IconUpgrade(mFaction);
 
     PositionIconUpgrade();
 }
