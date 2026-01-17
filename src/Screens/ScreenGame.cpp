@@ -727,7 +727,8 @@ void ScreenGame::CreateUI()
         mGameMap->MoveObjectDown(gate);
 
         // move to iso layer 1
-        mIsoMap->ChangeObjectLayer(gate->GetIsoObject(), MapLayers::REGULAR_OBJECTS, MapLayers::GROUND_OBJECTS);
+        mIsoMap->ChangeObjectLayer(gate->GetIsoObject(), MapLayers::REGULAR_OBJECTS,
+                                   MapLayers::GROUND_OBJECTS);
 
         // update panel actions
         panelObjActions->SetObject(gate);
@@ -925,8 +926,8 @@ void ScreenGame::OnKeyUp(sgl::core::KeyboardEvent & event)
             CenterCameraOverPlayerBase();
     }
 #ifdef DEV_MODE
-    // DEBUG: SHIFT+E -> add Experience to selected object
-    else if(event.IsModShiftDown() && key == KeyboardEvent::KEY_E)
+    // DEBUG: SHIFT+N -> add Experience to selected object
+    else if(event.IsModShiftDown() && key == KeyboardEvent::KEY_N)
     {
         auto selObj = GetGame()->GetLocalPlayer()->GetSelectedObject();
 
