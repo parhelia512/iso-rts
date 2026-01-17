@@ -381,6 +381,8 @@ add_executable(
     src/Widgets/GameSliderH.cpp
     src/Widgets/GameUIData.h
     src/Widgets/GameUIData.cpp
+    src/Widgets/IconUpgrade.h
+    src/Widgets/IconUpgrade.cpp
     src/Widgets/MiniMap.h
     src/Widgets/MiniMap.cpp
     src/Widgets/ObjectActionButton.h

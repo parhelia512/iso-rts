@@ -16,6 +16,7 @@
 #include "Particles/UpdaterDamage.h"
 #include "Particles/UpdaterHitPoints.h"
 #include "Screens/ScreenGame.h"
+#include "Widgets/IconUpgrade.h"
 
 #include <sgl/core/Math.h>
 #include <sgl/graphic/ParticlesManager.h>
@@ -767,6 +768,36 @@ float GameObject::GetActionExperienceGain(GameObjectActionType action) const
     return ACTION_EXPERIENCE[action];
 }
 
+void GameObject::ShowIconUpgrade()
+{
+    if(mIconUpgrade == nullptr)
+        mIconUpgrade = new IconUpgrade;
+
+    PositionIconUpgrade();
+}
+
+void GameObject::HideIconUpgrade()
+{
+    delete mIconUpgrade;
+    mIconUpgrade = nullptr;
+}
+
+void GameObject::PositionIconUpgrade()
+{
+    if(mIconUpgrade == nullptr)
+        return ;
+
+    const int isoX = mIsoObj->GetX();
+    const int isoY = mIsoObj->GetY();
+    const int isoW = mIsoObj->GetWidth();
+
+    const int iconMarginV = 5;
+    const int iconX = isoX + (isoW - mIconUpgrade->GetWidth()) / 2;
+    const int iconY = isoY - mIconUpgrade->GetHeight() - iconMarginV;
+
+    mIconUpgrade->SetPosition(iconX, iconY);
+}
+
 void GameObject::SetEnergy(float val)
 {
     const float oldEn = mEnergy;
@@ -795,6 +826,11 @@ void GameObject::SetExperience(int val)
         return ;
 
     mExp = val;
+
+    if(mExp >= GetExperienceToNextLevel())
+        ShowIconUpgrade();
+    else
+        HideIconUpgrade();
 
     NotifyValueChanged();
 }

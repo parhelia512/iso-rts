@@ -1124,6 +1124,9 @@ void ScreenInit::SetupTextures()
             { 55, 0, 24, 24 },
             { 80, 0, 24, 24 },
             { 105, 0, 24, 24 },
+
+            // UPGRADE ICON
+            { 130, 0, 24, 24 },
         };
 
         tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_GAME], SpriteFileParticles, rects);

@@ -49,6 +49,7 @@ enum GameObjectActionType : unsigned int
 class Game;
 class GameMap;
 class GameObjectsGroup;
+class IconUpgrade;
 class IsoObject;
 class ObjectInitData;
 class Player;
@@ -224,6 +225,10 @@ private:
     // NOTE no boundary check, assuming valid action
     virtual float GetActionExperienceGain(GameObjectActionType action) const;
 
+    void ShowIconUpgrade();
+    void HideIconUpgrade();
+    void PositionIconUpgrade();
+
     void SetEnergy(float val);
     void SetMaxEnergy(float val);
     void SetRegenerationPower(float val);
@@ -256,6 +261,8 @@ private:
     Player * mOwner = nullptr;
 
     const GameMapCell * mCell = nullptr;
+
+    IconUpgrade * mIconUpgrade = nullptr;
 
     GameObjectTypeId mType = ObjectData::TYPE_NULL;
     GameObjectCategoryId mCategory = ObjectData::CAT_NULL;
