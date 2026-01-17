@@ -228,9 +228,8 @@ void WallBuildPath::UpdateMove(float delta)
         --todo;
 
     // position object
-    IsoObject * isoObj = mUnit->GetIsoObject();
-    isoObj->SetX(static_cast<int>(std::roundf(mObjX)));
-    isoObj->SetY(static_cast<int>(std::roundf(mObjY)));
+    mUnit->SetPosition(static_cast<int>(std::roundf(mObjX)),
+                       static_cast<int>(std::roundf(mObjY)));
 
     // handle reached target
     if(0 == todo)

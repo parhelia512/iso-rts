@@ -32,7 +32,7 @@ StepGameUnit::StepGameUnit(const Player * p)
                        {
                            // FOCUS
                            mUnit = p->GetUnit(0);
-                           auto isoObj = mUnit->GetIsoObject();
+                           const auto isoObj = mUnit->GetIsoObject();
                            const int objX = isoObj->GetX();
                            const int objY = isoObj->GetY();
                            const int objW = isoObj->GetWidth();

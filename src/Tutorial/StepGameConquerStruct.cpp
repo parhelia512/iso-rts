@@ -25,7 +25,7 @@ StepGameConquerStruct::StepGameConquerStruct(const Player * p, const GameObject 
     auto sm = sgl::utilities::StringManager::Instance();
 
     // FOCUS
-    auto isoObj = mEnergyGen->GetIsoObject();
+    const auto isoObj = mEnergyGen->GetIsoObject();
     const int objX = isoObj->GetX();
     const int objY = isoObj->GetY();
     const int objW = isoObj->GetWidth();

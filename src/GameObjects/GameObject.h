@@ -83,6 +83,12 @@ public:
     IsoObject * GetIsoObject() const;
     virtual void OnPositionChanged();
 
+    int GetX() const;
+    int GetY() const;
+    void SetPosition(int x, int y);
+    void SetX(int x);
+    void SetY(int y);
+
     bool IsStructure() const;
     bool CanBeConquered() const;
 

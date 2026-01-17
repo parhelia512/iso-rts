@@ -131,6 +131,40 @@ void GameObject::SetOwner(Player * p)
 
 void GameObject::OnPositionChanged() { }
 
+int GameObject::GetX() const
+{
+    return mIsoObj->GetX();
+}
+
+int GameObject::GetY() const
+{
+    return mIsoObj->GetY();
+}
+
+void GameObject::SetPosition(int x, int y)
+{
+    mIsoObj->SetPosition(x, y);
+
+    if(mIconUpgrade != nullptr)
+        PositionIconUpgrade();
+}
+
+void GameObject::SetX(int x)
+{
+    mIsoObj->SetX(x);
+
+    if(mIconUpgrade != nullptr)
+        PositionIconUpgrade();
+
+}
+void GameObject::SetY(int y)
+{
+    mIsoObj->SetY(y);
+
+    if(mIconUpgrade != nullptr)
+        PositionIconUpgrade();
+}
+
 void GameObject::SetSelected(bool val)
 {
     // same value -> nothing to do
@@ -784,9 +818,6 @@ void GameObject::HideIconUpgrade()
 
 void GameObject::PositionIconUpgrade()
 {
-    if(mIconUpgrade == nullptr)
-        return ;
-
     const int isoX = mIsoObj->GetX();
     const int isoY = mIsoObj->GetY();
     const int isoW = mIsoObj->GetWidth();

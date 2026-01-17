@@ -20,7 +20,7 @@ StepGameBase::StepGameBase(const Base * b)
     auto sm = sgl::utilities::StringManager::Instance();
 
     // FOCUS
-    auto isoObj = mBase->GetIsoObject();
+    const auto isoObj = mBase->GetIsoObject();
     const int objX = isoObj->GetX();
     const int objY = isoObj->GetY();
     const int objW = isoObj->GetWidth();
