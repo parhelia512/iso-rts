@@ -144,7 +144,7 @@ public:
     static const ObjectData NullObj;
 
 public:
-    static std::string GetObjectTypeStr(const GameObjectTypeId type);
+    static const std::string & GetObjectTypeStr(const GameObjectTypeId type);
 
 public:
     ObjectData(const std::unordered_map<ObjAttId, int> & atts,

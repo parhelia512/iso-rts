@@ -130,7 +130,6 @@ public:
     bool IsFactionLocal() const;
 
     GameObjectTypeId GetObjectType() const;
-    std::string GetObjectTypeStr() const;
     GameObjectCategoryId GetObjectCategory() const;
     GameObjectVariantId GetObjectVariant() const;
     void SetObjectVariant(GameObjectVariantId var);
@@ -345,11 +344,6 @@ inline const GameMapCell * GameObject::GetCell() const { return mCell; }
 inline int GameObject::GetVisibilityLevel() const { return mVisLevel; }
 
 inline GameObjectTypeId GameObject::GetObjectType() const { return mType; }
-
-inline std::string GameObject::GetObjectTypeStr() const
-{
-    return ObjectData::GetObjectTypeStr(mType);
-}
 
 inline GameObjectCategoryId GameObject::GetObjectCategory() const { return mCategory; }
 
