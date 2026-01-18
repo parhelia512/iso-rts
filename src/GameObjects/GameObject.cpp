@@ -529,6 +529,10 @@ void GameObject::Hit(float damage, GameObject * attacker, bool fatal)
         const float variableDamage = 1.f - (GetAttribute(OBJ_ATT_RESISTANCE) / MAX_STAV_VAL);
 
         damage = damage * fixedW + (damage * variableW * variableDamage);
+
+        // shield can block up to shieldEfficency% of hit
+        const float shieldEfficency = 0.15f;
+        damage -= damage * shieldEfficency * (GetAttribute(OBJ_ATT_SHIELD) / MAX_STAV_VAL);
     }
 
     damage = std::roundf(damage);
