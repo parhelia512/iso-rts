@@ -330,6 +330,8 @@ void ScreenMainMenu::CreateChangelog()
                          "- New SFX for laser weapon, unit and mini-unit.\n"
                          "- Added multi-language support.\n"
                          "- Added Italian and Spanish translations.\n"
+                         "- Units and stuctures can be upgraded after gaining enough"
+                         " experience to level up.\n"
                          "\nCHANGES\n"
                          "- Unit movements are limited to visible cells.\n"
                          "- New look&feel for tutorial panels.\n"
