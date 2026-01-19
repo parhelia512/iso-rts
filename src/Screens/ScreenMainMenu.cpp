@@ -350,6 +350,7 @@ void ScreenMainMenu::CreateChangelog()
                          "- Fixed mission progression in planet map.\n"
                          "- Fixed object actions panel appearing with no object selected.\n"
                          "- Tutorial is not repeated after quitting it.\n"
+                         "- Fixed AI structures showing blinking icon.\n"
                          );
     textNewFeat->SetPosition(contX, contY);
     textNewFeat->SetColor(colorContent);
