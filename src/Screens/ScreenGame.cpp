@@ -1114,16 +1114,20 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
 
     Player * player = ai->GetPlayer();
 
-    auto PrintAction = [](int turnAI, const ActionAI * action, bool done, Player * player)
+    auto PrintAction = [this](int turnAI, const ActionAI * action, bool done, Player * player)
     {
         std::cout << "ScreenGame::ExecuteAIAction - AI " << turnAI << " - "
                   << action->GetTypeStr()
                   << (done ? " DOING" : " FAILED")
                   << " | ACT ID: " << action->actId
-                  << " - PRIORITY: " << action->priority
-                  << " | OBJ ID: " << action->ObjSrc->GetObjectId()
-                  << " - OBJ ENERGY: " << action->ObjSrc->GetEnergy()
-                  << " - TURN ENERGY: " << player->GetTurnEnergy() << std::endl;
+                  << " - PRIORITY: " << action->priority;
+
+        // make sure obj is still valid (not destroyed)
+        if(action->ObjSrc != nullptr && mGameMap->HasObject(action->ObjSrc))
+            std::cout << " | OBJ ID: " << action->ObjSrc->GetObjectId()
+                      << " - OBJ ENERGY: " << action->ObjSrc->GetEnergy();
+
+        std::cout << " | TURN ENERGY: " << player->GetTurnEnergy() << std::endl;
     };
 
     // execute planned action until one is successful or there's no more actions to do (NOP)
@@ -1182,12 +1186,7 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
 
                 // unit and generator are next to each other
                 if(mGameMap->AreObjectsOrthoAdjacent(action->ObjSrc, action->ObjDst))
-                {
-                    std::cout << "ScreenGame::ExecuteAIAction - AI " << turnAI
-                              << " - CONQUER GENERATOR ADJACENT" << std::endl;
-
                     done = SetupStructureConquest(unit, start, end, player, basicOnDone);
-                }
                 // unit needs to move to the generator
                 else
                 {
@@ -1195,12 +1194,7 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
 
                     // failed to find a suitable target
                     if(-1 == target.row || -1 == target.col)
-                    {
-                        std::cout << "ScreenGame::ExecuteAIAction - CONQUER GENERATOR -"
-                                     "GetOrthoAdjacentMoveTarget FAILED" << std::endl;
-
                         done = false;
-                    }
                     else
                     {
                         done = SetupUnitMove(unit, start, target,
@@ -1208,26 +1202,15 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
                             {
                                 if(successful)
                                 {
-                                    std::cout << "ScreenGame::ExecuteAIAction - CONQUER GENERATOR "
-                                                 "AFTER MOVE - SetupStructureConquest" << std::endl;
-
                                     const Cell2D currCell(unit->GetRow0(), unit->GetCol0());
                                     const bool res = SetupStructureConquest(unit, currCell, end,
                                                                             player, basicOnDone);
-
-                                    std::cout << "ScreenGame::ExecuteAIAction - CONQUER GENERATOR "
-                                                 "AFTER MOVE - SetupStructureConquest - res: " << res << std::endl;
 
                                     if(!res)
                                         basicOnDone(false);
                                 }
                                 else
-                                {
-                                    std::cout << "ScreenGame::ExecuteAIAction - CONQUER GENERATOR "
-                                                 "AFTER MOVE - MOVE FAILED" << std::endl;
-
                                     basicOnDone(false);
-                                }
                             });
                     }
                 }
@@ -1246,18 +1229,10 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
                 // unit already on start or next to it
                 if(unitCell == start || (startGM.owner == player &&
                    mGameMap->AreCellsOrthoAdjacent(unitCell, start)))
-                {
-                    std::cout << "ScreenGame::ExecuteAIAction - AI " << turnAI
-                              << " - CONNECT STRUCTURE ADJACENT" << std::endl;
-
                     done = SetupConnectCellsAI(unit, basicOnDone);
-                }
                 // unit needs to move to the structure
                 else
                 {
-                    std::cout << "ScreenGame::ExecuteAIAction - AI " << turnAI
-                              << " - CONNECT STRUCTURE AFTER MOVE" << std::endl;
-
                     done = SetupUnitMove(unit, unitCell, start,
                         [this, unit, start, basicOnDone](bool successful)
                         {
@@ -1265,19 +1240,11 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
                             {
                                 const bool res = SetupConnectCellsAI(unit, basicOnDone);
 
-                                std::cout << "ScreenGame::ExecuteAIAction - CONNECT STRUCTURE "
-                                             "AFTER MOVE - SetupConnectCellsAI - res: " << res << std::endl;
-
                                 if(!res)
                                     basicOnDone(false);
                             }
                             else
-                            {
-                                std::cout << "ScreenGame::ExecuteAIAction - CONNECT STRUCTURE "
-                                             "AFTER MOVE - MOVE FAILED" << std::endl;
-
                                 basicOnDone(false);
-                            }
                         });
                 }
 
@@ -1348,22 +1315,10 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
                 if(FindWhereToBuildStructureAI(unit, target))
                 {
                     if(mGameMap->AreCellsAdjacent(cellUnit, target))
-                    {
-                        std::cout << "ScreenGame::ExecuteAIAction - BUILD STRUCTURE ADJACENT - unit: "
-                                  << cellUnit.row << "," << cellUnit.col
-                                  << " - target: " << target.row << "," << target.col << std::endl;
-
                         done = SetupStructureBuilding(unit, target, player, basicOnDone);
-                    }
                     else
                     {
                         const Cell2D moveTarget = mGameMap->GetAdjacentMoveTarget(cellUnit, target);
-
-                        std::cout << "ScreenGame::ExecuteAIAction - BUILD STRUCTURE MOVE - unit: "
-                                  << cellUnit.row << "," << cellUnit.col
-                                  << " - target: " << target.row << "," << target.col
-                                  << " - move target: " << moveTarget.row << "," << moveTarget.col
-                                  << std::endl;
 
                         if(moveTarget.row != -1 && moveTarget.col != -1)
                         {
@@ -1374,9 +1329,6 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
                                     {
                                         const bool res = SetupStructureBuilding(unit, target, player, basicOnDone);
 
-                                        std::cout << "ScreenGame::ExecuteAIAction - BUILD STRUCTURE "
-                                                     "AFTER MOVE - SetupUnitMove - res: " << res << std::endl;
-
                                         if(!res)
                                         {
                                             basicOnDone(false);
@@ -1385,9 +1337,6 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
                                     }
                                     else
                                     {
-                                        std::cout << "ScreenGame::ExecuteAIAction - BUILD STRUCTURE "
-                                                     "AFTER MOVE - MOVE FAILED" << std::endl;
-
                                         basicOnDone(false);
                                         unit->ClearStructureToBuild();
                                     }
@@ -1428,27 +1377,15 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
                                 {
                                     const bool res = SetupUnitAttack(unit, target, player, basicOnDone);
 
-                                    std::cout << "ScreenGame::ExecuteAIAction - ATTACK TREES "
-                                                 "AFTER MOVE - SetupUnitMove - res: " << res << std::endl;
-
                                     if(!res)
                                         basicOnDone(false);
                                 }
                                 else
-                                {
-                                    std::cout << "ScreenGame::ExecuteAIAction - ATTACK TREES "
-                                                 "AFTER MOVE - MOVE FAILED" << std::endl;
-
                                     basicOnDone(false);
-                                }
                             });
                     }
                     else
-                    {
-                        std::cout << "ScreenGame::ExecuteAIAction - ATTACK TREES "
-                                     "FindAttackPosition FAILED" << std::endl;
                         done = false;
-                    }
                 }
 
                 PrintAction(turnAI, action, done, player);

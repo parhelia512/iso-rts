@@ -2657,8 +2657,6 @@ bool GameMap::FindFreeArea(const Cell2D & start, int rows, int cols, int maxRadi
                     }
                 }
             }
-
-            std::cout << "GameMap::FindFreeArea - BEST TOP: " << target.row << "," << target.col << std::endl;
         }
 
         // BOTTOM
@@ -2679,8 +2677,6 @@ bool GameMap::FindFreeArea(const Cell2D & start, int rows, int cols, int maxRadi
                     }
                 }
             }
-
-            std::cout << "GameMap::FindFreeArea - BEST BOTTOM: " << target.row << "," << target.col << std::endl;
         }
 
         // LEFT
@@ -2701,8 +2697,6 @@ bool GameMap::FindFreeArea(const Cell2D & start, int rows, int cols, int maxRadi
                     }
                 }
             }
-
-            std::cout << "GameMap::FindFreeArea - BEST LEFT: " << target.row << "," << target.col << std::endl;
         }
 
         // RIGHT
@@ -2723,17 +2717,10 @@ bool GameMap::FindFreeArea(const Cell2D & start, int rows, int cols, int maxRadi
                     }
                 }
             }
-
-            std::cout << "GameMap::FindFreeArea - BEST RIGHT: " << target.row << "," << target.col << std::endl;
         }
 
         if(target.row != -1)
-        {
-            std::cout << "GameMap::FindFreeArea - FOUND BEST - radius: " << radius
-                      << " - target: " << target.row << "," << target.col << std::endl;
-
             return true;
-        }
 
         ++radius;
     }
