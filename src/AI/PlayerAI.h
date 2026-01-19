@@ -60,8 +60,13 @@ private:
 
     void AddNewAction(ActionAI * action);
 
+    // GENERIC ACTIONS
     void AddActionEndTurn();
+    // STRUCTURE ACTIONS
+    void AddActionsStructure(Structure * s);
     void AddActionBaseCreateUnit(Structure * base);
+    void AddActionStructureUpgrade(Structure * s);
+    // UNIT ACTIONS
     void AddActionsUnit(Unit * u);
     void AddActionUnitAttackEnemyUnit(Unit * u);
     void AddActionUnitAttackTrees(Unit * u);
@@ -77,6 +82,10 @@ private:
     void AddActionUnitCollectLootbox(Unit * u);
     void AddActionUnitConnectStructure(Unit * u);
     void AddActionUnitConquestResGen(Unit * u, ResourceType type);
+    void AddActionUnitUpgrade(Unit * u);
+
+    // HELPER METHODS FOR ACTIONS
+    void AddActionUpgrade(GameObject * obj, const int weights[], AIActionType type);
 
     int GetMaxDistanceForObject(const GameObject * obj) const;
     int GetStructurePriorityBonusEnergy(const Structure * s, float bonus) const;

@@ -95,11 +95,7 @@ void PlayerAI::AddActions()
     for(unsigned int i = 0; i < mPlayer->GetNumStructures(); ++i)
     {
         Structure * s = mPlayer->GetStructure(i);
-
-        const GameObjectTypeId objType = s->GetObjectType();
-
-        if(objType == ObjectData::TYPE_BASE)
-            AddActionBaseCreateUnit(s);
+        AddActionsStructure(s);
     }
 
     // UNITS
@@ -109,7 +105,7 @@ void PlayerAI::AddActions()
         AddActionsUnit(u);
     }
 
-    // KEEP THI LAST
+    // KEEP THIS LAST
     AddActionEndTurn();
 }
 
@@ -379,6 +375,18 @@ void PlayerAI::AddActionEndTurn()
         delete action;
 }
 
+void PlayerAI::AddActionsStructure(Structure * s)
+{
+    // upgrade when possible
+    AddActionStructureUpgrade(s);
+
+    // type specific actions
+    const GameObjectTypeId objType = s->GetObjectType();
+
+    if(objType == ObjectData::TYPE_BASE)
+        AddActionBaseCreateUnit(s);
+}
+
 void PlayerAI::AddActionBaseCreateUnit(Structure * base)
 {
     const unsigned int numUnits = mPlayer->GetNumUnits();
@@ -469,8 +477,27 @@ void PlayerAI::AddActionBaseCreateUnit(Structure * base)
     AddNewAction(action);
 }
 
+void PlayerAI::AddActionStructureUpgrade(Structure * s)
+{
+    if(!s->CanBeUpgraded())
+        return ;
+
+    // define importance of each attribute for this object
+    const int weights[] =
+    {
+        8, 9, 0, 6, 8, 7, 0, 0, 0, 0, 0, 6, 9
+    };
+
+    static_assert(sizeof(weights) / sizeof(int) == NUM_BASIC_ATTRIBUTES);
+
+    AddActionUpgrade(s, weights, AIA_UPGRADE_STRUCTURE);
+}
+
 void PlayerAI::AddActionsUnit(Unit * u)
 {
+    // upgrade immediatly when possible
+    AddActionUnitUpgrade(u);
+
     // ATTACK
     if(u->CanAttack())
     {
@@ -1409,6 +1436,67 @@ void PlayerAI::AddActionUnitConquestResGen(Unit * u, ResourceType type)
     action->ObjSrc = u;
     action->ObjDst = mResGenerators[bestInd];
     action->priority = priority;
+
+    // push action to the queue
+    AddNewAction(action);
+}
+
+void PlayerAI::AddActionUnitUpgrade(Unit * u)
+{
+    if(!u->CanBeUpgraded())
+        return ;
+
+    // define importance of each attribute for this object
+    const int weights[] =
+    {
+        9, 8, 0, 6, 7, 6, 3, 3, 3, 6, 6, 3, 0
+    };
+
+    static_assert(sizeof(weights) / sizeof(int) == NUM_BASIC_ATTRIBUTES);
+
+    AddActionUpgrade(u, weights, AIA_UPGRADE_UNIT);
+}
+
+void PlayerAI::AddActionUpgrade(GameObject * obj, const int weights[],
+                                AIActionType type)
+{
+    const int level = obj->GetExperienceLevel();
+    const int pointsToAssign = GameObject::UPGRADE_POINTS[level];
+
+    const auto attributes = obj->GetAttributes();
+
+    // define points to assign to attributes
+    std::vector<int> changes(NUM_BASIC_ATTRIBUTES, 0);
+
+    ObjAttId attToInc = OBJ_ATT_NULL;
+    int maxAttScore = 0;
+
+    for(int i = 0; i < pointsToAssign; ++i)
+    {
+        for(auto it : attributes)
+        {
+            const ObjAttId attId = it.first;
+            const int val = it.second + changes[attId];
+            const int missingVal = MAX_STAT_IVAL - val;
+            const int attScore = missingVal * weights[attId];
+
+            if(attScore > maxAttScore)
+            {
+                attToInc = attId;
+                maxAttScore = attScore;
+            }
+        }
+
+        if(attToInc != OBJ_ATT_NULL)
+            ++changes[attToInc];
+    }
+
+    // create action
+    auto action = new ActionAIUpgradeObject;
+    action->type = type;
+    action->ObjSrc = obj;
+    action->priority = MAX_PRIORITY;
+    action->attChanges = std::move(changes);
 
     // push action to the queue
     AddNewAction(action);

@@ -5,7 +5,7 @@ namespace game
 
 const char * ActionAI::GetTypeStr() const
 {
-    static const char * STRINGS[NUM_AI_ACTIONS] =
+    static const char * STRINGS[] =
     {
         "NOP",
 
@@ -19,7 +19,11 @@ const char * ActionAI::GetTypeStr() const
         "UNIT COLLECT LOOTBOX",
         "UNIT CONNECT STRUCTURE",
         "UNIT CONQUER GEN",
+        "UPGRADE STRUCTURE",
+        "UPGRADE UNIT",
     };
+
+    static_assert(sizeof(STRINGS) / sizeof(const char *) == NUM_AI_ACTIONS);
 
     static const char * UNKNOWN = "UNKNOWN TYPE";
 

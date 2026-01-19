@@ -1118,7 +1118,7 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
     {
         std::cout << "ScreenGame::ExecuteAIAction - AI " << turnAI << " - "
                   << action->GetTypeStr()
-                  << (done ? " DOING" : " FAILED")
+                  << (done ? " DOING" : "")
                   << " | ACT ID: " << action->actId
                   << " - PRIORITY: " << action->priority;
 
@@ -1166,6 +1166,20 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
 
         switch(action->type)
         {
+            case AIA_UPGRADE_UNIT:
+            {
+                auto a = static_cast<const ActionAIUpgradeObject *>(action);
+                auto unit = static_cast<Unit *>(a->ObjSrc);
+
+                unit->UpgradeLevel(a->attChanges);
+
+                // keep doing things
+                done = false;
+
+                PrintAction(turnAI, action, done, player);
+            }
+            break;
+
             case AIA_UNIT_ATTACK_ENEMY_UNIT:
             {
                 auto unit = static_cast<Unit *>(action->ObjSrc);

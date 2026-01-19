@@ -3,6 +3,8 @@
 #include "Cell2D.h"
 #include "GameObjects/GameObjectTypes.h"
 
+#include <vector>
+
 namespace game
 {
 
@@ -22,6 +24,8 @@ enum AIActionType : unsigned int
     AIA_UNIT_COLLECT_LOOTBOX,
     AIA_UNIT_CONNECT_STRUCTURE,
     AIA_UNIT_CONQUER_GEN,
+    AIA_UPGRADE_STRUCTURE,
+    AIA_UPGRADE_UNIT,
 
     NUM_AI_ACTIONS
 };
@@ -63,5 +67,13 @@ struct ActionAINewUnit : public ActionAI
 {
     GameObjectTypeId unitType;
 };
+
+// ===== ACTION AI NEW UNIT =====
+
+struct ActionAIUpgradeObject : public ActionAI
+{
+    std::vector<int> attChanges;
+};
+
 
 } // namespace game
