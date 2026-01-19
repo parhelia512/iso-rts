@@ -385,6 +385,8 @@ void PlayerAI::AddActionsStructure(Structure * s)
 
     if(objType == ObjectData::TYPE_BASE)
         AddActionBaseCreateUnit(s);
+    else if (objType == ObjectData::TYPE_BARRACKS)
+        AddActionBarrackCreateUnit(s);
 }
 
 void PlayerAI::AddActionBaseCreateUnit(Structure * base)
@@ -396,85 +398,47 @@ void PlayerAI::AddActionBaseCreateUnit(Structure * base)
     if(numUnits >= limitUnits)
         return ;
 
-    int priority = MAX_PRIORITY;
+    // DECIDE UNIT TYPE
+    const auto availableUnits = mPlayer->GetAvailableUnits();
 
-    // the more units exist the lower the priority
-    const float bonusUnits = -30.f;
-    priority += std::roundf(bonusUnits * numUnits / limitUnits);
+    std::vector<GameObjectTypeId> types;
 
-    // decrease priority based on base's energy
-    const float bonusEnergy = -20.f;
-    priority += GetStructurePriorityBonusEnergy(base, bonusEnergy);
+    for(GameObjectTypeId t : availableUnits)
+    {
+        const ObjectData & data = mDataReg->GetObjectData(t);
 
-    // priority already too low
-    if(priority < mMinPriority)
+        if(OCU_WORKER == data.GetClass())
+            types.push_back(t);
+    }
+
+    // try to create one
+    AddActionCreateUnit(base, types);
+}
+
+void PlayerAI::AddActionBarrackCreateUnit(Structure * barrack)
+{
+    const unsigned int numUnits = mPlayer->GetNumUnits();
+    const unsigned int limitUnits = mPlayer->GetMaxUnits();
+
+    // can't build more units -> exit
+    if(numUnits >= limitUnits)
         return ;
 
     // DECIDE UNIT TYPE
-    std::vector<GameObjectTypeId> types { ObjectData::TYPE_UNIT_WORKER1 };
-    const unsigned int numTypes = types.size();
+    const auto availableUnits = mPlayer->GetAvailableUnits();
 
-    const int energy = mPlayer->GetStat(Player::ENERGY).GetValue();
-    const int material = mPlayer->GetStat(Player::MATERIAL).GetValue();
-    const int blobs = mPlayer->GetStat(Player::BLOBS).GetValue();
-    const int diamonds = mPlayer->GetStat(Player::DIAMONDS).GetValue();
+    std::vector<GameObjectTypeId> types;
 
-    unsigned int bestInd = numTypes;
-    int bestPriority = mMinPriority;
-
-    for(unsigned int i = 0; i < numTypes; ++i)
+    for(GameObjectTypeId t : availableUnits)
     {
-        const GameObjectTypeId t = types[i];
-
-        // can't create this unit -> next
-        if(!mGm->CanCreateUnit(t, base, mPlayer))
-            continue;
-
-        int typePriority = priority;
-
-        // reduce priority for existing same type units
-        const float bonusSameType = -25.f;
-        typePriority += std::roundf(bonusSameType * mPlayer->GetNumUnitsByType(t));
-
-        // reduce priority based on available resources
-        // NOTE all costs are < current resources or CanCreateUnit would have returned false
         const ObjectData & data = mDataReg->GetObjectData(t);
-        const auto & costs = data.GetCosts();
 
-        const float bonusRes = -10.f;
-
-        if(costs[RES_ENERGY] > 0)
-            typePriority += std::roundf(bonusRes * costs[RES_ENERGY] / energy);
-
-        if(costs[RES_MATERIAL1] > 0)
-            typePriority += std::roundf(bonusRes * costs[RES_MATERIAL1] / material);
-
-        if(costs[RES_BLOBS] > 0)
-            typePriority += std::roundf(bonusRes * costs[RES_BLOBS] / blobs);
-
-        if(costs[RES_DIAMONDS] > 0)
-            typePriority += std::roundf(bonusRes * costs[RES_DIAMONDS] / diamonds);
-
-        if(typePriority > bestPriority)
-        {
-            bestPriority = typePriority;
-            bestInd = i;
-        }
+        if(OCU_SOLDIER == data.GetClass())
+            types.push_back(t);
     }
 
-    // couldn't find any good
-    if(bestInd == numTypes)
-        return;
-
-    // create action
-    auto action = new ActionAINewUnit;
-    action->type = AIA_NEW_UNIT;
-    action->ObjSrc = base;
-    action->priority = bestPriority;
-    action->unitType = types[bestInd];
-
-    // push action to the queue
-    AddNewAction(action);
+    // try to create one
+    AddActionCreateUnit(barrack, types);
 }
 
 void PlayerAI::AddActionStructureUpgrade(Structure * s)
@@ -1456,6 +1420,90 @@ void PlayerAI::AddActionUnitUpgrade(Unit * u)
     static_assert(sizeof(weights) / sizeof(int) == NUM_BASIC_ATTRIBUTES);
 
     AddActionUpgrade(u, weights, AIA_UPGRADE_UNIT);
+}
+
+void PlayerAI::AddActionCreateUnit(Structure * gen, const std::vector<GameObjectTypeId> & types)
+{
+    const unsigned int numUnits = mPlayer->GetNumUnits();
+    const unsigned int limitUnits = mPlayer->GetMaxUnits();
+
+    int priority = MAX_PRIORITY;
+
+    // the more units exist the lower the priority
+    const float bonusUnits = -25.f;
+    priority += std::roundf(bonusUnits * numUnits / limitUnits);
+
+    // decrease priority based on base's energy
+    const float bonusEnergy = -20.f;
+    priority += GetStructurePriorityBonusEnergy(gen, bonusEnergy);
+
+    // priority already too low
+    if(priority < mMinPriority)
+        return ;
+
+    const unsigned int numTypes = types.size();
+
+    const int energy = mPlayer->GetStat(Player::ENERGY).GetValue();
+    const int material = mPlayer->GetStat(Player::MATERIAL).GetValue();
+    const int blobs = mPlayer->GetStat(Player::BLOBS).GetValue();
+    const int diamonds = mPlayer->GetStat(Player::DIAMONDS).GetValue();
+
+    unsigned int bestInd = numTypes;
+    int bestPriority = mMinPriority;
+
+    for(unsigned int i = 0; i < numTypes; ++i)
+    {
+        const GameObjectTypeId t = types[i];
+
+        // can't create this unit -> next
+        if(!mGm->CanCreateUnit(t, gen, mPlayer))
+            continue;
+
+        int typePriority = priority;
+
+        // reduce priority for existing same type units
+        const float bonusSameType = -25.f;
+        typePriority += std::roundf(bonusSameType * mPlayer->GetNumUnitsByType(t));
+
+        // reduce priority based on available resources
+        // NOTE all costs are < current resources or CanCreateUnit would have returned false
+        const ObjectData & data = mDataReg->GetObjectData(t);
+        const auto & costs = data.GetCosts();
+
+        const float bonusRes = -10.f;
+
+        if(costs[RES_ENERGY] > 0)
+            typePriority += std::roundf(bonusRes * costs[RES_ENERGY] / energy);
+
+        if(costs[RES_MATERIAL1] > 0)
+            typePriority += std::roundf(bonusRes * costs[RES_MATERIAL1] / material);
+
+        if(costs[RES_BLOBS] > 0)
+            typePriority += std::roundf(bonusRes * costs[RES_BLOBS] / blobs);
+
+        if(costs[RES_DIAMONDS] > 0)
+            typePriority += std::roundf(bonusRes * costs[RES_DIAMONDS] / diamonds);
+
+        if(typePriority > bestPriority)
+        {
+            bestPriority = typePriority;
+            bestInd = i;
+        }
+    }
+
+    // couldn't find any good
+    if(bestInd == numTypes)
+        return;
+
+    // create action
+    auto action = new ActionAINewUnit;
+    action->type = AIA_NEW_UNIT;
+    action->ObjSrc = gen;
+    action->priority = bestPriority;
+    action->unitType = types[bestInd];
+
+    // push action to the queue
+    AddNewAction(action);
 }
 
 void PlayerAI::AddActionUpgrade(GameObject * obj, const int weights[],

@@ -65,6 +65,7 @@ private:
     // STRUCTURE ACTIONS
     void AddActionsStructure(Structure * s);
     void AddActionBaseCreateUnit(Structure * base);
+    void AddActionBarrackCreateUnit(Structure * barrack);
     void AddActionStructureUpgrade(Structure * s);
     // UNIT ACTIONS
     void AddActionsUnit(Unit * u);
@@ -85,6 +86,7 @@ private:
     void AddActionUnitUpgrade(Unit * u);
 
     // HELPER METHODS FOR ACTIONS
+    void AddActionCreateUnit(Structure * gen, const std::vector<GameObjectTypeId> & types);
     void AddActionUpgrade(GameObject * obj, const int weights[], AIActionType type);
 
     int GetMaxDistanceForObject(const GameObject * obj) const;
