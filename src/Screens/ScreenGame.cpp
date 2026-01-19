@@ -2368,19 +2368,10 @@ bool ScreenGame::FindWhereToBuildStructureAI(Unit * unit, Cell2D & target)
 
     // build close to existing similar structure
     if(player->HasStructure(type))
-    {
         structures = player->GetStructuresByType(type);
-
-        std::cout << "ScreenGame::FindWhereToBuildStructureAI - search near similar structures "
-                  << structures.size() << std::endl;
-    }
     // no similar structure -> build close to base
     else
-    {
         structures = player->GetStructuresByType(ObjectData::TYPE_BASE);
-
-        std::cout << "ScreenGame::FindWhereToBuildStructureAI - search near base" << std::endl;
-    }
 
     // find similar structure which is closest to unit
     unsigned int bestInd = 0;
@@ -2435,11 +2426,6 @@ bool ScreenGame::FindWhereToBuildStructureAI(Unit * unit, Cell2D & target)
         }
     }
 
-    std::cout << "ScreenGame::FindWhereToBuildStructureAI - unit cell: "
-              << cellUnit.row << "," << cellUnit.col
-              << " - closest structure corner: "
-              << cellStart.row << "," << cellStart.col << std::endl;
-
     // find suitable spot close to cellStart
     const int maxRadius = mGameMap->GetNumRows() / 2;
 
@@ -2448,9 +2434,6 @@ bool ScreenGame::FindWhereToBuildStructureAI(Unit * unit, Cell2D & target)
     {
         target.row -= 1;
         target.col -= 1;
-
-        std::cout << "ScreenGame::FindWhereToBuildStructureAI - FOUND target area A - target: "
-                  << target.row << "," << target.col << std::endl;
 
         return true;
     }

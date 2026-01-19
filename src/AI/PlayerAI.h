@@ -81,7 +81,7 @@ private:
     void AddActionUnitCollectDiamonds(Unit * u);
     void AddActionUnitCollectLootbox(Unit * u);
     void AddActionUnitConnectStructure(Unit * u);
-    void AddActionUnitConquestResGen(Unit * u, ResourceType type);
+    void AddActionUnitConquerResGen(Unit * u, ResourceType type);
     void AddActionUnitUpgrade(Unit * u);
 
     // HELPER METHODS FOR ACTIONS
@@ -95,6 +95,7 @@ private:
 
     bool HasPlayerResourcesToBuild(GameObjectTypeId t) const;
     int GetPriorityBonusStructureBuildCost(GameObjectTypeId t, float bonus) const;
+    int GetPriorityBonusSameStructureCreated(GameObjectTypeId t, float bonus) const;
 
     void PrintdActionDebug(const char * title, const ActionAI * a);
 

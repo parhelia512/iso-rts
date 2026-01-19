@@ -399,7 +399,7 @@ void PlayerAI::AddActionBaseCreateUnit(Structure * base)
     int priority = MAX_PRIORITY;
 
     // the more units exist the lower the priority
-    const float bonusUnits = -25.f;
+    const float bonusUnits = -30.f;
     priority += std::roundf(bonusUnits * numUnits / limitUnits);
 
     // decrease priority based on base's energy
@@ -432,9 +432,9 @@ void PlayerAI::AddActionBaseCreateUnit(Structure * base)
 
         int typePriority = priority;
 
-        // reduce priority for existing same type units, also consider units limit
-        const float bonusSameType = -30.f;
-        typePriority += std::roundf(bonusSameType * mPlayer->GetNumUnitsByType(t) / limitUnits);
+        // reduce priority for existing same type units
+        const float bonusSameType = -25.f;
+        typePriority += std::roundf(bonusSameType * mPlayer->GetNumUnitsByType(t));
 
         // reduce priority based on available resources
         // NOTE all costs are < current resources or CanCreateUnit would have returned false
@@ -511,8 +511,8 @@ void PlayerAI::AddActionsUnit(Unit * u)
         AddActionUnitConnectStructure(u);
 
         // CONQUEST RESOURCE GENERATORS
-        AddActionUnitConquestResGen(u, RES_ENERGY);
-        AddActionUnitConquestResGen(u, RES_MATERIAL1);
+        AddActionUnitConquerResGen(u, RES_ENERGY);
+        AddActionUnitConquerResGen(u, RES_MATERIAL1);
     }
 
     // BUILD
@@ -671,7 +671,7 @@ void PlayerAI::AddActionUnitBuildStructure(Unit * u)
     int priority = MAX_PRIORITY;
 
     // decrease priority based on unit's energy
-    const float bonusEnergy = -25.f;
+    const float bonusEnergy = -30.f;
     priority += GetUnitPriorityBonusEnergy(u, bonusEnergy);
 
     // decrease priority based on unit's health
@@ -862,12 +862,16 @@ void PlayerAI::AddActionUnitBuildResourceStorage(Unit * u, ResourceType resType,
     const int resMax = res.GetMax();
     const int resSto = resMax - resCur;
 
-    const float bonusStorage = -25.f;
+    const float bonusStorage = -30.f;
     priority += std::roundf(bonusStorage * resSto / resMax);
 
     // reduce priority based on available resources
     const float bonusRes = -5.f;
     priority += GetPriorityBonusStructureBuildCost(structType, bonusRes);
+
+    // reduce priority based on same existing structures
+    const float bonusSameStruct = -15.f;
+    priority += GetPriorityBonusSameStructureCreated(structType, bonusSameStruct);
 
     // check if below current priority threshold
     if(priority < mMinPriority)
@@ -970,8 +974,8 @@ void PlayerAI::AddActionUnitBuildRadarStructure(Unit * u, GameObjectTypeId struc
     // reduce priority based on available resources
     const std::unordered_map<GameObjectTypeId, float> bonusRes
     {
-        {ObjectData::TYPE_RADAR_STATION , -20.f},
-        {ObjectData::TYPE_RADAR_TOWER , -25.f},
+        {ObjectData::TYPE_RADAR_STATION , -30.f},
+        {ObjectData::TYPE_RADAR_TOWER , -35.f},
     };
     priority += GetPriorityBonusStructureBuildCost(structType, bonusRes.at(structType));
 
@@ -979,7 +983,7 @@ void PlayerAI::AddActionUnitBuildRadarStructure(Unit * u, GameObjectTypeId struc
     if(ObjectData::TYPE_RADAR_TOWER == structType)
     {
         const float bonusExist = -10.f;
-        priority += bonusExist * mPlayer->GetNumStructuresByType(structType);
+        priority += GetPriorityBonusSameStructureCreated(structType, bonusExist);
     }
 
     // check if below current priority threshold
@@ -1336,7 +1340,7 @@ void PlayerAI::AddActionUnitConnectStructure(Unit * u)
     AddNewAction(action);
 }
 
-void PlayerAI::AddActionUnitConquestResGen(Unit * u, ResourceType type)
+void PlayerAI::AddActionUnitConquerResGen(Unit * u, ResourceType type)
 {
     // resource not supported
     if(type != RES_ENERGY && type != RES_MATERIAL1)
@@ -1360,11 +1364,11 @@ void PlayerAI::AddActionUnitConquestResGen(Unit * u, ResourceType type)
     priority += GetUnitPriorityBonusEnergy(u, bonusEnergy);
 
     // decrease priority based on unit's health
-    const float bonusHealth = -10.f;
+    const float bonusHealth = -5.f;
     priority += GetUnitPriorityBonusHealth(u, bonusHealth);
 
     // bonus resource availability level
-    const float bonusRes = -25.f;
+    const float bonusRes = -15.f;
     priority += std::roundf(bonusRes * stat.GetValue() / stat.GetMax());
 
     // action is already not doable
@@ -1419,13 +1423,10 @@ void PlayerAI::AddActionUnitConquestResGen(Unit * u, ResourceType type)
     const float bonusDist = -20.f;
     priority += GetUnitPriorityBonusDistance(u, minDist, bonusDist);
 
-    // decrease priority for owned generators
-    const float bonusOwned = -30.f;
-    priority += std::roundf(bonusOwned * ownedGenerators / totGenerators);
-
     // bonus unit conquest
-    const float bonusConquest = 10.f;
-    priority += std::roundf(bonusConquest * u->GetAttribute(OBJ_ATT_CONQUEST) / ObjectData::MAX_STAT_VAL);
+    const float bonusConquest = 20.f;
+    priority += std::roundf(bonusConquest *
+                            u->GetAttribute(OBJ_ATT_CONQUEST) / ObjectData::MAX_STAT_VAL);
 
     // can't find something that's worth an action
     if(priority < mMinPriority)
@@ -1620,6 +1621,12 @@ int PlayerAI::GetPriorityBonusStructureBuildCost(GameObjectTypeId t, float bonus
         b += bonus * costs[RES_DIAMONDS] / diamonds;
 
     return std::roundf(b);
+}
+
+int PlayerAI::GetPriorityBonusSameStructureCreated(GameObjectTypeId t, float bonus) const
+{
+    const int numSame = mPlayer->GetNumStructuresByType(t);
+    return std::roundf(numSame * bonus);
 }
 
 void PlayerAI::PrintdActionDebug(const char * title, const ActionAI * a)
