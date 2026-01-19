@@ -337,6 +337,7 @@ void ScreenMainMenu::CreateChangelog()
                          "- New look&feel for tutorial panels.\n"
                          "- New game starts directly playing first mission.\n"
                          "- Quitting to planet map screen makes mission fail.\n"
+                         "- Improved attack range indicator visibility.\n"
                          "\nFIXES\n"
                          "- Fixed energy cost computation of unit moves.\n"
                          "- Hide path overlay when not needed during tutorial.\n"

@@ -24,7 +24,7 @@ AttackRangeIndicator::AttackRangeIndicator()
 void AttackRangeIndicator::SetDistance(unsigned int d, unsigned int range)
 {
     const unsigned int maxAlpha = 255;
-    const unsigned int step = maxAlpha / range;
+    const unsigned int step = (maxAlpha / range) - 1;
     const unsigned int alpha =  maxAlpha - ((d - 1) * step);
 
     SetAlpha(alpha);
