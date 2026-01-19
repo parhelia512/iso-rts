@@ -5,7 +5,6 @@
 
 #include <functional>
 #include <map>
-#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -65,6 +64,7 @@ public:
     static const GameObjectVariantId VAR_0;
 
     static const int MAX_LEVEL = 10;
+    static const int UPGRADE_POINTS[MAX_LEVEL];
 
 public:
     GameObject(const ObjectData & data, const ObjectInitData & initData);
@@ -153,6 +153,7 @@ public:
     int GetExperienceToNextLevel() const;
     int GetExperienceLevel() const;
     void SumExperience(int val);
+    bool CanBeUpgraded() const;
     void UpgradeLevel(const std::vector<int> & attChanges);
 
     unsigned int AddFunctionOnValueChanged(const std::function<void()> & f);
@@ -160,6 +161,7 @@ public:
 
     // ATTRIBUTES
     int GetAttribute(ObjAttId attID) const;
+    const std::unordered_map<ObjAttId, int> & GetAttributes() const;
 
     float GetSpeed() const;
 
@@ -385,6 +387,15 @@ inline int GameObject::GetExperienceToNextLevel() const
     return GetExperienceToLevel(mExpLevel + 1);
 }
 inline int GameObject::GetExperienceLevel() const { return mExpLevel; }
+inline bool GameObject::CanBeUpgraded() const
+{
+    return mExp >= GetExperienceToNextLevel() && mExpLevel < MAX_LEVEL;
+}
+
+inline const std::unordered_map<ObjAttId, int> & GameObject::GetAttributes() const
+{
+    return mAttributes;
+}
 
 inline const Weapon * GameObject::GetWeapon() const { return mWeapon; }
 

@@ -94,7 +94,7 @@ void Laser::OnShoot(float x0, float y0)
     if(valHit < probHit)
     {
         const float maxDamage = 20.f;
-        damage = maxDamage * owner->GetAttribute(OBJ_ATT_ATTACK_POWER) / MAX_STAV_VAL;
+        damage = maxDamage * owner->GetAttribute(OBJ_ATT_ATTACK_POWER) / MAX_STAT_FVAL;
 
         // check for fatal hit
         const float probFatal = GetProbabilityFatalHit(mTarget);

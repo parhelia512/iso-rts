@@ -13,7 +13,8 @@ constexpr float TIME_GOD_MODE = 0.25f;
 
 constexpr float TIME_AUTO_END_TURN = 2.f;
 
-constexpr float MAX_STAV_VAL = 10.f;
+constexpr float MAX_STAT_FVAL = 10.f;
+constexpr int MAX_STAT_IVAL = 10;
 
 constexpr unsigned int PLAYER_COLOR[] =
 {
@@ -112,6 +113,8 @@ enum ObjAttId : unsigned int
     OBJ_ATT_ATTACK_RANGE,
 
     NUM_OBJ_ATTRIBUTES,
+
+    OBJ_ATT_NULL,
 
     FIRST_WEAPON_ATTRIBUTE = OBJ_ATT_ATTACK_ACCURACY,
     NUM_WEAPON_ATTRIBUTES = NUM_OBJ_ATTRIBUTES - FIRST_WEAPON_ATTRIBUTE,

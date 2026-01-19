@@ -48,6 +48,8 @@ unsigned int GameObject::counter = 0;
 // -- OBJECT VARIANT --
 const GameObjectVariantId GameObject::VAR_0 = 0;
 
+const int GameObject::UPGRADE_POINTS[MAX_LEVEL] = { 1, 1, 2, 2, 2, 3, 3, 3, 3 };
+
 // -- CONSTRUCTOR & DESTRUCTOR --
 GameObject::GameObject(const ObjectData & data, const ObjectInitData & initData)
     : mAttributes(data.GetAttributes())
@@ -325,7 +327,6 @@ void GameObject::SumExperience(int val)
     SetExperience(val + mExp);
 }
 
-
 void GameObject::UpgradeLevel(const std::vector<int> & attChanges)
 {
     // can't upgrade yet or already at max level -> exit
@@ -383,7 +384,7 @@ float GameObject::GetSpeed() const
         return 10.f;
 #endif
 
-    return mMaxSpeed * GetAttribute(OBJ_ATT_SPEED) / MAX_STAV_VAL;
+    return mMaxSpeed * GetAttribute(OBJ_ATT_SPEED) / MAX_STAT_FVAL;
 }
 
 void GameObject::SetWeapon(Weapon * w)
@@ -526,13 +527,13 @@ void GameObject::Hit(float damage, GameObject * attacker, bool fatal)
         // damage is influnced by object's resistance
         const float fixedW = 0.5f;
         const float variableW = 1.f - fixedW;
-        const float variableDamage = 1.f - (GetAttribute(OBJ_ATT_RESISTANCE) / MAX_STAV_VAL);
+        const float variableDamage = 1.f - (GetAttribute(OBJ_ATT_RESISTANCE) / MAX_STAT_FVAL);
 
         damage = damage * fixedW + (damage * variableW * variableDamage);
 
         // shield can block up to shieldEfficency% of hit
         const float shieldEfficency = 0.15f;
-        damage -= damage * shieldEfficency * (GetAttribute(OBJ_ATT_SHIELD) / MAX_STAV_VAL);
+        damage -= damage * shieldEfficency * (GetAttribute(OBJ_ATT_SHIELD) / MAX_STAT_FVAL);
     }
 
     damage = std::roundf(damage);
@@ -738,19 +739,19 @@ float GameObject::GetTime(float maxTime, float attribute) const
 
     const float baseTime = 0.25f;
 
-    return baseTime + maxTime - (maxTime * attribute / MAX_STAV_VAL);
+    return baseTime + maxTime - (maxTime * attribute / MAX_STAT_FVAL);
 }
 
 void GameObject::UpdateVisibilityLevel(float maxVal, float maxValLinked)
 {
     const float maxVisibility = IsLinked() ? maxValLinked : maxVal;
 
-    mVisLevel = std::roundf(maxVisibility * GetAttribute(OBJ_ATT_VIEW_RANGE) / MAX_STAV_VAL);
+    mVisLevel = std::roundf(maxVisibility * GetAttribute(OBJ_ATT_VIEW_RANGE) / MAX_STAT_FVAL);
 }
 
 void GameObject::UpdateMaxEnergy(float maxVal)
 {
-    const float maxEnergy = std::roundf(maxVal * GetAttribute(OBJ_ATT_ENERGY) / MAX_STAV_VAL);
+    const float maxEnergy = std::roundf(maxVal * GetAttribute(OBJ_ATT_ENERGY) / MAX_STAT_FVAL);
     const float diff = maxEnergy - mEnergy;
 
     SetMaxEnergy(maxEnergy);
@@ -759,7 +760,7 @@ void GameObject::UpdateMaxEnergy(float maxVal)
 
 void GameObject::UpdateMaxHealth(float maxVal)
 {
-    const float maxHealth = std::roundf(maxVal * GetAttribute(OBJ_ATT_HEALTH) / MAX_STAV_VAL);
+    const float maxHealth = std::roundf(maxVal * GetAttribute(OBJ_ATT_HEALTH) / MAX_STAT_FVAL);
     const float diff = maxHealth - mHealth;
 
     SetMaxHealth(maxHealth);
@@ -768,7 +769,7 @@ void GameObject::UpdateMaxHealth(float maxVal)
 
 void GameObject::UpdateRegenerationPower()
 {
-    const float reg = GetAttribute(OBJ_ATT_REGENERATION) / MAX_STAV_VAL;
+    const float reg = GetAttribute(OBJ_ATT_REGENERATION) / MAX_STAT_FVAL;
     SetRegenerationPower(reg);
 }
 

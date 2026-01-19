@@ -93,7 +93,7 @@ float Weapon::GetProbabilityHit(const GameObject * target) const
     const float fixedW = 0.5f + (0.5f - (0.5f / static_cast<float>(targetSize)));
     const float fixedProb = baseProb * fixedW;
 
-    const float variableProb = (baseProb - fixedProb) * mAttributes.at(OBJ_ATT_ATTACK_ACCURACY) / MAX_STAV_VAL;
+    const float variableProb = (baseProb - fixedProb) * mAttributes.at(OBJ_ATT_ATTACK_ACCURACY) / MAX_STAT_FVAL;
     const float finalProb = fixedProb + variableProb;
 
     // bonus/malus based on attack mode
@@ -128,7 +128,7 @@ float Weapon::GetProbabilityFatalHit(const GameObject * target) const
 
     // accuracy (higher -> higher chance)
     const float weightAccuracy = 0.34f;
-    const float multAccuracy = mAttributes.at(OBJ_ATT_ATTACK_ACCURACY) / MAX_STAV_VAL;
+    const float multAccuracy = mAttributes.at(OBJ_ATT_ATTACK_ACCURACY) / MAX_STAT_FVAL;
 
     // probability
     const float finalProb = (mMaxProbabilityFatal * weightDistance * multDist) +

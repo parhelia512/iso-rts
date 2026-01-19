@@ -92,7 +92,7 @@ void ResourceStorage::UpdateCapacity()
     const bool mainRes = RES_ENERGY == mResource || RES_MATERIAL1 == mResource;
     const float maxCapacity = mainRes ? 2000.f : 1000.f;
 
-    mCapacity = std::roundf(maxCapacity * GetAttribute(OBJ_ATT_STORAGE) / MAX_STAV_VAL);
+    mCapacity = std::roundf(maxCapacity * GetAttribute(OBJ_ATT_STORAGE) / MAX_STAT_FVAL);
 }
 
 void ResourceStorage::SetImage()

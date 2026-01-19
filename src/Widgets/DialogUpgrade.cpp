@@ -278,9 +278,7 @@ DialogUpgrade::DialogUpgrade(GameObject * obj, const ObjectsDataRegistry * odr)
 
     dataY += header->GetHeight() + marginHeaderV2;
 
-    const int points[] = { 1, 1, 2, 2, 2, 3, 3, 3, 3 };
-
-    mPointsToAssign = points[level];
+    mPointsToAssign = GameObject::UPGRADE_POINTS[level];
 
     mLabelPoints = new sgui::Label(std::to_string(mPointsToAssign).c_str(), fontText, this);
     mLabelPoints->SetColor(WidgetsConstants::colorDialogText);
@@ -321,7 +319,7 @@ DialogUpgrade::DialogUpgrade(GameObject * obj, const ObjectsDataRegistry * odr)
         header->SetPosition(paddingAttL, (bg->GetHeight() - header->GetHeight()) / 2);
 
         // attribute bar
-        auto bar = new ValueUpgradeBar(static_cast<int>(MAX_STAV_VAL), bg);
+        auto bar = new ValueUpgradeBar(MAX_STAT_IVAL, bg);
         bar->SetValue(val);
         bar->SetPosition(barX, (bg->GetHeight() - bar->GetHeight()) / 2);
 
@@ -351,7 +349,7 @@ DialogUpgrade::DialogUpgrade(GameObject * obj, const ObjectsDataRegistry * odr)
         btnInc->SetPosition(barX + bar->GetWidth() + marginButton,
                             (bg->GetHeight() - btnInc->GetHeight()) / 2);
 
-        const bool enable = val < static_cast<int>(MAX_STAV_VAL);
+        const bool enable = val < MAX_STAT_IVAL;
         btnInc->SetEnabled(enable);
 
         btnInc->AddOnClickFunction([this, bar, btnDec, i]
@@ -443,7 +441,7 @@ void DialogUpgrade::OnPointsChanged()
     else
     {
         // enable buttons INC
-        const int MAX_SLOTS = static_cast<int>(MAX_STAV_VAL);
+        const int MAX_SLOTS = MAX_STAT_IVAL;
         const unsigned int numButtons = mButtonsInc.size();
 
         for(unsigned int i = 0; i < numButtons; ++i)
