@@ -674,7 +674,7 @@ void PlayerAI::AddActionUnitBuildStructure(Unit * u)
     const GameObject * base = mPlayer->GetBase();
     const int distBase = mGm->ApproxDistance(u, base);
     const int maxDist = GetMaxDistanceForObject(u);
-    const float bonusDistBase = -15.f;
+    const float bonusDistBase = -10.f;
     priority += std::roundf(bonusDistBase * distBase / maxDist);
 
     // already below current priority threshold
@@ -924,11 +924,11 @@ void PlayerAI::AddActionUnitBuildPracticeTarget(Unit * u, int priority0)
     int priority = priority0;
 
     // reduce priority based on available resources
-    const float bonusRes = -15.f;
+    const float bonusRes = -30.f;
     priority += GetPriorityBonusStructureBuildCost(structType, bonusRes);
 
     // reduce priority based on number or existing structure
-    const float bonusExist = -10.f;
+    const float bonusExist = -30.f;
     priority += bonusExist * mPlayer->GetNumStructuresByType(structType);
 
     // check if below current priority threshold
@@ -967,14 +967,14 @@ void PlayerAI::AddActionUnitBuildRadarStructure(Unit * u, GameObjectTypeId struc
     const std::unordered_map<GameObjectTypeId, float> bonusRes
     {
         {ObjectData::TYPE_RADAR_STATION , -30.f},
-        {ObjectData::TYPE_RADAR_TOWER , -35.f},
+        {ObjectData::TYPE_RADAR_TOWER , -40.f},
     };
     priority += GetPriorityBonusStructureBuildCost(structType, bonusRes.at(structType));
 
     // reduce priority based on number or existing structure
     if(ObjectData::TYPE_RADAR_TOWER == structType)
     {
-        const float bonusExist = -10.f;
+        const float bonusExist = -15.f;
         priority += GetPriorityBonusSameStructureCreated(structType, bonusExist);
     }
 
