@@ -248,6 +248,100 @@ void PlayerAI::SetActionDone(const ActionAI * action)
     std::cout << "PlayerAI::SetActionDone - ACTION DONE - can't find action" << std::endl;
 }
 
+bool PlayerAI::FindWhereToBuildStructure(Unit * unit, Cell2D & target) const
+{
+    const GameObjectTypeId type = unit->GetStructureToBuild();
+    const ObjectData & data = mDataReg->GetObjectData(type);
+    const int rows = data.GetRows();
+    const int cols = data.GetCols();
+
+    // DECIDE WHERE TO LOOK FOR BUILDING AREA
+    Cell2D cellUnit(unit->GetRow0(), unit->GetCol0());
+    Cell2D cellStart;
+
+    std::vector<Structure *> structures;
+
+    // build close to existing similar structure
+    if(mPlayer->HasStructure(type))
+        structures = mPlayer->GetStructuresByType(type);
+    // no similar structure -> build close to base
+    else
+        structures = mPlayer->GetStructuresByType(ObjectData::TYPE_BASE);
+
+    // find similar structure which is closest to unit
+    unsigned int bestInd = 0;
+    int bestDist = mGm->GetNumRows() + mGm->GetNumCols();
+
+    for(unsigned int s = 0; s < structures.size(); ++s)
+    {
+        Structure * structure = structures[s];
+
+        // strucure made of multiple cells -> check 4 corners
+        if(rows > 1 || cols > 1)
+        {
+            // top-left
+            const Cell2D tl(structure->GetRow1(), structure->GetCol1());
+            const int distTL = mGm->ApproxDistance(cellUnit, tl);
+
+            if(distTL < bestDist)
+            {
+                cellStart = tl;
+                bestDist = distTL;
+            }
+
+            // top-right
+            const Cell2D tr(structure->GetRow1(), structure->GetCol0());
+            const int distTR = mGm->ApproxDistance(cellUnit, tr);
+
+            if(distTR < bestDist)
+            {
+                cellStart = tr;
+                bestDist = distTR;
+            }
+
+            // bottom-left
+            const Cell2D bl(structure->GetRow0(), structure->GetCol1());
+            const int distBL = mGm->ApproxDistance(cellUnit, bl);
+
+            if(distBL < bestDist)
+            {
+                cellStart = bl;
+                bestDist = distBL;
+            }
+        }
+
+        // bottom-right
+        const Cell2D br(structure->GetRow0(), structure->GetCol0());
+        const int distBR = mGm->ApproxDistance(cellUnit, br);
+
+        if(distBR < bestDist)
+        {
+            cellStart = br;
+            bestDist = distBR;
+        }
+    }
+
+    // find suitable spot close to cellStart
+    const int maxRadius = mGm->GetNumRows() / 2;
+
+    // first try to find an area big enough to have all sides free
+    if(mGm->FindFreeArea(cellStart, rows + 2, cols + 2, maxRadius, target))
+    {
+        target.row -= 1;
+        target.col -= 1;
+
+        return true;
+    }
+    else
+        return mGm->FindFreeArea(cellStart, rows, cols, maxRadius, target);
+}
+
+bool PlayerAI::FindWhereToBuildTower(Unit * unit, Cell2D & target) const
+{
+    // TODO
+    return false;
+}
+
 void PlayerAI::ClearActionsDone()
 {
     for(const ActionAI * a : mActionsDone)
@@ -714,6 +808,77 @@ void PlayerAI::AddActionUnitBuildStructure(Unit * u)
     // OTHER
     if(mPlayer->IsStructureAvailable(ObjectData::TYPE_PRACTICE_TARGET))
         AddActionUnitBuildPracticeTarget(u, priority);
+}
+
+void PlayerAI::AddActionUnitBuildTower(Unit * u)
+{
+    // DEFINE INITIAL PRIORITY
+    int priority = MAX_PRIORITY;
+
+    // decrease priority based on unit's energy
+    const float bonusEnergy = -25.f;
+    priority += GetUnitPriorityBonusEnergy(u, bonusEnergy);
+
+    // decrease priority based on unit's health
+    const float bonusHealth = -5.f;
+    priority += GetUnitPriorityBonusHealth(u, bonusHealth);
+
+    // already below current priority threshold
+    if(priority < mMinPriority)
+        return ;
+
+    // define towers to build
+    std::vector<GameObjectTypeId> towerIds;
+
+    if(mPlayer->IsStructureAvailable(ObjectData::TYPE_BUNKER))
+        towerIds.emplace_back(ObjectData::TYPE_BUNKER);
+    else if(mPlayer->IsStructureAvailable(ObjectData::TYPE_DEFENSIVE_TOWER))
+        towerIds.emplace_back(ObjectData::TYPE_DEFENSIVE_TOWER);
+
+    // no tower available
+    if(towerIds.empty())
+        return ;
+
+    GameObjectTypeId bestType = ObjectData::TYPE_NULL;
+    int bestPriority = 0;
+    int typePriority;
+
+    for(GameObjectTypeId type : towerIds)
+    {
+        typePriority = priority;
+
+        // reduce priority based on available resources
+        const float bonusRes = -10.f;
+        typePriority += GetPriorityBonusStructureBuildCost(type, bonusRes);
+
+        // reduce priority based on same existing structures
+        const float bonusSameStruct = -5.f;
+        typePriority += GetPriorityBonusSameStructureCreated(type, bonusSameStruct);
+
+        if(typePriority > bestPriority)
+        {
+            bestPriority = typePriority;
+            bestType = type;
+        }
+    }
+
+    // can't find anything good, this shouldn't happen
+    if(bestType == ObjectData::TYPE_NULL)
+        return ;
+
+    // check if below current priority threshold
+    if(bestPriority < mMinPriority)
+        return ;
+
+    // CREATE ACTION
+    auto action = new ActionAIBuildStructure;
+    action->type = AIA_UNIT_BUILD_TOWER;
+    action->ObjSrc = u;
+    action->priority = bestPriority;
+    action->structType = bestType;
+
+    // push action to the queue
+    AddNewAction(action);
 }
 
 void PlayerAI::AddActionUnitBuildUnitCreator(Unit * u, GameObjectTypeId structType, int priority0)

@@ -42,6 +42,10 @@ public:
 
     Player * GetPlayer();
 
+    // EXECUTION SUPPORT METHODS
+    bool FindWhereToBuildStructure(Unit * unit, Cell2D & target) const;
+    bool FindWhereToBuildTower(Unit * unit, Cell2D & target) const;
+
 private:
     void ClearActionsDone();
     void ClearActionsTodo();
@@ -72,6 +76,7 @@ private:
     void AddActionUnitAttackEnemyUnit(Unit * u);
     void AddActionUnitAttackTrees(Unit * u);
     void AddActionUnitBuildStructure(Unit * u);
+    void AddActionUnitBuildTower(Unit * u);
     void AddActionUnitBuildUnitCreator(Unit * u, GameObjectTypeId structType, int priority0);
     void AddActionUnitBuildResourceGenerator(Unit * u, ResourceType resType, int priority0);
     void AddActionUnitBuildResourceStorage(Unit * u, ResourceType resType, int priority0);

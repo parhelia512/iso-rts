@@ -1338,7 +1338,7 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
                 const Cell2D cellUnit(unit->GetRow0(), unit->GetCol0());
                 Cell2D target;
 
-                if(FindWhereToBuildStructureAI(unit, target))
+                if(ai->FindWhereToBuildStructure(unit, target))
                 {
                     if(mGameMap->AreCellsAdjacent(cellUnit, target))
                         done = SetupStructureBuilding(unit, target, player, basicOnDone);
@@ -1353,7 +1353,8 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
                                 {
                                     if(successful)
                                     {
-                                        const bool res = SetupStructureBuilding(unit, target, player, basicOnDone);
+                                        const bool res = SetupStructureBuilding(unit, target,
+                                                                                player, basicOnDone);
 
                                         if(!res)
                                         {
@@ -1379,6 +1380,21 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
                     unit->ClearStructureToBuild();
 
                 PrintAction(turnAI, action, done, player);
+            }
+            break;
+
+            case AIA_UNIT_BUILD_TOWER:
+            {
+                auto a = static_cast<const ActionAIBuildStructure *>(action);
+
+                // decide where to build
+                auto unit = static_cast<Unit *>(a->ObjSrc);
+                unit->SetStructureToBuild(a->structType);
+
+                const Cell2D cellUnit(unit->GetRow0(), unit->GetCol0());
+                Cell2D target;
+
+                // TODO
             }
             break;
 
@@ -2358,100 +2374,6 @@ bool ScreenGame::SetupConnectCellsAI(Unit * unit, const std::function<void (bool
         return false;
     }
 }
-
-bool ScreenGame::FindWhereToBuildStructureAI(Unit * unit, Cell2D & target)
-{
-    const PlayerFaction faction = unit->GetFaction();
-    const GameObjectTypeId type = unit->GetStructureToBuild();
-    const ObjectsDataRegistry * dataReg = GetGame()->GetObjectsRegistry();
-    const ObjectData & data = dataReg->GetObjectData(type);
-    const int rows = data.GetRows();
-    const int cols = data.GetCols();
-
-    Game * game = GetGame();
-
-    // DECIDE WHERE TO LOOK FOR BUILDING AREA
-    Player * player = game->GetPlayerByFaction(faction);
-
-    Cell2D cellUnit(unit->GetRow0(), unit->GetCol0());
-    Cell2D cellStart;
-
-    std::vector<Structure *> structures;
-
-    // build close to existing similar structure
-    if(player->HasStructure(type))
-        structures = player->GetStructuresByType(type);
-    // no similar structure -> build close to base
-    else
-        structures = player->GetStructuresByType(ObjectData::TYPE_BASE);
-
-    // find similar structure which is closest to unit
-    unsigned int bestInd = 0;
-    int bestDist = mGameMap->GetNumRows() + mGameMap->GetNumCols();
-
-    for(unsigned int s = 0; s < structures.size(); ++s)
-    {
-        Structure * structure = structures[s];
-
-        // strucure made of multiple cells -> check 4 corners
-        if(rows > 1 || cols > 1)
-        {
-            // top-left
-            const Cell2D tl(structure->GetRow1(), structure->GetCol1());
-            const int distTL = mGameMap->ApproxDistance(cellUnit, tl);
-
-            if(distTL < bestDist)
-            {
-                cellStart = tl;
-                bestDist = distTL;
-            }
-
-            // top-right
-            const Cell2D tr(structure->GetRow1(), structure->GetCol0());
-            const int distTR = mGameMap->ApproxDistance(cellUnit, tr);
-
-            if(distTR < bestDist)
-            {
-                cellStart = tr;
-                bestDist = distTR;
-            }
-
-            // bottom-left
-            const Cell2D bl(structure->GetRow0(), structure->GetCol1());
-            const int distBL = mGameMap->ApproxDistance(cellUnit, bl);
-
-            if(distBL < bestDist)
-            {
-                cellStart = bl;
-                bestDist = distBL;
-            }
-        }
-
-        // bottom-right
-        const Cell2D br(structure->GetRow0(), structure->GetCol0());
-        const int distBR = mGameMap->ApproxDistance(cellUnit, br);
-
-        if(distBR < bestDist)
-        {
-            cellStart = br;
-            bestDist = distBR;
-        }
-    }
-
-    // find suitable spot close to cellStart
-    const int maxRadius = mGameMap->GetNumRows() / 2;
-
-    // first try to find an area big enough to have all sides free
-    if(mGameMap->FindFreeArea(cellStart, rows + 2, cols + 2, maxRadius, target))
-    {
-        target.row -= 1;
-        target.col -= 1;
-
-        return true;
-    }
-    else
-        return mGameMap->FindFreeArea(cellStart, rows, cols, maxRadius, target);
-;}
 
 void ScreenGame::HandleUnitMoveOnMouseUp(Unit * unit, const Cell2D & clickCell)
 {

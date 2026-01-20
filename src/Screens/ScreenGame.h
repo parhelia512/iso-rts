@@ -151,7 +151,6 @@ private:
     bool SetupUnitMove(Unit * unit, const Cell2D & start, const Cell2D & end,
                        const std::function<void(bool)> & onDone = [](bool){});
     bool SetupConnectCellsAI(Unit * unit, const std::function<void(bool)> & onDone = [](bool){});
-    bool FindWhereToBuildStructureAI(Unit * unit, Cell2D & target);
 
     void HandleUnitMoveOnMouseUp(Unit * unit, const Cell2D & clickCell);
     void HandleUnitBuildStructureOnMouseUp(Unit * unit, const Cell2D & clickCell);
