@@ -83,6 +83,7 @@ private:
     void AddActionUnitCollectLootbox(Unit * u);
     void AddActionUnitConnectStructure(Unit * u);
     void AddActionUnitConquerResGen(Unit * u, ResourceType type);
+    void AddActionUnitPatrol(Unit * u);
     void AddActionUnitUpgrade(Unit * u);
 
     // HELPER METHODS FOR ACTIONS
@@ -108,10 +109,14 @@ private:
 
     // shared data
     std::vector<GameObject *> mCollectables;
+
+    std::vector<GameObject *> mOwnStructures;
+    std::vector<GameObject *> mOwnUnits;
     std::vector<GameObject *> mResGenerators;
-    std::vector<GameObject *> mStructures;
     std::vector<GameObject *> mTrees;
-    std::vector<GameObject *> mUnits;
+    std::vector<GameObject *> mVisibleEnemies;
+    std::vector<GameObject *> mVisibleEnemyStructures;
+    std::vector<GameObject *> mVisibleEnemyUnits;
 
     Player * mPlayer = nullptr;
 

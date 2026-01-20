@@ -5,7 +5,7 @@ namespace game
 
 const char * ActionAI::GetTypeStr() const
 {
-    static const char * STRINGS[] =
+    static const char * const STRINGS[] =
     {
         "NOP",
 
@@ -19,6 +19,7 @@ const char * ActionAI::GetTypeStr() const
         "UNIT COLLECT LOOTBOX",
         "UNIT CONNECT STRUCTURE",
         "UNIT CONQUER GEN",
+        "UNIT PATROL",
         "UPGRADE STRUCTURE",
         "UPGRADE UNIT",
     };

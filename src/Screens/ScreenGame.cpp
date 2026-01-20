@@ -1276,6 +1276,18 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
             }
             break;
 
+            case AIA_UNIT_PATROL:
+            {
+                auto unit = static_cast<Unit *>(action->ObjSrc);
+
+                const Cell2D cellUnit(unit->GetRow0(), unit->GetCol0());
+
+                done = SetupUnitMove(unit, cellUnit, action->cellDst, basicOnDone);
+
+                PrintAction(turnAI, action, done, player);
+            }
+            break;
+
             case AIA_UNIT_COLLECT_BLOBS:
             {
                 auto unit = static_cast<Unit *>(action->ObjSrc);

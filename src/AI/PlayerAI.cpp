@@ -52,33 +52,65 @@ void PlayerAI::PrepareData()
 {
     // clear data
     mCollectables.clear();
+    mOwnStructures.clear();
+    mOwnUnits.clear();
     mResGenerators.clear();
-    mStructures.clear();
     mTrees.clear();
-    mUnits.clear();
+    mVisibleEnemies.clear();
+    mVisibleEnemyStructures.clear();
+    mVisibleEnemyUnits.clear();
 
     // collect data
     const std::vector<GameObject *> & objects = mGm->GetObjects();
 
+    const PlayerFaction factionAI = mPlayer->GetFaction();
+
     for(GameObject * obj : objects)
     {
         const GameObjectCategoryId objCat = obj->GetObjectCategory();
+        const PlayerFaction objFaction = obj->GetFaction();
 
-        // store structures
-        if(obj->IsStructure())
+        // store ALL resource generators
+        if(objCat == ObjectData::CAT_RES_GENERATOR)
+            mResGenerators.push_back(obj);
+
+        // own stuff
+        if(objFaction == factionAI)
         {
-            mStructures.push_back(obj);
-
-            // store resource generators
-            if(objCat == ObjectData::CAT_RES_GENERATOR)
-                mResGenerators.push_back(obj);
+            // own structures
+            if(obj->IsStructure())
+                mOwnStructures.push_back(obj);
+            // own units
+            else if(obj->GetObjectCategory() == ObjectData::CAT_UNIT)
+                mOwnUnits.push_back(obj);
         }
-        else if(obj->GetObjectCategory() == ObjectData::CAT_UNIT)
-            mUnits.push_back(obj);
-        else if(obj->CanBeCollected())
-            mCollectables.push_back(obj);
-        else if(obj->GetObjectType() == ObjectData::TYPE_TREES)
-            mTrees.push_back(obj);
+        // enemies
+        else if(objFaction != NO_FACTION)
+        {
+            const int cellIdxObj = obj->GetRow0() * mGm->GetNumCols() + obj->GetCol0();
+
+            if(mPlayer->IsCellVisible(cellIdxObj))
+            {
+                mVisibleEnemies.emplace_back(obj);
+
+                // enemy structures
+                if(obj->IsStructure())
+                    mVisibleEnemyStructures.push_back(obj);
+                // enemy units
+                else if(obj->GetObjectCategory() == ObjectData::CAT_UNIT)
+                    mVisibleEnemyUnits.push_back(obj);
+            }
+        }
+        // NO FACTION
+        else
+        {
+            // store all collectables
+            if(obj->CanBeCollected())
+                mCollectables.push_back(obj);
+            // store all trees
+            else if(obj->GetObjectType() == ObjectData::TYPE_TREES)
+                mTrees.push_back(obj);
+        }
     }
 }
 
@@ -327,7 +359,7 @@ void PlayerAI::AddActionEndTurn()
     float totEnergy = 0.f;
     float totMaxEnergy = 0.f;
 
-    for(GameObject * obj : mUnits)
+    for(GameObject * obj : mOwnUnits)
     {
         totEnergy += obj->GetEnergy();
         totMaxEnergy += obj->GetMaxEnergy();
@@ -339,10 +371,12 @@ void PlayerAI::AddActionEndTurn()
     totEnergy = 0.f;
     totMaxEnergy = 0.f;
 
-    for(GameObject * obj : mUnits)
+    for(GameObject * obj : mOwnStructures)
     {
+        const GameObjectTypeId type = obj->GetObjectType();
+
         // only consider structure that have AI actions
-        if(obj->GetObjectType() == ObjectData::TYPE_BASE)
+        if(type == ObjectData::TYPE_BASE || type == ObjectData::TYPE_BARRACKS)
         {
             totEnergy += obj->GetEnergy();
             totMaxEnergy += obj->GetMaxEnergy();
@@ -467,6 +501,7 @@ void PlayerAI::AddActionsUnit(Unit * u)
     {
         AddActionUnitAttackEnemyUnit(u);
         AddActionUnitAttackTrees(u);
+        AddActionUnitPatrol(u);
     }
 
     if(u->CanConquer())
@@ -493,12 +528,11 @@ void PlayerAI::AddActionsUnit(Unit * u)
 
 void PlayerAI::AddActionUnitAttackEnemyUnit(Unit * u)
 {
-    // nothing to do if there's no units on the map
-    if(mUnits.empty())
+    // nothing to do if there's no visible enemy units
+    if(mVisibleEnemyUnits.empty())
         return ;
 
-    const PlayerFaction faction = mPlayer->GetFaction();
-    const unsigned int numUnits = mUnits.size();
+    const unsigned int numUnits = mVisibleEnemyUnits.size();
 
     // check if there's any unit to shoot at
     const int maxDist = GetMaxDistanceForObject(u);
@@ -509,13 +543,7 @@ void PlayerAI::AddActionUnitAttackEnemyUnit(Unit * u)
 
     for(unsigned int i = 0; i < numUnits; ++i)
     {
-        auto unit = static_cast<Unit *>(mUnits[i]);
-
-        const PlayerFaction unitFaction = unit->GetFaction();
-
-        // skip own faction units
-        if(unitFaction == faction)
-            continue;
+        auto unit = static_cast<Unit *>(mVisibleEnemyUnits[i]);
 
         // skip targets out of range
         if(!u->IsTargetAttackInRange(unit))
@@ -550,7 +578,7 @@ void PlayerAI::AddActionUnitAttackEnemyUnit(Unit * u)
     auto action = new ActionAI;
     action->type = AIA_UNIT_ATTACK_ENEMY_UNIT;
     action->ObjSrc = u;
-    action->ObjDst = mUnits[bestUnitInd];
+    action->ObjDst = mVisibleEnemyUnits[bestUnitInd];
     action->priority = priority;
 
     // push action to the queue
@@ -559,6 +587,9 @@ void PlayerAI::AddActionUnitAttackEnemyUnit(Unit * u)
 
 void PlayerAI::AddActionUnitAttackTrees(Unit * u)
 {
+    if(mTrees.empty())
+        return ;
+
     // DEFINE INITIAL PRIORITY
     int priority = MAX_PRIORITY;
 
@@ -575,9 +606,6 @@ void PlayerAI::AddActionUnitAttackTrees(Unit * u)
         return ;
 
     // FIND TREE
-    if(mTrees.empty())
-        return ;
-
     const unsigned int numTrees = mTrees.size();
     const int maxDist = mGm->GetNumRows() * mGm->GetNumCols();
     const Base * base = mPlayer->GetBase();
@@ -1187,7 +1215,7 @@ void PlayerAI::AddActionUnitConnectStructure(Unit * u)
         return ;
 
     // check if there's any structure to connect
-    const unsigned int numStructures = mStructures.size();
+    const unsigned int numStructures = mOwnStructures.size();
 
     unsigned int bestStructInd = numStructures;
     int minDist = GetMaxDistanceForObject(u);
@@ -1199,84 +1227,84 @@ void PlayerAI::AddActionUnitConnectStructure(Unit * u)
 
     for(unsigned int i = 0; i < numStructures; ++i)
     {
-        auto s = static_cast<Structure *>(mStructures[i]);
+        auto s = static_cast<Structure *>(mOwnStructures[i]);
 
-        // own structure which is not linked
-        if(s->GetFaction() == faction && !s->IsLinked())
+        // handle not linked only
+        if(s->IsLinked())
+            continue;
+
+        Cell2D start;
+
+        // SPECIAL CASE: unit is already next to structure -> best option
+        if(mGm->AreObjectsOrthoAdjacent(u, s))
         {
-            Cell2D start;
+            minDist = 0;
+            bestStructInd = i;
+            startConquest = posUnit;
 
-            // SPECIAL CASE: unit is already next to structure -> best option
-            if(mGm->AreObjectsOrthoAdjacent(u, s))
+            std::cout << "PlayerAI::AddActionUnitConnectStructure - ADJ - structure: " << s->GetObjectId()
+                      << " - min dist: 0"
+                      << " - dest/obj pos: " << startConquest.row << "," << startConquest.col
+                      << " - obj: " << u->GetObjectId() << std::endl;
+
+            break;
+        }
+
+        // check unit distance from structure
+        const int dist = mGm->ApproxDistance(u, s);
+
+        // unit is closer to structure
+        if(dist < minDist)
+        {
+            start = mGm->GetOrthoAdjacentMoveTarget(posUnit, s);
+
+            if(start.row != -1 && start.col != -1)
             {
-                minDist = 0;
+                minDist = dist;
                 bestStructInd = i;
-                startConquest = posUnit;
+                startConquest = start;
 
-                std::cout << "PlayerAI::AddActionUnitConnectStructure - ADJ - structure: " << s->GetObjectId()
-                          << " - min dist: 0"
-                          << " - dest/obj pos: " << startConquest.row << "," << startConquest.col
-                          << " - obj: " << u->GetObjectId() << std::endl;
-
-                break;
+                std::cout << "PlayerAI::AddActionUnitConnectStructure - A - structure: " << s->GetObjectId()
+                          << " - new min dist: " << dist
+                          << " - dest: " << startConquest.row << "," << startConquest.col
+                          << " - obj: " << u->GetObjectId()
+                          << " - obj pos: " << posUnit.row << "," << posUnit.col << std::endl;
             }
+        }
 
-            // check unit distance from structure
-            const int dist = mGm->ApproxDistance(u, s);
+        // check distance to closest connected cell
+        if(mGm->FindClosestCellConnectedToObject(s, posUnit, start))
+        {
+            const GameMapCell & gmc = mGm->GetCell(start.row, start.col);
 
-            // unit is closer to structure
-            if(dist < minDist)
+            // connected cell is occupied and not by unit -> find adjacent
+            if(gmc.objTop != nullptr && gmc.objTop != u)
             {
                 start = mGm->GetOrthoAdjacentMoveTarget(posUnit, s);
 
-                if(start.row != -1 && start.col != -1)
-                {
-                    minDist = dist;
-                    bestStructInd = i;
-                    startConquest = start;
-
-                    std::cout << "PlayerAI::AddActionUnitConnectStructure - A - structure: " << s->GetObjectId()
-                              << " - new min dist: " << dist
-                              << " - dest: " << startConquest.row << "," << startConquest.col
-                              << " - obj: " << u->GetObjectId()
-                              << " - obj pos: " << posUnit.row << "," << posUnit.col << std::endl;
-                }
+                // can't find any
+                if(start.row == -1 || start.col == -1)
+                    continue;
             }
 
-            // check distance to closest connected cell
-            if(mGm->FindClosestCellConnectedToObject(s, posUnit, start))
+            const int dist = mGm->ApproxDistance(posUnit, start);
+
+            // found a closest cell
+            if(dist < minDist)
             {
-                const GameMapCell & gmc = mGm->GetCell(start.row, start.col);
+                minDist = dist;
+                bestStructInd = i;
+                startConquest = start;
 
-                // connected cell is occupied and not by unit -> find adjacent
-                if(gmc.objTop != nullptr && gmc.objTop != u)
-                {
-                    start = mGm->GetOrthoAdjacentMoveTarget(posUnit, s);
+                std::cout << "PlayerAI::AddActionUnitConnectStructure - B - structure: " << s->GetObjectId()
+                          << " - new min dist: " << dist
+                          << " - dest: " << startConquest.row << "," << startConquest.col
+                          << " - obj: " << u->GetObjectId()
+                          << " - obj pos: " << posUnit.row << "," << posUnit.col << std::endl;
 
-                    // can't find any
-                    if(start.row == -1 || start.col == -1)
-                        continue;
-                }
-
-                const int dist = mGm->ApproxDistance(posUnit, start);
-
-                // found a closest cell
-                if(dist < minDist)
-                {
-                    minDist = dist;
-                    bestStructInd = i;
-                    startConquest = start;
-
-                    std::cout << "PlayerAI::AddActionUnitConnectStructure - B - structure: " << s->GetObjectId()
-                              << " - new min dist: " << dist
-                              << " - dest: " << startConquest.row << "," << startConquest.col
-                              << " - obj: " << u->GetObjectId()
-                              << " - obj pos: " << posUnit.row << "," << posUnit.col << std::endl;
-
-                    // already found best option
-                    if(0 == dist)
-                        break;
-                }
+                // already found best option
+                if(0 == dist)
+                    break;
             }
         }
     }
@@ -1297,7 +1325,7 @@ void PlayerAI::AddActionUnitConnectStructure(Unit * u)
     action->type = AIA_UNIT_CONNECT_STRUCTURE;
     action->ObjSrc = u;
     action->cellSrc = startConquest;
-    action->ObjDst = mStructures[bestStructInd];
+    action->ObjDst = mOwnStructures[bestStructInd];
     action->priority = priority;
 
     // push action to the queue
@@ -1400,6 +1428,120 @@ void PlayerAI::AddActionUnitConquerResGen(Unit * u, ResourceType type)
     action->type = AIA_UNIT_CONQUER_GEN;
     action->ObjSrc = u;
     action->ObjDst = mResGenerators[bestInd];
+    action->priority = priority;
+
+    // push action to the queue
+    AddNewAction(action);
+}
+
+void PlayerAI::AddActionUnitPatrol(Unit * u)
+{
+    if(mVisibleEnemies.empty())
+        return ;
+
+    // DEFINE INITIAL PRIORITY
+    int priority = MAX_PRIORITY;
+
+    // decrease priority based on unit's energy
+    const float bonusEnergy = -30.f;
+    priority += GetUnitPriorityBonusEnergy(u, bonusEnergy);
+
+    // decrease priority based on unit's health
+    const float bonusHealth = -15.f;
+    priority += GetUnitPriorityBonusHealth(u, bonusHealth);
+
+    // already below current priority threshold
+    if(priority < mMinPriority)
+        return ;
+
+    // DEFINE TARGET POSITION
+    // enemies
+    float enemyAvgRow = 0.f;
+    float enemyAvgCol = 0.f;
+    float wEnemies = 0.6f;
+    int numEnemies = 0;
+
+    for(auto e : mVisibleEnemyStructures)
+    {
+        ++numEnemies;
+        enemyAvgRow += e->GetRow0();
+        enemyAvgCol += e->GetCol0();
+    }
+
+    for(auto e : mVisibleEnemyUnits)
+    {
+        ++numEnemies;
+        enemyAvgRow += e->GetRow0();
+        enemyAvgCol += e->GetCol0();
+    }
+
+    if(numEnemies > 0)
+    {
+        enemyAvgRow /= numEnemies;
+        enemyAvgCol /= numEnemies;
+    }
+    else
+        wEnemies = 0.f;
+
+    // own objects
+    const float wOwn = 1.0f - wEnemies;
+    float ownAvgRow = 0.f;
+    float ownAvgCol = 0.f;
+    int numOwn = 0;
+
+    for(auto o : mOwnStructures)
+    {
+        ++numOwn;
+        ownAvgRow += o->GetRow0();
+        ownAvgCol += o->GetCol0();
+    }
+
+    for(auto o : mOwnUnits)
+    {
+        // skip current unit
+        if(o == u)
+            continue;
+
+        ++numOwn;
+        ownAvgRow += o->GetRow0();
+        ownAvgCol += o->GetCol0();
+    }
+
+    if(numOwn > 0)
+    {
+        ownAvgRow /= numOwn;
+        ownAvgCol /= numOwn;
+    }
+    // just in case
+    else if(0 == numEnemies)
+        return ;
+
+    Cell2D dest(std::roundf(enemyAvgRow * wEnemies + ownAvgRow * wOwn),
+                std::roundf(enemyAvgRow * wEnemies + ownAvgRow * wOwn));
+
+    // destination cell is not walkable -> find closer one
+    if(!mGm->IsCellWalkable(dest.row, dest.col))
+    {
+        dest = mGm->GetCloseMoveTarget(Cell2D(u->GetRow0(), u->GetCol0()), dest);
+
+        // failed to find a target cell
+        if(dest.row < 0 || dest.col < 0)
+            return ;
+    }
+
+    // reduce priority based on Distance from target
+    const float bonusDist = -0.5f;
+    const int dist = std::abs(dest.row - u->GetRow0()) + std::abs(dest.col - u->GetCol0());
+    priority += std::roundf(dist * bonusDist);
+
+    // can't find something that's worth an action
+    if(priority < mMinPriority)
+        return ;
+
+    auto action = new ActionAI;
+    action->type = AIA_UNIT_PATROL;
+    action->ObjSrc = u;
+    action->cellDst = dest;
     action->priority = priority;
 
     // push action to the queue
