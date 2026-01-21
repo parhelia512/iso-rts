@@ -1729,9 +1729,6 @@ void PlayerAI::AddActionUnitConquerResGen(Unit * u, ResourceType type)
 
 void PlayerAI::AddActionUnitPatrol(Unit * u)
 {
-    if(mVisibleEnemies.empty())
-        return ;
-
     // DEFINE INITIAL PRIORITY
     int priority = MAX_PRIORITY;
 
