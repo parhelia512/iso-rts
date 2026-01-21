@@ -934,7 +934,7 @@ void PlayerAI::AddActionUnitBuildTower(Unit * u)
     int priority = MAX_PRIORITY;
 
     // decrease priority based on unit's energy
-    const float bonusEnergy = -35.f;
+    const float bonusEnergy = -30.f;
     priority += GetUnitPriorityBonusEnergy(u, bonusEnergy);
 
     // decrease priority based on unit's health
@@ -1960,14 +1960,19 @@ void PlayerAI::AddActionUpgrade(GameObject * obj, const int weights[],
         for(auto it : attributes)
         {
             const ObjAttId attId = it.first;
-            const int val = it.second + changes[attId];
-            const int missingVal = MAX_STAT_IVAL - val;
-            const int attScore = missingVal * weights[attId];
 
-            if(attScore > maxAttScore)
+            // skip non-basic attributes
+            if(attId < NUM_BASIC_ATTRIBUTES)
             {
-                attToInc = attId;
-                maxAttScore = attScore;
+                const int val = it.second + changes[attId];
+                const int missingVal = MAX_STAT_IVAL - val;
+                const int attScore = missingVal * weights[attId];
+
+                if(attScore > maxAttScore)
+                {
+                    attToInc = attId;
+                    maxAttScore = attScore;
+                }
             }
         }
 
