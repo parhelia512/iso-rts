@@ -105,6 +105,9 @@ private:
     int GetPriorityBonusStructureBuildCost(GameObjectTypeId t, float bonus) const;
     int GetPriorityBonusSameStructureCreated(GameObjectTypeId t, float bonus) const;
 
+    int GetNumStructuresInArea(const Cell2D & tl, const Cell2D & br,
+                               GameObjectTypeId type) const;
+
     void PrintdActionDebug(const char * title, const ActionAI * a);
 
 private:

@@ -1394,7 +1394,48 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
                 const Cell2D cellUnit(unit->GetRow0(), unit->GetCol0());
                 Cell2D target;
 
-                // TODO
+                if(ai->FindWhereToBuildTower(unit, target))
+                {
+                    if(mGameMap->AreCellsAdjacent(cellUnit, target))
+                        done = SetupStructureBuilding(unit, target, player, basicOnDone);
+                    else
+                    {
+                        const Cell2D moveTarget = mGameMap->GetAdjacentMoveTarget(cellUnit, target);
+
+                        if(moveTarget.row != -1 && moveTarget.col != -1)
+                        {
+                            done = SetupUnitMove(unit, cellUnit, moveTarget,
+                                [this, unit, target, player, basicOnDone](bool successful)
+                                {
+                                    if(successful)
+                                    {
+                                        const bool res = SetupStructureBuilding(unit, target,
+                                                                                player, basicOnDone);
+
+                                        if(!res)
+                                        {
+                                            basicOnDone(false);
+                                            unit->ClearStructureToBuild();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        basicOnDone(false);
+                                        unit->ClearStructureToBuild();
+                                    }
+                                });
+                        }
+                        else
+                            done = false;
+                    }
+                }
+                else
+                    done = false;
+
+                if(!done)
+                    unit->ClearStructureToBuild();
+
+                PrintAction(turnAI, action, done, player);
             }
             break;
 

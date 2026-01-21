@@ -256,7 +256,7 @@ bool PlayerAI::FindWhereToBuildStructure(Unit * unit, Cell2D & target) const
     const int cols = data.GetCols();
 
     // DECIDE WHERE TO LOOK FOR BUILDING AREA
-    Cell2D cellUnit(unit->GetRow0(), unit->GetCol0());
+    const Cell2D cellUnit(unit->GetRow0(), unit->GetCol0());
     Cell2D cellStart;
 
     std::vector<Structure *> structures;
@@ -338,8 +338,125 @@ bool PlayerAI::FindWhereToBuildStructure(Unit * unit, Cell2D & target) const
 
 bool PlayerAI::FindWhereToBuildTower(Unit * unit, Cell2D & target) const
 {
-    // TODO
-    return false;
+    const GameObjectTypeId type = unit->GetStructureToBuild();
+    const ObjectData & data = mDataReg->GetObjectData(type);
+    const int rows = data.GetRows();
+    const int cols = data.GetCols();
+
+    // DECIDE WHERE TO LOOK FOR BUILDING AREA
+    const Cell2D cellUnit(unit->GetRow0(), unit->GetCol0());
+
+    // define current base area
+    const int mapRows = mGm->GetNumRows();
+    const int mapCols = mGm->GetNumCols();
+    const int maxDist = mapRows + mapCols;
+    const Cell2D mapCenter(mapRows / 2, mapCols / 2);
+
+    enum AreaId : unsigned int
+    {
+        AREA_TL,
+        AREA_TR,
+        AREA_BL,
+        AREA_BR,
+
+        AREA_C,
+
+        NUM_AREAS,
+        NUM_CORNERS = NUM_AREAS - 1,
+    };
+
+    std::vector<Cell2D> areas(NUM_AREAS);
+
+    areas[AREA_TL] = Cell2D(mapRows, mapCols);
+    areas[AREA_TL] = Cell2D(-1, -1);
+
+    for(auto s : mOwnStructures)
+    {
+        // set TL
+        if(s->GetRow1() < areas[AREA_TL].row)
+            areas[AREA_TL].row = s->GetRow1();
+        if(s->GetCol1() < areas[AREA_TL].col)
+            areas[AREA_TL].col = s->GetCol1();
+
+        // set BR
+        if(s->GetRow0() > areas[AREA_BR].row)
+            areas[AREA_BR].row = s->GetRow0();
+        if(s->GetCol0() > areas[AREA_BR].col)
+            areas[AREA_BR].col = s->GetCol0();
+    }
+
+    if(areas[AREA_BR].row == -1)
+    {
+        const Cell2D uc(unit->GetRow0(), unit->GetCol0());
+        areas[AREA_TL] = uc;
+        areas[AREA_BR] = uc;
+    }
+
+    areas[AREA_TR] = Cell2D(areas[AREA_TL].row, areas[AREA_BR].col);
+    areas[AREA_BL] = Cell2D(areas[AREA_BR].row, areas[AREA_TL].col);
+    const Cell2D areasC((areas[AREA_TL].row + areas[AREA_BR].row) / 2,
+                        (areas[AREA_TL].col + areas[AREA_BR].col) / 2);
+
+    std::vector<int> scores(NUM_AREAS, MAX_PRIORITY);
+
+    // bonus other towers in area
+    const int bonusTowers = -2;
+
+    scores[AREA_TL] += bonusTowers * GetNumStructuresInArea(areas[AREA_TL], areasC, type);
+    scores[AREA_TR] += bonusTowers * GetNumStructuresInArea(Cell2D(areas[AREA_TL].row, areasC.col),
+                                                            Cell2D(areasC.row, areas[AREA_TL].col),
+                                                            type);
+    scores[AREA_BL] += bonusTowers * GetNumStructuresInArea(Cell2D(areasC.row, areas[AREA_BL].col),
+                                                            Cell2D(areas[AREA_BL].row, areasC.col),
+                                                            type);
+    scores[AREA_BR] += bonusTowers * GetNumStructuresInArea(areasC, areas[AREA_BR], type);
+
+    // bonus distance from map center
+    const int bonusDistCenter = -35;
+
+    for(unsigned int i = 0; i < NUM_CORNERS; ++i)
+    {
+        scores[i] += bonusDistCenter *
+                     (std::abs(mapCenter.row - areas[i].row) +
+                      std::abs(mapCenter.col - areas[i].col)) / maxDist;
+    }
+
+    // bonus distance from unit
+    const int bonusDistUnit = -20;
+
+    for(unsigned int i = 0; i < NUM_CORNERS; ++i)
+    {
+        scores[i] += bonusDistUnit *
+                     (std::abs(cellUnit.row - areas[i].row) +
+                      std::abs(cellUnit.col - areas[i].col)) / maxDist;
+    }
+
+    // decide best area
+    unsigned int bestArea = NUM_AREAS;
+    int bestScore = 0;
+
+    for(unsigned int i = 0; i < NUM_CORNERS; ++i)
+    {
+        if(scores[i] > bestScore)
+        {
+            bestArea = i;
+            bestScore = scores[i];
+        }
+    }
+
+    // find suitable spot close to cellStart
+    const int maxRadius = 5;
+
+    // first try to find an area big enough to have all sides free
+    if(mGm->FindFreeArea(areas[bestArea], rows + 2, cols + 2, maxRadius, target))
+    {
+        target.row -= 1;
+        target.col -= 1;
+
+        return true;
+    }
+    else
+        return mGm->FindFreeArea(areas[bestArea], rows, cols, maxRadius, target);
 }
 
 void PlayerAI::ClearActionsDone()
@@ -612,6 +729,7 @@ void PlayerAI::AddActionsUnit(Unit * u)
     if(u->CanBuild())
     {
         AddActionUnitBuildStructure(u);
+        AddActionUnitBuildTower(u);
     }
 
     // COLLECTABLES
@@ -848,11 +966,11 @@ void PlayerAI::AddActionUnitBuildTower(Unit * u)
         typePriority = priority;
 
         // reduce priority based on available resources
-        const float bonusRes = -10.f;
+        const float bonusRes = -15.f;
         typePriority += GetPriorityBonusStructureBuildCost(type, bonusRes);
 
         // reduce priority based on same existing structures
-        const float bonusSameStruct = -5.f;
+        const float bonusSameStruct = -10.f;
         typePriority += GetPriorityBonusSameStructureCreated(type, bonusSameStruct);
 
         if(typePriority > bestPriority)
@@ -1984,6 +2102,23 @@ int PlayerAI::GetPriorityBonusSameStructureCreated(GameObjectTypeId t, float bon
     return std::roundf(numSame * bonus);
 }
 
+int PlayerAI::GetNumStructuresInArea(const Cell2D & tl, const Cell2D & br,
+                                     GameObjectTypeId type) const
+{
+    int num = 0;
+
+    for(const auto s : mOwnStructures)
+    {
+        if(s->GetObjectType() != type)
+            continue;
+
+        num += s->GetRow1() >= tl.row && s->GetCol1() >= tl.col &&
+               s->GetRow0() <= br.row && s->GetCol0() <= br.col;
+    }
+
+    return num;
+}
+
 void PlayerAI::PrintdActionDebug(const char * title, const ActionAI * a)
 {
     std::cout << title;
@@ -1991,7 +2126,7 @@ void PlayerAI::PrintdActionDebug(const char * title, const ActionAI * a)
     std::cout << " - ID: " << a->actId
               << " - TYPE: " << a->GetTypeStr() << " - PRIO: " << a->priority;
 
-    if(AIA_UNIT_BUILD_STRUCTURE == a->type)
+    if(AIA_UNIT_BUILD_STRUCTURE == a->type || AIA_UNIT_BUILD_TOWER == a->type)
     {
         auto ab = static_cast<const ActionAIBuildStructure *>(a);
         std::cout << " | STRUCT: " << ObjectData::TITLES.at(ab->structType);

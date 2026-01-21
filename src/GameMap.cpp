@@ -2730,15 +2730,18 @@ bool GameMap::FindFreeArea(const Cell2D & start, int rows, int cols, int maxRadi
 
 bool GameMap::IsAreaFree(int brR, int brC, int rows, int cols)
 {
+    const int tlR = brR - rows + 1;
+    const int tlC = brC - cols + 1;
+
     // area goes outside map
-    if(rows > brR || cols > brC)
+    if(rows > brR || cols > brC || tlR < 0 || tlC < 0)
         return false;
 
-    for(int r = brR - rows + 1; r <= brR; ++r)
+    for(int r = tlR; r <= brR; ++r)
     {
         const int ind0 = r * mCols;
 
-        for(int c = brC - cols + 1; c <= brC; ++c)
+        for(int c = tlC; c <= brC; ++c)
         {
             const int ind = ind0 + c;
             const GameMapCell & cell = mCells[ind];
