@@ -763,7 +763,11 @@ void GameMap::ConquerCell(const Cell2D & cell, Player * player)
     AddPlayerCellVisibility(gcell, player);
 
     if(stolen)
+    {
         DelPlayerCellVisibility(gcell, prevOwner);
+
+        UpdateLinkedCells(prevOwner);
+    }
 
     ApplyLocalVisibility();
 }
