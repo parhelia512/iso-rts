@@ -9,7 +9,7 @@ namespace game
 
 DiamondsGenerator::DiamondsGenerator(const Game * g, GameMap * gm)
 #ifdef DEV_MODE
-    : CollectableGenerator(g, gm, 1, 10)
+    : CollectableGenerator(g, gm, 4, 12)
 #else
     : CollectableGenerator(g, gm, 5, 30)
 #endif

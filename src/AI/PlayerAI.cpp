@@ -368,7 +368,7 @@ bool PlayerAI::FindWhereToBuildTower(Unit * unit, Cell2D & target) const
     std::vector<Cell2D> areas(NUM_AREAS);
 
     areas[AREA_TL] = Cell2D(mapRows, mapCols);
-    areas[AREA_TL] = Cell2D(-1, -1);
+    areas[AREA_BR] = Cell2D(-1, -1);
 
     for(auto s : mOwnStructures)
     {
@@ -934,12 +934,22 @@ void PlayerAI::AddActionUnitBuildTower(Unit * u)
     int priority = MAX_PRIORITY;
 
     // decrease priority based on unit's energy
-    const float bonusEnergy = -25.f;
+    const float bonusEnergy = -35.f;
     priority += GetUnitPriorityBonusEnergy(u, bonusEnergy);
 
     // decrease priority based on unit's health
     const float bonusHealth = -5.f;
     priority += GetUnitPriorityBonusHealth(u, bonusHealth);
+
+    // decrease priority based on low number of structures
+    const unsigned int numStruct = mOwnStructures.size();
+    const unsigned int minStructs = 5;
+
+    if(numStruct < minStructs)
+    {
+        const float bonusStructs = -10.f;
+        priority += bonusStructs * (minStructs - numStruct);
+    }
 
     // already below current priority threshold
     if(priority < mMinPriority)
