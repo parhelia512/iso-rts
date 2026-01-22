@@ -179,6 +179,7 @@ enum SpriteIdCity : unsigned int
     ID_CITY_BR2_SEL_NF,
 
     NUM_IDS_CITY,
+    NUM_CITY_SPRITES = 16,
 };
 
 // COLLECTIBLES
