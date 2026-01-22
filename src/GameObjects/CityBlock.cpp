@@ -56,7 +56,7 @@ void CityBlock::SetImage()
 
     const unsigned int spriteId0 = f != NO_FACTION ? factionSpriteIds[f] : ID_CITY_TL1_NF;
     const unsigned int spriteId = spriteId0 + mVariant + (sel * NUM_CITY_SPRITES);
-    tex = tm->GetSprite(SpriteFileSceneElements, spriteId);
+    tex = tm->GetSprite(SpriteFileCity, spriteId);
 
     isoObj->SetTexture(tex);
 }
