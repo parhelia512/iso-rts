@@ -4,6 +4,7 @@ namespace game
 {
 
 const char SpriteFileCells[] = "tiles.png";
+const char SpriteFileCity[] = "city.png";
 const char SpriteCollectiblesFile[] = "collectibles.png";
 const char SpriteFileMapIndicators[] = "map_indicators.png";
 const char SpriteFileMiniUnits[] = "mini_units.png";
