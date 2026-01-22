@@ -15,6 +15,7 @@ const std::string ObjectData::TYPE_STR_BASE("BASE");
 const std::string ObjectData::TYPE_STR_BASE_SPOT("BASE_SPOT");
 const std::string ObjectData::TYPE_STR_BLOBS("BLOBS");
 const std::string ObjectData::TYPE_STR_BUNKER("BUNKER");
+const std::string ObjectData::TYPE_STR_CITY_BLOCK("CITY_BLOCK");
 const std::string ObjectData::TYPE_STR_DEFENSIVE_TOWER("DEF_TOWER");
 const std::string ObjectData::TYPE_STR_DIAMONDS("DIAMONDS");
 const std::string ObjectData::TYPE_STR_HOSPITAL("HOSPITAL");
@@ -56,6 +57,7 @@ const GameObjectTypeId ObjectData::TYPE_BASE = h{}(TYPE_STR_BASE);
 const GameObjectTypeId ObjectData::TYPE_BASE_SPOT = h{}(TYPE_STR_BASE_SPOT);
 const GameObjectTypeId ObjectData::TYPE_BLOBS = h{}(TYPE_STR_BLOBS);
 const GameObjectTypeId ObjectData::TYPE_BUNKER = h{}(TYPE_STR_BUNKER);
+const GameObjectTypeId ObjectData::TYPE_CITY_BLOCK = h{}(TYPE_STR_CITY_BLOCK);
 const GameObjectTypeId ObjectData::TYPE_DEFENSIVE_TOWER = h{}(TYPE_STR_DEFENSIVE_TOWER);
 const GameObjectTypeId ObjectData::TYPE_DIAMONDS = h{}(TYPE_STR_DIAMONDS);
 const GameObjectTypeId ObjectData::TYPE_HOSPITAL = h{}(TYPE_STR_HOSPITAL);
@@ -96,6 +98,7 @@ const std::unordered_map<GameObjectTypeId, std::string> ObjectData::TYPE_STR_MAP
     { ObjectData::TYPE_BASE, TYPE_STR_BASE},
     { ObjectData::TYPE_BASE_SPOT, TYPE_STR_BASE_SPOT},
     { ObjectData::TYPE_BUNKER, TYPE_STR_BUNKER},
+    { ObjectData::TYPE_CITY_BLOCK, TYPE_STR_CITY_BLOCK},
     { ObjectData::TYPE_DEFENSIVE_TOWER, TYPE_STR_DEFENSIVE_TOWER },
     { ObjectData::TYPE_HOSPITAL, TYPE_STR_HOSPITAL },
     { ObjectData::TYPE_LOOTBOX, TYPE_STR_LOOTBOX },
@@ -149,6 +152,7 @@ const std::unordered_map<GameObjectTypeId, std::string> ObjectData::TITLES =
     { ObjectData::TYPE_BASE, "BASE"},
     { ObjectData::TYPE_BASE_SPOT, "BASE_SPOT"},
     { ObjectData::TYPE_BUNKER, "BUNKER"},
+    { ObjectData::TYPE_CITY_BLOCK, "CITY_BLOCK"},
     { ObjectData::TYPE_DEFENSIVE_TOWER, "DEF_TOWER"},
     { ObjectData::TYPE_HOSPITAL, "HOSPITAL"},
     { ObjectData::TYPE_LOOTBOX, "LOOT_BOX"},
@@ -189,6 +193,7 @@ const std::unordered_map<GameObjectTypeId, std::string> ObjectData::DESCRIPTIONS
         { ObjectData::TYPE_BASE, "DESC_BASE"},
         { ObjectData::TYPE_BASE_SPOT, "DESC_BASE_SPOT"},
         { ObjectData::TYPE_BUNKER, "DESC_BUNKER"},
+        { ObjectData::TYPE_CITY_BLOCK, "DESC_CITY_BLOCK"},
         { ObjectData::TYPE_DEFENSIVE_TOWER, "DESC_DEFENSIVE_TOWER"},
         { ObjectData::TYPE_HOSPITAL, "DESC_HOSPITAL"},
         { ObjectData::TYPE_LOOTBOX, "DESC_LOOTBOX"},

@@ -10,9 +10,9 @@ namespace game
 
 CityBlock::CityBlock(const ObjectData & data, const ObjectInitData & initData,
                          GameObjectVariantId part)
-    : GameObject(data, initData)
+    : Structure(data, initData)
 {
-    SetStatic(true);
+    SetCanBeConquered(true);
 
     mVariant = part;
 

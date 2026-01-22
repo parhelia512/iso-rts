@@ -1,11 +1,11 @@
 #pragma once
 
-#include "GameObject.h"
+#include "Structure.h"
 
 namespace game
 {
 
-class CityBlock : public GameObject
+class CityBlock : public Structure
 {
 public:
     enum CityBlockParts : GameObjectVariantId
