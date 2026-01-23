@@ -77,6 +77,8 @@ add_executable(
     src/GameObjects/Bunker.cpp
     src/GameObjects/CityBlock.h
     src/GameObjects/CityBlock.cpp
+    src/GameObjects/CityGroup.h
+    src/GameObjects/CityGroup.cpp
     src/GameObjects/Collectable.h
     src/GameObjects/Collectable.cpp
     src/GameObjects/CollectableGenerator.h

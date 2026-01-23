@@ -102,6 +102,8 @@ public:
 
     bool RemoveAndDestroyObject(GameObject * obj);
 
+    void InitCities();
+
     // player stats
     void RegisterEnemyKill(GameObject * killer);
     void RegisterCasualty(PlayerFaction killed);

@@ -20,6 +20,7 @@
 #include "GameObjects/BlobsGenerator.h"
 #include "GameObjects/Bunker.h"
 #include "GameObjects/CityBlock.h"
+#include "GameObjects/CityGroup.h"
 #include "GameObjects/DefensiveTower.h"
 #include "GameObjects/Diamonds.h"
 #include "GameObjects/DiamondsGenerator.h"
@@ -588,6 +589,161 @@ bool GameMap::RemoveAndDestroyObject(GameObject * obj)
     DestroyObject(obj);
 
     return true;
+}
+
+void GameMap::InitCities()
+{
+    std::vector<GameObject *> blockTodo;
+
+    for(auto o : mObjects)
+    {
+        // skip other objects
+        if(o->GetObjectType() != ObjectData::TYPE_CITY_BLOCK)
+            continue;
+
+        // block already done
+        if(o->GetGroup() != nullptr)
+            continue;
+
+        auto g = new CityGroup;
+
+        blockTodo.emplace_back(o);
+
+        while(!blockTodo.empty())
+        {
+            auto b = blockTodo.back();
+            blockTodo.pop_back();
+
+            // block already done
+            if(b->GetGroup() != nullptr)
+                continue;
+
+            // set city group
+            b->SetGroup(g);
+
+            // add neighbors
+            const int r0 = b->GetRow0();
+            const int c0 = b->GetCol0();
+            const int rows = b->GetRows();
+            const int cols = b->GetCols();
+
+            // TOP
+            if(r0 > rows)
+            {
+                const int r = r0 - rows;
+                const int ind0 = r * mCols;
+
+                // TL
+                if(c0 > cols)
+                {
+                    const int c = c0 - cols;
+                    const int ind = ind0 + c;
+
+                    auto co = mCells[ind].objTop;
+
+                    if(co != nullptr && co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
+                       co->GetGroup() == nullptr)
+                        blockTodo.emplace_back(co);
+                }
+
+                // T
+                {
+                    const int ind = ind0 + c0;
+
+                    auto co = mCells[ind].objTop;
+
+                    if(co != nullptr && co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
+                        co->GetGroup() == nullptr)
+                        blockTodo.emplace_back(co);
+                }
+
+                // TR
+                if(c0 + cols < mCols)
+                {
+                    const int c = c0 + cols;
+                    const int ind = ind0 + c;
+
+                    auto co = mCells[ind].objTop;
+
+                    if(co != nullptr && co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
+                        co->GetGroup() == nullptr)
+                        blockTodo.emplace_back(co);
+                }
+            }
+
+            // LEFT
+            if(c0 > cols)
+            {
+                const int c = c0 - cols;
+                const int ind = (r0 * mCols) + c;
+
+                auto co = mCells[ind].objTop;
+
+                if(co != nullptr && co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
+                    co->GetGroup() == nullptr)
+                    blockTodo.emplace_back(co);
+            }
+
+            // RIGHT
+            if(c0 + cols < mCols)
+            {
+                const int c = c0 + cols;
+                const int ind = (r0 * mCols) + c;
+
+                auto co = mCells[ind].objTop;
+
+                if(co != nullptr && co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
+                    co->GetGroup() == nullptr)
+                    blockTodo.emplace_back(co);
+            }
+
+            // BOTTOM
+            if(r0 + rows < mRows)
+            {
+                const int r = r0 + rows;
+                const int ind0 = r * mCols;
+
+                // TL
+                if(c0 > cols)
+                {
+                    const int c = c0 - cols;
+                    const int ind = ind0 + c;
+
+                    auto co = mCells[ind].objTop;
+
+                    if(co != nullptr && co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
+                        co->GetGroup() == nullptr)
+                        blockTodo.emplace_back(co);
+                }
+
+                // T
+                {
+                    const int ind = ind0 + c0;
+
+                    auto co = mCells[ind].objTop;
+
+                    if(co != nullptr && co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
+                        co->GetGroup() == nullptr)
+                        blockTodo.emplace_back(co);
+                }
+
+                // TR
+                if(c0 + cols < mCols)
+                {
+                    const int c = c0 + cols;
+                    const int ind = ind0 + c;
+
+                    auto co = mCells[ind].objTop;
+
+                    if(co != nullptr && co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
+                        co->GetGroup() == nullptr)
+                        blockTodo.emplace_back(co);
+                }
+            }
+        }
+
+        std::cout << "GameMap::InitCities - CREATED CITY OF " << g->GetNumObjects() << " BLOCKS" << std::endl;
+    }
 }
 
 void GameMap::RegisterEnemyKill(GameObject * killer)

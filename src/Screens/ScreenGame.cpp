@@ -895,6 +895,8 @@ void ScreenGame::LoadMapFile()
         mGameMap->CreateObjectFromFile(e.layerId, e.typeId, e.variantId, e.faction, e.r0, e.c0);
     }
 
+    mGameMap->InitCities();
+
     // get mission data
     mMissionGoals = mio.GetMissionGoals();
     SetMissionRewards();
