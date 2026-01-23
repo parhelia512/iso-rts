@@ -23,6 +23,8 @@ Base::Base(const ObjectData & data, const ObjectInitData & initData)
 
 void Base::OnNewTurn(PlayerFaction faction)
 {
+    GameObject::OnNewTurn(faction);
+
     // not linked yet -> exit
     if(!IsLinked())
         return ;
