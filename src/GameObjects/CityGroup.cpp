@@ -1,5 +1,7 @@
 #include "GameObjects/CityGroup.h"
 
+#include "Cell2D.h"
+#include "GameMap.h"
 #include "Player.h"
 #include "GameObjects/CityBlock.h"
 
@@ -26,8 +28,16 @@ void CityGroup::UpdateCityConquered(Player * conqueror)
     // all border blocks are conquered -> city is conquered
     mConquered = true;
 
+    // conquer inner blocks
     for(auto o : objs)
-        o->SetOwner(conqueror);
+    {
+        if(o->GetFaction() != f)
+        {
+            const Cell2D c(o->GetRow0(), o->GetCol0());
+
+            mGameMap->ConquerStructure(c, conqueror);
+        }
+    }
 }
 
 } // namespace game

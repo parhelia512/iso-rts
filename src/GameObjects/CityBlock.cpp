@@ -60,7 +60,7 @@ void CityBlock::OnNewTurn(PlayerFaction faction)
 
     IsoObject * isoObj = GetIsoObject();
 
-    const int marginV = 10;
+    const int marginV = 20;
     const float x = isoObj->GetX() + isoObj->GetWidth() / 2;
     const float y = isoObj->GetY() - marginV;
 

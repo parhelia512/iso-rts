@@ -332,6 +332,7 @@ void ScreenMainMenu::CreateChangelog()
                          "- Added Italian and Spanish translations.\n"
                          "- Units and stuctures can be upgraded after gaining enough"
                          " experience to level up.\n"
+                         "- New conquerable structure: City.\n"
                          "\nCHANGES\n"
                          "- Unit movements are limited to visible cells.\n"
                          "- New look&feel for tutorial panels.\n"

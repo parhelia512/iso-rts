@@ -605,7 +605,7 @@ void GameMap::InitCities()
         if(o->GetGroup() != nullptr)
             continue;
 
-        auto g = new CityGroup;
+        auto g = new CityGroup(this);
 
         blockTodo.emplace_back(o);
 
