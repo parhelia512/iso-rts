@@ -94,6 +94,8 @@ GameObject::~GameObject()
 
     delete mWeapon;
 
+    delete mIconUpgrade;
+
     ClearGroup();
 }
 

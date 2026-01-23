@@ -11,6 +11,7 @@ class Structure : public GameObject
 {
 public:
     Structure(const ObjectData & data, const ObjectInitData & initData);
+    ~Structure();
 
     float GetTimeBuildUnit() const;
 

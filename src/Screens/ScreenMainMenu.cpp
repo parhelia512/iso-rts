@@ -354,6 +354,7 @@ void ScreenMainMenu::CreateChangelog()
                          "- Fixed AI structures showing blinking icon.\n"
                          "- Fixed Base not restoring energy on new turn.\n"
                          "- Fixed energy consumption not refrecting conquered cells as it should.\n"
+                         "- Fixed state icons of destroyed object not destroyed.\n"
                          );
     textNewFeat->SetPosition(contX, contY);
     textNewFeat->SetColor(colorContent);

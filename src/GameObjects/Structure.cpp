@@ -20,6 +20,11 @@ Structure::Structure(const ObjectData & data, const ObjectInitData & initData)
         HideIconEnergy();
 }
 
+Structure::~Structure()
+{
+    delete mIconEnergy;
+}
+
 float Structure::GetTimeBuildUnit() const
 {
     const float maxTime = 5.f;
