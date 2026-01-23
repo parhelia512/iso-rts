@@ -34,11 +34,21 @@ public:
     CityBlock(const ObjectData & data, const ObjectInitData & initData,
               GameObjectVariantId part);
 
-protected:
-    void UpdateGraphics() override;
+    bool IsBorder() const;
+    void SetBorder(bool val);
 
 private:
+    void UpdateGraphics() override;
+
+    void OnFactionChanged() override;
+
     void SetImage();
+
+private:
+    bool mBorder = false;
 };
+
+inline bool CityBlock::IsBorder() const { return mBorder; }
+inline void CityBlock::SetBorder(bool val) { mBorder = val; }
 
 } // namespace game

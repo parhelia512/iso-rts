@@ -6,11 +6,14 @@ namespace game
 {
 
 class GameObject;
+class Player;
 
 class CityGroup : public GameObjectsGroup
 {
 public:
     bool IsCityConquered() const;
+
+    void UpdateCityConquered(Player * conqueror);
 
 private:
     bool mConquered = false;

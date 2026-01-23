@@ -627,6 +627,8 @@ void GameMap::InitCities()
             const int rows = b->GetRows();
             const int cols = b->GetCols();
 
+            bool border = false;
+
             // TOP
             if(r0 > rows)
             {
@@ -641,8 +643,10 @@ void GameMap::InitCities()
 
                     auto co = mCells[ind].objTop;
 
-                    if(co != nullptr && co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
-                       co->GetGroup() == nullptr)
+                    if(co == nullptr)
+                        border = true;
+                    else if (co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
+                             co->GetGroup() == nullptr)
                         blockTodo.emplace_back(co);
                 }
 
@@ -652,8 +656,10 @@ void GameMap::InitCities()
 
                     auto co = mCells[ind].objTop;
 
-                    if(co != nullptr && co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
-                        co->GetGroup() == nullptr)
+                    if(co == nullptr)
+                        border = true;
+                    else if (co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
+                             co->GetGroup() == nullptr)
                         blockTodo.emplace_back(co);
                 }
 
@@ -665,8 +671,10 @@ void GameMap::InitCities()
 
                     auto co = mCells[ind].objTop;
 
-                    if(co != nullptr && co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
-                        co->GetGroup() == nullptr)
+                    if(co == nullptr)
+                        border = true;
+                    else if (co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
+                             co->GetGroup() == nullptr)
                         blockTodo.emplace_back(co);
                 }
             }
@@ -679,8 +687,10 @@ void GameMap::InitCities()
 
                 auto co = mCells[ind].objTop;
 
-                if(co != nullptr && co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
-                    co->GetGroup() == nullptr)
+                if(co == nullptr)
+                    border = true;
+                else if (co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
+                         co->GetGroup() == nullptr)
                     blockTodo.emplace_back(co);
             }
 
@@ -692,8 +702,10 @@ void GameMap::InitCities()
 
                 auto co = mCells[ind].objTop;
 
-                if(co != nullptr && co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
-                    co->GetGroup() == nullptr)
+                if(co == nullptr)
+                    border = true;
+                else if (co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
+                         co->GetGroup() == nullptr)
                     blockTodo.emplace_back(co);
             }
 
@@ -711,8 +723,10 @@ void GameMap::InitCities()
 
                     auto co = mCells[ind].objTop;
 
-                    if(co != nullptr && co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
-                        co->GetGroup() == nullptr)
+                    if(co == nullptr)
+                        border = true;
+                    else if (co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
+                             co->GetGroup() == nullptr)
                         blockTodo.emplace_back(co);
                 }
 
@@ -722,8 +736,10 @@ void GameMap::InitCities()
 
                     auto co = mCells[ind].objTop;
 
-                    if(co != nullptr && co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
-                        co->GetGroup() == nullptr)
+                    if(co == nullptr)
+                        border = true;
+                    else if (co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
+                             co->GetGroup() == nullptr)
                         blockTodo.emplace_back(co);
                 }
 
@@ -735,10 +751,14 @@ void GameMap::InitCities()
 
                     auto co = mCells[ind].objTop;
 
-                    if(co != nullptr && co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
-                        co->GetGroup() == nullptr)
+                    if(co == nullptr)
+                        border = true;
+                    else if (co->GetObjectType() == ObjectData::TYPE_CITY_BLOCK &&
+                             co->GetGroup() == nullptr)
                         blockTodo.emplace_back(co);
                 }
+
+                static_cast<CityBlock *>(b)->SetBorder(border);
             }
         }
 

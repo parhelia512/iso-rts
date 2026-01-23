@@ -2,6 +2,7 @@
 
 #include "GameData.h"
 #include "IsoObject.h"
+#include "GameObjects/CityGroup.h"
 
 #include <sgl/graphic/TextureManager.h>
 
@@ -26,6 +27,16 @@ CityBlock::CityBlock(const ObjectData & data, const ObjectInitData & initData,
 void CityBlock::UpdateGraphics()
 {
     SetImage();
+}
+
+void CityBlock::OnFactionChanged()
+{
+    Structure::OnFactionChanged();
+
+    auto g = static_cast<CityGroup *>(GetGroup());
+
+    if(g != nullptr)
+        g->UpdateCityConquered(GetOwner());
 }
 
 void CityBlock::SetImage()
