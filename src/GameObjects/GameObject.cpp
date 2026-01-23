@@ -822,16 +822,19 @@ float GameObject::GetActionExperienceGain(GameObjectActionType action) const
 
 void GameObject::ShowIconUpgrade()
 {
+    // already showing it
+    if(mIconUpgrade != nullptr)
+        return ;
+
     // only show for local player
     if(!IsFactionLocal())
         return;
 
-    if(mIconUpgrade == nullptr)
-        mIconUpgrade = new IconUpgrade(mFaction);
+    mIconUpgrade = new IconUpgrade(mFaction);
 
     // play sound
-        auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
-        ap->PlaySound("game/upgrade_notification-01.ogg");
+    auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+    ap->PlaySound("game/upgrade_notification-01.ogg");
 
     PositionIconUpgrade();
 }
