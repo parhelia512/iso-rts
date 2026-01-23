@@ -1069,13 +1069,14 @@ void GameMap::BuildStructure(const Cell2D & cell, Player * player, GameObjectTyp
     Player * prevOwner = gcell.owner;
     gcell.owner = player;
 
-    // update player
-    player->SumCells(1);
-
     // reset cell's changing flag
     gcell.changing = false;
 
     GameObject * obj = CreateObject(REGULAR_OBJECTS, st, 0, player->GetFaction(), cell.row, cell.col, true);
+
+    // update player
+    const int numCells = obj->GetRows() * obj->GetCols();
+    player->SumCells(numCells);
 
     // propagate effects of conquest
     for(int r = obj->GetRow1(); r <= obj->GetRow0(); ++r)
@@ -1341,7 +1342,8 @@ void GameMap::ConquerStructure(const Cell2D & end, Player * player)
     obj->SetOwner(player);
 
     // update player
-    player->SumCells(1);
+    const int numCells = obj->GetRows() * obj->GetCols();
+    player->SumCells(numCells);
 
     // update tracking of structures and resource generators
     if(obj->IsStructure())

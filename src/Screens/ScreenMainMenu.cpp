@@ -352,6 +352,7 @@ void ScreenMainMenu::CreateChangelog()
                          "- Tutorial is not repeated after quitting it.\n"
                          "- Fixed AI structures showing blinking icon.\n"
                          "- Fixed Base not restoring energy on new turn.\n"
+                         "- Fixed energy consumption not refrecting conquered cells as it should.\n"
                          );
     textNewFeat->SetPosition(contX, contY);
     textNewFeat->SetColor(colorContent);
