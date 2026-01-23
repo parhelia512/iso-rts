@@ -37,6 +37,8 @@ public:
     bool IsBorder() const;
     void SetBorder(bool val);
 
+    void OnNewTurn(PlayerFaction faction) override;
+
 private:
     void UpdateGraphics() override;
 

@@ -2,8 +2,12 @@
 
 #include "GameData.h"
 #include "IsoObject.h"
+#include "Player.h"
 #include "GameObjects/CityGroup.h"
+#include "Particles/DataParticleOutput.h"
+#include "Particles/UpdaterOutput.h"
 
+#include <sgl/graphic/ParticlesManager.h>
 #include <sgl/graphic/TextureManager.h>
 
 namespace game
@@ -22,6 +26,49 @@ CityBlock::CityBlock(const ObjectData & data, const ObjectInitData & initData,
     UpdateMaxHealth(maxHealthValue);
 
     SetImage();
+}
+
+void CityBlock::OnNewTurn(PlayerFaction faction)
+{
+    GameObject::OnNewTurn(faction);
+
+    // not linked yet -> exit
+    if(!IsLinked())
+        return ;
+
+    // not own turn -> exit
+    if(faction != GetFaction())
+        return ;
+
+    // AI -> exit
+    if(!IsFactionLocal())
+        return ;
+
+    auto g = static_cast<CityGroup *>(GetGroup());
+
+    // city not conquered yet -> exit
+    if(g == nullptr || !g->IsCityConquered())
+        return ;
+
+    // assign money
+    const int money = 50;
+    GetOwner()->SumResource(Player::MONEY, money);
+
+    // emit notification
+    auto partMan = GetParticlesManager();
+    auto pu = static_cast<UpdaterOutput *>(partMan->GetUpdater(PU_OUTPUT));
+
+    IsoObject * isoObj = GetIsoObject();
+
+    const int marginV = 10;
+    const float x = isoObj->GetX() + isoObj->GetWidth() / 2;
+    const float y = isoObj->GetY() - marginV;
+
+    const float speed = 45.f;
+    const float decaySpeed = 120.f;
+
+    const DataParticleOutput pd(money, OT_MONEY, x, y, speed, decaySpeed);
+    pu->AddParticle(pd);
 }
 
 void CityBlock::UpdateGraphics()
