@@ -18,6 +18,7 @@ namespace sgl
 namespace game
 {
 
+class CityGroup;
 class CollectableGenerator;
 class ConquerPath;
 class ControlMap;
@@ -298,6 +299,8 @@ private:
     std::vector<MiniUnit *> mMiniUnitsAttacking;
 
     std::vector<GameObject *> mStructuresAttacking;
+
+    std::vector<CityGroup *> mCities;
 
     float mTimerAutoAttacking = 0.f;
 

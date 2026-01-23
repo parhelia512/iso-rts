@@ -98,19 +98,22 @@ GameMap::~GameMap()
 
     delete mControlMap;
 
-    for(GameObject * obj : mObjects)
+    for(auto obj : mObjects)
         delete obj;
 
-    for(MiniUnitsGroup * g : mMiniUnitsGroups)
+    for(auto g : mMiniUnitsGroups)
         delete g;
 
-    for(CollectableGenerator * cg : mCollGen)
+    for(auto g : mCities)
+        delete g;
+
+    for(auto cg : mCollGen)
         delete cg;
 
-    for(ObjectPath * op : mPaths)
+    for(auto op : mPaths)
         delete op;
 
-    for(ConquerPath * cp : mConquerPaths)
+    for(auto cp : mConquerPaths)
         delete cp;
 }
 
@@ -606,6 +609,7 @@ void GameMap::InitCities()
             continue;
 
         auto g = new CityGroup(this);
+        mCities.emplace_back(g);
 
         blockTodo.emplace_back(o);
 
