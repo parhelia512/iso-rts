@@ -67,6 +67,7 @@ private:
     void OnStringsChanged() override;
 
     void OnUpdateStats();
+    void UpdateButtonUpgrade();
 
     void ClearObserving();
 

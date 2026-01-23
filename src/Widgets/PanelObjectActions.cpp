@@ -181,10 +181,12 @@ void PanelObjectActions::SetObject(GameObject * obj)
         else
             mButtons[BTN_OPEN_GATE]->SetVisible(true);
     }
-
     // object not supported -> hide all buttons
     else
         mButtons[BTN_CANCEL]->SetVisible(false);
+
+    // button upgrade
+    UpdateButtonUpgrade();
 
     // POSITION BUTTONS
     UpdatePositions();
@@ -245,14 +247,19 @@ void PanelObjectActions::OnStringsChanged()
 
 void PanelObjectActions::OnUpdateStats()
 {
+    UpdateButtonUpgrade();
+
+    UpdatePositions();
+}
+
+void PanelObjectActions::UpdateButtonUpgrade()
+{
     const int exp = mObj->GetExperience();
     const int maxExp = mObj->GetExperienceToNextLevel();
     const bool showUpgrade = exp >= maxExp &&
                              (mObj->GetExperienceLevel() + 1) < GameObject::MAX_LEVEL;
 
     mButtons[BTN_UPGRADE]->SetVisible(showUpgrade);
-
-    UpdatePositions();
 }
 
 void PanelObjectActions::ClearObserving()
