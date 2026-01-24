@@ -1213,7 +1213,7 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
                         done = false;
                     else
                     {
-                        done = SetupUnitMove(unit, start, target,
+                        done = SetupUnitMove(unit, start, target, true,
                             [this, unit, end, player, basicOnDone](bool successful)
                             {
                                 if(successful)
@@ -1249,7 +1249,7 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
                 // unit needs to move to the structure
                 else
                 {
-                    done = SetupUnitMove(unit, unitCell, start,
+                    done = SetupUnitMove(unit, unitCell, start, true,
                         [this, unit, start, basicOnDone](bool successful)
                         {
                             if(successful)
@@ -1284,7 +1284,7 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
 
                 const Cell2D cellUnit(unit->GetRow0(), unit->GetCol0());
 
-                done = SetupUnitMove(unit, cellUnit, action->cellDst, basicOnDone);
+                done = SetupUnitMove(unit, cellUnit, action->cellDst, true, basicOnDone);
 
                 PrintAction(turnAI, action, done, player);
             }
@@ -1297,7 +1297,7 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
                 const Cell2D cellUnit(unit->GetRow0(), unit->GetCol0());
                 const Cell2D cellDest(action->ObjDst->GetRow0(), action->ObjDst->GetCol0());
 
-                done = SetupUnitMove(unit, cellUnit, cellDest, basicOnDone);
+                done = SetupUnitMove(unit, cellUnit, cellDest, true, basicOnDone);
 
                 PrintAction(turnAI, action, done, player);
             }
@@ -1310,7 +1310,7 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
                 const Cell2D cellUnit(unit->GetRow0(), unit->GetCol0());
                 const Cell2D cellDest(action->ObjDst->GetRow0(), action->ObjDst->GetCol0());
 
-                done = SetupUnitMove(unit, cellUnit, cellDest, basicOnDone);
+                done = SetupUnitMove(unit, cellUnit, cellDest, true, basicOnDone);
 
                 PrintAction(turnAI, action, done, player);
             }
@@ -1323,7 +1323,7 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
                 const Cell2D cellUnit(unit->GetRow0(), unit->GetCol0());
                 const Cell2D cellDest(action->ObjDst->GetRow0(), action->ObjDst->GetCol0());
 
-                done = SetupUnitMove(unit, cellUnit, cellDest, basicOnDone);
+                done = SetupUnitMove(unit, cellUnit, cellDest, true, basicOnDone);
 
                 PrintAction(turnAI, action, done, player);
             }
@@ -1350,7 +1350,7 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
 
                         if(moveTarget.row != -1 && moveTarget.col != -1)
                         {
-                            done = SetupUnitMove(unit, cellUnit, moveTarget,
+                            done = SetupUnitMove(unit, cellUnit, moveTarget, true,
                                 [this, unit, target, player, basicOnDone](bool successful)
                                 {
                                     if(successful)
@@ -1406,7 +1406,7 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
 
                         if(moveTarget.row != -1 && moveTarget.col != -1)
                         {
-                            done = SetupUnitMove(unit, cellUnit, moveTarget,
+                            done = SetupUnitMove(unit, cellUnit, moveTarget, true,
                                 [this, unit, target, player, basicOnDone](bool successful)
                                 {
                                     if(successful)
@@ -1455,7 +1455,7 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
 
                     if(mGameMap->FindAttackPosition(unit, action->ObjDst, dest))
                     {
-                        done = SetupUnitMove(unit, start, dest,
+                        done = SetupUnitMove(unit, start, dest, true,
                             [this, unit, target, player, basicOnDone](bool successful)
                             {
                                 if(successful)
@@ -2264,7 +2264,7 @@ bool ScreenGame::SetupUnitHeal(Unit * unit, GameObject * target, Player * player
 }
 
 bool ScreenGame::SetupUnitMove(Unit * unit, const Cell2D & start, const Cell2D & end,
-                               const std::function<void(bool)> & onDone)
+                               bool ignoreEnergy, const std::function<void(bool)> & onDone)
 {
     const auto path = mPathfinder->MakePath(start.row, start.col, end.row, end.col,
                                             sgl::ai::Pathfinder::ALL_OPTIONS);
@@ -2284,18 +2284,22 @@ bool ScreenGame::SetupUnitMove(Unit * unit, const Cell2D & start, const Cell2D &
     // do not move if energy is not enough
     const int cost = op->GetPathCost();
 
-    if(cost > unit->GetEnergy())
+    // check energy left before starting the move
+    if(!ignoreEnergy)
     {
-        delete op;
-        mHUD->ShowLocalWarningMessageAboveObject("not enough energy", 2.f, unit);
-        return false;
-    }
+        if(cost > unit->GetEnergy())
+        {
+            delete op;
+            mHUD->ShowLocalWarningMessageAboveObject("not enough energy", 2.f, unit);
+            return false;
+        }
 
-    if(cost > player->GetTurnEnergy())
-    {
-        delete op;
-        mHUD->ShowLocalWarningMessageAboveObject("not enough turn energy", 3.f, unit);
-        return false;
+        if(cost > player->GetTurnEnergy())
+        {
+            delete op;
+            mHUD->ShowLocalWarningMessageAboveObject("not enough turn energy", 3.f, unit);
+            return false;
+        }
     }
 
     if(mGameMap->MoveUnit(op))
@@ -2438,7 +2442,7 @@ void ScreenGame::HandleUnitMoveOnMouseUp(Unit * unit, const Cell2D & clickCell)
     // destination is walkable -> try to generate a path and move
     if(clickWalkable)
     {
-        SetupUnitMove(unit, selCell, clickCell);
+        SetupUnitMove(unit, selCell, clickCell, false);
         return ;
     }
 
@@ -2475,7 +2479,7 @@ void ScreenGame::HandleUnitMoveOnMouseUp(Unit * unit, const Cell2D & clickCell)
             return ;
         }
 
-        SetupUnitMove(unit, selCell, target,
+        SetupUnitMove(unit, selCell, target, false,
             [this, unit, clickCell](bool successful)
             {
                 if(successful)
@@ -2541,7 +2545,7 @@ void ScreenGame::HandleUnitBuildStructureOnMouseUp(Unit * unit, const Cell2D & c
             layer->AddObject(mTempStructIndicator, clickCell.row, clickCell.col);
 
             // move
-            SetupUnitMove(unit, cellUnit, target,
+            SetupUnitMove(unit, cellUnit, target, false,
                 [this, unit, clickCell](bool successful)
             {
                 if(successful)

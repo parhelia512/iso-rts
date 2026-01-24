@@ -148,7 +148,7 @@ private:
                            const std::function<void(bool)> & onDone = [](bool){});
     bool SetupUnitHeal(Unit * unit, GameObject * target, Player * player,
                        const std::function<void(bool)> & onDone = [](bool){});
-    bool SetupUnitMove(Unit * unit, const Cell2D & start, const Cell2D & end,
+    bool SetupUnitMove(Unit * unit, const Cell2D & start, const Cell2D & end, bool ignoreEnergy,
                        const std::function<void(bool)> & onDone = [](bool){});
     bool SetupConnectCellsAI(Unit * unit, const std::function<void(bool)> & onDone = [](bool){});
 
