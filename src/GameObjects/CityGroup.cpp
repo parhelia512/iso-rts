@@ -5,6 +5,9 @@
 #include "Player.h"
 #include "GameObjects/CityBlock.h"
 
+#include <sgl/media/AudioManager.h>
+#include <sgl/media/AudioPlayer.h>
+
 namespace game
 {
 
@@ -27,6 +30,13 @@ void CityGroup::UpdateCityConquered(Player * conqueror)
 
     // all border blocks are conquered -> city is conquered
     mConquered = true;
+
+    // play sound
+    if(conqueror->IsLocal())
+    {
+        auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+        ap->PlaySound("game/conquer-03.ogg");
+    }
 
     // conquer inner blocks
     for(auto o : objs)
