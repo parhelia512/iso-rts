@@ -77,8 +77,7 @@ public:
     void ClearSelection(Player * player);
     void SelectObject(GameObject * obj, Player * player);
 
-    void CenterCameraOverCell(int row, int col);
-    void CenterCameraOverObject(GameObject * obj);
+    void CenterCameraOverObject(const GameObject * obj);
 
     Player * GetActivePlayer() const;
 
@@ -175,8 +174,6 @@ private:
     void ClearTempStructIndicator();
 
     void UpdatePanelHit(const GameObject * attacker);
-
-    void CenterCameraOverPlayerBase();
 
     void UpdateCurrentCell();
 

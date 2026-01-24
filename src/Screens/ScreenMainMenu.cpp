@@ -341,45 +341,45 @@ void ScreenMainMenu::CreateChangelog()
 
     contY += title->GetHeight() + paddingV;
 
-    // NOTE commented out for future reference/usage
-    // CONTENT BLOCK: NEW FEATURES
+    // CONTENT BLOCK
     const int minBlockH = 0;
 
-    auto textNewFeat = new sgui::TextArea(contentW, minBlockH, font, true, content);
-    textNewFeat->SetText("NEW FEATURES\n"
-                         "- Show path overlay when planning unit's move.\n"
-                         "- Collecting blobs and diamonds show the number collected.\n"
-                         "- New SFX for laser weapon, unit and mini-unit.\n"
-                         "- Added multi-language support.\n"
-                         "- Added Italian and Spanish translations.\n"
-                         "- Units and stuctures can be upgraded after gaining enough"
-                         " experience to level up.\n"
-                         "- New conquerable structure: City.\n"
-                         "\nCHANGES\n"
-                         "- Unit movements are limited to visible cells.\n"
-                         "- New look&feel for tutorial panels.\n"
-                         "- New game starts directly playing first mission.\n"
-                         "- Quitting to planet map screen makes mission fail.\n"
-                         "- Improved attack range indicator visibility.\n"
-                         "\nFIXES\n"
-                         "- Fixed energy cost computation of unit moves.\n"
-                         "- Hide path overlay when not needed during tutorial.\n"
-                         "- Get rid of random focus area in top-left corner of planet map tutorial.\n"
-                         "- Fixed many memory leaks.\n"
-                         "- Fixed unit disappearing when building structure.\n"
-                         "- Fixed possible crash when AI collects lootbox.\n"
-                         "- Fixed possible crash when AI builds structure.\n"
-                         "- Fixed possible crash when ending turn right after the tutorial.\n"
-                         "- Fixed mission progression in planet map.\n"
-                         "- Fixed object actions panel appearing with no object selected.\n"
-                         "- Tutorial is not repeated after quitting it.\n"
-                         "- Fixed AI structures showing blinking icon.\n"
-                         "- Fixed Base not restoring energy on new turn.\n"
-                         "- Fixed energy consumption not refrecting conquered cells as it should.\n"
-                         "- Fixed state icons of destroyed object not destroyed.\n"
-                         );
-    textNewFeat->SetPosition(contX, contY);
-    textNewFeat->SetColor(colorContent);
+    auto text = new sgui::TextArea(contentW, minBlockH, font, true, content);
+    text->SetText("NEW FEATURES\n"
+                  "- Show path overlay when planning unit's move.\n"
+                  "- Collecting blobs and diamonds show the number collected.\n"
+                  "- New SFX for laser weapon, unit and mini-unit.\n"
+                  "- Added multi-language support.\n"
+                  "- Added Italian and Spanish translations.\n"
+                  "- Units and stuctures can be upgraded after gaining enough"
+                  " experience to level up.\n"
+                  "- New conquerable structure: City.\n"
+                  "- Camera automatically moves over visible AI units when they do something.\n"
+                  "\nCHANGES\n"
+                  "- Unit movements are limited to visible cells.\n"
+                  "- New look&feel for tutorial panels.\n"
+                  "- New game starts directly playing first mission.\n"
+                  "- Quitting to planet map screen makes mission fail.\n"
+                  "- Improved attack range indicator visibility.\n"
+                  "\nFIXES\n"
+                  "- Fixed energy cost computation of unit moves.\n"
+                  "- Hide path overlay when not needed during tutorial.\n"
+                  "- Get rid of random focus area in top-left corner of planet map tutorial.\n"
+                  "- Fixed many memory leaks.\n"
+                  "- Fixed unit disappearing when building structure.\n"
+                  "- Fixed possible crash when AI collects lootbox.\n"
+                  "- Fixed possible crash when AI builds structure.\n"
+                  "- Fixed possible crash when ending turn right after the tutorial.\n"
+                  "- Fixed mission progression in planet map.\n"
+                  "- Fixed object actions panel appearing with no object selected.\n"
+                  "- Tutorial is not repeated after quitting it.\n"
+                  "- Fixed AI structures showing blinking icon.\n"
+                  "- Fixed Base not restoring energy on new turn.\n"
+                  "- Fixed energy consumption not refrecting conquered cells as it should.\n"
+                  "- Fixed state icons of destroyed object not destroyed.\n"
+                  );
+    text->SetPosition(contX, contY);
+    text->SetColor(colorContent);
 
     // set content
     mDialogChangelog->SetContent(content);

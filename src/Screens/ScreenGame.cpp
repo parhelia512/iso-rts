@@ -178,7 +178,7 @@ ScreenGame::ScreenGame(Game * game)
     mPathIndicator = new PathIndicator(mLocalPlayer->GetFaction(), true);
 
     // set initial camera position
-    CenterCameraOverPlayerBase();
+    CenterCameraOverObject(mLocalPlayer->GetBase());
 
     // apply initial visibility to the game map
     mGameMap->InitVisibility(mLocalPlayer);
@@ -387,19 +387,16 @@ void ScreenGame::SelectObject(GameObject * obj, Player * player)
     sgl::sgui::Stage::Instance()->SetFocus();
 }
 
-void ScreenGame::CenterCameraOverCell(int row, int col)
+void ScreenGame::CenterCameraOverObject(const GameObject * obj)
 {
-    const sgl::core::Pointd2D pos = mIsoMap->GetCellPosition(row, col);
-    const int cX = pos.x + mIsoMap->GetTileWidth() * 0.5f;
-    const int cY = pos.y + mIsoMap->GetTileHeight() * 0.5f;
+    if(nullptr == obj)
+        return ;
+
+    const IsoObject * isoObj = obj->GetIsoObject();
+    const int cX = isoObj->GetX() + isoObj->GetWidth() / 2;
+    const int cY = isoObj->GetY() + isoObj->GetHeight() / 2;
 
     mCamController->CenterCameraToPoint(cX, cY);
-}
-
-void ScreenGame::CenterCameraOverObject(GameObject * obj)
-{
-    const GameMapCell * cell = obj->GetCell();
-    CenterCameraOverCell(cell->row, cell->col);
 
     // update current cell like if mouse was moved
     UpdateCurrentCell();
@@ -925,7 +922,7 @@ void ScreenGame::OnKeyUp(sgl::core::KeyboardEvent & event)
     else if(key == KeyboardEvent::KEY_B)
     {
         if(event.IsModShiftDown())
-            CenterCameraOverPlayerBase();
+            CenterCameraOverObject(mLocalPlayer->GetBase());
     }
 #ifdef DEV_MODE
     // DEBUG: SHIFT+N -> add Experience to selected object
@@ -1120,7 +1117,7 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
     {
         std::cout << "ScreenGame::ExecuteAIAction - AI " << turnAI << " - "
                   << action->GetTypeStr()
-                  << (done ? " DOING" : "")
+                  << (done ? " DOING" : " FAILED")
                   << " | ACT ID: " << action->actId
                   << " - PRIORITY: " << action->priority;
 
@@ -1178,7 +1175,7 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
                 // keep doing things
                 done = false;
 
-                PrintAction(turnAI, action, done, player);
+                PrintAction(turnAI, action, true, player);
             }
             break;
 
@@ -1484,7 +1481,12 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
         }
 
         if(done)
+        {
+            if(action->ObjSrc != nullptr && action->ObjSrc->IsVisible())
+                CenterCameraOverObject(action->ObjSrc);
+
             ai->RegisterActionInProgress(action);
+        }
         else
             delete action;
     }
@@ -3489,20 +3491,6 @@ void ScreenGame::UpdatePanelHit(const GameObject * attacker)
         mHUD->ShowPanelHit(attacker, objTarget);
     else
         mHUD->HidePanelHit();
-}
-
-void ScreenGame::CenterCameraOverPlayerBase()
-{
-    const Base * b = mLocalPlayer->GetBase();
-
-    if(nullptr == b)
-        return ;
-
-    const sgl::core::Pointd2D pos = mIsoMap->GetCellPosition(b->GetRow0(), b->GetCol0());
-    const int cX = pos.x + mIsoMap->GetTileWidth() * 0.5f;
-    const int cY = pos.y + mIsoMap->GetTileHeight() * 0.5f;
-
-    mCamController->CenterCameraToPoint(cX, cY);
 }
 
 void ScreenGame::UpdateCurrentCell()
