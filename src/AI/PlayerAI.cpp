@@ -625,6 +625,12 @@ void PlayerAI::AddActionsStructure(Structure * s)
     // upgrade when possible
     AddActionStructureUpgrade(s);
 
+    // do not consider unit if energy is too low
+    const float minEnergy = 5.f;
+
+    if(s->GetEnergy() < minEnergy || mPlayer->GetTurnEnergy() < minEnergy)
+        return ;
+
     // type specific actions
     const GameObjectTypeId objType = s->GetObjectType();
 
@@ -707,6 +713,12 @@ void PlayerAI::AddActionsUnit(Unit * u)
     // upgrade immediatly when possible
     AddActionUnitUpgrade(u);
 
+    // do not consider unit if energy is too low
+    const float minEnergy = 5.f;
+
+    if(u->GetEnergy() < minEnergy || mPlayer->GetTurnEnergy() < minEnergy)
+        return ;
+
     // ATTACK
     if(u->CanAttack())
     {
@@ -740,6 +752,10 @@ void PlayerAI::AddActionsUnit(Unit * u)
 
 void PlayerAI::AddActionUnitAttackEnemyUnit(Unit * u)
 {
+    // not enough energy to consider this action now
+    if(!u->HasEnergyForActionStep(GameObjectActionType::ATTACK))
+        return ;
+
     // nothing to do if there's no visible enemy units
     if(mVisibleEnemyUnits.empty())
         return ;
@@ -799,6 +815,10 @@ void PlayerAI::AddActionUnitAttackEnemyUnit(Unit * u)
 
 void PlayerAI::AddActionUnitAttackTrees(Unit * u)
 {
+    // not enough energy to consider this action now
+    if(!u->HasEnergyForActionStep(GameObjectActionType::ATTACK))
+        return ;
+
     if(mTrees.empty())
         return ;
 
@@ -871,6 +891,10 @@ void PlayerAI::AddActionUnitAttackTrees(Unit * u)
 
 void PlayerAI::AddActionUnitBuildStructure(Unit * u)
 {
+    // not enough energy to consider this action now
+    if(!u->HasEnergyForActionStep(GameObjectActionType::BUILD_STRUCTURE))
+        return ;
+
     // DEFINE INITIAL PRIORITY
     int priority = MAX_PRIORITY;
 
@@ -1492,6 +1516,10 @@ void PlayerAI::AddActionUnitCollectLootbox(Unit * u)
 
 void PlayerAI::AddActionUnitConnectStructure(Unit * u)
 {
+    // not enough energy to consider this action now
+    if(!u->HasEnergyForActionStep(GameObjectActionType::CONQUER_CELL))
+        return ;
+
     // DEFINE INITIAL PRIORITY
     int priority = MAX_PRIORITY;
 
@@ -1629,6 +1657,10 @@ void PlayerAI::AddActionUnitConquerResGen(Unit * u, ResourceType type)
 {
     // resource not supported
     if(type != RES_ENERGY && type != RES_MATERIAL1)
+        return ;
+
+    // not enough energy to consider this action now
+    if(!u->HasEnergyForActionStep(GameObjectActionType::CONQUER_STRUCTURE))
         return ;
 
     const int supportedRes = 2;
