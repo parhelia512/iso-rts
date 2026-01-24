@@ -35,6 +35,7 @@ ScreenMainMenu::ScreenMainMenu(Game * game)
 {
     using namespace sgl;
 
+    auto fm = graphic::FontManager::Instance();
     auto sm = utilities::StringManager::Instance();
 
     game->SetClearColor(0x12, 0x12, 0x12, 0xFF);
@@ -46,7 +47,6 @@ ScreenMainMenu::ScreenMainMenu(Game * game)
 
     const int screenW = graphic::Renderer::Instance()->GetWidth();
     const int screenH = graphic::Renderer::Instance()->GetHeight();
-
 
     // -- BACKGROUND --
     auto tm = graphic::TextureManager::Instance();
@@ -108,6 +108,29 @@ ScreenMainMenu::ScreenMainMenu(Game * game)
 
     btnWishlist->SetPosition(buttonX, buttonY);
 
+    // -- WARNING PANEL --
+    const int marginWarningB = 100;
+    auto panelWarning = new sgui::Image("UI/main_menu_warning_bg.png");
+    panelWarning->SetPosition(centerX - panelWarning->GetWidth() / 2,
+                              buttonY - panelWarning->GetHeight() - marginWarningB);
+
+    auto fontHeader = fm->GetFont("Lato-Regular.ttf", 26, graphic::Font::NORMAL);
+    auto fontText = fm->GetFont("Lato-Regular.ttf", 16, graphic::Font::NORMAL);
+
+    const int marginHeraderT = 10;
+    const int marginHeraderB = 10;
+    auto header = new sgui::Label(sm->GetCString("WARNING"), fontHeader, panelWarning);
+    header->SetColor(0xf5f5a3ff);
+    header->SetPosition((panelWarning->GetWidth() - header->GetWidth()) / 2, marginHeraderT);
+
+    const int marginTextH = 20;
+    const int textH = 60;
+    auto text = new sgui::TextArea(panelWarning->GetWidth() - (marginTextH * 2), textH,
+                               fontText, false, panelWarning);
+    text->SetColor(0xe5e5b3b2);
+    text->SetText(sm->GetCString("WARN_MM"));
+    text->SetPosition(marginTextH, header->GetY() + header->GetHeight() + marginHeraderB);
+
     // -- SOCIAL BUTTONS --
     auto panelSocial = new sgui::Widget;
 
@@ -166,7 +189,6 @@ ScreenMainMenu::ScreenMainMenu(Game * game)
     CreateChangelog();
 
     // VERSION LABEL
-    auto fm = graphic::FontManager::Instance();
     graphic::Font * fnt = fm->GetFont("Lato-Regular.ttf", 18, graphic::Font::NORMAL);
 
     const unsigned int colorVersion = 0xb2b2b2ff;
