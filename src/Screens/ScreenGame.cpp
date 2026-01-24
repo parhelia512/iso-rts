@@ -2622,11 +2622,10 @@ void ScreenGame::HandleUnitBuildWallOnMouseUp(Unit * unit, const Cell2D & clickC
                 auto op = new ObjectPath(unit, mIsoMap, mGameMap, this);
                 op->SetPath(pathMov);
 
-                const bool res = mGameMap->MoveUnit(op);
-
                 // movement failed
-                if(!res)
+                if(!mGameMap->MoveUnit(op))
                 {
+                    delete op;
                     onFail();
                     mHUD->ShowLocalWarningMessageAboveObject("move failed", 2.f, unit);
                     return;

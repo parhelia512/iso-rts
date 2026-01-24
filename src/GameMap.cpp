@@ -2122,14 +2122,13 @@ bool GameMap::MoveUnit(ObjectPath * path)
         return false;
 
     // start path
-    const bool started = path->Start();
-
-    if(started)
+    if(path->Start())
+    {
         mPathsToAdd.emplace_back(path);
+        return true;
+    }
     else
-        delete path;
-
-    return started;
+        return false;
 }
 
 bool GameMap::AbortMove(GameObject * obj)
@@ -4164,7 +4163,13 @@ bool GameMap::StartMiniUnitGroupMove()
     auto op = new ObjectPath(obj, mIsoMap, this, mScreenGame);
     op->SetPath(path);
 
-    return MoveUnit(op);
+    if(!MoveUnit(op))
+    {
+        delete op;
+        return false;
+    }
+    else
+        return true;
 }
 
 void GameMap::ContinueMiniUnitGroupMove(const ObjectPath * prevOP)
@@ -4274,6 +4279,7 @@ void GameMap::ContinueMiniUnitGroupMove(const ObjectPath * prevOP)
 
     if(!MoveUnit(op))
     {
+        delete op;
         ClearMiniUnitsGroupMoveFailed();
         SetNextMiniUnitsGroupToMove();
     }
