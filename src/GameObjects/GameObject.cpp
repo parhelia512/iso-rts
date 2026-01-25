@@ -17,8 +17,10 @@
 #include "Particles/UpdaterHitPoints.h"
 #include "Screens/ScreenGame.h"
 #include "Widgets/IconUpgrade.h"
+#include "Widgets/WarningMessage.h"
 
 #include <sgl/core/Math.h>
+#include <sgl/graphic/Camera.h>
 #include <sgl/graphic/ParticlesManager.h>
 #include <sgl/graphic/TextureManager.h>
 #include <sgl/media/AudioManager.h>
@@ -90,6 +92,8 @@ GameObject::GameObject(const ObjectData & data, const ObjectInitData & initData)
 
 GameObject::~GameObject()
 {
+    delete mWarnMessage;
+
     delete mIsoObj;
 
     delete mWeapon;
@@ -151,24 +155,43 @@ void GameObject::SetPosition(int x, int y)
 {
     mIsoObj->SetPosition(x, y);
 
-    if(mIconUpgrade != nullptr)
-        PositionIconUpgrade();
+    PositionIconUpgrade();
+    PositionWarningMessage();
 }
 
 void GameObject::SetX(int x)
 {
     mIsoObj->SetX(x);
 
-    if(mIconUpgrade != nullptr)
-        PositionIconUpgrade();
+    PositionIconUpgrade();
+    PositionWarningMessage();
 
 }
 void GameObject::SetY(int y)
 {
     mIsoObj->SetY(y);
 
-    if(mIconUpgrade != nullptr)
-        PositionIconUpgrade();
+    PositionIconUpgrade();
+    PositionWarningMessage();
+}
+
+void GameObject::ShowWarning(const char * text, float time)
+{
+    // show warning messages only for local player
+    if(!IsFactionLocal())
+        return ;
+
+    // create the first time
+    if(nullptr == mWarnMessage)
+        mWarnMessage = new WarningMessage;
+
+    mWarnMessage->ShowMessage(text, time);
+
+    PositionWarningMessage();
+
+    // play sound
+    auto player = sgl::media::AudioManager::Instance()->GetPlayer();
+    player->PlaySound("game/error_action_01.ogg");
 }
 
 void GameObject::SetSelected(bool val)
@@ -822,6 +845,30 @@ float GameObject::GetActionExperienceGain(GameObjectActionType action) const
     return ACTION_EXPERIENCE[action];
 }
 
+void GameObject::PositionWarningMessage()
+{
+    if(mWarnMessage == nullptr || !mWarnMessage->IsVisible())
+        return ;
+
+    const auto camera = sgl::graphic::Camera::GetDefaultCamera();
+
+    const int objX = mIsoObj->GetX();
+    const int objY = mIsoObj->GetY();
+    const int marginB = 5;
+
+    int messX = objX + (mIsoObj->GetWidth() - mWarnMessage->GetWidth()) / 2;
+    int messY = objY - mWarnMessage->GetHeight() - marginB;
+
+    if(camera->GetWorldToScreenX(messX) < 0)
+        messX = camera->GetX();
+
+    // move below object if can't see warning above it
+    if(camera->GetWorldToScreenY(messY) < 0)
+        messY = objY + mIsoObj->GetHeight() + marginB;
+
+    mWarnMessage->SetPosition(messX, messY);
+}
+
 void GameObject::ShowIconUpgrade()
 {
     // already showing it
@@ -849,6 +896,9 @@ void GameObject::HideIconUpgrade()
 
 void GameObject::PositionIconUpgrade()
 {
+    if(mIconUpgrade == nullptr)
+        return ;
+
     const int isoX = mIsoObj->GetX();
     const int isoY = mIsoObj->GetY();
     const int isoW = mIsoObj->GetWidth();

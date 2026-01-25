@@ -52,6 +52,7 @@ class IconUpgrade;
 class IsoObject;
 class ObjectInitData;
 class Player;
+class WarningMessage;
 class Weapon;
 struct GameMapCell;
 
@@ -88,6 +89,8 @@ public:
     void SetPosition(int x, int y);
     void SetX(int x);
     void SetY(int y);
+
+    void ShowWarning(const char * text, float time);
 
     bool IsStructure() const;
     bool CanBeConquered() const;
@@ -233,6 +236,8 @@ private:
     // NOTE no boundary check, assuming valid action
     virtual float GetActionExperienceGain(GameObjectActionType action) const;
 
+    void PositionWarningMessage();
+
     void ShowIconUpgrade();
     void HideIconUpgrade();
     void PositionIconUpgrade();
@@ -269,6 +274,8 @@ private:
     Player * mOwner = nullptr;
 
     const GameMapCell * mCell = nullptr;
+
+    WarningMessage * mWarnMessage = nullptr;
 
     IconUpgrade * mIconUpgrade = nullptr;
 

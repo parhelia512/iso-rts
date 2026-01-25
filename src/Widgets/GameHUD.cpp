@@ -38,7 +38,6 @@
 #include "Widgets/PanelSelfDestruction.h"
 #include "Widgets/PanelShotType.h"
 #include "Widgets/PanelTurnControl.h"
-#include "Widgets/WarningMessage.h"
 
 #include <sgl/graphic/Camera.h>
 #include <sgl/graphic/Renderer.h>
@@ -971,44 +970,6 @@ GameMapProgressBar * GameHUD::CreateProgressBarInCell(const Cell2D & cell, float
     pb->SetVisible(mScreen->mGameMap->IsCellVisibleToLocalPlayer(cell.row, cell.col));
 
     return pb;
-}
-
-void GameHUD::ShowLocalWarningAboveObject(const char * text, float time, const GameObject * obj)
-{
-    // show warning messages only for local player
-    if(!mScreen->IsCurrentTurnLocal())
-        return ;
-
-    // create the first time
-    if(nullptr == mWarnMessage)
-        mWarnMessage = new WarningMessage;
-
-    mWarnMessage->ShowMessage(text, time);
-
-    // positioning
-    const IsoObject * isoObj = obj->GetIsoObject();
-
-    const auto camera = sgl::graphic::Camera::GetDefaultCamera();
-
-    const int objX = isoObj->GetX();
-    const int objY = isoObj->GetY();
-    const int marginB = 5;
-
-    int messX = objX + (isoObj->GetWidth() - mWarnMessage->GetWidth()) / 2;
-    int messY = objY - mWarnMessage->GetHeight() - marginB;
-
-    if(camera->GetWorldToScreenX(messX) < 0)
-        messX = camera->GetX();
-
-    // move below object if can't see warning above it
-    if(camera->GetWorldToScreenY(messY) < 0)
-        messY = objY + isoObj->GetHeight() + marginB;
-
-    mWarnMessage->SetPosition(messX, messY);
-
-    // play sound
-    auto player = sgl::media::AudioManager::Instance()->GetPlayer();
-    player->PlaySound("game/error_action_01.ogg");
 }
 
 void GameHUD::HideDialogExploreTempleOutcome()

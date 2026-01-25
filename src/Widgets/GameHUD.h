@@ -43,7 +43,6 @@ class PanelTurnControl;
 class Player;
 class ScreenGame;
 class Temple;
-class WarningMessage;
 
 struct Cell2D;
 
@@ -117,8 +116,6 @@ public:
 
     GameMapProgressBar * CreateProgressBarInCell(const Cell2D & cell, float time, PlayerFaction faction);
 
-    void ShowLocalWarningAboveObject(const char * text, float time, const GameObject * obj);
-
 private:
     void HideDialogExploreTempleOutcome();
     void ShowDialogExploreTempleOutcome(Player * player, Temple * temple);
@@ -170,8 +167,6 @@ private:
     ButtonPanelSelectedObject * mButtonPanelSelObj = nullptr;
 
     sgl::sgui::Image * mGoalCompletedIcon = nullptr;
-
-    WarningMessage * mWarnMessage = nullptr;
 
     ScreenGame * mScreen = nullptr;
 
