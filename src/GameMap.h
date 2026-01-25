@@ -91,9 +91,6 @@ public:
 
     Player * GetCellOwner(unsigned int r, unsigned int c) const;
 
-    bool IsCellChanging(unsigned int r, unsigned int c) const;
-    void SetCellChanging(unsigned int r, unsigned int c, bool changing);
-
     void CreateObjectFromFile(unsigned int layerId, GameObjectTypeId type,
                               GameObjectVariantId variant, unsigned int faction,
                               unsigned int r0, unsigned int c0);
@@ -397,26 +394,6 @@ inline Player * GameMap::GetCellOwner(unsigned int r, unsigned int c) const
         return mCells[r * mCols + c].owner;
     else
         return nullptr;
-}
-
-/**
- * @brief Checks if a cell is in the process of changing (upgrade in progress).
- * @param r Row index, starting from 0
- * @param c Column index, starting from 0
- * @return TRUE if the cell is changing, FALSE otherwise
- */
-inline bool GameMap::IsCellChanging(unsigned int r, unsigned int c) const
-{
-    if(r < mRows && c < mCols)
-        return mCells[r * mCols + c].changing;
-    else
-        return false;
-}
-
-inline void GameMap::SetCellChanging(unsigned int r, unsigned int c, bool changing)
-{
-    if(r < mRows && c < mCols)
-        mCells[r * mCols + c].changing = changing;
 }
 
 inline void GameMap::RegisterCasualty(PlayerFaction killed) { ++mCasualties[killed]; }

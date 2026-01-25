@@ -306,8 +306,6 @@ void WallBuildPath::InstantAbort()
         const unsigned int nextRow = nextInd / mIsoMap->GetNumCols();
         const unsigned int nextCol = nextInd % mIsoMap->GetNumCols();
 
-        mGameMap->SetCellChanging(nextRow, nextCol, false);
-
         if(mProgressBar)
         {
             mProgressBar->DeleteLater();

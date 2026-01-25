@@ -884,10 +884,6 @@ bool GameMap::CanConquerCell(Unit * unit, const Cell2D & cell, Player * player)
     const int ind = r * mCols + c;
     GameMapCell & gcell = mCells[ind];
 
-    // already changing
-    if(gcell.changing)
-        return false;
-
     // player already owns the cell
     if(gcell.owner == player)
         return false;
@@ -914,9 +910,6 @@ void GameMap::StartConquerCell(const Cell2D & cell, Player * player)
 
     // take player's energy
     player->SumResource(Player::Stat::MATERIAL, -COST_CONQUEST_CELL);
-
-    // mark cell as changing
-    gcell.changing = true;
 }
 
 void GameMap::ConquerCell(const Cell2D & cell, Player * player)
@@ -935,9 +928,6 @@ void GameMap::ConquerCell(const Cell2D & cell, Player * player)
 
     // update player
     player->SumCells(1);
-
-    // reset cell's changing flag
-    gcell.changing = false;
 
     // propagate effects of conquest
     UpdateInfluencedCells(cell.row, cell.col);
@@ -1028,8 +1018,8 @@ bool GameMap::CanBuildStructure(Unit * unit, const Cell2D & cell, Player * playe
             const int idx = idx0 + c;
             const GameMapCell & gcell = mCells[idx];
 
-            // already changing or occupied
-            if(gcell.changing || !gcell.walkable)
+            // already occupied
+            if(!gcell.walkable)
             {
                 unit->ShowWarning(mSM->GetCString("WARN_CELL_NOT_VALID"), 3.f);
                 return false;
@@ -1043,22 +1033,6 @@ bool GameMap::CanBuildStructure(Unit * unit, const Cell2D & cell, Player * playe
 void GameMap::StartBuildStructure(const Cell2D & cell, Player * player, GameObjectTypeId st)
 {
     const ObjectData & data = GetObjectData(st);
-
-    // mark cell as changing
-    const unsigned int r0 = 1 + cell.row - data.GetRows();
-    const unsigned int c0 = 1 + cell.col - data.GetCols();
-
-    for(int r = r0; r <= cell.row; ++r)
-    {
-        const int idx0 = r * mCols;
-
-        for(int c = c0; c <= cell.col; ++c)
-        {
-            const int idx = idx0 + c;
-            GameMapCell & gcell = mCells[idx];
-            gcell.changing = true;
-        }
-    }
 
     // make player pay
     const auto & costs = data.GetCosts();
@@ -1086,9 +1060,6 @@ void GameMap::BuildStructure(const Cell2D & cell, Player * player, GameObjectTyp
     // assign owner
     Player * prevOwner = gcell.owner;
     gcell.owner = player;
-
-    // reset cell's changing flag
-    gcell.changing = false;
 
     GameObject * obj = CreateObject(REGULAR_OBJECTS, st, 0, player->GetFaction(), cell.row, cell.col, true);
 
@@ -1151,10 +1122,6 @@ bool GameMap::CanBuildWall(const Cell2D & cell, Player * player, unsigned int le
     const int ind = r * mCols + c;
     GameMapCell & gcell = mCells[ind];
 
-    // already changing
-    if(gcell.changing)
-        return false;
-
     // cell is full
     if(!gcell.walkable)
         return false;
@@ -1173,9 +1140,6 @@ void GameMap::StartBuildWall(const Cell2D & cell, Player * player, unsigned int 
 
     const int costMat = Wall::GetCostMaterial(level);
     player->SumResource(Player::Stat::MATERIAL, -costMat);
-
-    // mark cell as changing
-    gcell.changing = true;
 }
 
 void GameMap::BuildWall(const Cell2D & cell, Player * player, GameObjectTypeId planned)
@@ -1195,8 +1159,6 @@ void GameMap::BuildWall(const Cell2D & cell, Player * player, GameObjectTypeId p
     // update player
     player->SumCells(1);
 
-    // reset cell's changing flag
-    gcell.changing = false;
     // propagate effects of conquest
     UpdateInfluencedCells(cell.row, cell.col);
 
@@ -1307,10 +1269,7 @@ void GameMap::StartConquerStructure(const Cell2D & end, Player * player)
         const unsigned int indBase = r * mCols;
 
         for(int c = obj->GetCol1(); c <= obj->GetCol0(); ++c)
-        {
             const unsigned int ind = indBase + c;
-            mCells[ind].changing = true;
-        }
     }
 }
 
@@ -1322,10 +1281,7 @@ void GameMap::AbortConquerStructure(GameObject * target)
         const unsigned int indBase = r * mCols;
 
         for(int c = target->GetCol1(); c <= target->GetCol0(); ++c)
-        {
             const unsigned int ind = indBase + c;
-            mCells[ind].changing = false;
-        }
     }
 }
 
@@ -1345,7 +1301,6 @@ void GameMap::ConquerStructure(const Cell2D & end, Player * player)
         {
             const unsigned int ind = indBase + c;
             mCells[ind].owner = player;
-            mCells[ind].changing = false;
 
             UpdateInfluencedCells(r, c);
         }
@@ -1819,9 +1774,6 @@ void GameMap::StartCreateUnit(GameObjectTypeId ut, GameObject * gen,
     player->SumResource(Player::Stat::MATERIAL, -costs[RES_MATERIAL1]);
     player->SumResource(Player::Stat::DIAMONDS, -costs[RES_DIAMONDS]);
     player->SumResource(Player::Stat::BLOBS, -costs[RES_BLOBS]);
-
-    // mark cell as changing
-    gcell.changing = true;
 }
 
 Unit * GameMap::CreateUnit(GameObjectTypeId ut, const Cell2D & dest, Player * player)
@@ -1847,7 +1799,6 @@ Unit * GameMap::CreateUnit(GameObjectTypeId ut, const Cell2D & dest, Player * pl
     // update cell
     gcell.objTop = unit;
     gcell.walkable = false;
-    gcell.changing = false;
 
     mIsoMap->GetLayer(REGULAR_OBJECTS)->AddObject(unit->GetIsoObject(), r, c);
 
@@ -1918,7 +1869,6 @@ GameObject * GameMap::CreateMiniUnit(GameObjectTypeId ut, GameObject * gen, cons
     // update cell
     gcell.objTop = mu;
     gcell.walkable = false;
-    gcell.changing = false;
 
     mIsoMap->GetLayer(REGULAR_OBJECTS)->AddObject(mu->GetIsoObject(), dest.row, dest.col);
 
