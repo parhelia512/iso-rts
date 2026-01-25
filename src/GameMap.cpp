@@ -51,6 +51,7 @@
 #include <sgl/ai/Pathfinder.h>
 #include <sgl/media/AudioManager.h>
 #include <sgl/media/AudioPlayer.h>
+#include <sgl/utilities/StringManager.h>
 
 #include <algorithm>
 #include <cmath>
@@ -75,6 +76,7 @@ GameMap::GameMap(Game * game, ScreenGame * sg, IsoMap * isoMap)
     , mGame(game)
     , mScreenGame(sg)
     , mIsoMap(isoMap)
+    , mSM(sgl::utilities::StringManager::Instance())
 {
     SetSize(isoMap->GetNumRows(), isoMap->GetNumCols());
 
@@ -988,7 +990,10 @@ bool GameMap::CanBuildStructure(Unit * unit, const Cell2D & cell, Player * playe
 
     // out of bounds
     if((data.GetRows() - 1) > r || (data.GetCols() - 1) > c || r >= mRows || c >= mCols)
+    {
+        unit->ShowWarning(mSM->GetCString("WARN_CELL_NOT_VALID"), 3.f);
         return false;
+    }
 
     // check costs
     const auto & costs = data.GetCosts();
@@ -998,11 +1003,17 @@ bool GameMap::CanBuildStructure(Unit * unit, const Cell2D & cell, Player * playe
                         player->HasEnough(Player::BLOBS, costs[RES_BLOBS]);
 
     if(!costOk)
+    {
+        unit->ShowWarning(mSM->GetCString("WARN_LACK_RES"), 2.f);
         return false;
+    }
 
     // check unit's energy
     if(!unit->HasEnergyForActionStep(BUILD_STRUCTURE))
+    {
+        unit->ShowWarning(mSM->GetCString("WARN_NO_ENE"), 2.f);
         return false;
+    }
 
     // check cells
     const unsigned int r0 = 1 + cell.row - data.GetRows();
@@ -1019,7 +1030,10 @@ bool GameMap::CanBuildStructure(Unit * unit, const Cell2D & cell, Player * playe
 
             // already changing or occupied
             if(gcell.changing || !gcell.walkable)
+            {
+                unit->ShowWarning(mSM->GetCString("WARN_CELL_NOT_VALID"), 3.f);
                 return false;
+            }
         }
     }
 
@@ -1244,21 +1258,19 @@ bool GameMap::CanConquerStructure(Unit * unit, const Cell2D & end, Player * play
     const unsigned int r1 = static_cast<unsigned int>(end.row);
     const unsigned int c1 = static_cast<unsigned int>(end.col);
 
-    // no unit
-    if(nullptr == unit)
-        return false;
-
-    // not player's unit
-    if(unit->GetFaction() != player->GetFaction())
-        return false;
-
     // unit can't conquer
     if(!unit->CanConquer())
+    {
+        unit->ShowWarning(mSM->GetCString("WARN_CANT_CONQUER"), 2.f);
         return false;
+    }
 
     // unit doesn't have enough energy
     if(!unit->HasEnergyForActionStep(CONQUER_STRUCTURE))
+    {
+        unit->ShowWarning(mSM->GetCString("WARN_NO_ENE"), 2.f);
         return false;
+    }
 
     const int ind1 = r1 * mCols + c1;
     GameMapCell & gcell1 = mCells[ind1];
@@ -1269,14 +1281,13 @@ bool GameMap::CanConquerStructure(Unit * unit, const Cell2D & end, Player * play
 
     // target object can't be conquered
     if(!gcell1.objTop->CanBeConquered())
+    {
+       unit->ShowWarning(mSM->GetCString("WARN_CANT_BE_CONQUERED"), 3.f);
         return false;
+    }
 
     // player already owns the structure
     if(gcell1.objTop->GetFaction() == player->GetFaction())
-        return false;
-
-    // TEMP - no conquest while another is in progress
-    if(gcell1.changing)
         return false;
 
     return true;
@@ -1576,24 +1587,12 @@ void GameMap::HandleTempleExplorationOutcome(unsigned int outcome, Player * p, T
 
 bool GameMap::CanCreateUnit(GameObjectTypeId ut, GameObject * gen, Player * player)
 {
-    // generator is not owned by the player
-    if(gen->GetFaction() != player->GetFaction())
-        return false;
-
     // already has enough units
     if(player->GetNumUnits() == player->GetMaxUnits())
+    {
+        gen->ShowWarning(mSM->GetCString("WARN_TM_UNITS"), 2.f);
         return false;
-
-    // check if generator is valid
-    const GameObjectTypeId genType = gen->GetObjectType();
-
-    if(genType != ObjectData::TYPE_BASE && genType != ObjectData::TYPE_BARRACKS &&
-       genType != ObjectData::TYPE_HOSPITAL)
-        return false;
-
-    // generator is already busy
-    if(gen->IsBusy())
-       return false;
+    }
 
     // check if player has enough resources
     const auto & costs = GetObjectData(ut).GetCosts();
@@ -1602,7 +1601,10 @@ bool GameMap::CanCreateUnit(GameObjectTypeId ut, GameObject * gen, Player * play
        !player->HasEnough(Player::Stat::MATERIAL, costs[RES_MATERIAL1]) ||
        !player->HasEnough(Player::Stat::DIAMONDS, costs[RES_DIAMONDS]) ||
        !player->HasEnough(Player::Stat::BLOBS, costs[RES_BLOBS]))
+    {
+        gen->ShowWarning(mSM->GetCString("WARN_LACK_RES"), 2.f);
         return false;
+    }
 
     // check if there's at least 1 free cell where to place the new unit
     // NOTE this must be the last test or the code below needs to be changed
@@ -1646,6 +1648,7 @@ bool GameMap::CanCreateUnit(GameObjectTypeId ut, GameObject * gen, Player * play
     }
 
     // free cell test failed
+    gen->ShowWarning(mSM->GetCString("WARN_CANT_CELL"), 3.f);
     return false;
 }
 
@@ -1864,10 +1867,6 @@ Unit * GameMap::CreateUnit(GameObjectTypeId ut, const Cell2D & dest, Player * pl
 
 bool GameMap::CanCreateMiniUnit(GameObjectTypeId ut, GameObject * gen, int elements, Player * player)
 {
-    // generator is not owned by the player
-    if(gen->GetFaction() != player->GetFaction())
-        return false;
-
     // check if player has enough resources
     const auto & costs = GetObjectData(ut).GetCosts();
 
@@ -1875,10 +1874,16 @@ bool GameMap::CanCreateMiniUnit(GameObjectTypeId ut, GameObject * gen, int eleme
        !player->HasEnough(Player::Stat::MATERIAL, costs[RES_MATERIAL1] * elements) ||
        !player->HasEnough(Player::Stat::DIAMONDS, costs[RES_DIAMONDS] * elements) ||
        !player->HasEnough(Player::Stat::BLOBS, costs[RES_BLOBS] * elements))
+    {
+        gen->ShowWarning(mSM->GetCString("WARN_LACK_RES"), 2.f);
         return false;
+    }
 
     if(!gen->HasEnergyForActionStep(GameObjectActionType::SPAWN))
+    {
+        gen->ShowWarning(mSM->GetCString("WARN_NO_ENE"), 2.f);
         return false;
+    }
 
     return true;
 }

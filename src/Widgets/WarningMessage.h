@@ -17,6 +17,8 @@ public:
 
     void ShowMessage(const char * text, float time);
 
+    void FadeOut();
+
 private:
     void HandlePositionChanged() override;
 

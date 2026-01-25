@@ -13,6 +13,7 @@
 namespace sgl
 {
     namespace ai { class Pathfinder; }
+    namespace utilities { class StringManager; }
 }
 
 namespace game
@@ -312,6 +313,8 @@ private:
     ScreenGame * mScreenGame = nullptr;
 
     IsoMap * mIsoMap = nullptr;
+
+    sgl::utilities::StringManager * mSM = nullptr;
 
     unsigned int mRows = 0;
     unsigned int mCols = 0;

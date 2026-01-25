@@ -71,6 +71,14 @@ void WarningMessage::ShowMessage(const char * text, float time)
     SetEnabled(true);
 }
 
+void WarningMessage::FadeOut()
+{
+    const float timeFO = 0.25f;
+
+    if(mTimer > timeFO)
+        mTimer = timeFO;
+}
+
 void WarningMessage::HandlePositionChanged()
 {
     UpdatePositions();

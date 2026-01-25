@@ -1907,13 +1907,9 @@ bool ScreenGame::SetupNewMiniUnits(GameObjectTypeId type, GameObject * gen, Game
                                    Player * player, int squads, int elements,
                                    const std::function<void(bool)> & onDone)
 {
-    // TODO do checks here
     // check if create is possible
     if(!mGameMap->CanCreateMiniUnit(type, gen, elements, player))
-    {
-        gen->ShowWarning(mSM->GetCString("WARN_CANT_MU"), 3.f);
         return false;
-    }
 
     // find where to build
     const Cell2D gc(gen->GetRow0(), gen->GetCol0());
@@ -1987,13 +1983,9 @@ bool ScreenGame::SetupNewMiniUnits(GameObjectTypeId type, GameObject * gen, Game
 bool ScreenGame::SetupNewUnit(GameObjectTypeId type, GameObject * gen, Player * player,
                               const std::function<void(bool)> & onDone)
 {
-    // TODO do checks here
     // check if create is possible
     if(!mGameMap->CanCreateUnit(type, gen, player))
-    {
-        gen->ShowWarning(mSM->GetCString("WARN_CANT_UNIT"), 3.f);
         return false;
-    }
 
     Cell2D cell = mGameMap->GetNewUnitDestination(gen);
 
@@ -2053,13 +2045,9 @@ bool ScreenGame::SetupNewUnit(GameObjectTypeId type, GameObject * gen, Player * 
 bool ScreenGame::SetupStructureConquest(Unit * unit, const Cell2D & start, const Cell2D & end,
                                         Player * player, const std::function<void(bool)> & onDone)
 {
-    // TODO do checks here
     // check if conquest is possible
     if(!mGameMap->CanConquerStructure(unit, end, player))
-    {
-        unit->ShowWarning("object can't be conquered", 3.f);
         return false;
-    }
 
     const GameMapCell & gameCell = mGameMap->GetCell(end.row, end.col);
     GameObject * target = gameCell.objTop;
@@ -2131,13 +2119,9 @@ bool ScreenGame::SetupStructureBuilding(Unit * unit, const Cell2D & cellTarget, 
 {
     const GameObjectTypeId st = unit->GetStructureToBuild();
 
-    // TODO do checks here
     // check if building is possible
     if(!mGameMap->CanBuildStructure(unit, cellTarget, player, st))
-    {
-        unit->ShowWarning("unit can't build structure", 3.f);
         return false;
-    }
 
     mGameMap->StartBuildStructure(cellTarget, player, st);
 

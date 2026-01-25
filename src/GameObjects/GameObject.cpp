@@ -155,24 +155,41 @@ void GameObject::SetPosition(int x, int y)
 {
     mIsoObj->SetPosition(x, y);
 
-    PositionIconUpgrade();
-    PositionWarningMessage();
+    if(mIconUpgrade != nullptr)
+        PositionIconUpgrade();
+
+    if(mWarnMessage != nullptr && mWarnMessage->IsVisible())
+    {
+        mWarnMessage->FadeOut();
+        PositionWarningMessage();
+    }
 }
 
 void GameObject::SetX(int x)
 {
     mIsoObj->SetX(x);
 
-    PositionIconUpgrade();
-    PositionWarningMessage();
+    if(mIconUpgrade != nullptr)
+        PositionIconUpgrade();
 
+    if(mWarnMessage != nullptr && mWarnMessage->IsVisible())
+    {
+        mWarnMessage->FadeOut();
+        PositionWarningMessage();
+    }
 }
 void GameObject::SetY(int y)
 {
     mIsoObj->SetY(y);
 
-    PositionIconUpgrade();
-    PositionWarningMessage();
+    if(mIconUpgrade != nullptr)
+        PositionIconUpgrade();
+
+    if(mWarnMessage != nullptr && mWarnMessage->IsVisible())
+    {
+        mWarnMessage->FadeOut();
+        PositionWarningMessage();
+    }
 }
 
 void GameObject::ShowWarning(const char * text, float time)
@@ -847,9 +864,6 @@ float GameObject::GetActionExperienceGain(GameObjectActionType action) const
 
 void GameObject::PositionWarningMessage()
 {
-    if(mWarnMessage == nullptr || !mWarnMessage->IsVisible())
-        return ;
-
     const auto camera = sgl::graphic::Camera::GetDefaultCamera();
 
     const int objX = mIsoObj->GetX();
@@ -896,9 +910,6 @@ void GameObject::HideIconUpgrade()
 
 void GameObject::PositionIconUpgrade()
 {
-    if(mIconUpgrade == nullptr)
-        return ;
-
     const int isoX = mIsoObj->GetX();
     const int isoY = mIsoObj->GetY();
     const int isoW = mIsoObj->GetWidth();
