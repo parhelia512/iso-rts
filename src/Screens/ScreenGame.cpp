@@ -426,6 +426,14 @@ void ScreenGame::SetPause(bool paused)
 {
     mPaused = paused;
 
+    // pause sounds that are playing
+    auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+
+    if(mPaused)
+        ap->PauseSounds();
+    else
+        ap->ResumeSounds();
+
     mHUD->SetEnabled(!paused);
 
     mHUD->UpdatePanelTurnControl();
