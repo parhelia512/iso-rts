@@ -93,6 +93,11 @@ Game::Game(int argc, char * argv[])
 
     graphic::FontManager::Create();
 
+#ifdef DEBUG
+    graphic::ModuleGraphic::PrintVideoInfo();
+    std::cout << std::endl;
+#endif
+
     // -- State Manager --
     mStateMan = new utilities::StateManager;
 
