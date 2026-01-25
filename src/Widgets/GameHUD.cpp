@@ -973,7 +973,7 @@ GameMapProgressBar * GameHUD::CreateProgressBarInCell(const Cell2D & cell, float
     return pb;
 }
 
-void GameHUD::ShowLocalWarningMessageAboveObject(const char * text, float time, const GameObject * obj)
+void GameHUD::ShowLocalWarningAboveObject(const char * text, float time, const GameObject * obj)
 {
     // show warning messages only for local player
     if(!mScreen->IsCurrentTurnLocal())

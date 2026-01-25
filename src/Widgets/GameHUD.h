@@ -117,7 +117,7 @@ public:
 
     GameMapProgressBar * CreateProgressBarInCell(const Cell2D & cell, float time, PlayerFaction faction);
 
-    void ShowLocalWarningMessageAboveObject(const char * text, float time, const GameObject * obj);
+    void ShowLocalWarningAboveObject(const char * text, float time, const GameObject * obj);
 
 private:
     void HideDialogExploreTempleOutcome();

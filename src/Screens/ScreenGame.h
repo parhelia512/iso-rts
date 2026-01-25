@@ -16,6 +16,7 @@ namespace sgl
 {
     namespace ai { class Pathfinder; }
     namespace graphic { class ParticlesManager; }
+    namespace utilities { class StringManager; }
 }
 
 namespace game
@@ -222,6 +223,8 @@ private:
     unsigned int mIdOnSettingsChanged = 0;
 
     sgl::graphic::ParticlesManager * mPartMan = nullptr;
+
+    sgl::utilities::StringManager * mSM = nullptr;
 
     // UI
     GameHUD * mHUD = nullptr;
