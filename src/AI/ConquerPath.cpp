@@ -77,6 +77,9 @@ void ConquerPath::InstantAbort()
     {
         mProgressBar->DeleteLater();
         mProgressBar = nullptr;
+
+        auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+        ap->StopSound("game/conquer-01.ogg");
     }
 
     // clear indicators

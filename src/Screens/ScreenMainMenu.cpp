@@ -377,6 +377,7 @@ void ScreenMainMenu::CreateChangelog()
                   "- Fixed Base not restoring energy on new turn.\n"
                   "- Fixed energy consumption not refrecting conquered cells as it should.\n"
                   "- Fixed state icons of destroyed object not destroyed.\n"
+                  "- Fixed cancelling some actions ahs no effect.\n"
                   );
     text->SetPosition(contX, contY);
     text->SetColor(colorContent);

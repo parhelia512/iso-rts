@@ -312,6 +312,9 @@ void WallBuildPath::InstantAbort()
         {
             mProgressBar->DeleteLater();
             mProgressBar = nullptr;
+
+            auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+            ap->StopSound("game/build-02.ogg");
         }
     }
 

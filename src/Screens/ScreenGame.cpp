@@ -1525,6 +1525,8 @@ void ScreenGame::ClearObjectAction(GameObject * obj)
 
 void ScreenGame::CancelObjectAction(GameObject * obj)
 {
+    auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+
     auto it = mObjActions.begin();
 
     // search selected object in active actions
@@ -1537,15 +1539,21 @@ void ScreenGame::CancelObjectAction(GameObject * obj)
             const GameObjectTypeId objType = act.obj->GetObjectType();
             const GameObjectActionType actType = act.type;
 
-            // object is a Base
-            if(objType == ObjectData::TYPE_BASE)
+            // spawn mini-units
+            if(actType == GameObjectActionType::SPAWN)
             {
-                // building a new unit
-                if(actType == GameObjectActionType::BUILD_UNIT)
-                    act.progressBar->DeleteLater();
+                act.progressBar->DeleteLater();
+                ap->StopSound("game/build-04.ogg");
             }
+            // building a new unit
+            else if(actType == GameObjectActionType::BUILD_UNIT)
+            {
+                act.progressBar->DeleteLater();
+                ap->StopSound("game/build-03.ogg");
+            }
+
             // object is a Unit
-            else if(act.obj->GetObjectCategory() == ObjectData::CAT_UNIT)
+            if(act.obj->GetObjectCategory() == ObjectData::CAT_UNIT)
             {
                 if(actType == GameObjectActionType::MOVE)
                     mGameMap->AbortMove(obj);
@@ -1557,11 +1565,18 @@ void ScreenGame::CancelObjectAction(GameObject * obj)
                 {
                     mGameMap->AbortConquerStructure(act.target);
                     act.progressBar->DeleteLater();
+                    ap->StopSound("game/conquer-02.ogg");
                 }
                 else if(actType == GameObjectActionType::ATTACK)
                 {
                     auto unit = static_cast<Unit *>(obj);
                     unit->ClearTargetAttack();
+                }
+                // building a structure
+                else if(actType == GameObjectActionType::BUILD_STRUCTURE)
+                {
+                    act.progressBar->DeleteLater();
+                    ap->StopSound("game/build-01.ogg");
                 }
                 else if(actType == GameObjectActionType::HEAL)
                 {
