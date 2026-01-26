@@ -22,7 +22,7 @@ ScreenNewGame::ScreenNewGame(Game * game)
 {
     const int MAX_UNITS0 = 6;
     const int startEnergy = 1000;
-    const int startMaterial = 500;
+    const int startMaterial = 750;
     const int startMoney = 1000;
     const int startDiamonds = 10;
     const int startBlobs = 10;
