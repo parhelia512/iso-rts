@@ -932,7 +932,7 @@ void PlayerAI::AddActionUnitBuildTower(Unit * u)
     int priority = MAX_PRIORITY;
 
     // decrease priority based on unit's energy
-    const float bonusEnergy = -30.f;
+    const float bonusEnergy = -25.f;
     priority += GetUnitPriorityBonusEnergy(u, bonusEnergy);
 
     // decrease priority based on unit's health
@@ -974,11 +974,11 @@ void PlayerAI::AddActionUnitBuildTower(Unit * u)
         typePriority = priority;
 
         // reduce priority based on available resources
-        const float bonusRes = -15.f;
+        const float bonusRes = -10.f;
         typePriority += GetPriorityBonusStructureBuildCost(type, bonusRes);
 
         // reduce priority based on same existing structures
-        const float bonusSameStruct = -10.f;
+        const float bonusSameStruct = -5.f;
         typePriority += GetPriorityBonusSameStructureCreated(type, bonusSameStruct);
 
         if(typePriority > bestPriority)
@@ -1262,12 +1262,13 @@ void PlayerAI::AddActionUnitBuildRadarStructure(Unit * u, GameObjectTypeId struc
     };
     priority += GetPriorityBonusStructureBuildCost(structType, bonusRes.at(structType));
 
+    std::cout << "PlayerAI::AddActionUnitBuildRadarStructure - A priority:" << priority << std::endl;
+
     // reduce priority based on number or existing structure
-    if(ObjectData::TYPE_RADAR_TOWER == structType)
-    {
-        const float bonusExist = -15.f;
-        priority += GetPriorityBonusSameStructureCreated(structType, bonusExist);
-    }
+    const float bonusExist = -15.f;
+    priority += GetPriorityBonusSameStructureCreated(structType, bonusExist);
+
+    std::cout << "PlayerAI::AddActionUnitBuildRadarStructure - B priority:" << priority << std::endl;
 
     // check if below current priority threshold
     if(priority < mMinPriority)
@@ -2100,16 +2101,36 @@ int PlayerAI::GetPriorityBonusStructureBuildCost(GameObjectTypeId t, float bonus
     float b = 0.f;
 
     if(costs[RES_ENERGY] > 0)
-        b += bonus * costs[RES_ENERGY] / energy;
+    {
+        if(energy > 0)
+            b += bonus * costs[RES_ENERGY] / energy;
+        else
+            b += bonus;
+    }
 
     if(costs[RES_MATERIAL1] > 0)
-        b += bonus * costs[RES_MATERIAL1] / material;
+    {
+        if(material > 0)
+            b += bonus * costs[RES_MATERIAL1] / material;
+        else
+            b += bonus;
+    }
 
     if(costs[RES_BLOBS] > 0)
-        b += bonus * costs[RES_BLOBS] / blobs;
+    {
+        if(blobs > 0)
+            b += bonus * costs[RES_BLOBS] / blobs;
+        else
+            b += bonus;
+    }
 
     if(costs[RES_DIAMONDS] > 0)
-        b += bonus * costs[RES_DIAMONDS] / diamonds;
+    {
+        if(diamonds > 0)
+            b += bonus * costs[RES_DIAMONDS] / diamonds;
+        else
+            b += bonus;
+    }
 
     return std::roundf(b);
 }
