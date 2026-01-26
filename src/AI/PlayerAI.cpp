@@ -346,117 +346,91 @@ bool PlayerAI::FindWhereToBuildTower(Unit * unit, Cell2D & target) const
     // DECIDE WHERE TO LOOK FOR BUILDING AREA
     const Cell2D cellUnit(unit->GetRow0(), unit->GetCol0());
 
+    // std::cout << "PlayerAI::FindWhereToBuildTower - unit: " << unit->GetRow0() << ","
+    //           << unit->GetCol0() << std::endl;
+
     // define current base area
     const int mapRows = mGm->GetNumRows();
     const int mapCols = mGm->GetNumCols();
     const int maxDist = mapRows + mapCols;
     const Cell2D mapCenter(mapRows / 2, mapCols / 2);
 
-    enum AreaId : unsigned int
+    const unsigned int numStruct = mOwnStructures.size();
+    std::vector<int> scores(numStruct, MAX_PRIORITY);
+
+    const int radius = 3;
+
+    for(unsigned int i = 0; i < numStruct; ++i)
     {
-        AREA_TL,
-        AREA_TR,
-        AREA_BL,
-        AREA_BR,
+        const auto s = mOwnStructures[i];
+        const auto st = s->GetObjectType();
 
-        AREA_C,
+        // ignore other towers
+        if(st == ObjectData::TYPE_BUNKER || st == ObjectData::TYPE_DEFENSIVE_TOWER)
+        {
+            scores[i] = 0;
+            continue;
+        }
 
-        NUM_AREAS,
-        NUM_CORNERS = NUM_AREAS - 1,
-    };
+        // penalize structures already surrounded by towers
+        const Cell2D tl(s->GetRow1() - radius, s->GetCol1() - radius);
+        const Cell2D br(s->GetRow0() + radius, s->GetCol0() + radius);
+        const int bonusOthers = -20;
+        scores[i] += GetNumStructuresInArea(tl, br, type) * bonusOthers;
 
-    std::vector<Cell2D> areas(NUM_AREAS);
-
-    areas[AREA_TL] = Cell2D(mapRows, mapCols);
-    areas[AREA_BR] = Cell2D(-1, -1);
-
-    for(auto s : mOwnStructures)
-    {
-        // set TL
-        if(s->GetRow1() < areas[AREA_TL].row)
-            areas[AREA_TL].row = s->GetRow1();
-        if(s->GetCol1() < areas[AREA_TL].col)
-            areas[AREA_TL].col = s->GetCol1();
-
-        // set BR
-        if(s->GetRow0() > areas[AREA_BR].row)
-            areas[AREA_BR].row = s->GetRow0();
-        if(s->GetCol0() > areas[AREA_BR].col)
-            areas[AREA_BR].col = s->GetCol0();
+        // penalize structures that are far
+        const int dist = mGm->ApproxDistance(unit, s);
+        const int bonusDist = -30;
+        scores[i] += bonusDist * dist / maxDist;
     }
 
-    if(areas[AREA_BR].row == -1)
-    {
-        const Cell2D uc(unit->GetRow0(), unit->GetCol0());
-        areas[AREA_TL] = uc;
-        areas[AREA_BR] = uc;
-    }
+    // for(unsigned int i = 0; i < numStruct; ++i)
+    //     std::cout << "PlayerAI::FindWhereToBuildTower - structure: "
+    //               << mOwnStructures[i]->GetRow0() << "," << mOwnStructures[i]->GetCol0()
+    //               << " score[" << i << "] = " << scores[i] << std::endl;
 
-    areas[AREA_TR] = Cell2D(areas[AREA_TL].row, areas[AREA_BR].col);
-    areas[AREA_BL] = Cell2D(areas[AREA_BR].row, areas[AREA_TL].col);
-    const Cell2D areasC((areas[AREA_TL].row + areas[AREA_BR].row) / 2,
-                        (areas[AREA_TL].col + areas[AREA_BR].col) / 2);
-
-    std::vector<int> scores(NUM_AREAS, MAX_PRIORITY);
-
-    // bonus other towers in area
-    const int bonusTowers = -2;
-
-    scores[AREA_TL] += bonusTowers * GetNumStructuresInArea(areas[AREA_TL], areasC, type);
-    scores[AREA_TR] += bonusTowers * GetNumStructuresInArea(Cell2D(areas[AREA_TL].row, areasC.col),
-                                                            Cell2D(areasC.row, areas[AREA_TL].col),
-                                                            type);
-    scores[AREA_BL] += bonusTowers * GetNumStructuresInArea(Cell2D(areasC.row, areas[AREA_BL].col),
-                                                            Cell2D(areas[AREA_BL].row, areasC.col),
-                                                            type);
-    scores[AREA_BR] += bonusTowers * GetNumStructuresInArea(areasC, areas[AREA_BR], type);
-
-    // bonus distance from map center
-    const int bonusDistCenter = -35;
-
-    for(unsigned int i = 0; i < NUM_CORNERS; ++i)
-    {
-        scores[i] += bonusDistCenter *
-                     (std::abs(mapCenter.row - areas[i].row) +
-                      std::abs(mapCenter.col - areas[i].col)) / maxDist;
-    }
-
-    // bonus distance from unit
-    const int bonusDistUnit = -20;
-
-    for(unsigned int i = 0; i < NUM_CORNERS; ++i)
-    {
-        scores[i] += bonusDistUnit *
-                     (std::abs(cellUnit.row - areas[i].row) +
-                      std::abs(cellUnit.col - areas[i].col)) / maxDist;
-    }
-
-    // decide best area
-    unsigned int bestArea = NUM_AREAS;
     int bestScore = 0;
+    unsigned int bestInd = numStruct;
 
-    for(unsigned int i = 0; i < NUM_CORNERS; ++i)
+    for(unsigned int i = 0; i < numStruct; ++i)
     {
         if(scores[i] > bestScore)
         {
-            bestArea = i;
             bestScore = scores[i];
+            bestInd = i;
         }
     }
 
-    // find suitable spot close to cellStart
-    const int maxRadius = 5;
+    if(bestInd == numStruct)
+        return false;
 
-    // first try to find an area big enough to have all sides free
-    if(mGm->FindFreeArea(areas[bestArea], rows + 2, cols + 2, maxRadius, target))
+    // find suitable spot close to cellStart
+    const auto bestStructure = mOwnStructures[bestInd];
+    const int areaRows = rows + 2;
+    const int areaCols = cols + 2;
+
+    // start searching from corner closest to unit
+    const Cell2D structTL(bestStructure->GetRow1(), bestStructure->GetCol1());
+    const Cell2D structBR(bestStructure->GetRow0(), bestStructure->GetCol0());
+
+    const Cell2D start = (mGm->ApproxDistance(cellUnit, structTL) >
+                          mGm->ApproxDistance(cellUnit, structBR)) ?
+                         structBR : structTL;
+
+    // try to find a bigger area first
+    if(mGm->FindFreeArea(start, areaRows, areaCols, radius, target))
     {
         target.row -= 1;
         target.col -= 1;
 
+        // std::cout << "PlayerAI::FindWhereToBuildTower - start: "
+        //           << start.row << "," << start.col << " - target : "
+        //           << target.row << "," << target.col << std::endl;
+
         return true;
     }
     else
-        return mGm->FindFreeArea(areas[bestArea], rows, cols, maxRadius, target);
+        return mGm->FindFreeArea(start, rows, cols, radius, target);
 }
 
 void PlayerAI::ClearActionsDone()
@@ -967,7 +941,7 @@ void PlayerAI::AddActionUnitBuildTower(Unit * u)
 
     // decrease priority based on low number of structures
     const unsigned int numStruct = mOwnStructures.size();
-    const unsigned int minStructs = 5;
+    const unsigned int minStructs = 4;
 
     if(numStruct < minStructs)
     {
