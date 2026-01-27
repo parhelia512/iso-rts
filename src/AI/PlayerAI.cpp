@@ -2137,7 +2137,11 @@ int PlayerAI::GetPriorityBonusStructureBuildCost(GameObjectTypeId t, float bonus
 
 int PlayerAI::GetPriorityBonusSameStructureCreated(GameObjectTypeId t, float bonus) const
 {
-    const int numSame = mPlayer->GetNumStructuresByType(t);
+    int numSame = 0;
+
+    for(auto o : mOwnStructures)
+        numSame += (o->GetObjectType() == t);
+
     return std::roundf(numSame * bonus);
 }
 
