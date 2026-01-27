@@ -1953,16 +1953,36 @@ void PlayerAI::AddActionCreateUnit(Structure * gen, const std::vector<GameObject
         const float bonusRes = -10.f;
 
         if(costs[RES_ENERGY] > 0)
-            typePriority += std::roundf(bonusRes * costs[RES_ENERGY] / energy);
+        {
+            if(energy > 0)
+                typePriority += std::roundf(bonusRes * costs[RES_ENERGY] / energy);
+            else
+                typePriority += bonusRes;
+        }
 
         if(costs[RES_MATERIAL1] > 0)
-            typePriority += std::roundf(bonusRes * costs[RES_MATERIAL1] / material);
+        {
+            if(material > 0)
+                typePriority += std::roundf(bonusRes * costs[RES_MATERIAL1] / material);
+            else
+                typePriority += bonusRes;
+        }
 
         if(costs[RES_BLOBS] > 0)
-            typePriority += std::roundf(bonusRes * costs[RES_BLOBS] / blobs);
+        {
+            if(blobs > 0)
+                typePriority += std::roundf(bonusRes * costs[RES_BLOBS] / blobs);
+            else
+                typePriority += bonusRes;
+        }
 
         if(costs[RES_DIAMONDS] > 0)
-            typePriority += std::roundf(bonusRes * costs[RES_DIAMONDS] / diamonds);
+        {
+            if(diamonds > 0)
+                typePriority += std::roundf(bonusRes * costs[RES_DIAMONDS] / diamonds);
+            else
+                typePriority += bonusRes;
+        }
 
         if(typePriority > bestPriority)
         {
@@ -2082,7 +2102,7 @@ int PlayerAI::GetUnitPriorityBonusDistance(const Unit * u, int dist, float bonus
     const float wAbs = 1.f - wRel;
 
     // bonuses
-    const float bonusRelDist = bonus * energyTot / energyUnit;
+    const float bonusRelDist = energyUnit > 0 ? bonus * energyTot / energyUnit : bonus;
     const float bonusAbsDist = bonus * dist / maxDist;
 
     return std::roundf(bonusRelDist * wRel + bonusAbsDist * wAbs);
