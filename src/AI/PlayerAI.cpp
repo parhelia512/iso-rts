@@ -971,6 +971,9 @@ void PlayerAI::AddActionUnitBuildTower(Unit * u)
 
     for(GameObjectTypeId type : towerIds)
     {
+        if(!HasPlayerResourcesToBuild(type))
+            continue;
+
         typePriority = priority;
 
         // reduce priority based on available resources
