@@ -956,9 +956,9 @@ void PlayerAI::AddActionUnitBuildTower(Unit * u)
     // define towers to build
     std::vector<GameObjectTypeId> towerIds;
 
-    if(mPlayer->IsStructureAvailable(ObjectData::TYPE_BUNKER))
+     if(mPlayer->IsStructureAvailable(ObjectData::TYPE_BUNKER))
         towerIds.emplace_back(ObjectData::TYPE_BUNKER);
-    else if(mPlayer->IsStructureAvailable(ObjectData::TYPE_DEFENSIVE_TOWER))
+     if(mPlayer->IsStructureAvailable(ObjectData::TYPE_DEFENSIVE_TOWER))
         towerIds.emplace_back(ObjectData::TYPE_DEFENSIVE_TOWER);
 
     // no tower available
@@ -974,8 +974,10 @@ void PlayerAI::AddActionUnitBuildTower(Unit * u)
         typePriority = priority;
 
         // reduce priority based on available resources
-        const float bonusRes = -10.f;
-        typePriority += GetPriorityBonusStructureBuildCost(type, bonusRes);
+        if(type == ObjectData::TYPE_DEFENSIVE_TOWER)
+            typePriority += GetPriorityBonusStructureBuildCost(type, -5.f);
+        else
+            typePriority += GetPriorityBonusStructureBuildCost(type, -10.f);
 
         // reduce priority based on same existing structures
         const float bonusSameStruct = -5.f;
@@ -1262,13 +1264,9 @@ void PlayerAI::AddActionUnitBuildRadarStructure(Unit * u, GameObjectTypeId struc
     };
     priority += GetPriorityBonusStructureBuildCost(structType, bonusRes.at(structType));
 
-    std::cout << "PlayerAI::AddActionUnitBuildRadarStructure - A priority:" << priority << std::endl;
-
     // reduce priority based on number or existing structure
     const float bonusExist = -15.f;
     priority += GetPriorityBonusSameStructureCreated(structType, bonusExist);
-
-    std::cout << "PlayerAI::AddActionUnitBuildRadarStructure - B priority:" << priority << std::endl;
 
     // check if below current priority threshold
     if(priority < mMinPriority)
