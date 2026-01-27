@@ -2,6 +2,8 @@
 
 #include "GameData.h"
 
+#include <cassert>
+
 namespace game
 {
 
@@ -149,7 +151,7 @@ void ObjectsDataRegistry::InitObjectData()
                    { 150, 150, 0, 0 },
                    { ID_STRUCT_RADAR_TOWER_F1, ID_STRUCT_RADAR_TOWER_F2,
                      ID_STRUCT_RADAR_TOWER_F3, ID_STRUCT_RADAR_TOWER }, SpriteFileStructures,
-                   ObjectData::TYPE_RADAR_STATION, ObjectData::CAT_STRUCTURE,
+                   ObjectData::TYPE_RADAR_TOWER, ObjectData::CAT_STRUCTURE,
                    OCS_RADAR, OCAT_TECHNOLOGY, WeaponData::TYPE_NULL, 1, 1));
 
     mDataObjects.emplace(ObjectData::TYPE_RESEARCH_CENTER,
@@ -353,6 +355,11 @@ void ObjectsDataRegistry::InitObjectData()
                      WALL_GATE_L1_F3_HORIZ_CLOSED }, SpriteFileWalls,
                    ObjectData::TYPE_WALL_GATE, ObjectData::CAT_STRUCTURE,
                    OCS_WALL, OCAT_DEFENSE, WeaponData::TYPE_NULL, 1, 1));
+
+#ifdef DEV_MODE
+    for(auto it : mDataObjects)
+        assert(it.first == it.second.GetType());
+#endif
 }
 
 void ObjectsDataRegistry::InitWeaponData()
@@ -381,6 +388,11 @@ void ObjectsDataRegistry::InitWeaponData()
         WeaponData(WeaponData::TYPE_LASER5, WEAPONC_LASER, 4, 0.5f,
                    { {OBJ_ATT_ATTACK_ACCURACY, 6}, {OBJ_ATT_ATTACK_POWER, 5}, {OBJ_ATT_ATTACK_RANGE, 5} },
                    { {ATT_AIMED_SHOT, 40}, {ATT_BURST_SHOT, 25}, {ATT_QUICK_SHOT, 30} }));
+
+#ifdef DEV_MODE
+    for(auto it : mDataWeapons)
+        assert(it.first == it.second.GetType());
+#endif
 }
 
 } // namespace game
