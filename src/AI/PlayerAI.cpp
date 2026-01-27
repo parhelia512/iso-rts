@@ -1749,70 +1749,110 @@ void PlayerAI::AddActionUnitPatrol(Unit * u)
     if(priority < mMinPriority)
         return ;
 
-    // DEFINE TARGET POSITION
-    // enemies
-    float enemyAvgRow = 0.f;
-    float enemyAvgCol = 0.f;
-    float wEnemies = 0.6f;
-    int numEnemies = 0;
+    // FIND TARGET DESTINATION
+    const int maxDist = mGm->GetNumRows() + mGm->GetNumCols();
 
-    for(auto e : mVisibleEnemyStructures)
-    {
-        ++numEnemies;
-        enemyAvgRow += e->GetRow0();
-        enemyAvgCol += e->GetCol0();
-    }
+    Cell2D dest;
 
-    for(auto e : mVisibleEnemyUnits)
+    // closest enemy unit
+    if(!mVisibleEnemyUnits.empty())
     {
-        ++numEnemies;
-        enemyAvgRow += e->GetRow0();
-        enemyAvgCol += e->GetCol0();
-    }
+        int bestDist = maxDist;
 
-    if(numEnemies > 0)
-    {
-        enemyAvgRow /= numEnemies;
-        enemyAvgCol /= numEnemies;
+        for(const auto e : mVisibleEnemyUnits)
+        {
+            const int d = mGm->ApproxDistance(u, e);
+
+            if(d < bestDist)
+            {
+                bestDist = d;
+                dest.row = e->GetRow0();
+                dest.col = e->GetCol0();
+            }
+        }
+
+        std::cout << "PlayerAI::AddActionUnitPatrol - unit("
+                  << u->GetRow0() << "," << u->GetCol0()
+                  << ") - TARGET enemy: " << dest.row << ","
+                  << dest.col << std::endl;
     }
     else
-        wEnemies = 0.f;
-
-    // own objects
-    const float wOwn = 1.0f - wEnemies;
-    float ownAvgRow = 0.f;
-    float ownAvgCol = 0.f;
-    int numOwn = 0;
-
-    for(auto o : mOwnStructures)
     {
-        ++numOwn;
-        ownAvgRow += o->GetRow0();
-        ownAvgCol += o->GetCol0();
+        // define 4 corners of territory
+        enum CornerId : unsigned int
+        {
+            C_TL,
+            C_TR,
+            C_BR,
+            C_BL,
+
+            NUM_CORNERS,
+        };
+
+        std::vector<Cell2D> corners =
+        {
+            {maxDist, maxDist},
+            {maxDist, 0},
+            {0, 0},
+            {0, maxDist},
+        };
+
+        for(const auto os : mOwnStructures)
+        {
+            const int r0 = os->GetRow0();
+            const int c0 = os->GetCol0();
+
+            if(r0 < corners[C_TL].row)
+            {
+                corners[C_TL].row = r0;
+                corners[C_TR].row = r0;
+            }
+            else if(r0 > corners[C_BR].row)
+            {
+                corners[C_BL].row = r0;
+                corners[C_BR].row = r0;
+            }
+
+            if(c0 < corners[C_TL].col)
+            {
+                corners[C_TL].col = c0;
+                corners[C_BL].col = c0;
+            }
+            else if(c0 > corners[C_BR].col)
+            {
+                corners[C_TR].col = c0;
+                corners[C_BR].col = c0;
+            }
+        }
+
+        // define probabilities to each corner based on distance
+        const Cell2D uc(u->GetRow0(), u->GetCol0());
+
+        std::vector<float> distances(NUM_CORNERS, 0);
+        float totDist = 0.f;
+
+        for(unsigned int i = 0; i < NUM_CORNERS; ++ i)
+        {
+            distances[i] = mGm->ApproxDistance(uc, corners[i]);
+            totDist += distances[i];
+        }
+
+        const float maxProb = 100.f;
+        std::vector<float> probs(NUM_CORNERS, 0.f);
+
+        probs[C_TL] = maxProb * distances[C_TL] / totDist;
+        probs[C_TR] = maxProb * distances[C_TR] / totDist;
+        probs[C_BL] = maxProb * distances[C_BL] / totDist;
+        probs[C_BR] = maxProb - probs[C_TL] - probs[C_TR] - probs[C_BL];
+
+        sgl::utilities::LoadedDie ld(probs);
+        dest = corners[ld.GetNextValue()];
+
+        std::cout << "PlayerAI::AddActionUnitPatrol - unit("
+                  << u->GetRow0() << "," << u->GetCol0()
+                  << ") - TARGET corner: " << dest.row << ","
+                  << dest.col << std::endl;
     }
-
-    for(auto o : mOwnUnits)
-    {
-        // skip current unit
-        if(o == u)
-            continue;
-
-        ++numOwn;
-        ownAvgRow += o->GetRow0();
-        ownAvgCol += o->GetCol0();
-    }
-
-    if(numOwn > 0)
-    {
-        ownAvgRow /= numOwn;
-        ownAvgCol /= numOwn;
-    }
-    // just in case
-    else if(0 == numEnemies)
-        return ;
-
-    Cell2D dest(std::roundf(enemyAvgRow * wEnemies + ownAvgRow * wOwn),
-                std::roundf(enemyAvgRow * wEnemies + ownAvgRow * wOwn));
 
     // destination cell is not walkable -> find closer one
     if(!mGm->IsCellWalkable(dest.row, dest.col))
