@@ -288,6 +288,9 @@ void ScreenInit::SetupSFX()
         am->CreateSound(packageSoundsGame, "game/explosion-01.ogg");
         am->CreateSound(packageSoundsGame, "game/laser-01.ogg");
         am->CreateSound(packageSoundsGame, "game/miniunit_move-01.ogg");
+        am->CreateSound(packageSoundsGame, "game/selection-01.ogg");
+        am->CreateSound(packageSoundsGame, "game/selection-02.ogg");
+        am->CreateSound(packageSoundsGame, "game/selection-03.ogg");
         am->CreateSound(packageSoundsGame, "game/unit_move-01.ogg");
         am->CreateSound(packageSoundsGame, "game/unit_move-02.ogg");
         am->CreateSound(packageSoundsGame, "game/upgrade-01.ogg");

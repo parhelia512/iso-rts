@@ -351,19 +351,30 @@ void ScreenGame::ClearSelection(Player * player)
 
 void ScreenGame::SelectObject(GameObject * obj, Player * player)
 {
+    auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+
     player->SetSelectedObject(obj);
 
+    const auto cat = obj->GetObjectCategory();
+
     // update quick selection buttons when selected unit
-    if(obj->GetObjectCategory() == ObjectData::CAT_UNIT)
+    if(cat == ObjectData::CAT_UNIT)
     {
         mHUD->SetQuickUnitButtonChecked(obj);
 
         // show current indicator
         ShowActiveUnitIndicators(static_cast<Unit *>(obj), mCurrCell);
+
+        ap->PlaySound("game/selection-01.ogg");
     }
     // not a unit
     else
     {
+        if(cat == ObjectData::CAT_STRUCTURE)
+            ap->PlaySound("game/selection-02.ogg");
+        else
+            ap->PlaySound("game/selection-03.ogg");
+
         mHUD->ClearQuickUnitButtonChecked();
 
         // show attack range overlay for towers

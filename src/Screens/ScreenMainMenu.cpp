@@ -348,7 +348,7 @@ void ScreenMainMenu::CreateChangelog()
     text->SetText("NEW FEATURES\n"
                   "- Show path overlay when planning unit's move.\n"
                   "- Collecting blobs and diamonds show the number collected.\n"
-                  "- New SFX for laser weapon, unit and mini-unit.\n"
+                  "- New SFX for laser weapon, structures, units and mini-units.\n"
                   "- Added multi-language support.\n"
                   "- Added Italian and Spanish translations.\n"
                   "- Units and stuctures can be upgraded after gaining enough"
