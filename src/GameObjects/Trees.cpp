@@ -29,7 +29,7 @@ Trees::Trees(const ObjectData & data, const ObjectInitData & initData, GameObjec
     UpdateMaxHealth(maxTreeHealth);
 
     // energy
-    UpdateMaxEnergy(maxTreeEnergy);
+    SetMaxEnergy(maxTreeEnergy);
 
     // randomize turns for change
     const int minTurns = 10;
@@ -76,7 +76,7 @@ void Trees::OnNewTurn(PlayerFaction faction)
         UpdateMaxHealth(maxTreeHealth * mNumTrees);
 
         // increase total energy
-        UpdateMaxEnergy(maxTreeEnergy * mNumTrees);
+        SetMaxEnergy(maxTreeEnergy * mNumTrees);
     }
     // spawn tree
     else

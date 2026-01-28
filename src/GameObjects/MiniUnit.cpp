@@ -37,7 +37,7 @@ MiniUnit::MiniUnit(const ObjectData & data, const ObjectInitData & initData, int
 
     // energy
     const float maxEnergy = maxSingleEnergyValue * mElements;
-    UpdateMaxEnergy(maxEnergy);
+    SetMaxEnergy(maxEnergy);
 
     // INIT GRAPHICS
     SetImage();
@@ -61,7 +61,7 @@ void MiniUnit::SetNumElements(int num)
 
     // energy
     const float maxEnergy = maxSingleEnergyValue * mElements;
-    UpdateMaxEnergy(maxEnergy);
+    SetMaxEnergy(maxEnergy);
 
     UpdateGraphics();
 }

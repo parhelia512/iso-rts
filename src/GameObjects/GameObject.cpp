@@ -81,7 +81,7 @@ GameObject::GameObject(const ObjectData & data, const ObjectInitData & initData)
     SetDefaultColors();
 
     // update data based on attributes
-    UpdateMaxEnergy(defMaxEnergy);
+    SetMaxEnergy(defMaxEnergy);
 
     UpdateMaxHealth(defMaxHealth);
 
@@ -301,12 +301,18 @@ void GameObject::SumHealth(float val)
 
 bool GameObject::IsEnergyMax() const
 {
-    return  mEnergy >= mMaxEnergy || (mMaxEnergy - mEnergy) < minDelta;
+    const float maxEn = GetMaxEnergy();
+    return  mEnergy >= maxEn  || (maxEn - mEnergy) < minDelta;
 }
 
 void GameObject::SumEnergy(float val)
 {
     SetEnergy(mEnergy + val);
+}
+
+float GameObject::GetMaxEnergy() const
+{
+    return std::roundf(mMaxEnergy * GetAttribute(OBJ_ATT_ENERGY) / MAX_STAT_FVAL);
 }
 
 bool GameObject::HasEnergyForActionStep(GameObjectActionType action) const
@@ -791,15 +797,6 @@ void GameObject::UpdateVisibilityLevel(float maxVal, float maxValLinked)
     mVisLevel = std::roundf(maxVisibility * GetAttribute(OBJ_ATT_VIEW_RANGE) / MAX_STAT_FVAL);
 }
 
-void GameObject::UpdateMaxEnergy(float maxVal)
-{
-    const float maxEnergy = std::roundf(maxVal * GetAttribute(OBJ_ATT_ENERGY) / MAX_STAT_FVAL);
-    const float diff = maxEnergy - mEnergy;
-
-    SetMaxEnergy(maxEnergy);
-    SumEnergy(diff);
-}
-
 void GameObject::UpdateMaxHealth(float maxVal)
 {
     const float maxHealth = std::roundf(maxVal * GetAttribute(OBJ_ATT_HEALTH) / MAX_STAT_FVAL);
@@ -927,8 +924,10 @@ void GameObject::SetEnergy(float val)
 
     mEnergy = val;
 
-    if(mEnergy > mMaxEnergy || (mMaxEnergy - mEnergy) < minDelta)
-        mEnergy = mMaxEnergy;
+    const float maxEn = GetMaxEnergy();
+
+    if(mEnergy > maxEn || (maxEn - mEnergy) < minDelta)
+        mEnergy = maxEn;
     else if(mEnergy < 0.f)
         mEnergy = 0.f;
 
@@ -978,8 +977,9 @@ void GameObject::SetHealth(float val)
 void GameObject::RestoreTurnEnergy()
 {
     const float basePerc = 0.5f;
-    const float baseEnergy = mMaxEnergy * basePerc;
-    const float newEnergy = (mMaxEnergy - baseEnergy) * mEnergyRegPower;
+    const float maxEn = GetMaxEnergy();
+    const float baseEnergy = maxEn * basePerc;
+    const float newEnergy = (maxEn - baseEnergy) * mEnergyRegPower;
     const float prevEnergy = mEnergy * mEnergyRegPower;
     const float energy = std::roundf(baseEnergy + prevEnergy + newEnergy);
 
