@@ -19,7 +19,7 @@ const char * ActionAI::GetTypeStr() const
         "UNIT COLLECT DIAMONDS",
         "UNIT COLLECT LOOTBOX",
         "UNIT CONNECT STRUCTURE",
-        "UNIT CONQUER GEN",
+        "UNIT CONQUER STRUCTURE",
         "UNIT PATROL",
         "UPGRADE STRUCTURE",
         "UPGRADE UNIT",

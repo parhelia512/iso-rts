@@ -355,6 +355,7 @@ void ScreenMainMenu::CreateChangelog()
                   " experience to level up.\n"
                   "- New conquerable structure: City.\n"
                   "- Camera automatically moves over visible AI units when they do something.\n"
+                  "- Added several AI actions.\n"
                   "\nCHANGES\n"
                   "- Unit movements are limited to visible cells.\n"
                   "- New look&feel for tutorial panels.\n"

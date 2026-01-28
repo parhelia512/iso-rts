@@ -1209,7 +1209,7 @@ void ScreenGame::ExecuteAIAction(PlayerAI * ai)
             }
             break;
 
-            case AIA_UNIT_CONQUER_GEN:
+            case AIA_UNIT_CONQUER_STRUCT:
             {
                 auto unit = static_cast<Unit *>(action->ObjSrc);
                 const Cell2D start(unit->GetRow0(), unit->GetCol0());

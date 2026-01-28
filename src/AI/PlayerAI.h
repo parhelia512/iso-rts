@@ -87,6 +87,7 @@ private:
     void AddActionUnitCollectDiamonds(Unit * u);
     void AddActionUnitCollectLootbox(Unit * u);
     void AddActionUnitConnectStructure(Unit * u);
+    void AddActionUnitConquerCity(Unit * u);
     void AddActionUnitConquerResGen(Unit * u, ResourceType type);
     void AddActionUnitPatrol(Unit * u);
     void AddActionUnitUpgrade(Unit * u);

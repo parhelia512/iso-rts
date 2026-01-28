@@ -4,6 +4,7 @@
 #include "GameMap.h"
 #include "Player.h"
 #include "GameObjects/Base.h"
+#include "GameObjects/CityBlock.h"
 #include "GameObjects/ObjectsDataRegistry.h"
 #include "GameObjects/ResourceGenerator.h"
 #include "GameObjects/Structure.h"
@@ -709,6 +710,7 @@ void PlayerAI::AddActionsUnit(Unit * u)
         // CONQUEST RESOURCE GENERATORS
         AddActionUnitConquerResGen(u, RES_ENERGY);
         AddActionUnitConquerResGen(u, RES_MATERIAL1);
+        AddActionUnitConquerCity(u);
     }
 
     // BUILD
@@ -1500,7 +1502,7 @@ void PlayerAI::AddActionUnitConnectStructure(Unit * u)
     int priority = MAX_PRIORITY;
 
     // decrease priority based on unit's energy
-    const float bonusEnergy = -30.f;
+    const float bonusEnergy = -25.f;
     priority += GetUnitPriorityBonusEnergy(u, bonusEnergy);
 
     // decrease priority based on unit's health
@@ -1611,7 +1613,7 @@ void PlayerAI::AddActionUnitConnectStructure(Unit * u)
         return ;
 
     // bonus distance
-    const float bonusDist = -50.f;
+    const float bonusDist = -35.f;
     priority += GetUnitPriorityBonusDistance(u, minDist, bonusDist);
 
     // can't find something that's worth an action
@@ -1623,6 +1625,83 @@ void PlayerAI::AddActionUnitConnectStructure(Unit * u)
     action->ObjSrc = u;
     action->cellSrc = startConquest;
     action->ObjDst = mOwnStructures[bestStructInd];
+    action->priority = priority;
+
+    // push action to the queue
+    AddNewAction(action);
+}
+
+void PlayerAI::AddActionUnitConquerCity(Unit * u)
+{
+    // not enough energy to consider this action now
+    if(!u->HasEnergyForActionStep(GameObjectActionType::CONQUER_STRUCTURE))
+        return ;
+
+    int priority = MAX_PRIORITY;
+
+    // decrease priority based on unit's energy
+    const float bonusEnergy = -30.f;
+    priority += GetUnitPriorityBonusEnergy(u, bonusEnergy);
+
+    // decrease priority based on unit's health
+    const float bonusHealth = -5.f;
+    priority += GetUnitPriorityBonusHealth(u, bonusHealth);
+
+    // bonus energy availability level
+    const StatValue & stat = mPlayer->GetStat(Player::Stat::ENERGY);
+
+    const float bonusRes = -40.f;
+    priority += std::roundf(bonusRes * stat.GetValue() / stat.GetMax());
+
+    // action is already not doable
+    if(priority < mMinPriority)
+        return ;
+
+    // FIND CITY BLOCK
+    const std::vector<GameObject *> & objects = mGm->GetObjects();
+
+    const PlayerFaction factionAI = mPlayer->GetFaction();
+
+    unsigned int bestDist = mGm->GetNumRows() + mGm->GetNumCols();
+    GameObject * bestCB = nullptr;
+
+    for(GameObject * obj : objects)
+    {
+        // consider only CityBlocks not already conquered and border
+        if(obj->GetObjectType() != ObjectData::TYPE_CITY_BLOCK ||
+           obj->GetFaction() == factionAI || !static_cast<CityBlock *>(obj)->IsBorder())
+            continue;
+
+        const unsigned int dist = mGm->ApproxDistance(obj, u);
+
+        if(dist < bestDist)
+        {
+            bestDist = dist;
+            bestCB = obj;
+        }
+    }
+
+    // didn't find any
+    if(bestCB == nullptr)
+        return ;
+
+    // bonus distance
+    const float bonusDist = -20.f;
+    priority += GetUnitPriorityBonusDistance(u, bestDist, bonusDist);
+
+    // bonus unit conquest
+    const float bonusConquest = 20.f;
+    priority += std::roundf(bonusConquest *
+                            u->GetAttribute(OBJ_ATT_CONQUEST) / ObjectData::MAX_STAT_VAL);
+
+    // can't find something that's worth an action
+    if(priority < mMinPriority)
+        return ;
+
+    auto action = new ActionAI;
+    action->type = AIA_UNIT_CONQUER_STRUCT;
+    action->ObjSrc = u;
+    action->ObjDst = bestCB;
     action->priority = priority;
 
     // push action to the queue
@@ -1726,7 +1805,7 @@ void PlayerAI::AddActionUnitConquerResGen(Unit * u, ResourceType type)
         return ;
 
     auto action = new ActionAI;
-    action->type = AIA_UNIT_CONQUER_GEN;
+    action->type = AIA_UNIT_CONQUER_STRUCT;
     action->ObjSrc = u;
     action->ObjDst = mResGenerators[bestInd];
     action->priority = priority;
