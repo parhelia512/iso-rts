@@ -9,6 +9,8 @@
 
 #include <sgl/graphic/ParticlesManager.h>
 #include <sgl/graphic/TextureManager.h>
+#include <sgl/media/AudioManager.h>
+#include <sgl/media/AudioPlayer.h>
 #include <sgl/utilities/UniformDistribution.h>
 
 namespace game
@@ -64,6 +66,10 @@ void Blobs::Collected(Player * collector)
     DataParticleOutput pd(mNum, OT_BLOBS, x0, y0, speed, decaySpeed);
 
     pu->AddParticle(pd);
+
+    // play SFX
+    auto ap = sgl::media::AudioManager::Instance()->GetPlayer();
+    ap->PlaySound("game/collect-02.ogg");
 }
 
 void Blobs::UpdateGraphics()
