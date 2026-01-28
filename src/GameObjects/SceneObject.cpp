@@ -21,7 +21,7 @@ SceneObject::SceneObject(const ObjectData & data, const ObjectInitData & initDat
     {
         // health
         const float maxHealthValue = 5000.f;
-        UpdateMaxHealth(maxHealthValue);
+        SetMaxHealth(maxHealthValue);
     }
 
     SetImage();

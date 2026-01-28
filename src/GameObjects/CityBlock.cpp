@@ -23,7 +23,7 @@ CityBlock::CityBlock(const ObjectData & data, const ObjectInitData & initData,
 
     // set object health
     const float maxHealthValue = 2000.f;
-    UpdateMaxHealth(maxHealthValue);
+    SetMaxHealth(maxHealthValue);
 
     SetImage();
 }

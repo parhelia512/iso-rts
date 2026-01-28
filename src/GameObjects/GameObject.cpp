@@ -83,7 +83,7 @@ GameObject::GameObject(const ObjectData & data, const ObjectInitData & initData)
     // update data based on attributes
     SetMaxEnergy(defMaxEnergy);
 
-    UpdateMaxHealth(defMaxHealth);
+    SetMaxHealth(defMaxHealth);
 
     UpdateRegenerationPower();
 
@@ -291,7 +291,13 @@ void GameObject::SetObjectVariant(GameObjectVariantId var)
 
 bool GameObject::IsHealthMax() const
 {
-    return  mHealth >= mMaxHealth || (mMaxHealth - mHealth) < minDelta;
+    const float maxH = GetMaxHealth();
+    return  mHealth >= maxH || (maxH - mHealth) < minDelta;
+}
+
+float GameObject::GetMaxHealth() const
+{
+    return std::roundf(mMaxHealth * GetAttribute(OBJ_ATT_HEALTH) / MAX_STAT_FVAL);
 }
 
 void GameObject::SumHealth(float val)
@@ -797,15 +803,6 @@ void GameObject::UpdateVisibilityLevel(float maxVal, float maxValLinked)
     mVisLevel = std::roundf(maxVisibility * GetAttribute(OBJ_ATT_VIEW_RANGE) / MAX_STAT_FVAL);
 }
 
-void GameObject::UpdateMaxHealth(float maxVal)
-{
-    const float maxHealth = std::roundf(maxVal * GetAttribute(OBJ_ATT_HEALTH) / MAX_STAT_FVAL);
-    const float diff = maxHealth - mHealth;
-
-    SetMaxHealth(maxHealth);
-    SumHealth(diff);
-}
-
 void GameObject::UpdateRegenerationPower()
 {
     const float reg = GetAttribute(OBJ_ATT_REGENERATION) / MAX_STAT_FVAL;
@@ -963,8 +960,10 @@ void GameObject::SetHealth(float val)
 
     mHealth = val;
 
-    if(mHealth > mMaxHealth || (mMaxHealth - mHealth) < minDelta)
-        mHealth = mMaxHealth;
+    const float maxH = GetMaxHealth();
+
+    if(mHealth > maxH || (maxH - mHealth) < minDelta)
+        mHealth = maxH;
     else if(mHealth < 0.f)
         mHealth = 0.f;
 

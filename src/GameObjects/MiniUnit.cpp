@@ -33,7 +33,7 @@ MiniUnit::MiniUnit(const ObjectData & data, const ObjectInitData & initData, int
 
     // health
     const float maxHealthValue = maxSingleHealthValue * mElements;
-    UpdateMaxHealth(maxHealthValue);
+    SetMaxHealth(maxHealthValue);
 
     // energy
     const float maxEnergy = maxSingleEnergyValue * mElements;
@@ -57,7 +57,7 @@ void MiniUnit::SetNumElements(int num)
 
     // health
     const float maxHealthValue = maxSingleHealthValue * mElements;
-    UpdateMaxHealth(maxHealthValue);
+    SetMaxHealth(maxHealthValue);
 
     // energy
     const float maxEnergy = maxSingleEnergyValue * mElements;

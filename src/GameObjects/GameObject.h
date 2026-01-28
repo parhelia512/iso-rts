@@ -217,7 +217,7 @@ protected:
 
     void UpdateVisibilityLevel(float maxVal, float maxValLinked);
     void SetMaxEnergy(float val);
-    void UpdateMaxHealth(float maxVal);
+    void SetMaxHealth(float maxVal);
     void UpdateRegenerationPower();
 
 protected:
@@ -246,7 +246,6 @@ private:
     void SetRegenerationPower(float val);
     void SetExperience(int val);
 
-    void SetMaxHealth(float max);
     void SetHealth(float val);
 
     void RestoreTurnEnergy();
@@ -374,7 +373,6 @@ inline void GameObject::SetStatic(bool val) { mStatic = val; }
 inline void GameObject::SetMaxSpeed(float val) { mMaxSpeed = val; }
 
 inline float GameObject::GetHealth() const { return mHealth; }
-inline float GameObject::GetMaxHealth() const { return mMaxHealth; }
 
 inline float GameObject::GetEnergy() const { return mEnergy; }
 
@@ -411,10 +409,17 @@ inline void GameObject::SetCurrentAction(GameObjectActionType action) { mCurrAct
 inline GameObjectActionType GameObject::GetDefaultAction() const { return mDefaultAction; }
 inline void GameObject::SetDefaultAction(GameObjectActionType action) { mDefaultAction = action; }
 
-inline void GameObject::SetMaxEnergy(float val) { mMaxEnergy = val; }
+inline void GameObject::SetMaxEnergy(float val)
+{
+    mMaxEnergy = val;
+    SetEnergy(val);
+}
 
-
-inline void GameObject::SetMaxHealth(float max) { mMaxHealth = max; }
+inline void GameObject::SetMaxHealth(float val)
+{
+    mMaxHealth = val;
+    SetHealth(val);
+}
 
 inline void GameObject::SetRegenerationPower(float val)
 {

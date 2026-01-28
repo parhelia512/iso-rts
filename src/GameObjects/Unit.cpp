@@ -34,7 +34,7 @@ Unit::Unit(const ObjectData & data, const ObjectInitData & initData)
 
     // health
     const float maxHealthValue = 250.f;
-    UpdateMaxHealth(maxHealthValue);
+    SetMaxHealth(maxHealthValue);
 
     // init graphics
     SetImage();

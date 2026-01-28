@@ -13,7 +13,7 @@ PracticeTarget::PracticeTarget(const ObjectData & data, const ObjectInitData & i
 {
     // health
     const float maxHealthValue = 2500.f;
-    UpdateMaxHealth(maxHealthValue);
+    SetMaxHealth(maxHealthValue);
 
     SetImage();
 

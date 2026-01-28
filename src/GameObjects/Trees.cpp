@@ -26,7 +26,7 @@ Trees::Trees(const ObjectData & data, const ObjectInitData & initData, GameObjec
     SetStatic(true);
 
     // health
-    UpdateMaxHealth(maxTreeHealth);
+    SetMaxHealth(maxTreeHealth);
 
     // energy
     SetMaxEnergy(maxTreeEnergy);
@@ -73,7 +73,7 @@ void Trees::OnNewTurn(PlayerFaction faction)
         SetImage();
 
         // health
-        UpdateMaxHealth(maxTreeHealth * mNumTrees);
+        SetMaxHealth(maxTreeHealth * mNumTrees);
 
         // increase total energy
         SetMaxEnergy(maxTreeEnergy * mNumTrees);
