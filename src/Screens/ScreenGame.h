@@ -257,6 +257,7 @@ private:
 
     bool mMapCompleted = false;
     bool mPaused = false;
+    bool mTutorialStarted = false;
 };
 
 inline void ScreenGame::SetObjectActionCompleted(GameObject * obj)

@@ -778,8 +778,6 @@ void GameMap::InitCities()
                 static_cast<CityBlock *>(b)->SetBorder(border);
             }
         }
-
-        std::cout << "GameMap::InitCities - CREATED CITY OF " << g->GetNumObjects() << " BLOCKS" << std::endl;
     }
 }
 

@@ -80,8 +80,8 @@ Game::Game(int argc, char * argv[])
     auto sm = utilities::StringManager::Create();
     sm->RegisterPackage("data/text/game.bin");
 
-    //SetLanguage(LANG_ENGLISH);
-    SetLanguage(LANG_ITALIAN);
+    SetLanguage(LANG_ENGLISH);
+    //SetLanguage(LANG_ITALIAN);
 
     const std::string title = std::string("Virtualord - v. ") + std::string(VERSION);
     mWin = graphic::Window::Create(title.c_str(), 0, 0, this);

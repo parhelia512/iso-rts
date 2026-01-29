@@ -196,6 +196,7 @@ ScreenGame::ScreenGame(Game * game)
         {
             tutMan->CreateTutorial(TUTORIAL_MISSION_INTRO, this);
             tutMan->StartTutorial();
+            mTutorialStarted = true;
         }
     }
 }
@@ -1785,7 +1786,7 @@ bool ScreenGame::CheckIfGoalCompleted(MissionGoal & g)
     {
         Game * game = GetGame();
 
-        if(game->IsTutorialEnabled())
+        if(game->IsTutorialEnabled() && mTutorialStarted)
         {
             auto tutMan = game->GetTutorialManager();
 
