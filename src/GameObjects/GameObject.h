@@ -218,7 +218,7 @@ protected:
     void UpdateVisibilityLevel(float maxVal, float maxValLinked);
     void SetMaxEnergy(float val);
     void SetMaxHealth(float maxVal);
-    void UpdateRegenerationPower();
+    float GetRegenerationPower() const;
 
 protected:
     static const unsigned int COLOR_FOW;
@@ -243,7 +243,6 @@ private:
     void PositionIconUpgrade();
 
     void SetEnergy(float val);
-    void SetRegenerationPower(float val);
     void SetExperience(int val);
 
     void SetHealth(float val);
@@ -296,7 +295,6 @@ private:
 
     float mMaxEnergy = 100.f;
     float mEnergy = 100.f;
-    float mEnergyRegPower = 1.f;
     float mMaxHealth = 100.f;
     float mHealth = 100.f;
     float mMaxSpeed = 0.f;
@@ -419,13 +417,6 @@ inline void GameObject::SetMaxHealth(float val)
 {
     mMaxHealth = val;
     SetHealth(val);
-}
-
-inline void GameObject::SetRegenerationPower(float val)
-{
-    const float maxVal = 1.f;
-
-    mEnergyRegPower = val > maxVal ? maxVal : val;
 }
 
 } // namespace game

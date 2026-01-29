@@ -85,7 +85,7 @@ GameObject::GameObject(const ObjectData & data, const ObjectInitData & initData)
 
     SetMaxHealth(defMaxHealth);
 
-    UpdateRegenerationPower();
+    GetRegenerationPower();
 
     UpdateVisibilityLevel(defMaxVisibility, defMaxVisibilityLinked);
 }
@@ -803,10 +803,9 @@ void GameObject::UpdateVisibilityLevel(float maxVal, float maxValLinked)
     mVisLevel = std::roundf(maxVisibility * GetAttribute(OBJ_ATT_VIEW_RANGE) / MAX_STAT_FVAL);
 }
 
-void GameObject::UpdateRegenerationPower()
+float GameObject::GetRegenerationPower() const
 {
-    const float reg = GetAttribute(OBJ_ATT_REGENERATION) / MAX_STAT_FVAL;
-    SetRegenerationPower(reg);
+    return GetAttribute(OBJ_ATT_REGENERATION) / MAX_STAT_FVAL;
 }
 
 float GameObject::GetActionEnergyCost(GameObjectActionType action) const
@@ -977,9 +976,10 @@ void GameObject::RestoreTurnEnergy()
 {
     const float basePerc = 0.5f;
     const float maxEn = GetMaxEnergy();
+    const float regPower = GetRegenerationPower();
     const float baseEnergy = maxEn * basePerc;
-    const float newEnergy = (maxEn - baseEnergy) * mEnergyRegPower;
-    const float prevEnergy = mEnergy * mEnergyRegPower;
+    const float newEnergy = (maxEn - baseEnergy) * regPower;
+    const float prevEnergy = mEnergy * regPower;
     const float energy = std::roundf(baseEnergy + prevEnergy + newEnergy);
 
     SumEnergy(energy);
