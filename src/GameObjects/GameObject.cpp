@@ -87,7 +87,7 @@ GameObject::GameObject(const ObjectData & data, const ObjectInitData & initData)
 
     GetRegenerationPower();
 
-    UpdateVisibilityLevel(defMaxVisibility, defMaxVisibilityLinked);
+    SetMaxVisibilityLevel(defMaxVisibility, defMaxVisibilityLinked);
 }
 
 GameObject::~GameObject()
@@ -247,6 +247,11 @@ void GameObject::SetCell(const GameMapCell * cell)
     mIsoObj->SetCol(cell->col);
 }
 
+int GameObject::GetVisibilityLevel() const
+{
+    return std::roundf(mMaxVisLevel * GetAttribute(OBJ_ATT_VIEW_RANGE) / MAX_STAT_FVAL);;
+}
+
 int GameObject::GetRow0() const { return mCell->row; }
 int GameObject::GetCol0() const { return mCell->col; }
 int GameObject::GetRow1() const { return 1 + mCell->row - mRows; }
@@ -399,6 +404,10 @@ void GameObject::UpgradeLevel(const std::vector<int> & attChanges)
 
     for(unsigned int i = 0; i < numAtt; ++i)
         mAttributes[static_cast<ObjAttId>(i)] += attChanges[i];
+
+    // update visibility if needed
+    if(IsFactionLocal() && attChanges[OBJ_ATT_VIEW_RANGE] > 0)
+        mGameMap->UpdateLocalObjectVisibility(this);
 
     // notify object and observers
     OnAttributeChanged();
@@ -767,7 +776,7 @@ void GameObject::OnFactionChanged()
 
 void GameObject::OnLinkedChanged()
 {
-    UpdateVisibilityLevel(defMaxVisibility, defMaxVisibilityLinked);
+    SetMaxVisibilityLevel(defMaxVisibility, defMaxVisibilityLinked);
 }
 
 void GameObject::OnAttributeChanged()
@@ -796,11 +805,9 @@ float GameObject::GetTime(float maxTime, float attribute) const
     return baseTime + maxTime - (maxTime * attribute / MAX_STAT_FVAL);
 }
 
-void GameObject::UpdateVisibilityLevel(float maxVal, float maxValLinked)
+void GameObject::SetMaxVisibilityLevel(float maxVal, float maxValLinked)
 {
-    const float maxVisibility = IsLinked() ? maxValLinked : maxVal;
-
-    mVisLevel = std::roundf(maxVisibility * GetAttribute(OBJ_ATT_VIEW_RANGE) / MAX_STAT_FVAL);
+    mMaxVisLevel = IsLinked() ? maxValLinked : maxVal;
 }
 
 float GameObject::GetRegenerationPower() const

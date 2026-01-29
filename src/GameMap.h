@@ -88,6 +88,7 @@ public:
     void ApplyLocalVisibilityToObject(GameObject * go);
     void ApplyVisibilityToObject(Player * player, GameObject * go);
     void InitObjectVisibility(Player * player, GameObject * go);
+    void UpdateLocalObjectVisibility(GameObject * go);
 
     Player * GetCellOwner(unsigned int r, unsigned int c) const;
 

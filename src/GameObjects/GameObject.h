@@ -215,7 +215,7 @@ protected:
 
     float GetTime(float maxTime, float attribute) const;
 
-    void UpdateVisibilityLevel(float maxVal, float maxValLinked);
+    void SetMaxVisibilityLevel(float maxVal, float maxValLinked);
     void SetMaxEnergy(float val);
     void SetMaxHealth(float maxVal);
     float GetRegenerationPower() const;
@@ -288,7 +288,7 @@ private:
     unsigned int mRows = 1;
     unsigned int mCols = 1;
 
-    int mVisLevel = 0;
+    int mMaxVisLevel = 0;
 
     int mExpLevel = 0;
     int mExp = 0;
@@ -345,8 +345,6 @@ inline bool GameObject::IsDestroyed() const
 }
 
 inline const GameMapCell * GameObject::GetCell() const { return mCell; }
-
-inline int GameObject::GetVisibilityLevel() const { return mVisLevel; }
 
 inline GameObjectTypeId GameObject::GetObjectType() const { return mType; }
 

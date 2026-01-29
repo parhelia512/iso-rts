@@ -414,6 +414,17 @@ void GameMap::InitObjectVisibility(Player * player, GameObject * gameObj)
     }
 }
 
+void GameMap::UpdateLocalObjectVisibility(GameObject * go)
+{
+    Player * p = mGame->GetLocalPlayer();
+
+    DelPlayerObjVisibility(go, p);
+
+    AddPlayerObjVisibility(go, p);
+
+    ApplyLocalVisibility();
+}
+
 void GameMap::CreateObjectFromFile(unsigned int layerId, GameObjectTypeId type, GameObjectVariantId variant,
                                    unsigned int faction, unsigned int r0, unsigned int c0)
 {
