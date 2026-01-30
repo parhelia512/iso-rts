@@ -335,7 +335,7 @@ void ScreenMainMenu::CreateChangelog()
     const int contX = 0;
     int contY = 0;
 
-    auto title = new sgui::Label("0.5.0 - \"???\"", font, content);
+    auto title = new sgui::Label("0.5.0 - \"Up, Up, Upgrade\"", font, content);
     title->SetPosition(contX, contY);
     title->SetColor(colorContent);
 
