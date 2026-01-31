@@ -156,11 +156,13 @@ void ScreenInit::SetupLoadPackages()
         mTexPackages[PACKAGE_IMGS_GAME] = new sgl::core::DataPackage("data/img/game.bin");
     });
 
+#ifdef DEV_MODE
     // LOAD TEST PACKAGE
     mJobs.emplace_back([this]
     {
         mTexPackages[PACKAGE_IMGS_TEST] = new sgl::core::DataPackage("data/img/test.bin");
     });
+#endif
 
     // LOAD UI GAME PACKAGE
     mJobs.emplace_back([this]
@@ -192,11 +194,13 @@ void ScreenInit::SetupLoadPackages()
         am->RegisterDataPackage(packageMusicMenus);
     });
 
+#ifdef DEV_MODE
     // LOAD MUSIC TEST PACKAGE
     mJobs.emplace_back([am]
     {
         am->RegisterDataPackage(packageMusicTest);
     });
+#endif
 
     // LOAD SFX GAME PACKAGE
     mJobs.emplace_back([am]
@@ -210,11 +214,13 @@ void ScreenInit::SetupLoadPackages()
         am->RegisterDataPackage(packageSoundsUI);
     });
 
+#ifdef DEV_MODE
     // LOAD SFX TEST PACKAGE
     mJobs.emplace_back([am]
     {
         am->RegisterDataPackage(packageSoundsTest);
     });
+#endif
 }
 
 void ScreenInit::SetupFonts()
@@ -261,6 +267,7 @@ void ScreenInit::SetupMusic()
         am->CreateMusic(packageMusicGame, "mission/music_02.ogg");
     });
 
+#ifdef DEV_MODE
     // TEST MUSIC
     mJobs.emplace_back([this, am]
     {
@@ -268,6 +275,7 @@ void ScreenInit::SetupMusic()
 
         am->CreateMusic(packageSoundsTest, "test/test.ogg");
     });
+#endif
 }
 
 void ScreenInit::SetupSFX()
@@ -300,11 +308,13 @@ void ScreenInit::SetupSFX()
         am->CreateSound(packageSoundsGame, "game/upgrade_notification-01.ogg");
     });
 
+#ifdef DEV_MODE
     // TEST SFX
     mJobs.emplace_back([this, am]
     {
         am->CreateSound(packageSoundsTest, "test/test.ogg");
     });
+#endif
 
     // UI SFX
     mJobs.emplace_back([this, am]
@@ -2196,6 +2206,7 @@ void ScreenInit::SetupTextures()
         tm->RegisterSprite(*mTexPackages[PACKAGE_IMGS_UI_OTHERS], SpriteFileSettingsExp, rects);
     });
 
+#ifdef DEV_MODE
     // TEST SPRITE
     mJobs.emplace_back([this, tm]
     {
@@ -2256,6 +2267,7 @@ void ScreenInit::SetupTextures()
 
             tm->RegisterTexture(*mTexPackages[PACKAGE_IMGS_TEST], SpriteFileTestSprite);
     });
+#endif
 }
 
 } // namespace game
